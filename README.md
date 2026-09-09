@@ -1,5 +1,12 @@
 # suretool
 
+![CI](https://img.shields.io/github/actions/workflow/status/TASure/suretool/ci.yml?branch=main&label=CI)
+![Coverage](https://img.shields.io/codecov/c/github/TASure/suretool)
+![Release](https://img.shields.io/github/v/release/TASure/suretool)
+![License](https://img.shields.io/badge/license-Apache%202.0-blue)
+![Java](https://img.shields.io/badge/Java-8+-orange)
+![Stars](https://img.shields.io/github/stars/TASure/suretool)
+
 一个**小而全**的 Java 工具类库，参考 [Hutool](https://doc.hutool.cn/pages/index/) 的设计理念，通过静态方法封装常用 JDK API，减少重复造轮子、降低开发成本。
 
 - 包前缀：`com.sure.tool`

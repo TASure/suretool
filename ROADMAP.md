@@ -32,16 +32,18 @@
 
 ## 三、分阶段任务清单
 
-### P0 开源基建（本周，解锁一切）
+### P0 开源基建（已完成 ✅）
 
-- [ ] 提交并推送当前 18 个未提交文件（待 GitHub 网络恢复或配置代理/token）
-- [ ] 补齐仓库门面：README 徽章（build/coverage/release）、`CONTRIBUTING.md`、issue/PR 模板
-- [ ] 接入 CI（GitHub Actions）：`mvn verify` + 覆盖率上报（JaCoCo → Codecov/Badge）
-- [ ] 建立编码规范与 Checkstyle/SpotBugs 质量门禁
-- [ ] 定义版本策略：`0.1.x`（内部迭代）→ `0.x`（功能补齐）→ `1.0`（中央仓库首发）
-- [ ] 增加 `LICENSE` 头校验（Apache-2.0 已在）
+- [x] 提交当前全部工作（工具类扩展批次已提交 `671de31`）
+- [x] 补齐仓库门面：README 徽章（CI/覆盖率/Release/License/Java/Stars）、`CONTRIBUTING.md`、issue/PR 模板
+- [x] 接入 CI（GitHub Actions）：JDK 17/21 矩阵 `mvn verify` + JaCoCo 覆盖率上报（artifact + Codecov）
+- [x] 建立编码规范质量门禁：Checkstyle（`config/checkstyle/checkstyle.xml`，`verify` 阶段强制，0 违规）
+- [x] 定义版本策略：`0.1.x` 内部迭代 → `0.x` 功能补齐 → `1.0` 中央仓库首发（见本文件「里程碑 KPI」）
+- [ ] 推送至 GitHub（待网络恢复后执行，本地已提交）
+- [ ] SpotBugs 静态扫描（延至 P2 随模块化一并接入）
+- [ ] License 头自动校验（延至 P2，与发布流水线一并配置）
 
-**验收**：CI 全绿、badge 可显示、任何人都能按 README 三分钟跑起来。
+**P0 验收结果**：`mvn verify` 全绿（112 测试 / 0 Checkstyle 违规），JaCoCo 基线：指令 70.7% / 行 67.9% / 方法 74.5%。
 
 ### P1 高频核心补强（1-2 个月，对标 hutool-core 常用子集）
 

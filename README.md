@@ -1,2 +1,123 @@
 # suretool
-工具库
+
+一个**小而全**的 Java 工具类库，参考 [Hutool](https://doc.hutool.cn/pages/index/) 的设计理念，通过静态方法封装常用 JDK API，减少重复造轮子、降低开发成本。
+
+- 包前缀：`com.sure.tool`
+- 语言：Java 8+（无任何第三方运行期依赖，仅测试依赖 JUnit）
+- 许可：Apache License 2.0
+
+## 快速开始
+
+### Maven 引入
+
+```xml
+<dependency>
+    <groupId>com.sure</groupId>
+    <artifactId>suretool</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+</dependency>
+```
+
+先本地安装：
+
+```bash
+mvn clean install
+```
+
+### 模块与工具类
+
+| 包 | 工具类 | 说明 |
+| --- | --- | --- |
+| `com.sure.tool.util` | `StrUtil` | 字符串判空/去空白/截取/拼接/格式化/驼峰转换 |
+| | `CharUtil` | 字符分类判断（字母/数字/空白/十六进制） |
+| | `ArrayUtil` | 数组判空/包含/拼接/反转/去重/截取（支持基本类型） |
+| | `NumberUtil` | 安全数值解析/高精度四则运算/四舍五入/格式化 |
+| | `BooleanUtil` | 多种字符串形式解析布尔值（true/yes/1/是…） |
+| | `ObjectUtil` | 对象判空/深比较/克隆/序列化 |
+| | `RandomUtil` | 随机数/随机字符串/随机 UUID |
+| | `ReUtil` | 正则匹配/提取分组/查找/替换 |
+| | `IdUtil` | UUID、ObjectId、雪花 ID |
+| | `ClassUtil` | 类加载/实例化/基本类型判断 |
+| | `ReflectUtil` | 反射获取/设置字段、调用方法 |
+| | `ConvertUtil` | 类型转换（字符串↔基础类型/数组/集合） |
+| | `DesensitizedUtil` | 手机号/身份证/银行卡/邮箱/姓名脱敏 |
+| | `CharsetUtil` | 字符集常量与编码转换 |
+| `com.sure.tool.codec` | `Base64Util` | Base64 / URL 安全 Base64 编解码 |
+| | `HexUtil` | 十六进制编解码 |
+| | `HashUtil` | MD5 / SHA-1 / SHA-256 / SHA-512 / CRC32 |
+| `com.sure.tool.collection` | `CollUtil` | 集合判空/交并差/分组/过滤/映射 |
+| | `ListUtil` | 列表切分/分页/反转 |
+| | `MapUtil` | Map 创建/取值/反转/拼接 |
+| `com.sure.tool.date` | `DateUtil` | 日期格式化/解析/偏移/年龄/区间 |
+| | `DateUnit` | 日期时间单位枚举 |
+| `com.sure.tool.io` | `FileUtil` | 文件读写/复制/移动/删除/大小/路径规范化 |
+| | `IoUtil` | 流复制/读取/写入/安静关闭 |
+| `com.sure.tool.lang` | `Assert` | 断言工具（非空/为真/正则匹配） |
+| | `Snowflake` | 雪花算法 ID 生成器 |
+
+## 使用示例
+
+```java
+import com.sure.tool.collection.CollUtil;
+import com.sure.tool.date.DateUtil;
+import com.sure.tool.io.FileUtil;
+import com.sure.tool.lang.Snowflake;
+import com.sure.tool.util.*;
+
+import java.util.Date;
+
+public class Demo {
+
+    public static void main(String[] args) throws Exception {
+        // 字符串
+        StrUtil.isBlank("  ");              // true
+        StrUtil.toCamelCase("user_name");   // userName
+        StrUtil.format("你好，{}", "世界");    // 你好，世界
+
+        // 数值
+        NumberUtil.div(10, 3, 2);           // 3.33
+        NumberUtil.round(3.14159, 2);       // 3.14
+
+        // 日期
+        DateUtil.format(DateUtil.now());    // 2026-09-09 16:30:00
+        DateUtil.age(DateUtil.parse("2000-05-20"));  // 26
+
+        // 集合
+        CollUtil.union(CollUtil.newArrayList(1, 2), CollUtil.newArrayList(2, 3));  // [1, 2, 3]
+
+        // 脱敏
+        DesensitizedUtil.mobilePhone("13812345678");   // 138****5678
+
+        // 加密
+        HashUtil.sha256Hex("abc");
+
+        // 文件
+        FileUtil.writeUtf8String("hello", new java.io.File("/tmp/a.txt"));
+        FileUtil.readUtf8String(new java.io.File("/tmp/a.txt"));
+
+        // ID
+        Snowflake snowflake = IdUtil.createSnowflake(1, 1);
+        snowflake.nextId();  // 雪花 ID
+    }
+}
+```
+
+## 构建与测试
+
+```bash
+# 编译并运行全部单元测试
+mvn test
+
+# 安装到本地仓库
+mvn clean install
+```
+
+测试覆盖：字符串、数值、集合、日期、文件 IO、编解码、反射、断言、雪花 ID 等全部工具类。
+
+## 设计参考
+
+本项目的 API 设计参考 [Hutool](https://doc.hutool.cn/pages/index/)（[Gitee 仓库](https://gitee.com/chinabugotech/hutool)），实现为独立编写的原始代码，无代码复制。
+
+## License
+
+[Apache License 2.0](LICENSE)

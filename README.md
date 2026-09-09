@@ -42,9 +42,16 @@ mvn clean install
 | | `ConvertUtil` | 类型转换（字符串↔基础类型/数组/集合） |
 | | `DesensitizedUtil` | 手机号/身份证/银行卡/邮箱/姓名脱敏 |
 | | `CharsetUtil` | 字符集常量与编码转换 |
+| | `ValidatorUtil` | 邮箱/手机号/身份证/IP/URL/车牌/邮编等校验 |
+| | `IdcardUtil` | 身份证校验、15↔18 位转换、生日/性别解析 |
+| | `EscapeUtil` | HTML 转义与反转义（防注入） |
+| | `SystemUtil` | 系统属性与 JVM 内存信息 |
+| | `RuntimeUtil` | 执行系统命令并读取输出 |
+| | `NetUtil` | 本机 IP/主机名、内网地址判断、端口检查 |
 | `com.sure.tool.codec` | `Base64Util` | Base64 / URL 安全 Base64 编解码 |
 | | `HexUtil` | 十六进制编解码 |
 | | `HashUtil` | MD5 / SHA-1 / SHA-256 / SHA-512 / CRC32 |
+| | `EncodeUtil` | URL 百分号编解码 |
 | `com.sure.tool.collection` | `CollUtil` | 集合判空/交并差/分组/过滤/映射 |
 | | `ListUtil` | 列表切分/分页/反转 |
 | | `MapUtil` | Map 创建/取值/反转/拼接 |
@@ -52,8 +59,13 @@ mvn clean install
 | | `DateUnit` | 日期时间单位枚举 |
 | `com.sure.tool.io` | `FileUtil` | 文件读写/复制/移动/删除/大小/路径规范化 |
 | | `IoUtil` | 流复制/读取/写入/安静关闭 |
+| | `ZipUtil` | ZIP 压缩/解压（含 zip-slip 防护） |
 | `com.sure.tool.lang` | `Assert` | 断言工具（非空/为真/正则匹配） |
 | | `Snowflake` | 雪花算法 ID 生成器 |
+| | `PatternPool` | 常用正则模式池 |
+| | `StopWatch` | 秒表计时器 |
+| | `Console` | 控制台格式化打印 |
+| | `Dict` | 便捷字典（类型化取值） |
 
 ## 使用示例
 
@@ -98,6 +110,17 @@ public class Demo {
         // ID
         Snowflake snowflake = IdUtil.createSnowflake(1, 1);
         snowflake.nextId();  // 雪花 ID
+
+        // 校验
+        ValidatorUtil.isEmail("test@example.com");   // true
+        ValidatorUtil.isMobile("13800138000");       // true
+
+        // 身份证
+        IdcardUtil.getBirthDate("11010119900307123X");  // 1990-03-07
+
+        // 压缩
+        ZipUtil.zip("/tmp/dir", "/tmp/out.zip");
+        ZipUtil.unzip("/tmp/out.zip", "/tmp/out");
     }
 }
 ```
@@ -112,7 +135,7 @@ mvn test
 mvn clean install
 ```
 
-测试覆盖：字符串、数值、集合、日期、文件 IO、编解码、反射、断言、雪花 ID 等全部工具类。
+测试覆盖：字符串、数值、集合、日期、文件 IO、编解码、反射、断言、雪花 ID、校验、压缩、计时、字典等全部工具类。
 
 ## 设计参考
 

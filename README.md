@@ -73,6 +73,15 @@ mvn clean install
 | | `StopWatch` | 秒表计时器 |
 | | `Console` | 控制台格式化打印 |
 | | `Dict` | 便捷字典（类型化取值） |
+| `com.sure.tool.bean` | `BeanUtil` | 属性拷贝（含类型转换）/Bean↔Map/属性读写 |
+| | `BeanDesc` | Bean 属性描述（getter/setter/字段扫描缓存） |
+| | `FieldUtil` | 字段遍历/查找/常量读取 |
+| `com.sure.tool.json` | `JSONUtil` | 零依赖 JSON 解析/序列化/Bean 互转 |
+| | `JSONObject` | JSON 对象（链式设置、类型化读取） |
+| | `JSONArray` | JSON 数组（类型化读取） |
+| `com.sure.tool.thread` | `ThreadUtil` | 异步执行/休眠/线程工厂 |
+| | `ExecutorBuilder` | 线程池构造器 |
+| | `SyncFinisher` | 并发同步器（固定线程并发+等待） |
 
 ## 使用示例
 

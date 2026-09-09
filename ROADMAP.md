@@ -49,16 +49,17 @@
 
 按优先级分 8 个能力域，每个域完成标准：**类齐全 + 测试覆盖 ≥ 85% + 文档示例**。
 
-#### 1. Bean 域（最高优先级，使用率第一）
-- [ ] `BeanUtil`：属性拷贝（支持类型转换/忽略空值）、Bean↔Map、Bean→Map 级联
-- [ ] `BeanDesc`/`PropDesc`：Bean 属性元数据（缓存 getter/setter）
-- [ ] `FieldUtil`：字段操作、常量类工具
+#### 1. Bean 域（最高优先级，使用率第一）✅
+- [x] `BeanUtil`：属性拷贝（支持类型转换/忽略空值/忽略指定属性）、Bean↔Map、属性读写
+- [x] `BeanDesc`/`PropDesc`：Bean 属性元数据（缓存 getter/setter/字段）
+- [x] `FieldUtil`：字段遍历/查找/常量读取
 
-#### 2. JSON 域（招牌能力，必须自研零依赖）
-- [ ] `JSONObject`/`JSONArray`：基于 Map/List 的轻量 JSON 模型
-- [ ] `JSONUtil`：parse/parseObj/parseArray/toJsonStr/toBean（结合 ReflectUtil）
-- [ ] 严格 RFC 8259 解析 + 容错模式 + 性能基准（目标：快于 hutool-json）
-- [ ] 测试：嵌套、转义、Unicode、数字精度（BigDecimal）、错误输入
+#### 2. JSON 域（招牌能力，必须自研零依赖）✅
+- [x] `JSONObject`/`JSONArray`：基于 LinkedHashMap/ArrayList 的轻量 JSON 模型
+- [x] `JSONUtil`：parse/parseObj/parseArray/toJsonStr/toBean（结合 BeanUtil 反射）
+- [x] 严格 RFC 8259 解析（递归下降，非法输入抛 `JSONException`）
+- [x] 测试：嵌套、转义、Unicode、数字精度（BigDecimal）、错误输入、往返一致性
+- [ ] 性能基准对比 hutool-json（延至 P2 随 JMH 基准一起做）
 
 #### 3. HTTP 域（零依赖 HttpURLConnection 封装）
 - [ ] `HttpUtil`：get/post/upload/download，超时、Header、Cookie、表单、代理
@@ -66,10 +67,10 @@
 - [ ] `URLUtil`：URL 拼接、编解码、域名提取
 - [ ] 中文/编码/重定向/连接复用边界测试
 
-#### 4. 并发域
-- [ ] `ThreadUtil`：execAsync、sleep、线程工厂、快捷线程池
-- [ ] `ExecutorBuilder`：参数化线程池构建器
-- [ ] `SyncFinisher`：多线程任务并发与汇总
+#### 4. 并发域 ✅
+- [x] `ThreadUtil`：execAsync、sleep、线程工厂、共享守护线程池
+- [x] `ExecutorBuilder`：参数化线程池构建器（队列/线程名/拒绝策略）
+- [x] `SyncFinisher`：多线程任务并发与汇总（异常传播）
 - [ ] `LockUtil`（可选）：读写锁便捷封装
 
 #### 5. 加密安全域
@@ -130,8 +131,8 @@
 
 | 里程碑 | 时间 | 功能 | 质量 | 影响力 |
 | --- | --- | --- | --- | --- |
-| M1 | 2 周 | 60+ 类 / 700+ 方法 | CI 全绿、覆盖率 70% | 仓库开源、README 门面完整 |
-| M2 | 6 周 | JSON/HTTP/并发/加密/定时/缓存落地，模块化拆分 | 覆盖率 75%、JMH 报告发布 | 首篇技术文章、10+ star |
+| M1 | 2 周 | 60+ 类 / 700+ 方法（**当前进度：49 类 / 约 570 方法**） | CI 全绿、覆盖率 70%（**已达成：指令 71.7%**） | 仓库开源、README 门面完整 |
+| M2 | 6 周 | JSON/HTTP/并发/加密/定时/缓存落地，模块化拆分（**Bean/JSON/并发 3 域已落地**） | 覆盖率 75%、JMH 报告发布 | 首篇技术文章、10+ star |
 | M3（v1.0） | 3 个月 | 100+ 类 / 1000+ 方法 | 覆盖率 85%、Maven Central 发布 | 文档站上线、100+ star |
 | M4（v1.x） | 6-12 个月 | 生态组件（starter/BOM/插件） | 双 JDK 兼容、长期 API 稳定 | 500+ star、10+ 外部贡献者、月下载量 10k+ |
 

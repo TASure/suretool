@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  suretool SpotBugs 排除清单：
+  仅排除「设计意图 / 惯例性」告警，真实缺陷一律修复而非排除。
+  新增排除项必须在注释中说明理由。
+-->
+<FindBugsFilter>
+
+    <!-- 构造器参数校验抛异常（CT_CONSTRUCTOR_THROW）：
+         suretool 工具类均为 final 不可继承、无 finalize 方法，不存在 Finalizer 攻击面；
+         Hutool 等主流工具库同样在构造器直接校验参数。 -->
+    <Match>
+        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+    </Match>
+
+    <!-- 反射元数据共享（EI_EXPOSE_REP / EI_EXPOSE_REP2）：
+         PropDesc 持有的 Field/Method 为 JDK 反射对象（全局单例语义，无防御性拷贝可行做法），
+         与 Hutool BeanDesc 等实现一致，属行业惯例。 -->
+    <Match>
+        <Class name="com.sure.tool.bean.PropDesc"/>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+    </Match>
+
+    <!-- Boolean 包装类型显式返回 null（NP_BOOLEAN_RETURN_NULL）：
+         API 语义刻意设计——缺失值返回 null（区别于 false），调用方按三态处理；
+         与 Hutool JSONObject.getBool / Dict.getBool 行为一致。 -->
+    <Match>
+        <Bug pattern="NP_BOOLEAN_RETURN_NULL"/>
+    </Match>
+
+    <!-- 持锁 sleep（SWL_SLEEP_WITH_LOCK_HELD）：
+         Snowflake 时钟回拨等待时持 synchronized 锁是有意设计，保证同毫秒内 ID 全局唯一。 -->
+    <Match>
+        <Bug pattern="SWL_SLEEP_WITH_LOCK_HELD"/>
+    </Match>
+
+    <!-- 反射提升字段可访问性（REFLF_REFLECTION_MAY_INCREASE_ACCESSIBILITY_OF_FIELD）：
+         反射工具库的本职能力（getField 返回私有字段供调用方读写），非缺陷。 -->
+    <Match>
+        <Bug pattern="REFLF_REFLECTION_MAY_INCREASE_ACCESSIBILITY_OF_FIELD"/>
+    </Match>
+
+</FindBugsFilter>

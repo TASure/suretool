@@ -21,7 +21,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.sure</groupId>
+    <groupId>io.github.tasure</groupId>
     <artifactId>suretool</artifactId>
     <version>0.1.0</version>
     <packaging>pom</packaging>
@@ -69,62 +69,62 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-json</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-http</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-crypto</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-cron</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-cache</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-xml</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-poi</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-captcha</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-jwt</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-dfa</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-all</artifactId>
                 <version>${project.version}</version>
             </dependency>

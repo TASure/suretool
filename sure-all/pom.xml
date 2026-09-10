@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.sure</groupId>
+        <groupId>io.github.tasure</groupId>
         <artifactId>suretool</artifactId>
         <version>0.1.0</version>
     </parent>
@@ -40,47 +40,47 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.sure</groupId>
+            <groupId>io.github.tasure</groupId>
             <artifactId>sure-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sure</groupId>
+            <groupId>io.github.tasure</groupId>
             <artifactId>sure-json</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sure</groupId>
+            <groupId>io.github.tasure</groupId>
             <artifactId>sure-http</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sure</groupId>
+            <groupId>io.github.tasure</groupId>
             <artifactId>sure-crypto</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sure</groupId>
+            <groupId>io.github.tasure</groupId>
             <artifactId>sure-cron</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sure</groupId>
+            <groupId>io.github.tasure</groupId>
             <artifactId>sure-cache</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sure</groupId>
+            <groupId>io.github.tasure</groupId>
             <artifactId>sure-xml</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sure</groupId>
+            <groupId>io.github.tasure</groupId>
             <artifactId>sure-poi</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sure</groupId>
+            <groupId>io.github.tasure</groupId>
             <artifactId>sure-captcha</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sure</groupId>
+            <groupId>io.github.tasure</groupId>
             <artifactId>sure-jwt</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sure</groupId>
+            <groupId>io.github.tasure</groupId>
             <artifactId>sure-dfa</artifactId>
         </dependency>
     </dependencies>

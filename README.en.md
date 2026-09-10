@@ -33,7 +33,7 @@ static utility methods to reduce boilerplate and lower development cost.
 <dependencyManagement>
     <dependencies>
         <dependency>
-            <groupId>com.sure</groupId>
+            <groupId>io.github.tasure</groupId>
             <artifactId>sure-bom</artifactId>
             <version>0.1.0</version>
             <type>pom</type>
@@ -43,7 +43,7 @@ static utility methods to reduce boilerplate and lower development cost.
 </dependencyManagement>
 
 <dependency>
-    <groupId>com.sure</groupId>
+    <groupId>io.github.tasure</groupId>
     <artifactId>sure-all</artifactId>
 </dependency>
 ```
@@ -52,15 +52,15 @@ Or import individual modules (lighter):
 
 ```xml
 <dependency>
-    <groupId>com.sure</groupId>
+    <groupId>io.github.tasure</groupId>
     <artifactId>sure-core</artifactId>
 </dependency>
 <dependency>
-    <groupId>com.sure</groupId>
+    <groupId>io.github.tasure</groupId>
     <artifactId>sure-json</artifactId>
 </dependency>
 <dependency>
-    <groupId>com.sure</groupId>
+    <groupId>io.github.tasure</groupId>
     <artifactId>sure-crypto</artifactId>
 </dependency>
 ```
@@ -86,21 +86,21 @@ mvn -pl sure-examples exec:java
 
 | Module | Coordinates | Capabilities | Runtime deps |
 | --- | --- | --- | --- |
-| `sure-core` | `com.sure:sure-core` | util/codec/collection/date/io/lang/bean/thread core domain | none |
-| `sure-json` | `com.sure:sure-json` | JSON parse/serialize/Bean conversion | core |
-| `sure-http` | `com.sure:sure-http` | HTTP client / URL utilities | core |
-| `sure-crypto` | `com.sure:sure-crypto` | Hash / AES / DES / RSA / HMAC | core |
-| `sure-cron` | `com.sure:sure-cron` | Cron expressions / scheduler | core |
-| `sure-cache` | `com.sure:sure-cache` | FIFO / LRU / LFU / Timed caches | core |
-| `sure-xml` | `com.sure:sure-xml` | XML to Map/Bean conversion | core |
-| `sure-poi` | `com.sure:sure-poi` | Excel / Word read & write | core + POI |
-| `sure-captcha` | `com.sure:sure-captcha` | Graphic captcha (line/circle/distortion) | none |
-| `sure-jwt` | `com.sure:sure-jwt` | JWT issue/verify (HS/RS) | core + crypto + json |
-| `sure-dfa` | `com.sure:sure-dfa` | Sensitive-word filtering (prefix tree / stop words) | none |
-| `sure-bom` | `com.sure:sure-bom` | BOM for unified version management | — |
-| `sure-all` | `com.sure:sure-all` | Aggregated module (everything) | all |
-| `sure-examples` | `com.sure:sure-examples` | Runnable demos (14 examples) | sure-all |
-| `sure-spring-boot-starter` | `com.sure:sure-spring-boot-starter` | Spring Boot auto-configuration entry | sure-all + spring-boot |
+| `sure-core` | `io.github.tasure:sure-core` | util/codec/collection/date/io/lang/bean/thread core domain | none |
+| `sure-json` | `io.github.tasure:sure-json` | JSON parse/serialize/Bean conversion | core |
+| `sure-http` | `io.github.tasure:sure-http` | HTTP client / URL utilities | core |
+| `sure-crypto` | `io.github.tasure:sure-crypto` | Hash / AES / DES / RSA / HMAC | core |
+| `sure-cron` | `io.github.tasure:sure-cron` | Cron expressions / scheduler | core |
+| `sure-cache` | `io.github.tasure:sure-cache` | FIFO / LRU / LFU / Timed caches | core |
+| `sure-xml` | `io.github.tasure:sure-xml` | XML to Map/Bean conversion | core |
+| `sure-poi` | `io.github.tasure:sure-poi` | Excel / Word read & write | core + POI |
+| `sure-captcha` | `io.github.tasure:sure-captcha` | Graphic captcha (line/circle/distortion) | none |
+| `sure-jwt` | `io.github.tasure:sure-jwt` | JWT issue/verify (HS/RS) | core + crypto + json |
+| `sure-dfa` | `io.github.tasure:sure-dfa` | Sensitive-word filtering (prefix tree / stop words) | none |
+| `sure-bom` | `io.github.tasure:sure-bom` | BOM for unified version management | — |
+| `sure-all` | `io.github.tasure:sure-all` | Aggregated module (everything) | all |
+| `sure-examples` | `io.github.tasure:sure-examples` | Runnable demos (14 examples) | sure-all |
+| `sure-spring-boot-starter` | `io.github.tasure:sure-spring-boot-starter` | Spring Boot auto-configuration entry | sure-all + spring-boot |
 
 Full class index: [docs/index.md](docs/index.md).
 

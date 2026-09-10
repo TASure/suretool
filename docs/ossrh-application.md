@@ -3,18 +3,12 @@
 发布到 Maven Central 需先在 Sonatype OSSRH 申请 groupId。
 本文件提供可直接复制到 [issues.sonatype.org](https://issues.sonatype.org) 新建 Issue 的工单内容。
 
-## 申请前须知（重要）
+## 已定稿方案（免证明）
 
-Sonatype 校验规则：**groupId 需能证明域名所有权**。
-
-| 方案 | groupId | 证明方式 | 适用 |
-| --- | --- | --- | --- |
-| **A（推荐，免证明）** | `io.github.tasure` | 无需额外证明，GitHub 用户名 `TASure` 即所有权证明（提交仓库链接即可） | 无 `sure.com` 域名时 |
-| B | `com.sure` | 需持有并验证 `sure.com` 域名（DNS/TXT 记录） | 持有该域名时 |
-
-> 若选方案 A，请同步修改根 pom 的 `<groupId>` 为 `io.github.tasure`（子模块自动继承），
-> 并全局替换 pom 内 `com.sure:sure-*` 依赖坐标。Java 包名 `com.sure.tool` 不变。
-> 修改方式：`git grep -l "com.sure" -- "*.xml"` 逐一替换后执行 `mvn -q verify` 回归。
+- **groupId**：`io.github.tasure`
+- **证明方式**：无需额外域名证明。GitHub 用户名 `TASure` 即所有权证明（提交本仓库链接即可）。
+- **坐标**：所有模块已统一切换为 `io.github.tasure:sure-*`（17 个 pom 已改，全量回归通过）；
+  Java 包名 `com.sure.tool` 保持不变（groupId 与包名相互独立）。
 
 ## 工单模板（复制到 JIRA）
 
@@ -29,7 +23,7 @@ Hi,
 
 I would like to publish an open-source Java utility library to Maven Central.
 
-- GroupId: <com.sure 或 io.github.tasure（见上述方案）>
+- GroupId: io.github.tasure
 - ArtifactId(s): sure-core, sure-json, sure-http, sure-crypto, sure-cron,
   sure-cache, sure-xml, sure-poi, sure-captcha, sure-jwt, sure-dfa,
   sure-bom, sure-all, sure-examples, sure-spring-boot-starter
@@ -39,8 +33,8 @@ I would like to publish an open-source Java utility library to Maven Central.
 - License: Apache License 2.0 (https://www.apache.org/licenses/LICENSE-2.0)
 - Publishing user: TASure
 - Do you have permission to publish to this groupId? Yes
-  (GitHub account TASure owns the repository TASure/suretool;
-   if groupId is com.sure, I own the domain sure.com and can verify ownership)
+  (GitHub account TASure owns the repository TASure/suretool, which
+   verifies ownership of the io.github.tasure groupId per Sonatype rules)
 
 This is a small-but-complete Java utility library for JDK 21+:
 secure-by-default crypto (AES-GCM, RSA-OAEP), zero-dependency core domain,

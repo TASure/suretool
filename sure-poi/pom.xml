@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.sure</groupId>
+        <groupId>io.github.tasure</groupId>
         <artifactId>suretool</artifactId>
         <version>0.1.0</version>
     </parent>
@@ -37,7 +37,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.sure</groupId>
+            <groupId>io.github.tasure</groupId>
             <artifactId>sure-core</artifactId>
         </dependency>
         <!-- poi-ooxml-full 聚合完整 schemas，poi-ooxml 提供 XSSF/XWPF 本体 -->

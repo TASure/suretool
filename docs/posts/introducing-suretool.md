@@ -58,7 +58,7 @@ switch 模式匹配、虚拟线程等特性，不需要为老版本做兼容体�
 <dependencyManagement>
     <dependencies>
         <dependency>
-            <groupId>com.sure</groupId>
+            <groupId>io.github.tasure</groupId>
             <artifactId>sure-bom</artifactId>
             <version>0.1.0</version>
             <type>pom</type>
@@ -68,7 +68,7 @@ switch 模式匹配、虚拟线程等特性，不需要为老版本做兼容体�
 </dependencyManagement>
 
 <dependency>
-    <groupId>com.sure</groupId>
+    <groupId>io.github.tasure</groupId>
     <artifactId>sure-core</artifactId>
 </dependency>
 ```

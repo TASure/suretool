@@ -30,7 +30,7 @@
 
 ## 提交前检查清单
 
-- [ ] 发布首个稳定版本到 Maven Central（`com.sure:sure-core` 等可搜索）
+- [ ] 发布首个稳定版本到 Maven Central（`io.github.tasure:sure-core` 等可搜索）
 - [ ] README 徽章：Maven Central 版本徽章、CI、覆盖率、CodeQL
 - [ ] 仓库有明确贡献指南（CONTRIBUTING.md）与行为准则（Code of Conduct）
 - [ ] GitHub Releases 含版本标签与 CHANGELOG 摘要

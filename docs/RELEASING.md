@@ -8,7 +8,7 @@
 - JDK 21+（`maven.compiler.release=21`）
 - Maven 3.9+
 - GPG 密钥对（用于制品签名）
-- Sonatype OSSRH 账号（suretool 的 `com.sure` groupId）
+- Sonatype OSSRH 账号（suretool 的 `io.github.tasure` groupId）
 
 ### 1.1 配置 `~/.m2/settings.xml`
 

@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.sure</groupId>
+        <groupId>io.github.tasure</groupId>
         <artifactId>suretool</artifactId>
         <version>0.1.0</version>
     </parent>
@@ -42,62 +42,62 @@
         <dependencies>
             <!-- suretool 全模块（版本统一由 ${project.version} 驱动） -->
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-json</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-http</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-crypto</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-cron</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-cache</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-xml</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-poi</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-captcha</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-jwt</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-dfa</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sure</groupId>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-all</artifactId>
                 <version>${project.version}</version>
             </dependency>

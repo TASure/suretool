@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.sure</groupId>
+        <groupId>io.github.tasure</groupId>
         <artifactId>suretool</artifactId>
         <version>0.1.0</version>
     </parent>
@@ -40,7 +40,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.sure</groupId>
+            <groupId>io.github.tasure</groupId>
             <artifactId>sure-all</artifactId>
         </dependency>
     </dependencies>

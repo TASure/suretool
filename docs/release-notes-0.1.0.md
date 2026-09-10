@@ -23,7 +23,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.sure</groupId>
+    <groupId>io.github.tasure</groupId>
     <artifactId>sure-all</artifactId>
     <version>0.1.0</version>
 </dependency>
@@ -53,7 +53,7 @@ String token = JwtUtil.createToken(Map.of("uid", 1001), "secret", 3600);
 
 ```xml
 <dependency>
-    <groupId>com.sure</groupId>
+    <groupId>io.github.tasure</groupId>
     <artifactId>sure-all</artifactId>
     <version>0.1.0</version>
 </dependency>

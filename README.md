@@ -24,7 +24,7 @@
 
 ```xml
 <dependency>
-    <groupId>com.sure</groupId>
+    <groupId>io.github.tasure</groupId>
     <artifactId>sure-all</artifactId>
     <version>0.1.0</version>
 </dependency>
@@ -34,12 +34,12 @@
 
 ```xml
 <dependency>
-    <groupId>com.sure</groupId>
+    <groupId>io.github.tasure</groupId>
     <artifactId>sure-core</artifactId>
     <version>0.1.0</version>
 </dependency>
 <dependency>
-    <groupId>com.sure</groupId>
+    <groupId>io.github.tasure</groupId>
     <artifactId>sure-json</artifactId>
     <version>0.1.0</version>
 </dependency>
@@ -51,7 +51,7 @@
 <dependencyManagement>
     <dependencies>
         <dependency>
-            <groupId>com.sure</groupId>
+            <groupId>io.github.tasure</groupId>
             <artifactId>sure-bom</artifactId>
             <version>0.1.0</version>
             <type>pom</type>
@@ -71,21 +71,21 @@ mvn clean install
 
 | 模块 | 坐标 | 能力 | 运行期依赖 |
 | --- | --- | --- | --- |
-| `sure-core` | `com.sure:sure-core` | util/codec/collection/date/io/lang/bean/thread 核心域 | 零依赖 |
-| `sure-json` | `com.sure:sure-json` | JSON 解析/序列化/Bean 互转 | core |
-| `sure-http` | `com.sure:sure-http` | HTTP 客户端/URL 工具 | core |
-| `sure-crypto` | `com.sure:sure-crypto` | 哈希/AES/DES/RSA/HMAC | core |
-| `sure-cron` | `com.sure:sure-cron` | Cron 表达式/调度器 | core |
-| `sure-cache` | `com.sure:sure-cache` | FIFO/LRU/LFU/Timed 缓存 | core |
-| `sure-xml` | `com.sure:sure-xml` | XML 与 Map/Bean 互转 | core |
-| `sure-poi` | `com.sure:sure-poi` | Excel/Word 读写 | core + POI |
-| `sure-captcha` | `com.sure:sure-captcha` | 图形验证码（线段/圆圈/扭曲） | 零依赖 |
-| `sure-jwt` | `com.sure:sure-jwt` | JWT 签发/校验（HS/RS） | core + crypto + json |
-| `sure-dfa` | `com.sure:sure-dfa` | 敏感词过滤（前缀树/停用词） | 零依赖 |
-| `sure-bom` | `com.sure:sure-bom` | BOM 统一版本管理 | — |
-| `sure-all` | `com.sure:sure-all` | 聚合模块（全部） | 全部 |
-| `sure-examples` | `com.sure:sure-examples` | 可运行示例（14 个 Demo） | sure-all |
-| `sure-spring-boot-starter` | `com.sure:sure-spring-boot-starter` | Spring Boot 自动装配入口 | sure-all + spring-boot |
+| `sure-core` | `io.github.tasure:sure-core` | util/codec/collection/date/io/lang/bean/thread 核心域 | 零依赖 |
+| `sure-json` | `io.github.tasure:sure-json` | JSON 解析/序列化/Bean 互转 | core |
+| `sure-http` | `io.github.tasure:sure-http` | HTTP 客户端/URL 工具 | core |
+| `sure-crypto` | `io.github.tasure:sure-crypto` | 哈希/AES/DES/RSA/HMAC | core |
+| `sure-cron` | `io.github.tasure:sure-cron` | Cron 表达式/调度器 | core |
+| `sure-cache` | `io.github.tasure:sure-cache` | FIFO/LRU/LFU/Timed 缓存 | core |
+| `sure-xml` | `io.github.tasure:sure-xml` | XML 与 Map/Bean 互转 | core |
+| `sure-poi` | `io.github.tasure:sure-poi` | Excel/Word 读写 | core + POI |
+| `sure-captcha` | `io.github.tasure:sure-captcha` | 图形验证码（线段/圆圈/扭曲） | 零依赖 |
+| `sure-jwt` | `io.github.tasure:sure-jwt` | JWT 签发/校验（HS/RS） | core + crypto + json |
+| `sure-dfa` | `io.github.tasure:sure-dfa` | 敏感词过滤（前缀树/停用词） | 零依赖 |
+| `sure-bom` | `io.github.tasure:sure-bom` | BOM 统一版本管理 | — |
+| `sure-all` | `io.github.tasure:sure-all` | 聚合模块（全部） | 全部 |
+| `sure-examples` | `io.github.tasure:sure-examples` | 可运行示例（14 个 Demo） | sure-all |
+| `sure-spring-boot-starter` | `io.github.tasure:sure-spring-boot-starter` | Spring Boot 自动装配入口 | sure-all + spring-boot |
 
 ### 模块与工具类
 

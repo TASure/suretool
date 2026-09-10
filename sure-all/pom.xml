@@ -15,6 +15,11 @@
     <name>suretool-all</name>
     <description>聚合模块：一个依赖引入全部工具域（等价旧版 suretool 单模块）。</description>
 
+    <properties>
+        <!-- 聚合包无源码，不参与 JaCoCo 覆盖率门禁 -->
+        <jacoco.skip>true</jacoco.skip>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.sure</groupId>

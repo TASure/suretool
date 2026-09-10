@@ -12,7 +12,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [17, 21]
+        # JDK8 验证 Java 8 兼容性（source/target 8），JDK17/21 验证高版本双跑与 release 字节码
+        java: [8, 17, 21]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,7 +28,9 @@ jobs:
       - name: Build, test and verify
         run: mvn -B verify
 
+      # 覆盖率上报只在单一 JDK 上执行，避免重复上传
       - name: Upload JaCoCo coverage report
+        if: matrix.java == '17'
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report-jdk${{ matrix.java }}
@@ -42,6 +45,7 @@ jobs:
             sure-poi/target/site/jacoco
 
       - name: Upload coverage to Codecov
+        if: matrix.java == '17'
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

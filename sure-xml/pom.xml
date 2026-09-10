@@ -13,6 +13,9 @@
     <artifactId>sure-xml</artifactId>
     <packaging>jar</packaging>
     <name>suretool-xml</name>
+    <properties>
+        <jacoco.line.min>0.80</jacoco.line.min>
+    </properties>
     <description>XML 域：Map/Bean 互转，基于 JDK DOM，零第三方依赖。</description>
 
     <dependencies>

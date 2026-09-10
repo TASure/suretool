@@ -13,6 +13,9 @@
     <artifactId>sure-poi</artifactId>
     <packaging>jar</packaging>
     <name>suretool-poi</name>
+    <properties>
+        <jacoco.line.min>0.88</jacoco.line.min>
+    </properties>
     <description>Office 域：Excel/Word 读写，基于 Apache POI。</description>
 
     <dependencies>

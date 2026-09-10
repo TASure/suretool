@@ -13,6 +13,9 @@
     <artifactId>sure-json</artifactId>
     <packaging>jar</packaging>
     <name>suretool-json</name>
+    <properties>
+        <jacoco.line.min>0.63</jacoco.line.min>
+    </properties>
     <description>零依赖 JSON 解析与序列化。</description>
 
     <dependencies>

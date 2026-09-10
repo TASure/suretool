@@ -22,15 +22,19 @@
         <module>sure-cache</module>
         <module>sure-xml</module>
         <module>sure-poi</module>
+        <module>sure-benchmark</module>
         <module>sure-all</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.release>8</maven.compiler.release>
         <junit.version>4.13.2</junit.version>
         <poi.version>5.5.1</poi.version>
+        <jmh.version>1.37</jmh.version>
+        <hutool.version>5.8.32</hutool.version>
+        <!-- JaCoCo 行覆盖率门禁下限（各模块在自身 pom 中覆盖，见 ROADMAP P2） -->
+        <jacoco.line.min>0.70</jacoco.line.min>
     </properties>
 
     <dependencyManagement>
@@ -91,6 +95,27 @@
                 <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.openjdk.jmh</groupId>
+                <artifactId>jmh-core</artifactId>
+                <version>${jmh.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openjdk.jmh</groupId>
+                <artifactId>jmh-generator-annprocess</artifactId>
+                <version>${jmh.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-core</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-json</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -135,6 +160,27 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>jacoco-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>BUNDLE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>${jacoco.line.min}</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <!-- 编码规范检查（配置相对多模块根目录解析） -->
@@ -147,6 +193,13 @@
                     <consoleOutput>true</consoleOutput>
                     <failOnViolation>true</failOnViolation>
                     <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                    <!-- 只检查源码目录，排除 target/generated-sources（JMH 注解处理器生成代码等） -->
+                    <sourceDirectories>
+                        <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
+                    </sourceDirectories>
+                    <testSourceDirectories>
+                        <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
+                    </testSourceDirectories>
                 </configuration>
                 <executions>
                     <execution>
@@ -160,4 +213,27 @@
             </plugin>
         </plugins>
     </build>
+
+    <!-- JDK8 用 source/target（release 参数在 JDK8 不可用）；JDK9+ 用 release 锁定字节码 8 -->
+    <profiles>
+        <profile>
+            <id>jdk8</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.source>8</maven.compiler.source>
+                <maven.compiler.target>8</maven.compiler.target>
+            </properties>
+        </profile>
+        <profile>
+            <id>jdk9plus</id>
+            <activation>
+                <jdk>[9,)</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.release>8</maven.compiler.release>
+            </properties>
+        </profile>
+    </profiles>
 </project>

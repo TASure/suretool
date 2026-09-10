@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.sure</groupId>
+        <artifactId>suretool</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>sure-benchmark</artifactId>
+    <packaging>jar</packaging>
+    <name>suretool-benchmark</name>
+    <description>JMH 基准套件：suretool 与 Hutool / JDK 基线的性能对比（不参与测试与覆盖率门禁，仅编译验证）。</description>
+
+    <properties>
+        <!-- 基准模块无测试与覆盖率数据，不参与 JaCoCo 门禁 -->
+        <jacoco.skip>true</jacoco.skip>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.sure</groupId>
+            <artifactId>sure-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sure</groupId>
+            <artifactId>sure-json</artifactId>
+        </dependency>
+        <!-- JMH 基准框架 -->
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- 对比对象：Hutool（仅基准模块引入，不影响主库零依赖承诺） -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-core</artifactId>
+        </dependency>
+        <!-- Hutool 5.x 的 JSON 位于独立 hutool-json 模块 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-json</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.openjdk.jmh</groupId>
+                            <artifactId>jmh-generator-annprocess</artifactId>
+                            <version>${jmh.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <!-- 运行入口：mvn -pl sure-benchmark exec:java -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>com.sure.tool.benchmark.BenchmarkRunner</mainClass>
+                </configuration>
+            </plugin>
+            <!-- 可执行 fat jar：java -jar sure-benchmark/target/sure-benchmark-*-jar-with-dependencies.jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>sure-benchmark-${project.version}-jar-with-dependencies</finalName>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.sure.tool.benchmark.BenchmarkRunner</mainClass>
+                                </transformer>
+                            </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

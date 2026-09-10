@@ -6,6 +6,7 @@ package com.sure.tool.util;
  * <p>提供字符分类判断、空白判断等静态方法。</p>
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class CharUtil {
 

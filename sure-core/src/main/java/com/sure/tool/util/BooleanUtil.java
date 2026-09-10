@@ -6,6 +6,7 @@ package com.sure.tool.util;
  * <p>支持多种字符串形式解析布尔值。</p>
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class BooleanUtil {
 

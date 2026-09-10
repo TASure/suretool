@@ -71,5 +71,9 @@
             <groupId>com.sure</groupId>
             <artifactId>sure-poi</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.sure</groupId>
+            <artifactId>sure-captcha</artifactId>
+        </dependency>
     </dependencies>
 </project>

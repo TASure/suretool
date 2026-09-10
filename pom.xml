@@ -39,6 +39,7 @@
         <module>sure-cache</module>
         <module>sure-xml</module>
         <module>sure-poi</module>
+        <module>sure-captcha</module>
         <module>sure-benchmark</module>
         <module>sure-all</module>
     </modules>
@@ -96,6 +97,11 @@
             <dependency>
                 <groupId>com.sure</groupId>
                 <artifactId>sure-poi</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sure</groupId>
+                <artifactId>sure-captcha</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

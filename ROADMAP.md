@@ -71,7 +71,7 @@
 - [x] `ThreadUtil`：execAsync、sleep、线程工厂、共享守护线程池
 - [x] `ExecutorBuilder`：参数化线程池构建器（队列/线程名/拒绝策略）
 - [x] `SyncFinisher`：多线程任务并发与汇总（异常传播）
-- [ ] `LockUtil`（可选）：读写锁便捷封装
+- [x] `LockUtil`：读写锁便捷封装（P3 第一轮补齐）
 
 #### 5. 加密安全域 ✅
 - [x] `SecureUtil`：哈希（MD5/SHA1/SHA256/SHA512）+ AES/DES/RSA/HMAC 一键加解密门面 + 随机密钥
@@ -98,7 +98,7 @@
 - [x] `StrJoiner`：分隔符/前缀/后缀拼接器（null 跳过、空内容返回空串）
 - [x] `CsvUtil`：CSV 读写（引号包裹、引号内逗号、双引号转义）
 - [x] `XmlUtil`：Map/Bean ↔ XML（JDK DOM、转义、同名元素转 List）
-- [ ] 延后项：`CaseInsensitiveMap`/`OrderedMap`/`StrSplitter`（P2 补）
+- [x] 延后项：`CaseInsensitiveMap`/`OrderedMap`/`StrSplitter`（P3 第一轮补齐）
 
 **P1 验收 ✅**：新增 47 个主类（初版 26 → 73）、测试 238 个全绿、指令覆盖率 73.5%（core 域）、`mvn verify` 全绿 + 0 Checkstyle 违规、README 模块表与示例就绪。
 
@@ -114,6 +114,12 @@
 - [x] API 稳定性：全部 76 个主类 `@since 0.1.0` 标注、破坏性变更进 minor 版本、`@deprecated` 流程（见 CONTRIBUTING「API 稳定性约定」）
 
 ### P3 发布与生态（3-6 个月）
+
+**P3 第一轮 · 新功能域（对齐 Hutool 高频能力，持续）**
+- [x] `sure-captcha` 模块：`LineCaptcha`/`CircleCaptcha`/`ShearCaptcha` + `CaptchaUtil` 门面（纯 JDK AWT 图形验证码、无头环境兼容、零第三方依赖，对齐 Hutool captcha）
+- [ ] `sure-jwt`：JWT 令牌签发/校验（基于 sure-crypto HMAC/RSA，纯 JDK）
+- [ ] `sure-http` 链式封装：`HttpRequest`/`HttpResponse`（补齐 P1 遗留）
+- [ ] `sure-dfa`：敏感词过滤（前缀树，纯 JDK）
 
 - [ ] Maven Central 发布：OSSRH 账号 + GPG 签名 + `maven-central` 插件流水线
 - [ ] 文档站上线（GitHub Pages 或独立域名）：类索引 + 每类示例 + 快速上手

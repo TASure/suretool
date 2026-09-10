@@ -46,3 +46,24 @@ suretool 作为可被其他项目引用的 Java 工具库，将安全视为最�
 ## 公告渠道
 
 安全更新随版本发布同步说明（GitHub Releases + CHANGELOG）。
+
+## 依赖漏洞应急响应（SOP）
+
+当 Dependabot / CodeQL / 安全公告触发漏洞告警时，维护者按以下顺序处置：
+
+| 步骤 | 动作 | 时限 |
+| --- | --- | --- |
+| 1 | 确认影响面：该依赖是否进入运行期制品（区分 compile / test / optional 作用域） | 24h |
+| 2 | 评估可利用性：结合 suretool 调用链判断是否可达（加密 / HTTP / 输入解析面优先） | 24h |
+| 3 | 修复：升级到修复版本或移除受影响依赖；API 变化时同步更新模块与文档 | 48h |
+| 4 | 回归：`mvn verify` 全量门禁（Checkstyle / SpotBugs / JaCoCo / License） | 修复后立即 |
+| 5 | 发布：按 RELEASING.md 发布补丁版本 | 高危 7 天内 |
+| 6 | 披露：GitHub Release + CHANGELOG +（如适用）CVE 引用 | 发布时同步 |
+
+测试 / 可选作用域依赖告警可降级处理，但须在对应 PR 中注明"不受影响"的理由，便于审计。
+
+## 持续安全扫描
+
+- **CodeQL**：push / PR / 每周定时扫描（`security-and-quality` 查询集），告警须在合入前清零；
+- **Dependabot**：Maven 与 GitHub Actions 依赖每周自动检查并生成升级 PR；
+- **覆盖率门禁**：业务模块行覆盖率 ≥ 85%，防止安全相关代码"裸奔"。

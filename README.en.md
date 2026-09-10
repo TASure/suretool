@@ -118,6 +118,10 @@ Full class index: [docs/index.md](docs/index.md).
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). All PRs must pass: Checkstyle 0 violations, SpotBugs, JaCoCo ≥ 85% (business modules), license headers.
 
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) (Contributor Covenant 2.1)
+- [SECURITY.md](SECURITY.md) (report a vulnerability; 24h acknowledgment, 72h assessment)
+- Security scanning: CodeQL on push/PR/weekly + Dependabot auto-updates
+
 ## License
 
 [Apache License 2.0](LICENSE). Design and API naming reference [Hutool](https://gitee.com/chinabugotech/hutool) (also Apache-2.0); implementation ideas are credited in class-level Javadoc where applicable.

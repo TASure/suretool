@@ -33,3 +33,8 @@ target/
 .classpath
 .project
 .settings/
+
+# Maven shade 生成物
+dependency-reduced-pom.xml
+# 本地构建产物
+*.log

@@ -12,6 +12,7 @@ import com.sure.tool.io.FileUtil;
  * CSV 读写工具类（最小实现），支持引号包裹、引号内逗号与双引号转义，参考 Hutool 的 {@code CsvUtil} 设计。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class CsvUtil {
 

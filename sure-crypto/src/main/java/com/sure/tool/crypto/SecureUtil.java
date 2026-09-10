@@ -122,23 +122,27 @@ public class SecureUtil {
 	}
 
 	/**
-	 * DES 加密为十六进制。
+	 * DES 加密为十六进制（仅用于兼容旧系统，新项目勿用）。
 	 *
 	 * @param data 明文
 	 * @param key  密钥
 	 * @return 十六进制密文
+	 * @deprecated 不安全算法（DES），仅兼容旧系统，新代码请使用 {@link #aesEncryptHex(String, String)}
 	 */
+	@Deprecated
 	public static String desEncryptHex(String data, String key) {
 		return DesUtil.encryptHex(data, key);
 	}
 
 	/**
-	 * DES 解密十六进制密文。
+	 * DES 解密十六进制密文（仅用于兼容旧系统，新项目勿用）。
 	 *
 	 * @param hex 十六进制密文
 	 * @param key 密钥
 	 * @return 明文
+	 * @deprecated 不安全算法（DES），仅兼容旧系统，新代码请使用 {@link #aesDecryptHex(String, String)}
 	 */
+	@Deprecated
 	public static String desDecryptHex(String hex, String key) {
 		return DesUtil.decryptHex(hex, key);
 	}

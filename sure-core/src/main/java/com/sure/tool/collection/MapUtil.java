@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Map 工具类，参考 Hutool 的 {@code MapUtil} 设计。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class MapUtil {
 

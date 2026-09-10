@@ -6,6 +6,7 @@ package com.sure.tool.collection;
  * {@code null} 值默认跳过；无内容时 {@link #toString()} 返回空串。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class StrJoiner {
 

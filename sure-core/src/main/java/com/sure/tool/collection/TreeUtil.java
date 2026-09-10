@@ -10,6 +10,7 @@ import java.util.function.Consumer;
  * 树结构工具类：从扁平节点列表构建树、遍历、深度计算，参考 Hutool 的 {@code TreeUtil} 设计。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class TreeUtil {
 

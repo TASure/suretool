@@ -5,6 +5,7 @@ package com.sure.tool.util;
  * 转义 {@code & < > " '} 五个特殊字符，防止 HTML 注入与内容破坏。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class EscapeUtil {
 

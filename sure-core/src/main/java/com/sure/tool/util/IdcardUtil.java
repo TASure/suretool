@@ -7,6 +7,7 @@ import com.sure.tool.lang.PatternPool;
  * 支持合法性校验、15 位转 18 位、出生日期与性别解析。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class IdcardUtil {
 

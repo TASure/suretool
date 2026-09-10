@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * ID 生成工具类，参考 Hutool 的 {@code IdUtil} 设计。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class IdUtil {
 

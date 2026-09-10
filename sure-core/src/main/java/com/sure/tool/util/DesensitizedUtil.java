@@ -4,6 +4,7 @@ package com.sure.tool.util;
  * 数据脱敏工具类，参考 Hutool 的 {@code DesensitizedUtil} 设计。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class DesensitizedUtil {
 

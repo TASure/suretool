@@ -4,6 +4,7 @@
 
 ## 项目约定
 
+- **环境要求**：JDK 21+（项目基线，`maven.compiler.release=21`，CI 在 JDK 21/25 上验证；写法自由使用 JDK21 特性，不考虑低版本兼容）。
 - **包结构**：所有工具类位于 `com.sure.tool.*`，按能力域分包（`util/codec/collection/date/io/lang` 等）。
 - **命名**：工具类统一 `XxxUtil` 命名，全部方法为 `public static`，类提供私有构造器。
 - **设计原则**：参考 [Hutool](https://doc.hutool.cn/pages/index/) 的静态方法封装风格，但：

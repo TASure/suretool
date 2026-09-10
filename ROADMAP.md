@@ -110,7 +110,7 @@
 - [x] CI 多模块化：JaCoCo 报告与 Codecov 上传按模块路径聚合
 - [x] JaCoCo 覆盖率门禁：各模块行覆盖率下限按当前基线设保护线（core 71% / json 63% / http 86% / crypto 78% / cron 93% / cache 75% / xml 80% / poi 88%），目标 85% 随测试补强逐步收紧
 - [x] JMH 基准套件：StrUtil/集合/日期/JSON 对比 Hutool 与 JDK 基线（`sure-benchmark` 模块，见「JMH 基准报告」）
-- [x] Java 8 兼容性验证：`maven.compiler.release=8`（JDK9+）/ `source=8 target=8`（JDK8 profile 自动切换）+ CI JDK 8/17/21 三版本矩阵
+- [x] 基线决策（2026-09-10）：仅支持 JDK21+，`maven.compiler.release=21`，CI 矩阵 JDK 21/25 双跑；写法自由使用 JDK21 特性（record/密封类/虚拟线程等），不考虑低版本兼容
 - [x] API 稳定性：全部 76 个主类 `@since 0.1.0` 标注、破坏性变更进 minor 版本、`@deprecated` 流程（见 CONTRIBUTING「API 稳定性约定」）
 
 ### P3 发布与生态（3-6 个月）
@@ -135,6 +135,44 @@
 - [ ] GitHub 运营：`awesome-java` 提交、技术周刊自荐、star 里程碑发文
 - [ ] 关键词 SEO：`suretool` 搜索占位、文档站被收录
 - [ ] 远期（可选）：IDEA 插件（代码片段/文档内联）、vscode 片段
+
+### P5 开源卓越（Open Source Excellence，成为可信赖组件的硬要求）
+
+**A 安全与可信（可被企业/社区放心引用）**
+- [x] Dependabot 依赖自动更新（已启用，log4j 等安全版本收敛）
+- [x] CodeQL 代码扫描（0 Open / 15 Closed，2026-09-10）
+- [x] Secret scanning（GitHub 默认开启）
+- [x] 加密现代化：AES-GCM+随机IV / RSA-OAEP-2048 / DES 标记废弃
+- [x] SECURITY.md 真实安全策略（支持版本表 + 上报渠道 + 响应承诺）
+- [ ] License 合规：第三方依赖清单 + NOTICE 文件（POI / log4j-test / JMH / Hutool-benchmark）
+- [ ] GPG 签名发布 + SBOM（CycloneDX）随发布生成
+
+**B 工程质量（可复现、可验证）**
+- [x] CI 双矩阵：JDK 21（LTS）/ 25 全量 `mvn verify`
+- [x] 三重门禁：Checkstyle（0 违规）/ SpotBugs（Max 力度 / Medium 阈值）/ License 头校验
+- [x] 326 个单元测试全绿（31 个测试类）
+- [x] JMH 基准：14 项对比 13 项不慢于 Hutool（见「JMH 基准报告」）
+- [ ] 覆盖率收紧：全模块行覆盖率 ≥ 85%（当前 63%-93%）
+- [ ] JSON 解析 fuzz 测试（畸形输入 / 深度嵌套 / 超大数值）
+
+**C 发布与分发（可被一键引入）**
+- [x] 多模块 + sure-all 聚合 + sure-bom 统一版本管理
+- [ ] Maven Central 发布（OSSRH + GPG + maven-central 插件流水线）
+- [ ] CHANGELOG.md（Keep a Changelog 规范，随版本维护）
+- [ ] 发布前自动化清单（版本核对 / 测试 / 覆盖率 / 签名 / 仓库同步）
+
+**D 文档与上手（降低试用门槛）**
+- [x] README 完整门面（徽章 / 快速开始 / 模块表 / 工具类表）
+- [x] CONTRIBUTING.md 贡献指南（含 JDK21+ 环境要求）
+- [ ] 文档站（GitHub Pages）：类索引 + 每类示例
+- [ ] 示例仓库：10+ 个真实场景 Demo
+- [ ] Spring Boot starter（`suretool-spring-boot-starter`）
+
+**E 社区与影响力（长期运营）**
+- [ ] issue SLA：48h 首次响应
+- [ ] 技术内容：掘金 / CSDN / 知乎系列文章
+- [ ] awesome-java 提交 + 技术周刊自荐
+- [ ] 对比测评：与 Hutool API 对照表 + 性能报告（数据透明、不贬低）
 
 ---
 

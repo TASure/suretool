@@ -4,13 +4,13 @@
 ![Coverage](https://img.shields.io/codecov/c/github/TASure/suretool)
 ![Release](https://img.shields.io/github/v/release/TASure/suretool)
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue)
-![Java](https://img.shields.io/badge/Java-8+-orange)
+![Java](https://img.shields.io/badge/Java-21+-blue)
 ![Stars](https://img.shields.io/github/stars/TASure/suretool)
 
 一个**小而全**的 Java 工具类库，参考 [Hutool](https://doc.hutool.cn/pages/index/) 的设计理念，通过静态方法封装常用 JDK API，减少重复造轮子、降低开发成本。
 
 - 包前缀：`com.sure.tool`
-- 语言：Java 8+（核心域零第三方运行期依赖；Office 域基于 Apache POI 5.5.1）
+- 语言：Java 21+（核心域零第三方运行期依赖；Office 域基于 Apache POI 5.5.1）
 - 许可：Apache License 2.0
 
 ## 快速开始
@@ -155,7 +155,7 @@ mvn clean install
 | | `HttpRequest` | 链式 HTTP 请求（query/表单/body/超时/重定向） |
 | | `HttpResponse` | 链式 HTTP 响应（状态/头/字符集解析） |
 | `com.sure.tool.crypto` | `SecureUtil` | 安全门面：哈希/AES/DES/RSA/HMAC/随机密钥 |
-| | `AesUtil` | AES-CBC 加解密（hex/Base64 双输出） |
+| | `AesUtil` | AES-GCM 加解密（随机 IV，hex/Base64 双输出） |
 | | `DesUtil` | DES 加解密（兼容旧系统） |
 | | `RsaUtil` | RSA 密钥对生成/加解密/密钥序列化 |
 | | `HmacUtil` | HMAC-MD5/SHA1/SHA256/SHA512 |

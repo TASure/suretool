@@ -4,6 +4,7 @@ package com.sure.tool.xml;
  * XML 处理异常。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class XmlException extends RuntimeException {
 

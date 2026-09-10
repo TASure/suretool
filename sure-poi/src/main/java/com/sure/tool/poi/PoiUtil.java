@@ -12,6 +12,7 @@ import org.apache.poi.ss.usermodel.Workbook;
  * POI 通用门面：工作簿/行/单元格的容错访问与类型感知取值，参考 Hutool 的 {@code PoiUtil} 设计。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class PoiUtil {
 

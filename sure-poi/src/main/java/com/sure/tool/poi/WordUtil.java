@@ -19,6 +19,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTableRow;
  * 读取支持段落与表格文本提取；写入支持单段/多段简单文档。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class WordUtil {
 

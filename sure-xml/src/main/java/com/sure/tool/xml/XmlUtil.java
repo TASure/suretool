@@ -30,6 +30,7 @@ import com.sure.tool.bean.BeanUtil;
  * 仅支持元素层级与文本内容（忽略属性）；同名兄弟元素解析为 List。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class XmlUtil {
 

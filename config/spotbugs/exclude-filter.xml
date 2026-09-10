@@ -40,4 +40,12 @@
         <Bug pattern="REFLF_REFLECTION_MAY_INCREASE_ACCESSIBILITY_OF_FIELD"/>
     </Match>
 
+    <!-- JWT 的 header/payload 返回可变 JSON 模型（EI_EXPOSE_REP）：
+         JSONObject 为工具库自带可变模型，getPayload()/getHeader() 供调用方继续读写 claim，
+         与 Hutool JWT.getPayload 行为一致；setKey(byte[]) 已做防御性拷贝，不在此排除。 -->
+    <Match>
+        <Class name="com.sure.tool.jwt.JWT"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+
 </FindBugsFilter>

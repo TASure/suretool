@@ -40,6 +40,7 @@
         <module>sure-xml</module>
         <module>sure-poi</module>
         <module>sure-captcha</module>
+        <module>sure-jwt</module>
         <module>sure-benchmark</module>
         <module>sure-all</module>
     </modules>
@@ -102,6 +103,11 @@
             <dependency>
                 <groupId>com.sure</groupId>
                 <artifactId>sure-captcha</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sure</groupId>
+                <artifactId>sure-jwt</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

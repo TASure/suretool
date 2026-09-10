@@ -117,7 +117,7 @@
 
 **P3 第一轮 · 新功能域（对齐 Hutool 高频能力，持续）**
 - [x] `sure-captcha` 模块：`LineCaptcha`/`CircleCaptcha`/`ShearCaptcha` + `CaptchaUtil` 门面（纯 JDK AWT 图形验证码、无头环境兼容、零第三方依赖，对齐 Hutool captcha）
-- [ ] `sure-jwt`：JWT 令牌签发/校验（基于 sure-crypto HMAC/RSA，纯 JDK）
+- [x] `sure-jwt`：JWT 令牌签发/校验（HS256/HS384/HS512/RS256，基于 sure-crypto 与 sure-json，纯 JDK）
 - [ ] `sure-http` 链式封装：`HttpRequest`/`HttpResponse`（补齐 P1 遗留）
 - [ ] `sure-dfa`：敏感词过滤（前缀树，纯 JDK）
 

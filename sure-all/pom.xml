@@ -75,5 +75,9 @@
             <groupId>com.sure</groupId>
             <artifactId>sure-captcha</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.sure</groupId>
+            <artifactId>sure-jwt</artifactId>
+        </dependency>
     </dependencies>
 </project>

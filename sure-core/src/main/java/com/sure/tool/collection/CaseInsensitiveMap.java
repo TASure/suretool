@@ -69,7 +69,7 @@ public class CaseInsensitiveMap<K, V> extends LinkedHashMap<K, V> {
 		if (map == null) {
 			return;
 		}
-		for (Entry<? extends K, ? extends V> entry : map.entrySet()) {
+		for (Map.Entry<? extends K, ? extends V> entry : map.entrySet()) {
 			put(entry.getKey(), entry.getValue());
 		}
 	}

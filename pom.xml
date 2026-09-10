@@ -60,6 +60,8 @@
         <jacoco.line.min>0.70</jacoco.line.min>
         <!-- SpotBugs 静态扫描：默认开启，无源码模块（sure-all 等）在自身 pom 覆盖为 true -->
         <spotbugs.skip>false</spotbugs.skip>
+        <!-- 字节码目标：suretool 仅支持 JDK21+（见 README「环境要求」与 ROADMAP 开源治理） -->
+        <maven.compiler.release>21</maven.compiler.release>
     </properties>
 
     <dependencyManagement>
@@ -308,27 +310,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <!-- JDK8 用 source/target（release 参数在 JDK8 不可用）；JDK9+ 用 release 锁定字节码 8 -->
-    <profiles>
-        <profile>
-            <id>jdk8</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <properties>
-                <maven.compiler.source>8</maven.compiler.source>
-                <maven.compiler.target>8</maven.compiler.target>
-            </properties>
-        </profile>
-        <profile>
-            <id>jdk9plus</id>
-            <activation>
-                <jdk>[9,)</jdk>
-            </activation>
-            <properties>
-                <maven.compiler.release>8</maven.compiler.release>
-            </properties>
-        </profile>
-    </profiles>
 </project>

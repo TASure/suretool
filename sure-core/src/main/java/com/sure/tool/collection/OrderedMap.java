@@ -84,7 +84,7 @@ public class OrderedMap<K, V> extends LinkedHashMap<K, V> {
 	 *
 	 * @return 第一个键值对或 {@code null}
 	 */
-	public Entry<K, V> removeFirst() {
+	public Map.Entry<K, V> removeFirst() {
 		if (isEmpty()) {
 			return null;
 		}
@@ -97,7 +97,7 @@ public class OrderedMap<K, V> extends LinkedHashMap<K, V> {
 	 *
 	 * @return 最后一个键值对或 {@code null}
 	 */
-	public Entry<K, V> removeLast() {
+	public Map.Entry<K, V> removeLast() {
 		if (isEmpty()) {
 			return null;
 		}

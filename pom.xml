@@ -54,6 +54,8 @@
         <poi.version>5.5.1</poi.version>
         <jmh.version>1.37</jmh.version>
         <hutool.version>5.8.32</hutool.version>
+        <!-- 安全版本基线：log4j-core < 2.25.4 存在 CVE-2026-34477/34478/34480（TLS 主机名验证绕过/日志注入），测试日志后端随本版本升级 -->
+        <log4j.version>2.25.4</log4j.version>
         <!-- JaCoCo 行覆盖率门禁下限（各模块在自身 pom 中覆盖，见 ROADMAP P2） -->
         <jacoco.line.min>0.70</jacoco.line.min>
         <!-- SpotBugs 静态扫描：默认开启，无源码模块（sure-all 等）在自身 pom 覆盖为 true -->
@@ -126,6 +128,12 @@
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi-ooxml</artifactId>
                 <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>

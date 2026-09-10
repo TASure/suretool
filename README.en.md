@@ -16,7 +16,7 @@ static utility methods to reduce boilerplate and lower development cost.
 - Package prefix: `com.sure.tool`
 - Language level: **Java 21+** (zero third-party runtime dependencies in the core domain; Office domain is built on Apache POI 5.5.1)
 - License: Apache License 2.0
-- Docs: [Class index](docs/index.md) · [Hutool comparison](docs/comparison-hutool.md) · [Releasing](docs/RELEASING.md) · [Maintaining](docs/MAINTAINING.md)
+- Docs: [Class index](docs/index.md) · [Hutool comparison](docs/comparison-hutool.md) · [Releasing](docs/RELEASING.md) · [Maintaining](docs/MAINTAINING.md) · [GitHub setup](docs/github-setup.md)
 
 ## Why suretool?
 

@@ -4,6 +4,7 @@ package com.sure.tool.json;
  * JSON 解析或序列化异常。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class JSONException extends RuntimeException {
 

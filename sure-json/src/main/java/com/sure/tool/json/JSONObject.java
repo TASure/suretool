@@ -9,6 +9,7 @@ import com.sure.tool.bean.BeanUtil;
  * JSON 对象，继承 {@link LinkedHashMap} 保证顺序，提供链式设置与类型化读取，参考 Hutool 的 {@code JSONObject} 设计。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class JSONObject extends LinkedHashMap<String, Object> {
 

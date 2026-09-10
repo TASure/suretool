@@ -7,6 +7,7 @@ import java.util.Collection;
  * JSON 数组，继承 {@link ArrayList}，提供类型化读取，参考 Hutool 的 {@code JSONArray} 设计。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class JSONArray extends ArrayList<Object> {
 

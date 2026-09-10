@@ -1,0 +1,43 @@
+# Dependabot 自动依赖升级
+# 覆盖范围：Maven 依赖（根 pom + 各模块 pom）
+# 策略：每周一检查；按版本类型分组 PR；避免主版本突变自动合入
+
+version: 2
+updates:
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "Asia/Shanghai"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+    groups:
+      # 补丁级升级合并为单个 PR（低风险）
+      maven-patch:
+        applies-to: version-updates
+        update-types:
+          - "patch"
+      # 次要版本升级合并为单个 PR（需复核但风险可控）
+      maven-minor:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+    ignore:
+      # JDK21+ 基线：拒绝依赖强制要求更高 JDK 的激进升级由 CI 门禁兜底，
+      # 这里仅忽略已知与 license/构建插件冲突的旧条目（按需维护）
+      - dependency-name: "org.apache.maven.plugins:*"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "Asia/Shanghai"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "ci"

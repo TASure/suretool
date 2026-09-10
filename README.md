@@ -253,6 +253,13 @@ mvn clean install
 
 本项目的 API 设计参考 [Hutool](https://doc.hutool.cn/pages/index/)（[Gitee 仓库](https://gitee.com/chinabugotech/hutool)），实现为独立编写的原始代码，无代码复制。
 
+## 贡献与安全
+
+- 贡献指南：[CONTRIBUTING.md](CONTRIBUTING.md)（环境要求 / PR 流程 / 门禁标准）
+- 行为准则：[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)（Contributor Covenant 2.1）
+- 安全策略：[SECURITY.md](SECURITY.md)（漏洞报告与响应承诺 24h）
+- 安全扫描：CodeQL（push/PR/每周）+ Dependabot 自动依赖升级
+
 ## License
 
 [Apache License 2.0](LICENSE)

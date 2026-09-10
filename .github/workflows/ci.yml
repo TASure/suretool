@@ -46,6 +46,9 @@ jobs:
             sure-cache/target/site/jacoco
             sure-xml/target/site/jacoco
             sure-poi/target/site/jacoco
+            sure-captcha/target/site/jacoco
+            sure-jwt/target/site/jacoco
+            sure-dfa/target/site/jacoco
 
       - name: Upload coverage to Codecov
         if: matrix.java == '21'
@@ -61,4 +64,7 @@ jobs:
             sure-cache/target/site/jacoco/jacoco.xml
             sure-xml/target/site/jacoco/jacoco.xml
             sure-poi/target/site/jacoco/jacoco.xml
+            sure-captcha/target/site/jacoco/jacoco.xml
+            sure-jwt/target/site/jacoco/jacoco.xml
+            sure-dfa/target/site/jacoco/jacoco.xml
           fail_ci_if_error: false

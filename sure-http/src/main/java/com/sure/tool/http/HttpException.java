@@ -4,6 +4,7 @@ package com.sure.tool.http;
  * HTTP 请求异常，携带响应状态码。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class HttpException extends RuntimeException {
 

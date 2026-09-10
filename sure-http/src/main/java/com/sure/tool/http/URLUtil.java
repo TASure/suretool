@@ -11,6 +11,7 @@ import com.sure.tool.codec.EncodeUtil;
  * URL 工具类：域名/路径/参数提取与拼接，参考 Hutool 的 {@code URLUtil} 设计。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class URLUtil {
 

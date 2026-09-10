@@ -19,6 +19,7 @@ import com.sure.tool.io.IoUtil;
  * 仅支持 http/https 协议，2xx/3xx 返回响应体，其余状态码抛出 {@link HttpException}。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class HttpUtil {
 

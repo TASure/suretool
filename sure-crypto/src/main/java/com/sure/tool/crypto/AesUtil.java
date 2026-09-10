@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2026 suretool contributors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.sure.tool.crypto;
 
 import java.nio.charset.StandardCharsets;
@@ -27,6 +42,8 @@ public class AesUtil {
 	private static final String ALGORITHM = "AES";
 	/** 固定 IV（16 字节），生产环境建议自定义 */
 	private static final byte[] IV = new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+	/** 随机源（复用实例，避免每次创建阻塞熵源） */
+	private static final SecureRandom RANDOM = new SecureRandom();
 
 	private AesUtil() {
 	}
@@ -130,7 +147,7 @@ public class AesUtil {
 	 */
 	public static String generateKey() {
 		byte[] key = new byte[16];
-		new SecureRandom().nextBytes(key);
+		RANDOM.nextBytes(key);
 		return Base64Util.encode(key);
 	}
 }

@@ -74,7 +74,7 @@ suretool 是一个**小而全**的 Java 工具类库，参考 [Hutool](https://h
 <dependency>
     <groupId>com.sure</groupId>
     <artifactId>sure-all</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 

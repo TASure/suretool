@@ -26,7 +26,7 @@
 <dependency>
     <groupId>com.sure</groupId>
     <artifactId>sure-all</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
@@ -36,12 +36,12 @@
 <dependency>
     <groupId>com.sure</groupId>
     <artifactId>sure-core</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
 </dependency>
 <dependency>
     <groupId>com.sure</groupId>
     <artifactId>sure-json</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
@@ -53,7 +53,7 @@
         <dependency>
             <groupId>com.sure</groupId>
             <artifactId>sure-bom</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <version>0.1.0</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>

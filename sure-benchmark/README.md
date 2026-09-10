@@ -12,7 +12,7 @@ mvn -pl sure-benchmark exec:java
 
 ```bash
 mvn -pl sure-benchmark package
-java -jar sure-benchmark/target/sure-benchmark-0.1.0-SNAPSHOT-jar-with-dependencies.jar
+java -jar sure-benchmark/target/sure-benchmark-0.1.0-jar-with-dependencies.jar
 ```
 
 ## 覆盖路径

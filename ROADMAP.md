@@ -246,6 +246,6 @@
 | JSONUtil.toJsonStr | 357.497 | 3543.600 | **快 9.9×** |
 
 **结论**：14 项中 13 项不慢于 Hutool，其中 join（12-13×）、JSON（3.4-9.9×）、日期解析（7.4×）大幅领先；唯一落后项为 `DateUtil.format`（749 vs 421 ns，亚微秒量级），已用 ThreadLocal SimpleDateFormat 缓存优化一轮（1829→750 ns），后续可引入模式缓存或与 Hutool DatePrinter 对齐。
-**运行方式**：`mvn -pl sure-benchmark package && java -jar sure-benchmark/target/sure-benchmark-0.1.0-SNAPSHOT-jar-with-dependencies.jar`
+**运行方式**：`mvn -pl sure-benchmark package && java -jar sure-benchmark/target/sure-benchmark-0.1.0-jar-with-dependencies.jar`
 
 *编制日期：2026-09-09。Hutool 数据来源：Gitee 官方仓库 README（Star 24,353、模块列表）。*

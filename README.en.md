@@ -35,7 +35,7 @@ static utility methods to reduce boilerplate and lower development cost.
         <dependency>
             <groupId>com.sure</groupId>
             <artifactId>sure-bom</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <version>0.1.0</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>

@@ -10,6 +10,7 @@ import java.nio.charset.Charset;
  * 保留 {@code A-Z a-z 0-9 - _ . ~} 五个非保留字符，其余按字节 {@code %XX} 编码。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class EncodeUtil {
 

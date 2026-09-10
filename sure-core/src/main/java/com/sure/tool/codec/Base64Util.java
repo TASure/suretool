@@ -9,6 +9,7 @@ import java.util.Base64;
  * Base64 编解码工具类，参考 Hutool 的 {@code Base64} 设计。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class Base64Util {
 

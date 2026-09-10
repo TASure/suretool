@@ -104,8 +104,10 @@
 
 ### P2 模块化与工程化（与 P1 并行推进）
 
-- [ ] 拆分多模块：`suretool-core` 起步，按依赖方向扩展 `-json/-http/-crypto/-cron/-cache/-extra`
-- [ ] 模块间禁止反向依赖；核心模块保持零第三方依赖
+- [x] 拆分多模块：`sure-core` + `sure-json/-http/-crypto/-cron/-cache/-xml/-poi` + `sure-all` 聚合（包名不变，用户代码无感）
+- [x] 模块间禁止反向依赖（全部单向依赖 core）；core 保持零第三方运行期依赖
+- [x] 聚合构建验证：根目录 `mvn verify` 全绿（238 测试 × 10 模块）、Checkstyle 门禁沿用
+- [x] CI 多模块化：JaCoCo 报告与 Codecov 上传按模块路径聚合
 - [ ] JaCoCo 覆盖率门禁（核心模块 ≥ 85% 后放开）
 - [ ] JMH 基准套件：StrUtil/集合/日期/JSON 对比 Hutool 与 JDK 基线，输出报告
 - [ ] Java 8 兼容性验证（`maven.compiler.release=8` 已在）+ 高版本 JDK 双跑 CI

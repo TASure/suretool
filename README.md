@@ -17,10 +17,27 @@
 
 ### Maven 引入
 
+一个依赖引入全部工具域：
+
 ```xml
 <dependency>
     <groupId>com.sure</groupId>
-    <artifactId>suretool</artifactId>
+    <artifactId>sure-all</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+</dependency>
+```
+
+或按需按模块引入（依赖更轻）：
+
+```xml
+<dependency>
+    <groupId>com.sure</groupId>
+    <artifactId>sure-core</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+</dependency>
+<dependency>
+    <groupId>com.sure</groupId>
+    <artifactId>sure-json</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 </dependency>
 ```
@@ -30,6 +47,20 @@
 ```bash
 mvn clean install
 ```
+
+### 模块结构（P2 多模块拆分）
+
+| 模块 | 坐标 | 能力 | 运行期依赖 |
+| --- | --- | --- | --- |
+| `sure-core` | `com.sure:sure-core` | util/codec/collection/date/io/lang/bean/thread 核心域 | 零依赖 |
+| `sure-json` | `com.sure:sure-json` | JSON 解析/序列化/Bean 互转 | core |
+| `sure-http` | `com.sure:sure-http` | HTTP 客户端/URL 工具 | core |
+| `sure-crypto` | `com.sure:sure-crypto` | 哈希/AES/DES/RSA/HMAC | core |
+| `sure-cron` | `com.sure:sure-cron` | Cron 表达式/调度器 | core |
+| `sure-cache` | `com.sure:sure-cache` | FIFO/LRU/LFU/Timed 缓存 | core |
+| `sure-xml` | `com.sure:sure-xml` | XML 与 Map/Bean 互转 | core |
+| `sure-poi` | `com.sure:sure-poi` | Excel/Word 读写 | core + POI |
+| `sure-all` | `com.sure:sure-all` | 聚合模块（全部） | 全部 |
 
 ### 模块与工具类
 
@@ -80,6 +111,9 @@ mvn clean install
 | | `CacheUtil` | 缓存门面（四种策略一键创建） |
 | `com.sure.tool.xml` | `XmlUtil` | XML 与 Map/Bean 互转/转义 |
 | | `XmlException` | XML 处理异常 |
+| `com.sure.tool.poi` | `ExcelUtil` | Excel 读写（类型感知/表头/Bean 导出） |
+| | `WordUtil` | Word（docx）读写（段落/表格文本提取） |
+| | `PoiUtil` | POI 通用门面（单元格取值/越界容错） |
 | `com.sure.tool.lang` | `Assert` | 断言工具（非空/为真/正则匹配） |
 | | `Snowflake` | 雪花算法 ID 生成器 |
 | | `PatternPool` | 常用正则模式池 |

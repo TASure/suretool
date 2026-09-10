@@ -6,6 +6,7 @@ package com.sure.tool.cache;
  * @param <K> 键类型
  * @param <V> 值类型
  * @author suretool
+ * @since 0.1.0
  */
 public interface Cache<K, V> {
 

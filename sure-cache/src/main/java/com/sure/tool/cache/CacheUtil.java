@@ -4,6 +4,7 @@ package com.sure.tool.cache;
  * 缓存门面：快速创建各种策略缓存，参考 Hutool 的 {@code CacheUtil} 设计。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class CacheUtil {
 

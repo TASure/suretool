@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
  * <p>提供判空、去空白、截取、拼接、格式化、驼峰转换等常用静态方法。</p>
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class StrUtil {
 
@@ -834,8 +835,8 @@ public class StrUtil {
 	/**
 	 * 空白字符串使用默认值替换。
 	 *
-	 * @param str        字符串
-	 * @param defaultStr 默认值
+	 * @param str         字符串
+	 * @param defaultStr  默认值
 	 * @return 非空白时返回原串，否则返回默认值
 	 */
 	public static String blankToDefault(CharSequence str, String defaultStr) {
@@ -845,8 +846,8 @@ public class StrUtil {
 	/**
 	 * 空字符串使用默认值替换。
 	 *
-	 * @param str        字符串
-	 * @param defaultStr 默认值
+	 * @param str         字符串
+	 * @param defaultStr  默认值
 	 * @return 非空时返回原串，否则返回默认值
 	 */
 	public static String emptyToDefault(CharSequence str, String defaultStr) {

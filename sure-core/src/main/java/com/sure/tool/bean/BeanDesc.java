@@ -12,6 +12,7 @@ import java.util.Map;
  * Bean 描述，扫描并缓存类的属性（getter/setter/字段），参考 Hutool 的 {@code BeanDesc} 设计。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class BeanDesc {
 

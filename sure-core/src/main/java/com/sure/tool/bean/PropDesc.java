@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
  * Bean 属性描述，包含属性名、类型、getter/setter 与字段，参考 Hutool 的 {@code PropDesc} 设计。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class PropDesc {
 

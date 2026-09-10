@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sure.tool.crypto;
+package com.sure.tool;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -30,27 +29,24 @@ import java.security.PublicKey;
 import org.junit.Test;
 
 import com.sure.tool.codec.HexUtil;
+import com.sure.tool.crypto.AesUtil;
+import com.sure.tool.crypto.CryptoException;
+import com.sure.tool.crypto.DesUtil;
+import com.sure.tool.crypto.HmacUtil;
+import com.sure.tool.crypto.RsaUtil;
+import com.sure.tool.crypto.SecureUtil;
 
 /**
- * AesUtil / DesUtil / RsaUtil / HmacUtil / SecureUtil 测试。
+ * 加密工具类测试：AES-GCM 随机 IV、RSA-OAEP 密钥校验、DES 兼容、HMAC RFC 向量、门面一致性。
  */
 public class CryptoTest {
 
 	@Test
-	public void testAesHexRoundTrip() {
+	public void testAesRoundTrip() {
+		String data = "hello aes 中文";
 		String key = "my-secret-key";
-		String data = "hello 世界, 中文内容 🚀";
-		String hex = AesUtil.encryptHex(data, key);
-		assertFalse(hex.isEmpty());
-		assertEquals(data, AesUtil.decryptHex(hex, key));
-	}
-
-	@Test
-	public void testAesBase64RoundTrip() {
-		String key = "another-key-123";
-		String data = "sensitive data";
-		String base64 = AesUtil.encryptBase64(data, key);
-		assertEquals(data, AesUtil.decryptBase64(base64, key));
+		assertEquals(data, AesUtil.decryptHex(AesUtil.encryptHex(data, key), key));
+		assertEquals(data, AesUtil.decryptBase64(AesUtil.encryptBase64(data, key), key));
 	}
 
 	@Test
@@ -70,6 +66,14 @@ public class CryptoTest {
 	public void testAesDifferentKeysDifferentCipher() {
 		String c1 = AesUtil.encryptHex("same", "key-a");
 		String c2 = AesUtil.encryptHex("same", "key-b");
+		assertNotEquals(c1, c2);
+	}
+
+	@Test
+	public void testAesRandomIvPerEncrypt() {
+		// GCM 随机 IV：同密钥同明文两次加密，密文必须不同
+		String c1 = AesUtil.encryptHex("same", "key-a");
+		String c2 = AesUtil.encryptHex("same", "key-a");
 		assertNotEquals(c1, c2);
 	}
 
@@ -123,8 +127,18 @@ public class CryptoTest {
 	}
 
 	@Test
+	public void testRsaKeySizeValidation() {
+		try {
+			RsaUtil.generateKeyPair(1024);
+			fail("低于 2048 的密钥应被拒绝");
+		} catch (IllegalArgumentException e) {
+			// 预期
+		}
+	}
+
+	@Test
 	public void testRsaEncryptTooLong() {
-		KeyPair keyPair = RsaUtil.generateKeyPair(1024);
+		KeyPair keyPair = RsaUtil.generateKeyPair(2048);
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 200; i++) {
 			sb.append('a');

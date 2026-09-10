@@ -247,7 +247,7 @@ public class JsonTest {
 
 	@Test
 	public void testArrayIteratorNoSuchElement() {
-		// 基本类型数组走 JSONUtil.ArrayIterator
+		// primitive array path: JSONUtil.ArrayIterator
 		assertEquals("[1,2]", JSONUtil.toJsonStr(new int[]{1, 2}));
 		Iterator<Object> it = JSONUtil.parseArray("[1,2]").iterator();
 		assertTrue(it.hasNext());
@@ -256,9 +256,9 @@ public class JsonTest {
 		assertFalse(it.hasNext());
 		try {
 			it.next();
-			fail("越界 next 应抛 NoSuchElementException");
+			fail("out-of-range next must throw NoSuchElementException");
 		} catch (java.util.NoSuchElementException expected) {
-			// 预期异常
+			// expected
 		}
 	}
 }

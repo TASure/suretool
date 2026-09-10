@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2026 suretool contributors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.sure.tool.io;
 
 import com.sure.tool.util.CharsetUtil;
@@ -49,8 +64,8 @@ public class ZipUtil {
 			throw new IllegalArgumentException("源文件或目标文件不合法");
 		}
 		File parent = zipFile.getParentFile();
-		if (parent != null) {
-			parent.mkdirs();
+		if (parent != null && !parent.exists() && !parent.mkdirs()) {
+			throw new IOException("创建目录失败: " + parent);
 		}
 		try (ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipFile)), charset)) {
 			if (src.isDirectory()) {
@@ -64,8 +79,8 @@ public class ZipUtil {
 	/**
 	 * 压缩文件或目录到 zip 文件（路径字符串版本）。
 	 *
-	 * @param srcPath 源路径
-	 * @param zipPath 目标 zip 路径
+	 * @param srcPath  源路径
+	 * @param zipPath  目标 zip 路径
 	 * @throws IOException IO 异常
 	 */
 	public static void zip(String srcPath, String zipPath) throws IOException {
@@ -95,7 +110,9 @@ public class ZipUtil {
 		if (zipFile == null || outDir == null || !zipFile.isFile()) {
 			throw new IllegalArgumentException("zip 文件或目标目录不合法");
 		}
-		outDir.mkdirs();
+		if (!outDir.exists() && !outDir.mkdirs()) {
+			throw new IOException("创建目录失败: " + outDir);
+		}
 		String outPath = outDir.getCanonicalPath();
 		try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile)), charset)) {
 			ZipEntry entry;
@@ -106,12 +123,14 @@ public class ZipUtil {
 					throw new IOException("非法 zip 条目: " + entry.getName());
 				}
 				if (entry.isDirectory()) {
-					target.mkdirs();
+					if (!target.exists() && !target.mkdirs()) {
+						throw new IOException("创建目录失败: " + target);
+					}
 					continue;
 				}
 				File parent = target.getParentFile();
-				if (parent != null) {
-					parent.mkdirs();
+				if (parent != null && !parent.exists() && !parent.mkdirs()) {
+					throw new IOException("创建目录失败: " + parent);
 				}
 				try (FileOutputStream fos = new FileOutputStream(target)) {
 					IoUtil.copy(zis, fos);

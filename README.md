@@ -10,7 +10,7 @@
 一个**小而全**的 Java 工具类库，参考 [Hutool](https://doc.hutool.cn/pages/index/) 的设计理念，通过静态方法封装常用 JDK API，减少重复造轮子、降低开发成本。
 
 - 包前缀：`com.sure.tool`
-- 语言：Java 8+（无任何第三方运行期依赖，仅测试依赖 JUnit）
+- 语言：Java 8+（核心域零第三方运行期依赖；Office 域基于 Apache POI 5.5.1）
 - 许可：Apache License 2.0
 
 ## 快速开始

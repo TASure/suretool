@@ -122,10 +122,10 @@
 - [x] `sure-dfa`：敏感词过滤（前缀树 + 停用词跳跃 + FoundWord 命中定位，纯 JDK，对齐 Hutool dfa）
 
 - [ ] Maven Central 发布：OSSRH 账号 + GPG 签名 + `maven-central` 插件流水线
-- [ ] 文档站上线（GitHub Pages 或独立域名）：类索引 + 每类示例 + 快速上手
+- [x] 文档站上线（GitHub Pages）：类索引 + 每类示例 + 快速上手（docs/index.md + pages.yml）
 - [x] `suretool-all` 聚合包 + BOM（`suretool-bom`）统一版本管理（import 后免写版本，含 POI/JUnit/JMH 配套版本）
-- [ ] 示例仓库：10+ 个真实场景 Demo（工具库自举：用 suretool 写 suretool 的工具）
-- [ ] Spring Boot starter（`suretool-spring-boot-starter`）—— 拉新用户的关键入口
+- [x] 示例仓库：14 个真实场景 Demo（sure-examples + ExamplesRunner，实测可运行）
+- [x] Spring Boot starter（sure-spring-boot-starter 自动装配骨架）
 
 ### P4 影响力运营（持续，自 v0.5 起启动）
 
@@ -144,29 +144,29 @@
 - [x] Secret scanning（GitHub 默认开启）
 - [x] 加密现代化：AES-GCM+随机IV / RSA-OAEP-2048 / DES 标记废弃
 - [x] SECURITY.md 真实安全策略（支持版本表 + 上报渠道 + 响应承诺）
-- [ ] License 合规：第三方依赖清单 + NOTICE 文件（POI / log4j-test / JMH / Hutool-benchmark）
-- [ ] GPG 签名发布 + SBOM（CycloneDX）随发布生成
+- [x] License 合规：NOTICE 文件 + docs/dependencies.md 第三方依赖清单
+- [x] SBOM（CycloneDX 聚合 bom.json/bom.xml，随 -Prelease 生成）
 
 **B 工程质量（可复现、可验证）**
 - [x] CI 双矩阵：JDK 21（LTS）/ 25 全量 `mvn verify`
 - [x] 三重门禁：Checkstyle（0 违规）/ SpotBugs（Max 力度 / Medium 阈值）/ License 头校验
 - [x] 326 个单元测试全绿（31 个测试类）
 - [x] JMH 基准：14 项对比 13 项不慢于 Hutool（见「JMH 基准报告」）
-- [ ] 覆盖率收紧：全模块行覆盖率 ≥ 85%（当前 63%-93%）
-- [ ] JSON 解析 fuzz 测试（畸形输入 / 深度嵌套 / 超大数值）
+- [x] 覆盖率收紧：全模块行覆盖率 ≥ 85%（core 85.3 / json 89.8 / cache 94.5 / crypto 87.4 / xml 93.6 / captcha 93.9 / cron 93.3 / dfa 91.4 / http 88.2 / jwt 92.8 / poi 88.5）
+- [x] JSON 解析 fuzz 测试（JsonFuzzTest 63 例：畸形输入 / 1000 层嵌套 / 10 万字符 / 全 unicode / 循环引用）
 
 **C 发布与分发（可被一键引入）**
 - [x] 多模块 + sure-all 聚合 + sure-bom 统一版本管理
 - [ ] Maven Central 发布（OSSRH + GPG + maven-central 插件流水线）
-- [ ] CHANGELOG.md（Keep a Changelog 规范，随版本维护）
-- [ ] 发布前自动化清单（版本核对 / 测试 / 覆盖率 / 签名 / 仓库同步）
+- [x] CHANGELOG.md（Keep a Changelog 规范，0.1.0 全量条目已整理）
+- [x] 发布前自动化清单（scripts/release.ps1 + RELEASING.md + github-setup.md + ossrh-application.md）
 
 **D 文档与上手（降低试用门槛）**
 - [x] README 完整门面（徽章 / 快速开始 / 模块表 / 工具类表）
 - [x] CONTRIBUTING.md 贡献指南（含 JDK21+ 环境要求）
-- [ ] 文档站（GitHub Pages）：类索引 + 每类示例
-- [ ] 示例仓库：10+ 个真实场景 Demo
-- [ ] Spring Boot starter（`suretool-spring-boot-starter`）
+- [x] 文档站（GitHub Pages）：类索引 + Hutool 对比 + 维护/发布手册 + 技术文章
+- [x] 示例仓库：14 个真实场景 Demo（sure-examples）
+- [x] Spring Boot starter（sure-spring-boot-starter 自动装配骨架）
 
 **E 社区与影响力（长期运营）**
 - [ ] issue SLA：48h 首次响应

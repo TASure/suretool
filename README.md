@@ -14,7 +14,7 @@
 - 包前缀：`com.sure.tool`
 - 语言：Java 21+（核心域零第三方运行期依赖；Office 域基于 Apache POI 5.5.1）
 - 许可：Apache License 2.0
-- 文档：[类索引](docs/index.md) · [Hutool 对比](docs/comparison-hutool.md) · [发布指南](docs/RELEASING.md) · [维护手册](docs/MAINTAINING.md) · [仓库设置](docs/github-setup.md)
+- 文档：[类索引](docs/index.md) · [Hutool 对比](docs/comparison-hutool.md) · [发布指南](docs/RELEASING.md) · [维护手册](docs/MAINTAINING.md) · [仓库设置](docs/github-setup.md) · [依赖清单](docs/dependencies.md)
 
 ## 快速开始
 

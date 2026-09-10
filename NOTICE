@@ -1,0 +1,48 @@
+suretool
+Copyright (c) 2026 suretool contributors
+
+This product includes software developed by the suretool project
+(https://github.com/TASure/suretool), licensed under the Apache License,
+Version 2.0 (https://www.apache.org/licenses/LICENSE-2.0).
+
+--------------------------------------------------------------------
+Third-party notices
+--------------------------------------------------------------------
+
+This product includes or references the following third-party software:
+
+1. Apache POI (org.apache.poi:poi-ooxml-full:5.5.1)
+   - Scope: runtime dependency of sure-poi (Excel/Word read & write)
+   - License: Apache License 2.0
+   - Copyright: Copyright (c) The Apache Software Foundation
+   - Homepage: https://poi.apache.org/
+   - NOTICE: https://poi.apache.org/legal.html
+
+2. JUnit (junit:junit:4.13.2)
+   - Scope: test only
+   - License: Eclipse Public License 1.0
+   - Homepage: https://junit.org/junit4/
+
+3. Apache Log4j (org.apache.logging.log4j:log4j-core:2.25.4)
+   - Scope: test only (logging backend for tests)
+   - License: Apache License 2.0
+   - Homepage: https://logging.apache.org/log4j/2.x/
+
+4. JMH (org.openjdk.jmh:jmh-core:1.37)
+   - Scope: benchmark only (sure-benchmark)
+   - License: GNU General Public License v2 with Classpath Exception
+   - Homepage: https://github.com/openjdk/jmh
+
+5. Hutool (cn.hutool:hutool-all:5.8.32)
+   - Scope: benchmark comparison baseline only (sure-benchmark)
+   - License: Apache License 2.0
+   - Homepage: https://hutool.cn/ | https://gitee.com/chinabugotech/hutool
+
+--------------------------------------------------------------------
+Design attribution
+--------------------------------------------------------------------
+
+The API design and class naming of this project reference the open-source
+project Hutool (https://gitee.com/chinabugotech/hutool, Apache License 2.0).
+All implementation code is written independently; where an implementation
+idea was adapted from Hutool, it is credited in the class-level Javadoc.

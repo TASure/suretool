@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.sure</groupId>
+        <artifactId>suretool</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>sure-all</artifactId>
+    <packaging>jar</packaging>
+    <name>suretool-all</name>
+    <description>聚合模块：一个依赖引入全部工具域（等价旧版 suretool 单模块）。</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.sure</groupId>
+            <artifactId>sure-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sure</groupId>
+            <artifactId>sure-json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sure</groupId>
+            <artifactId>sure-http</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sure</groupId>
+            <artifactId>sure-crypto</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sure</groupId>
+            <artifactId>sure-cron</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sure</groupId>
+            <artifactId>sure-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sure</groupId>
+            <artifactId>sure-xml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sure</groupId>
+            <artifactId>sure-poi</artifactId>
+        </dependency>
+    </dependencies>
+</project>

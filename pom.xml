@@ -7,26 +7,95 @@
     <groupId>com.sure</groupId>
     <artifactId>suretool</artifactId>
     <version>0.1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>suretool</name>
     <description>一个小而全的 Java 工具类库，参考 Hutool 设计，通过静态方法封装常用 JDK API，降低开发成本。</description>
     <url>https://github.com/TASure/suretool</url>
+
+    <modules>
+        <module>sure-core</module>
+        <module>sure-json</module>
+        <module>sure-http</module>
+        <module>sure-crypto</module>
+        <module>sure-cron</module>
+        <module>sure-cache</module>
+        <module>sure-xml</module>
+        <module>sure-poi</module>
+        <module>sure-all</module>
+    </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.release>8</maven.compiler.release>
         <junit.version>4.13.2</junit.version>
+        <poi.version>5.5.1</poi.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.sure</groupId>
+                <artifactId>sure-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sure</groupId>
+                <artifactId>sure-json</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sure</groupId>
+                <artifactId>sure-http</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sure</groupId>
+                <artifactId>sure-crypto</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sure</groupId>
+                <artifactId>sure-cron</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sure</groupId>
+                <artifactId>sure-cache</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sure</groupId>
+                <artifactId>sure-xml</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sure</groupId>
+                <artifactId>sure-poi</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml-full</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml-full</artifactId>
-            <version>5.5.1</version>
-            <scope>compile</scope>
-        </dependency>
+        <!-- 所有子模块共用的测试依赖 -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -47,7 +116,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.2</version>
             </plugin>
-            <!-- 测试覆盖率 -->
+            <!-- 测试覆盖率（各模块独立报告） -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -68,13 +137,13 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- 编码规范检查 -->
+            <!-- 编码规范检查（配置相对多模块根目录解析） -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>3.3.1</version>
                 <configuration>
-                    <configLocation>config/checkstyle/checkstyle.xml</configLocation>
+                    <configLocation>${maven.multiModuleProjectDirectory}/config/checkstyle/checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
                     <failOnViolation>true</failOnViolation>
                     <includeTestSourceDirectory>true</includeTestSourceDirectory>

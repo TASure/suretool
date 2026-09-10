@@ -19,6 +19,7 @@ import com.sure.tool.util.CharsetUtil;
  * IO 流工具类，参考 Hutool 的 {@code IoUtil} 设计。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class IoUtil {
 

@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
  * 以字符串为键的 {@link LinkedHashMap}，提供类型化取值方法，常用于组装参数或临时数据载体。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class Dict extends LinkedHashMap<String, Object> {
 

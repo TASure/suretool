@@ -14,6 +14,7 @@ import java.util.Map;
  * <p>断言失败时抛出 {@link IllegalArgumentException}。</p>
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class Assert {
 

@@ -6,6 +6,7 @@ import com.sure.tool.util.StrUtil;
  * 控制台打印工具类，参考 Hutool 的 {@code Console} 设计。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class Console {
 

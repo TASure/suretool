@@ -73,11 +73,12 @@
 - [x] `SyncFinisher`：多线程任务并发与汇总（异常传播）
 - [ ] `LockUtil`（可选）：读写锁便捷封装
 
-#### 5. 加密安全域
-- [ ] `SecureUtil`：MD5/SHA/AES/DES/RSA/HMac 一键加解密（JDK 自带实现）
-- [ ] `AesUtil`/`DesUtil`/`RsaUtil`/`HmacUtil` 分门别类
-- [ ] 安全实践：固定 IV、密钥派生、异常语义清晰（不吞异常）
-- [ ] 与 HashUtil 统一命名（`xxxHex/xxxBase64` 双输出）
+#### 5. 加密安全域 ✅
+- [x] `SecureUtil`：哈希（MD5/SHA1/SHA256/SHA512）+ AES/DES/RSA/HMAC 一键加解密门面 + 随机密钥
+- [x] `AesUtil`/`DesUtil`/`RsaUtil`/`HmacUtil` 分门别类（无状态静态方法、线程安全——区别于 Hutool 的对象式实现）
+- [x] 安全实践：密钥 MD5 派生（任意长度 key 可用）、CBC + IV、异常语义清晰（`CryptoException` 不吞异常）
+- [x] 与 HashUtil 统一命名（`xxxHex/xxxBase64` 双输出）
+- [x] 测试含 RFC 4231（HMAC-SHA256）/ RFC 2202（HMAC-SHA1）官方向量校验、密钥序列化往返、错误密钥解密失败
 
 #### 6. 定时与调度域
 - [ ] `CronUtil`：类 Cron 表达式解析与调度（`*/5 * * * * ?`）

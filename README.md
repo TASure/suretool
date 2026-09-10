@@ -85,6 +85,11 @@ mvn clean install
 | `com.sure.tool.http` | `HttpUtil` | 零依赖 HTTP 客户端（GET/POST/JSON/下载/超时） |
 | | `URLUtil` | URL 域名/路径/参数提取与拼接 |
 | | `HttpException` | HTTP 异常（携带状态码） |
+| `com.sure.tool.crypto` | `SecureUtil` | 安全门面：哈希/AES/DES/RSA/HMAC/随机密钥 |
+| | `AesUtil` | AES-CBC 加解密（hex/Base64 双输出） |
+| | `DesUtil` | DES 加解密（兼容旧系统） |
+| | `RsaUtil` | RSA 密钥对生成/加解密/密钥序列化 |
+| | `HmacUtil` | HMAC-MD5/SHA1/SHA256/SHA512 |
 
 ## 使用示例
 

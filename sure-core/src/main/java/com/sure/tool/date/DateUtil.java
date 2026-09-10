@@ -6,11 +6,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 日期时间工具类，参考 Hutool 的 {@code DateUtil} 设计。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class DateUtil {
 
@@ -22,6 +25,29 @@ public class DateUtil {
 	public static final String NORM_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 	/** ISO 日期时间格式：yyyy-MM-dd'T'HH:mm:ss */
 	public static final String ISO_DATETIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+
+	/**
+	 * 格式解析器缓存。
+	 *
+	 * <p>{@link SimpleDateFormat} 非线程安全，按线程隔离缓存可避免频繁创建对象的开销
+	 * （与 Hutool 的 ThreadLocal 方案一致），且不影响 API 与线程安全语义。</p>
+	 */
+	private static final ThreadLocal<Map<String, SimpleDateFormat>> FORMATTER_CACHE = new ThreadLocal<Map<String, SimpleDateFormat>>() {
+		@Override
+		protected Map<String, SimpleDateFormat> initialValue() {
+			return new HashMap<String, SimpleDateFormat>(8);
+		}
+	};
+
+	private static SimpleDateFormat getFormatter(String pattern) {
+		Map<String, SimpleDateFormat> cache = FORMATTER_CACHE.get();
+		SimpleDateFormat format = cache.get(pattern);
+		if (format == null) {
+			format = new SimpleDateFormat(pattern);
+			cache.put(pattern, format);
+		}
+		return format;
+	}
 
 	private DateUtil() {
 	}
@@ -76,7 +102,7 @@ public class DateUtil {
 		if (date == null) {
 			return null;
 		}
-		return new SimpleDateFormat(format).format(date);
+		return getFormatter(format).format(date);
 	}
 
 	/**
@@ -108,7 +134,7 @@ public class DateUtil {
 	 */
 	public static Date parse(String dateStr, String format) {
 		try {
-			return new SimpleDateFormat(format).parse(dateStr);
+			return getFormatter(format).parse(dateStr);
 		} catch (ParseException e) {
 			throw new IllegalArgumentException("日期解析失败: " + dateStr + "，格式: " + format, e);
 		}

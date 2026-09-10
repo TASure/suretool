@@ -11,6 +11,16 @@
   - 空输入默认不抛 NPE（除 `Assert` 语义外）；
   - 集合工具默认返回不可变视图。
 - **编码风格**：Tab 缩进、UTF-8、单行单语句，由 Checkstyle（`config/checkstyle/checkstyle.xml`）在 `verify` 阶段强制检查。
+- **覆盖率门禁**：每个模块在 `verify` 阶段受 JaCoCo 行覆盖率下限约束（`jacoco.line.min`，各模块 pom 配置），提交不得使其降低。
+
+## API 稳定性约定
+
+suretool 遵循语义化版本：`0.x` 阶段允许破坏性变更但需在 ROADMAP 记录；进入 `1.0` 后破坏性变更只允许在 `minor` 版本发布。
+
+- **`@since` 必填**：类级 Javadoc 必须标注引入版本（当前基线 `0.1.0`）；新增 public 方法建议同时标注 `@since`。
+- **`@deprecated` 流程**：计划移除的 API 先标记 `@deprecated` 并注明替代方案，至少保留一个 `minor` 版本后再移除。
+- **不静默改名/改签名**：重命名或变更签名必须同步更新测试与 README/ROADMAP 示例，并在提交信息中说明。
+- **新增公共方法检查**：纳入下方清单，缺 `@since` 视为未完成。
 
 ## 提交规范
 
@@ -36,7 +46,7 @@
    mvn -B verify
    ```
 
-   通过标准：`Tests run` 全部通过、Checkstyle 无违规、JaCoCo 覆盖率不下降。
+   通过标准：`Tests run` 全部通过、Checkstyle 无违规、JaCoCo 覆盖率不低于门禁下限。
 
 5. 推送分支并发起 PR，关联对应 issue（如有）。
 

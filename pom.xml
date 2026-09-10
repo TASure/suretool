@@ -43,6 +43,7 @@
         <module>sure-jwt</module>
         <module>sure-dfa</module>
         <module>sure-benchmark</module>
+        <module>sure-bom</module>
         <module>sure-all</module>
     </modules>
 

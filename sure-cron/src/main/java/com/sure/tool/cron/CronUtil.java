@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 同一秒内同一任务只执行一次（秒级精度）。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class CronUtil {
 

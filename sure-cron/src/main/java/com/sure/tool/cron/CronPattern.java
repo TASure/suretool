@@ -17,6 +17,7 @@ import java.util.TreeSet;
  * 日与周同时指定时按 Quartz 语义取「或」关系。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class CronPattern {
 

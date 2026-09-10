@@ -1,0 +1,51 @@
+package com.sure.tool;
+
+import com.sure.tool.codec.EncodeUtil;
+import com.sure.tool.util.EscapeUtil;
+import org.junit.Assert;
+import org.junit.Test;
+
+/**
+ * EscapeUtil / EncodeUtil 单元测试。
+ */
+public class EscapeUtilTest {
+
+	@Test
+	public void testEscape() {
+		Assert.assertEquals("&lt;a&gt;&amp;&quot;&#39;", EscapeUtil.escape("<a>&\"'"));
+		Assert.assertNull(EscapeUtil.escape(null));
+		Assert.assertEquals("abc", EscapeUtil.escape("abc"));
+		Assert.assertEquals("", EscapeUtil.escape(""));
+	}
+
+	@Test
+	public void testUnescape() {
+		Assert.assertEquals("<a>&\"'", EscapeUtil.unescape("&lt;a&gt;&amp;&quot;&#39;"));
+		Assert.assertEquals("<b>", EscapeUtil.unescape("&lt;b&gt;"));
+		Assert.assertNull(EscapeUtil.unescape(null));
+	}
+
+	@Test
+	public void testEncode() {
+		Assert.assertEquals("hello%20world", EncodeUtil.encode("hello world"));
+		Assert.assertEquals("%E4%BD%A0%E5%A5%BD", EncodeUtil.encode("你好"));
+		Assert.assertEquals("a-b_c.d~e", EncodeUtil.encode("a-b_c.d~e"));
+		Assert.assertNull(EncodeUtil.encode(null));
+	}
+
+	@Test
+	public void testDecode() {
+		Assert.assertEquals("hello world", EncodeUtil.decode("hello%20world"));
+		Assert.assertEquals("你好", EncodeUtil.decode("%E4%BD%A0%E5%A5%BD"));
+		Assert.assertEquals("a b", EncodeUtil.decode("a+b"));
+		Assert.assertNull(EncodeUtil.decode(null));
+	}
+
+	@Test
+	public void testRoundTrip() {
+		String[] samples = { "suretool", "中文混合 ABC-123", "a/b?c=d&e=f", "空格 与+号" };
+		for (String sample : samples) {
+			Assert.assertEquals(sample, EncodeUtil.decode(EncodeUtil.encode(sample)));
+		}
+	}
+}

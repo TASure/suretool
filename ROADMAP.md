@@ -119,7 +119,7 @@
 - [x] `sure-captcha` 模块：`LineCaptcha`/`CircleCaptcha`/`ShearCaptcha` + `CaptchaUtil` 门面（纯 JDK AWT 图形验证码、无头环境兼容、零第三方依赖，对齐 Hutool captcha）
 - [x] `sure-jwt`：JWT 令牌签发/校验（HS256/HS384/HS512/RS256，基于 sure-crypto 与 sure-json，纯 JDK）
 - [x] `sure-http` 链式封装：`HttpRequest`/`HttpResponse`（补齐 P1 遗留）
-- [ ] `sure-dfa`：敏感词过滤（前缀树，纯 JDK）
+- [x] `sure-dfa`：敏感词过滤（前缀树 + 停用词跳跃 + FoundWord 命中定位，纯 JDK，对齐 Hutool dfa）
 
 - [ ] Maven Central 发布：OSSRH 账号 + GPG 签名 + `maven-central` 插件流水线
 - [ ] 文档站上线（GitHub Pages 或独立域名）：类索引 + 每类示例 + 快速上手

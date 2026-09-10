@@ -79,5 +79,9 @@
             <groupId>com.sure</groupId>
             <artifactId>sure-jwt</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.sure</groupId>
+            <artifactId>sure-dfa</artifactId>
+        </dependency>
     </dependencies>
 </project>

@@ -61,11 +61,11 @@
 - [x] 测试：嵌套、转义、Unicode、数字精度（BigDecimal）、错误输入、往返一致性
 - [ ] 性能基准对比 hutool-json（延至 P2 随 JMH 基准一起做）
 
-#### 3. HTTP 域（零依赖 HttpURLConnection 封装）
-- [ ] `HttpUtil`：get/post/upload/download，超时、Header、Cookie、表单、代理
-- [ ] `HttpRequest`/`HttpResponse` 链式封装（可选：先做 HttpUtil 单方法版）
-- [ ] `URLUtil`：URL 拼接、编解码、域名提取
-- [ ] 中文/编码/重定向/连接复用边界测试
+#### 3. HTTP 域（零依赖 HttpURLConnection 封装）✅
+- [x] `HttpUtil`：get（query 参数编码）/post 表单/postJson/原始 body/下载/字节，超时、仅 http(s) 协议校验、状态码异常语义（`HttpException` 带 statusCode）
+- [x] `URLUtil`：URL 拼接、参数提取/解码、域名/路径提取
+- [x] 测试：基于 JDK 内置 HttpServer 的本地服务（中文编码、表单、JSON、404、非法协议），不依赖外网
+- [ ] `HttpRequest`/`HttpResponse` 链式封装（延后，HttpUtil 单方法版已覆盖主要场景）
 
 #### 4. 并发域 ✅
 - [x] `ThreadUtil`：execAsync、sleep、线程工厂、共享守护线程池

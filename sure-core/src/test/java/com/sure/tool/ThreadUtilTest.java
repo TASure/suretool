@@ -84,7 +84,7 @@ public class ThreadUtilTest {
 			futures.add(pool.submit(() -> value * 2));
 		}
 		for (int i = 0; i < 6; i++) {
-			AssertEquals(Integer.valueOf(i * 2), futures.get(i).get(5, TimeUnit.SECONDS));
+			assertEquals(Integer.valueOf(i * 2), futures.get(i).get(5, TimeUnit.SECONDS));
 		}
 		ThreadUtil.shutdownQuietly(pool);
 		assertTrue(pool.isShutdown());

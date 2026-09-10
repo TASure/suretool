@@ -42,6 +42,22 @@
 </dependency>
 ```
 
+或引入 BOM 统一版本管理（import 后无需再写版本号）：
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.sure</groupId>
+            <artifactId>sure-bom</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
 先本地安装：
 
 ```bash
@@ -60,6 +76,10 @@ mvn clean install
 | `sure-cache` | `com.sure:sure-cache` | FIFO/LRU/LFU/Timed 缓存 | core |
 | `sure-xml` | `com.sure:sure-xml` | XML 与 Map/Bean 互转 | core |
 | `sure-poi` | `com.sure:sure-poi` | Excel/Word 读写 | core + POI |
+| `sure-captcha` | `com.sure:sure-captcha` | 图形验证码（线段/圆圈/扭曲） | 零依赖 |
+| `sure-jwt` | `com.sure:sure-jwt` | JWT 签发/校验（HS/RS） | core + crypto + json |
+| `sure-dfa` | `com.sure:sure-dfa` | 敏感词过滤（前缀树/停用词） | 零依赖 |
+| `sure-bom` | `com.sure:sure-bom` | BOM 统一版本管理 | — |
 | `sure-all` | `com.sure:sure-all` | 聚合模块（全部） | 全部 |
 
 ### 模块与工具类
@@ -132,6 +152,8 @@ mvn clean install
 | `com.sure.tool.http` | `HttpUtil` | 零依赖 HTTP 客户端（GET/POST/JSON/下载/超时） |
 | | `URLUtil` | URL 域名/路径/参数提取与拼接 |
 | | `HttpException` | HTTP 异常（携带状态码） |
+| | `HttpRequest` | 链式 HTTP 请求（query/表单/body/超时/重定向） |
+| | `HttpResponse` | 链式 HTTP 响应（状态/头/字符集解析） |
 | `com.sure.tool.crypto` | `SecureUtil` | 安全门面：哈希/AES/DES/RSA/HMAC/随机密钥 |
 | | `AesUtil` | AES-CBC 加解密（hex/Base64 双输出） |
 | | `DesUtil` | DES 加解密（兼容旧系统） |
@@ -139,6 +161,18 @@ mvn clean install
 | | `HmacUtil` | HMAC-MD5/SHA1/SHA256/SHA512 |
 | `com.sure.tool.cron` | `CronPattern` | 6 段 Cron 表达式解析/匹配/下次执行时间 |
 | | `CronUtil` | 定时调度器（注册表达式任务，每秒扫描执行） |
+| `com.sure.tool.captcha` | `Captcha` | 验证码接口 |
+| | `AbstractCaptcha` | 验证码基类（图形生成/字符校验） |
+| | `LineCaptcha` | 线段干扰验证码 |
+| | `CircleCaptcha` | 圆圈干扰验证码 |
+| | `ShearCaptcha` | 扭曲干扰验证码 |
+| | `CaptchaUtil` | 验证码门面（一键创建） |
+| `com.sure.tool.jwt` | `JWT` | JWT 构建/解析/验证（HS256/384/512 + RS256） |
+| | `JwtUtil` | JWT 门面（签发/校验/解析） |
+| | `JWTException` | JWT 异常 |
+| `com.sure.tool.dfa` | `WordTree` | 敏感词前缀树（停用词跳跃） |
+| | `FoundWord` | 命中结果（词 + 起止索引） |
+| | `DfaUtil` | 敏感词过滤门面 |
 
 ## 使用示例
 

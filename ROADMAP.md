@@ -40,8 +40,8 @@
 - [x] 建立编码规范质量门禁：Checkstyle（`config/checkstyle/checkstyle.xml`，`verify` 阶段强制，0 违规）
 - [x] 定义版本策略：`0.1.x` 内部迭代 → `0.x` 功能补齐 → `1.0` 中央仓库首发（见本文件「里程碑 KPI」）
 - [x] 推送至 GitHub（经 GitHub API 完成，仓库 TASure/suretool）
-- [ ] SpotBugs 静态扫描（延至 P2 随模块化一并接入）
-- [ ] License 头自动校验（延至 P2，与发布流水线一并配置）
+- [x] SpotBugs 静态扫描（已随 P2 模块化接入，`verify` 强制，Max 力度 / Medium 阈值）
+- [x] License 头自动校验（已随 P2 接入，缺失即构建失败）
 
 **P0 验收结果**：`mvn verify` 全绿（112 测试 / 0 Checkstyle 违规），JaCoCo 基线：指令 70.7% / 行 67.9% / 方法 74.5%。
 
@@ -123,7 +123,7 @@
 
 - [ ] Maven Central 发布：OSSRH 账号 + GPG 签名 + `maven-central` 插件流水线
 - [ ] 文档站上线（GitHub Pages 或独立域名）：类索引 + 每类示例 + 快速上手
-- [ ] `suretool-all` 聚合包 + BOM（`suretool-bom`）统一版本管理
+- [x] `suretool-all` 聚合包 + BOM（`suretool-bom`）统一版本管理（import 后免写版本，含 POI/JUnit/JMH 配套版本）
 - [ ] 示例仓库：10+ 个真实场景 Demo（工具库自举：用 suretool 写 suretool 的工具）
 - [ ] Spring Boot starter（`suretool-spring-boot-starter`）—— 拉新用户的关键入口
 

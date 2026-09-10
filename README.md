@@ -12,6 +12,7 @@
 - 包前缀：`com.sure.tool`
 - 语言：Java 21+（核心域零第三方运行期依赖；Office 域基于 Apache POI 5.5.1）
 - 许可：Apache License 2.0
+- 文档：[类索引](docs/index.md) · [Hutool 对比](docs/comparison-hutool.md) · [发布指南](docs/RELEASING.md) · [维护手册](docs/MAINTAINING.md)
 
 ## 快速开始
 
@@ -81,6 +82,8 @@ mvn clean install
 | `sure-dfa` | `com.sure:sure-dfa` | 敏感词过滤（前缀树/停用词） | 零依赖 |
 | `sure-bom` | `com.sure:sure-bom` | BOM 统一版本管理 | — |
 | `sure-all` | `com.sure:sure-all` | 聚合模块（全部） | 全部 |
+| `sure-examples` | `com.sure:sure-examples` | 可运行示例（14 个 Demo） | sure-all |
+| `sure-spring-boot-starter` | `com.sure:sure-spring-boot-starter` | Spring Boot 自动装配入口 | sure-all + spring-boot |
 
 ### 模块与工具类
 

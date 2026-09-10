@@ -22,6 +22,8 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 import javax.crypto.Cipher;
+
+import com.sure.tool.codec.HexUtil;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 

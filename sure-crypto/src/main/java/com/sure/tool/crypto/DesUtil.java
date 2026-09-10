@@ -20,6 +20,8 @@ import java.security.MessageDigest;
 import java.util.Base64;
 
 import javax.crypto.Cipher;
+
+import com.sure.tool.codec.HexUtil;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 

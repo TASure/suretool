@@ -90,6 +90,8 @@ mvn clean install
 | | `DesUtil` | DES 加解密（兼容旧系统） |
 | | `RsaUtil` | RSA 密钥对生成/加解密/密钥序列化 |
 | | `HmacUtil` | HMAC-MD5/SHA1/SHA256/SHA512 |
+| `com.sure.tool.cron` | `CronPattern` | 6 段 Cron 表达式解析/匹配/下次执行时间 |
+| | `CronUtil` | 定时调度器（注册表达式任务，每秒扫描执行） |
 
 ## 使用示例
 

@@ -80,11 +80,11 @@
 - [x] 与 HashUtil 统一命名（`xxxHex/xxxBase64` 双输出）
 - [x] 测试含 RFC 4231（HMAC-SHA256）/ RFC 2202（HMAC-SHA1）官方向量校验、密钥序列化往返、错误密钥解密失败
 
-#### 6. 定时与调度域
-- [ ] `CronUtil`：类 Cron 表达式解析与调度（`*/5 * * * * ?`）
-- [ ] `CronPattern`/`CronTimer`：表达式校验、下次执行时间计算
-- [ ] 支持秒/分/时/日/月/周 + 通配符 + 纯 JDK（Timer/ScheduledExecutor）
-- [ ] 时间计算正确性测试（跨月/跨年/夏令时不做、边界日期）
+#### 6. 定时与调度域 ✅
+- [x] `CronPattern`：6 段 Quartz 风格表达式（`* ? a-b a,b,c */n a-b/n`、周名 SUN-SAT），校验/匹配/下次执行时间
+- [x] `CronUtil`：注册表达式任务 + 每秒扫描调度（守护线程、任务独立线程池、同秒去重）
+- [x] 纯 JDK（Calendar 实现，无第三方依赖）
+- [x] 时间计算正确性测试：跨月/跨年、日/周「或」关系、每 5 秒/15 分钟、不可能日期（2 月 30 日）返回 null
 
 #### 7. 缓存域
 - [ ] `CacheUtil`：FIFO/LRU/LFU/定时过期的统一门面

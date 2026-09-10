@@ -1,5 +1,7 @@
 # suretool
 
+中文 | [English](README.en.md)
+
 ![CI](https://img.shields.io/github/actions/workflow/status/TASure/suretool/ci.yml?branch=main&label=CI)
 ![Coverage](https://img.shields.io/codecov/c/github/TASure/suretool)
 ![Release](https://img.shields.io/github/v/release/TASure/suretool)

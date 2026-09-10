@@ -29,9 +29,9 @@ public class Console {
 	}
 
 	/**
-	 * 格式化输出并换行（{@code {}} 占位符风格）。
+	 * 格式化输出并换行（一对花括号占位符风格）。
 	 *
-	 * @param template 模板，如 {@code "你好，{}"}
+	 * @param template 模板，如 {@code "你好，&#123;&#125;"}
 	 * @param args     参数
 	 */
 	public static void log(String template, Object... args) {

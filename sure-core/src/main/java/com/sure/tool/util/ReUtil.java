@@ -227,7 +227,7 @@ public class ReUtil {
 	}
 
 	/**
-	 * 提取多组内容并套入模板，模板中使用 {@code {1}}、{@code {2}} 引用分组。
+	 * 提取多组内容并套入模板，模板中使用 {1}、{2} 引用分组。
 	 *
 	 * @param regex   正则表达式
 	 * @param content 内容

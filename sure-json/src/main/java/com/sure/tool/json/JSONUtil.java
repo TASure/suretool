@@ -112,7 +112,7 @@ public class JSONUtil {
 	}
 
 	/**
-	 * 是否为 JSON 对象或数组（以 {@code {} 或 [] 开头）。
+	 * 是否为 JSON 对象或数组（以 &#123; 或 &#91; 开头）。
 	 *
 	 * @param json 字符串
 	 * @return 是否 JSON

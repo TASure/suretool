@@ -40,7 +40,7 @@ public class Assert {
 	 * 断言表达式为真。
 	 *
 	 * @param expression      表达式
-	 * @param errorMsgTemplate 错误信息模板，支持 {@code {}} 占位符
+	 * @param errorMsgTemplate 错误信息模板，支持一对花括号占位符
 	 * @param params           占位符参数
 	 */
 	public static void isTrue(boolean expression, String errorMsgTemplate, Object... params) {

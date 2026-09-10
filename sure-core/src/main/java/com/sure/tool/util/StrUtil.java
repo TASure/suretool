@@ -513,7 +513,7 @@ public class StrUtil {
 	}
 
 	/**
-	 * 字符串格式化，使用 {@code {}} 作为占位符，如 {@code format("你好，{}", "世界")}。
+	 * 字符串格式化，使用一对花括号作为占位符，如 {@code format("你好，&#123;&#125;", "世界")}。
 	 *
 	 * @param template 模板
 	 * @param args     参数

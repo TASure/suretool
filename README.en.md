@@ -77,7 +77,9 @@ String text = StrUtil.removeSuffixIgnoreCase("Hello.txt", ".TXT"); // "Hello"
 Run all runnable demos:
 
 ```bash
-mvn -pl sure-examples -am exec:java
+# 首次运行先安装依赖模块到本地仓库，再单独运行 examples（避免 -am 在父项目执行 exec 目标）
+mvn -pl sure-examples -am install -DskipTests
+mvn -pl sure-examples exec:java
 ```
 
 ## Modules

@@ -237,6 +237,16 @@ public class Demo {
 }
 ```
 
+### 运行全部示例（sure-examples 模块，14 个 Demo）
+
+```bash
+# 首次运行先安装依赖模块到本地仓库
+mvn -pl sure-examples -am install -DskipTests
+
+# 运行全部示例（聚合入口 ExamplesRunner）
+mvn -pl sure-examples exec:java
+```
+
 ## 构建与测试
 
 ```bash

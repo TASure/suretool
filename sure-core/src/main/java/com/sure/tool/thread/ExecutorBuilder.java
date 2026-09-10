@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 线程池构造器，链式配置并构建 {@link ThreadPoolExecutor}，参考 Hutool 的 {@code ExecutorBuilder} 设计。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class ExecutorBuilder {
 

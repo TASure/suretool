@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
  * 并发同步器：以固定线程数并发执行一组任务并等待全部完成，参考 Hutool 的 {@code SyncFinisher} 设计。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class SyncFinisher {
 

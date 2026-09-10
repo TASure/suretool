@@ -5,6 +5,7 @@ package com.sure.tool.lang;
  * 基于 {@link System#nanoTime()} 累计耗时，支持分段累计与多次启停。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class StopWatch {
 

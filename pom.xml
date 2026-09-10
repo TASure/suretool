@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2026 suretool contributors
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -35,6 +52,8 @@
         <hutool.version>5.8.32</hutool.version>
         <!-- JaCoCo 行覆盖率门禁下限（各模块在自身 pom 中覆盖，见 ROADMAP P2） -->
         <jacoco.line.min>0.70</jacoco.line.min>
+        <!-- SpotBugs 静态扫描：默认开启，无源码模块（sure-all 等）在自身 pom 覆盖为 true -->
+        <spotbugs.skip>false</spotbugs.skip>
     </properties>
 
     <dependencyManagement>
@@ -204,6 +223,55 @@
                 <executions>
                     <execution>
                         <id>checkstyle-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- 静态缺陷扫描（SpotBugs，随 verify 强制执行） -->
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>4.8.6.4</version>
+                <configuration>
+                    <effort>Max</effort>
+                    <threshold>Medium</threshold>
+                    <failOnError>true</failOnError>
+                    <!-- 设计意图/惯例型告警排除（新增须注明理由，见 config/spotbugs/exclude-filter.xml） -->
+                    <excludeFilterFile>${maven.multiModuleProjectDirectory}/config/spotbugs/exclude-filter.xml</excludeFilterFile>
+                    <!-- 基准/聚合等无业务源码模块通过属性跳过 -->
+                    <skip>${spotbugs.skip}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>spotbugs-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- License 头自动校验（缺失即构建失败；本地可用 mvn license:format 一键补齐） -->
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>4.5</version>
+                <configuration>
+                    <header>${maven.multiModuleProjectDirectory}/config/license/header.txt</header>
+                    <includes>
+                        <include>**/*.java</include>
+                        <include>**/pom.xml</include>
+                    </includes>
+                    <properties>
+                        <owner>suretool contributors</owner>
+                    </properties>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>license-check</id>
                         <phase>verify</phase>
                         <goals>
                             <goal>check</goal>

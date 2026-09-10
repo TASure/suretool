@@ -15,6 +15,7 @@ import com.sure.tool.codec.HexUtil;
  * 用于数据完整性校验与签名场景，输出 hex 与 Base64 双格式。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class HmacUtil {
 

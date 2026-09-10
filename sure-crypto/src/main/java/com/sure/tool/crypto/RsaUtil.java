@@ -22,6 +22,7 @@ import com.sure.tool.codec.HexUtil;
  * 默认 2048 位密钥；单次加密明文上限 = 密钥位数 / 8 - 11 字节（2048 位约 245 字节），超出请自行分段。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class RsaUtil {
 

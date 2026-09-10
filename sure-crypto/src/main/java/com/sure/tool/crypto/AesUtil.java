@@ -19,6 +19,7 @@ import com.sure.tool.codec.HexUtil;
  * IV：固定 16 字节常量，简单场景够用；对安全性要求极高的场景请自行派生 IV 并更换为自定义实现。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class AesUtil {
 

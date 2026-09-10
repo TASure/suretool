@@ -4,6 +4,7 @@ package com.sure.tool.crypto;
  * 加密解密异常。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class CryptoException extends RuntimeException {
 

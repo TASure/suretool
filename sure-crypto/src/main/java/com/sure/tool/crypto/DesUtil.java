@@ -18,6 +18,7 @@ import com.sure.tool.codec.HexUtil;
  * 密钥派生：任意长度字符串密钥经 MD5 摘要取前 8 字节；IV 固定 8 字节。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class DesUtil {
 

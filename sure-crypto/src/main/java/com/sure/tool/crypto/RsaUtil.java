@@ -16,104 +16,106 @@
 package com.sure.tool.crypto;
 
 import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
+import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SecureRandom;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
 
 import javax.crypto.Cipher;
 
+import com.sure.tool.codec.Base64Util;
+import com.sure.tool.codec.HexUtil;
+
 /**
- * RSA 加解密工具类（OAEP-SHA256 填充，语义安全），参考 Hutool 的 {@code RSA} 设计。
- *
- * <p>安全说明：
+ * RSA 加解密工具类（RSA/ECB/OAEPWithSHA-256AndMGF1Padding），无状态静态方法、线程安全，参考 Hutool 的 {@code RSA} 设计。
+ * <p>
+ * 安全设计（2026-09-10 升级，随 CodeQL 安全扫描告警修复）：
  * <ul>
- *   <li>使用 RSA/ECB/OAEPWithSHA-256AndMGF1Padding（替代不安全的 PKCS1 v1.5），抵抗 Bleichenbacher 攻击；</li>
- *   <li>默认 2048 位密钥，{@link #generateKeyPair(int)} 拒绝低于 2048 位的弱密钥；</li>
- *   <li>单次加密明文上限约 190 字节（2048 位 OAEP-SHA256），大文本请先对称加密（如 {@link AesUtil}）。</li>
+ *   <li>采用 OAEP-SHA256 填充（替代 PKCS#1 v1.5，消除 Bleichenbacher padding oracle 风险）；</li>
+ *   <li>密钥长度强制不低于 2048 位（拒绝 1024 及以下的弱密钥）。</li>
  * </ul>
+ * 单次加密明文上限 = 密钥位数 / 8 - 2 * 32 - 2 字节（2048 位约 190 字节），超出请自行分段或改用混合加密。
  *
  * @author suretool
  * @since 0.1.0
  */
 public class RsaUtil {
 
-	/** 变换算法：OAEP-SHA256 填充 */
 	private static final String TRANSFORMATION = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding";
-
-	/** 最小安全密钥位数 */
+	private static final String ALGORITHM = "RSA";
+	/** 默认密钥位数 */
+	public static final int DEFAULT_KEY_SIZE = 2048;
+	/** 允许的最小密钥位数（低于此值直接拒绝，弱密钥） */
 	public static final int MIN_KEY_SIZE = 2048;
-
-	/** 随机源 */
-	private static final SecureRandom RANDOM = new SecureRandom();
 
 	private RsaUtil() {
 	}
 
 	/**
-	 * 生成默认 2048 位 RSA 密钥对。
+	 * 生成密钥对（2048 位）。
 	 *
 	 * @return 密钥对
 	 */
 	public static KeyPair generateKeyPair() {
-		return generateKeyPair(MIN_KEY_SIZE);
+		return generateKeyPair(DEFAULT_KEY_SIZE);
 	}
 
 	/**
-	 * 生成指定长度 RSA 密钥对（拒绝低于 {@link #MIN_KEY_SIZE} 的弱密钥）。
+	 * 生成密钥对。
 	 *
-	 * @param keySize 密钥位数
+	 * @param keySize 密钥位数（强制不小于 {@link #MIN_KEY_SIZE}，推荐 2048 及以上）
 	 * @return 密钥对
+	 * @throws IllegalArgumentException keySize 小于 2048
 	 */
 	public static KeyPair generateKeyPair(int keySize) {
 		if (keySize < MIN_KEY_SIZE) {
-			throw new IllegalArgumentException("RSA 密钥长度不能低于 " + MIN_KEY_SIZE + " 位（收到 " + keySize + "）");
+			throw new IllegalArgumentException("RSA 密钥长度不得小于 " + MIN_KEY_SIZE + " 位（弱密钥），当前: " + keySize);
 		}
 		try {
-			KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
-			generator.initialize(keySize, RANDOM);
+			KeyPairGenerator generator = KeyPairGenerator.getInstance(ALGORITHM);
+			generator.initialize(keySize);
 			return generator.generateKeyPair();
-		} catch (Exception e) {
-			throw new CryptoException("RSA 密钥对生成失败: " + e.getMessage(), e);
+		} catch (GeneralSecurityException e) {
+			throw new CryptoException("RSA 密钥对生成失败", e);
 		}
 	}
 
 	/**
-	 * 公钥加密为十六进制。
+	 * RSA 加密（OAEP-SHA256）。
 	 *
-	 * @param data      明文
-	 * @param publicKey 公钥
-	 * @return 十六进制密文
+	 * @param data 明文
+	 * @param key  公钥或私钥
+	 * @return 密文字节
 	 */
-	public static String encryptHex(String data, PublicKey publicKey) {
-		return HexUtil.encodeHexStr(encrypt(data.getBytes(StandardCharsets.UTF_8), publicKey));
+	public static byte[] encrypt(byte[] data, Key key) {
+		return transform(Cipher.ENCRYPT_MODE, data, key);
 	}
 
 	/**
-	 * 私钥解密十六进制密文。
+	 * RSA 解密（OAEP-SHA256）。
 	 *
-	 * @param hex        十六进制密文
-	 * @param privateKey 私钥
-	 * @return 明文
+	 * @param data 密文字节
+	 * @param key  与加密相反的公钥或私钥
+	 * @return 明文字节
 	 */
-	public static String decryptHex(String hex, PrivateKey privateKey) {
-		return new String(decrypt(HexUtil.decodeHex(hex), privateKey), StandardCharsets.UTF_8);
+	public static byte[] decrypt(byte[] data, Key key) {
+		return transform(Cipher.DECRYPT_MODE, data, key);
 	}
 
 	/**
 	 * 公钥加密为 Base64。
 	 *
-	 * @param data      明文
+	 * @param data      明文（UTF-8）
 	 * @param publicKey 公钥
 	 * @return Base64 密文
 	 */
 	public static String encryptBase64(String data, PublicKey publicKey) {
-		return Base64.getEncoder().encodeToString(encrypt(data.getBytes(StandardCharsets.UTF_8), publicKey));
+		return Base64Util.encode(encrypt(bytes(data), publicKey));
 	}
 
 	/**
@@ -121,93 +123,95 @@ public class RsaUtil {
 	 *
 	 * @param base64     Base64 密文
 	 * @param privateKey 私钥
-	 * @return 明文
+	 * @return 明文（UTF-8）
 	 */
 	public static String decryptBase64(String base64, PrivateKey privateKey) {
-		return new String(decrypt(Base64.getDecoder().decode(base64), privateKey), StandardCharsets.UTF_8);
+		return new String(decrypt(Base64Util.decode(base64), privateKey), StandardCharsets.UTF_8);
 	}
 
 	/**
-	 * 公钥 OAEP 加密（字节）。
+	 * 公钥加密为十六进制。
 	 *
-	 * @param data      明文
+	 * @param data      明文（UTF-8）
 	 * @param publicKey 公钥
-	 * @return 密文
+	 * @return 十六进制密文
 	 */
-	public static byte[] encrypt(byte[] data, PublicKey publicKey) {
-		try {
-			Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-			return cipher.doFinal(data);
-		} catch (Exception e) {
-			throw new CryptoException("RSA 加密失败: " + e.getMessage(), e);
-		}
+	public static String encryptHex(String data, PublicKey publicKey) {
+		return HexUtil.encodeHexStr(encrypt(bytes(data), publicKey));
 	}
 
 	/**
-	 * 私钥 OAEP 解密（字节）。
+	 * 私钥解密十六进制密文。
 	 *
-	 * @param data       密文
+	 * @param hex        十六进制密文
 	 * @param privateKey 私钥
-	 * @return 明文
+	 * @return 明文（UTF-8）
 	 */
-	public static byte[] decrypt(byte[] data, PrivateKey privateKey) {
-		try {
-			Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-			cipher.init(Cipher.DECRYPT_MODE, privateKey);
-			return cipher.doFinal(data);
-		} catch (Exception e) {
-			throw new CryptoException("RSA 解密失败: " + e.getMessage(), e);
-		}
+	public static String decryptHex(String hex, PrivateKey privateKey) {
+		return new String(decrypt(HexUtil.decodeHex(hex), privateKey), StandardCharsets.UTF_8);
 	}
 
 	/**
-	 * 提取公钥 Base64（X.509）。
+	 * 公钥转 Base64（X.509）。
 	 *
 	 * @param keyPair 密钥对
 	 * @return Base64 公钥
 	 */
 	public static String getPublicKeyBase64(KeyPair keyPair) {
-		return Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded());
+		return Base64Util.encode(keyPair.getPublic().getEncoded());
 	}
 
 	/**
-	 * 提取私钥 Base64（PKCS#8）。
+	 * 私钥转 Base64（PKCS#8）。
 	 *
 	 * @param keyPair 密钥对
 	 * @return Base64 私钥
 	 */
 	public static String getPrivateKeyBase64(KeyPair keyPair) {
-		return Base64.getEncoder().encodeToString(keyPair.getPrivate().getEncoded());
+		return Base64Util.encode(keyPair.getPrivate().getEncoded());
 	}
 
 	/**
-	 * 解析 Base64 公钥。
+	 * Base64 解析公钥。
 	 *
 	 * @param base64 Base64 公钥
 	 * @return 公钥
 	 */
 	public static PublicKey parsePublicKey(String base64) {
 		try {
-			byte[] bytes = Base64.getDecoder().decode(base64);
-			return KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(bytes));
-		} catch (Exception e) {
-			throw new CryptoException("RSA 公钥解析失败: " + e.getMessage(), e);
+			KeyFactory factory = KeyFactory.getInstance(ALGORITHM);
+			return factory.generatePublic(new X509EncodedKeySpec(Base64Util.decode(base64)));
+		} catch (GeneralSecurityException e) {
+			throw new CryptoException("公钥解析失败", e);
 		}
 	}
 
 	/**
-	 * 解析 Base64 私钥。
+	 * Base64 解析私钥。
 	 *
 	 * @param base64 Base64 私钥
 	 * @return 私钥
 	 */
 	public static PrivateKey parsePrivateKey(String base64) {
 		try {
-			byte[] bytes = Base64.getDecoder().decode(base64);
-			return KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(bytes));
-		} catch (Exception e) {
-			throw new CryptoException("RSA 私钥解析失败: " + e.getMessage(), e);
+			KeyFactory factory = KeyFactory.getInstance(ALGORITHM);
+			return factory.generatePrivate(new PKCS8EncodedKeySpec(Base64Util.decode(base64)));
+		} catch (GeneralSecurityException e) {
+			throw new CryptoException("私钥解析失败", e);
 		}
+	}
+
+	private static byte[] transform(int mode, byte[] data, Key key) {
+		try {
+			Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+			cipher.init(mode, key);
+			return cipher.doFinal(data);
+		} catch (GeneralSecurityException e) {
+			throw new CryptoException("RSA 加解密失败", e);
+		}
+	}
+
+	private static byte[] bytes(String value) {
+		return value == null ? new byte[0] : value.getBytes(StandardCharsets.UTF_8);
 	}
 }

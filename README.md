@@ -62,11 +62,24 @@ mvn clean install
 | `com.sure.tool.collection` | `CollUtil` | 集合判空/交并差/分组/过滤/映射 |
 | | `ListUtil` | 列表切分/分页/反转 |
 | | `MapUtil` | Map 创建/取值/反转/拼接 |
+| | `TreeUtil` | 树结构构建/遍历/深度计算 |
+| | `TreeNode` | 通用树节点 |
+| | `BiMap` | 双向映射（键值互查） |
+| | `StrJoiner` | 字符串拼接器（分隔符/前缀/后缀） |
+| | `CsvUtil` | CSV 读写（引号/转义处理） |
 | `com.sure.tool.date` | `DateUtil` | 日期格式化/解析/偏移/年龄/区间 |
 | | `DateUnit` | 日期时间单位枚举 |
 | `com.sure.tool.io` | `FileUtil` | 文件读写/复制/移动/删除/大小/路径规范化 |
 | | `IoUtil` | 流复制/读取/写入/安静关闭 |
 | | `ZipUtil` | ZIP 压缩/解压（含 zip-slip 防护） |
+| `com.sure.tool.cache` | `Cache` | 缓存接口 |
+| | `FifoCache` | 先进先出缓存 |
+| | `LruCache` | 最近最少使用缓存 |
+| | `LfuCache` | 最不经常使用缓存 |
+| | `TimedCache` | 定时过期缓存（TTL） |
+| | `CacheUtil` | 缓存门面（四种策略一键创建） |
+| `com.sure.tool.xml` | `XmlUtil` | XML 与 Map/Bean 互转/转义 |
+| | `XmlException` | XML 处理异常 |
 | `com.sure.tool.lang` | `Assert` | 断言工具（非空/为真/正则匹配） |
 | | `Snowflake` | 雪花算法 ID 生成器 |
 | | `PatternPool` | 常用正则模式池 |

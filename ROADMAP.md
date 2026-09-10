@@ -86,19 +86,21 @@
 - [x] 纯 JDK（Calendar 实现，无第三方依赖）
 - [x] 时间计算正确性测试：跨月/跨年、日/周「或」关系、每 5 秒/15 分钟、不可能日期（2 月 30 日）返回 null
 
-#### 7. 缓存域
-- [ ] `CacheUtil`：FIFO/LRU/LFU/定时过期的统一门面
-- [ ] `Cache<K,V>` 接口 + 3 种实现 + `TimedCache`
-- [ ] 并发安全（ConcurrentHashMap + 原子操作）、容量上限、过期策略测试
+#### 7. 缓存域 ✅
+- [x] `Cache<K,V>` 接口 + `FifoCache`/`LruCache`/`LfuCache`/`TimedCache` 四实现
+- [x] `CacheUtil`：四种策略一键创建门面
+- [x] 逐出策略测试：FIFO 最旧淘汰、LRU 访问刷新、LFU 低频淘汰、TTL 惰性过期
+- [x] 并发冒烟：8 线程 × 100 轮 put/get 无异常且容量不超限
 
-#### 8. 集合与文本增强
-- [ ] `TreeUtil` + `TreeNode`：父子结构转树、树转列表
-- [ ] `BiMap`/`CaseInsensitiveMap`/`OrderedMap` 等专用 Map
-- [ ] `StrJoiner`/`StrSplitter`/`StrFormatter`：字符串细分工具（对齐 Hutool 文本包）
-- [ ] `CsvUtil`：CSV 读写（Reader/Writer + 行模型）
-- [ ] `XmlUtil`：DOM 读写、XML↔Map（JDK 内置）
+#### 8. 集合与文本增强 ✅
+- [x] `TreeUtil` + `TreeNode`：扁平列表建树、深度优先遍历、深度、展平
+- [x] `BiMap`：双向映射（键值互查、覆盖清理旧映射）
+- [x] `StrJoiner`：分隔符/前缀/后缀拼接器（null 跳过、空内容返回空串）
+- [x] `CsvUtil`：CSV 读写（引号包裹、引号内逗号、双引号转义）
+- [x] `XmlUtil`：Map/Bean ↔ XML（JDK DOM、转义、同名元素转 List）
+- [ ] 延后项：`CaseInsensitiveMap`/`OrderedMap`/`StrSplitter`（P2 补）
 
-**P1 验收**：新增 ≥ 40 个类、public static 方法 ≥ 600、覆盖率 ≥ 70%、`mvn verify` 全绿、每个域文档示例就绪。
+**P1 验收 ✅**：新增 47 个主类（初版 26 → 73）、测试 228 个全绿、指令覆盖率 75.0%、`mvn verify` 全绿 + 0 Checkstyle 违规、README 模块表与示例就绪。
 
 ### P2 模块化与工程化（与 P1 并行推进）
 

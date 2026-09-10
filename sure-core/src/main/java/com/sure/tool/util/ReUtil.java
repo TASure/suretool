@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
  * 正则工具类，参考 Hutool 的 {@code ReUtil} 设计。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class ReUtil {
 
@@ -107,6 +108,8 @@ public class ReUtil {
 			for (int i = 0; i <= matcher.groupCount(); i++) {
 				result.put(String.valueOf(i), matcher.group(i));
 			}
+			// 命名分组
+			java.util.regex.Pattern p = matcher.pattern();
 			java.util.Set<String> groupNames = getNamedGroups(regex);
 			for (String name : groupNames) {
 				try {
@@ -212,8 +215,8 @@ public class ReUtil {
 	/**
 	 * 提取多组内容并套入模板，模板中使用 {@code {1}}、{@code {2}} 引用分组。
 	 *
-	 * @param regex    正则表达式
-	 * @param content  内容
+	 * @param regex   正则表达式
+	 * @param content 内容
 	 * @param template 模板
 	 * @return 套用后的字符串，未匹配返回 {@code null}
 	 */

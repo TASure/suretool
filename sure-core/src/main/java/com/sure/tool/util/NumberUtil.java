@@ -10,6 +10,7 @@ import java.text.DecimalFormat;
  * <p>提供安全的数值解析、高精度运算、格式化等静态方法。</p>
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class NumberUtil {
 

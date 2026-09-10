@@ -4,6 +4,7 @@ package com.sure.tool.util;
  * 系统属性工具类，参考 Hutool 的 {@code SystemUtil} 设计。
  *
  * @author suretool
+ * @since 0.1.0
  */
 public class SystemUtil {
 
@@ -113,7 +114,7 @@ public class SystemUtil {
 	}
 
 	/**
-	 * 文件分隔符（Windows 为 {@code \}，Linux 为 {@code /}）。
+	 * 文件分隔符（Windows 为 {@code \\}，Linux 为 {@code /}）。
 	 *
 	 * @return 文件分隔符
 	 */

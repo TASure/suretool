@@ -65,7 +65,7 @@
 - [x] `HttpUtil`：get（query 参数编码）/post 表单/postJson/原始 body/下载/字节，超时、仅 http(s) 协议校验、状态码异常语义（`HttpException` 带 statusCode）
 - [x] `URLUtil`：URL 拼接、参数提取/解码、域名/路径提取
 - [x] 测试：基于 JDK 内置 HttpServer 的本地服务（中文编码、表单、JSON、404、非法协议），不依赖外网
-- [ ] `HttpRequest`/`HttpResponse` 链式封装（延后，HttpUtil 单方法版已覆盖主要场景）
+- [x] `HttpRequest`/`HttpResponse` 链式封装：链式构建（URL/头/query/表单/body/超时/重定向），非 2xx 不抛异常由 `isOk()` 判断（P3 第三轮补齐）
 
 #### 4. 并发域 ✅
 - [x] `ThreadUtil`：execAsync、sleep、线程工厂、共享守护线程池
@@ -118,7 +118,7 @@
 **P3 第一轮 · 新功能域（对齐 Hutool 高频能力，持续）**
 - [x] `sure-captcha` 模块：`LineCaptcha`/`CircleCaptcha`/`ShearCaptcha` + `CaptchaUtil` 门面（纯 JDK AWT 图形验证码、无头环境兼容、零第三方依赖，对齐 Hutool captcha）
 - [x] `sure-jwt`：JWT 令牌签发/校验（HS256/HS384/HS512/RS256，基于 sure-crypto 与 sure-json，纯 JDK）
-- [ ] `sure-http` 链式封装：`HttpRequest`/`HttpResponse`（补齐 P1 遗留）
+- [x] `sure-http` 链式封装：`HttpRequest`/`HttpResponse`（补齐 P1 遗留）
 - [ ] `sure-dfa`：敏感词过滤（前缀树，纯 JDK）
 
 - [ ] Maven Central 发布：OSSRH 账号 + GPG 签名 + `maven-central` 插件流水线

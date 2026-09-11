@@ -30,6 +30,31 @@
     <description>一个小而全的 Java 工具类库，参考 Hutool 设计，通过静态方法封装常用 JDK API，降低开发成本。</description>
     <url>https://github.com/TASure/suretool</url>
 
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>TASure</id>
+            <name>TASure</name>
+            <email>335069951@qq.com</email>
+            <url>https://github.com/TASure</url>
+            <roles>
+                <role>maintainer</role>
+            </roles>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:https://github.com/TASure/suretool.git</connection>
+        <developerConnection>scm:git:https://github.com/TASure/suretool.git</developerConnection>
+        <url>https://github.com/TASure/suretool</url>
+        <tag>HEAD</tag>
+    </scm>
+
     <modules>
         <module>sure-core</module>
         <module>sure-json</module>
@@ -384,6 +409,9 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
                         <version>3.2.4</version>
+                        <configuration>
+                            <keyname>${gpg.keyname}</keyname>
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>

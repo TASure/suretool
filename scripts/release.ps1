@@ -50,6 +50,11 @@ if ($Tag -ne "") {
 # ---- 正式发布 ----
 Write-Host "[2/4] 前置检查：GPG 密钥 与 ~/.m2/settings.xml"
 $gpg = Get-Command gpg -ErrorAction SilentlyContinue
+if (-not $gpg) {
+    $gitGpg = "D:\Program Files\Git\usr\bin\gpg.exe"
+    if (Test-Path $gitGpg) { $env:Path += ";D:\Program Files\Git\usr\bin" }
+    $gpg = Get-Command gpg -ErrorAction SilentlyContinue
+}
 if (-not $gpg) { Write-Error "未检测到 gpg 命令。请安装 GnuPG 并生成签名密钥。"; exit 1 }
 $settings = Join-Path $env:USERPROFILE ".m2\settings.xml"
 if (-not (Test-Path $settings)) {

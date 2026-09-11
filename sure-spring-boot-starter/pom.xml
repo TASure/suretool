@@ -33,7 +33,7 @@
     <description>suretool Spring Boot Starter：自动装配入口骨架，帮助 Spring Boot 应用零配置接入 suretool 能力。</description>
 
     <properties>
-        <spring-boot.version>3.3.5</spring-boot.version>
+        <spring-boot.version>4.1.1</spring-boot.version>
         <!-- Starter 无业务测试数据，不参与 JaCoCo 覆盖率门禁；自动配置骨架类跳过 SpotBugs -->
         <jacoco.skip>true</jacoco.skip>
         <spotbugs.skip>true</spotbugs.skip>

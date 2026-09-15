@@ -31,10 +31,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
-          # 使用默认查询集 + security-and-quality 扩展查询
+          # 默认查询集已包含 security-and-quality；显式声明以锁定扩展查询
           queries: security-and-quality
 
       - name: Set up JDK 21
@@ -45,9 +45,11 @@ jobs:
           cache: maven
 
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
+        uses: github/codeql-action/autobuild@v4
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
         with:
           category: "/language:${{matrix.language}}"
+          # 15 模块多模块工程：显式限制内存防止 analyze 阶段 OOM
+          ram: 6144

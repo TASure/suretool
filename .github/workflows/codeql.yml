@@ -51,5 +51,3 @@ jobs:
         uses: github/codeql-action/analyze@v4
         with:
           category: "/language:${{matrix.language}}"
-          # 15 模块多模块工程：显式限制内存防止 analyze 阶段 OOM
-          ram: 6144

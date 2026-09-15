@@ -14,7 +14,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: codeql
+  group: codeql-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:

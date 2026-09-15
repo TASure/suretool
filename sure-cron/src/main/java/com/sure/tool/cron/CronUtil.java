@@ -37,6 +37,8 @@ public class CronUtil {
 
 	private static final AtomicInteger POOL_SEQ = new AtomicInteger(1);
 	private static final List<CronJob> JOBS = new CopyOnWriteArrayList<>();
+	/** 私有锁对象：避免使用类对象作为锁（暴露给外部同步）。 */
+	private static final Object LOCK = new Object();
 
 	private static volatile ScheduledExecutorService scheduler;
 	private static volatile ExecutorService worker;
@@ -90,32 +92,36 @@ public class CronUtil {
 	/**
 	 * 启动调度（幂等）。
 	 */
-	public static synchronized void start() {
-		if (started) {
-			return;
+	public static void start() {
+		synchronized (LOCK) {
+			if (started) {
+				return;
+			}
+			started = true;
+			if (scheduler == null || scheduler.isShutdown()) {
+				scheduler = Executors.newSingleThreadScheduledExecutor(CronUtil::newDaemonThread);
+			}
+			if (worker == null || worker.isShutdown()) {
+				worker = Executors.newCachedThreadPool(CronUtil::newDaemonThread);
+			}
+			scheduler.scheduleAtFixedRate(CronUtil::tick, 0, 1, TimeUnit.SECONDS);
 		}
-		started = true;
-		if (scheduler == null || scheduler.isShutdown()) {
-			scheduler = Executors.newSingleThreadScheduledExecutor(CronUtil::newDaemonThread);
-		}
-		if (worker == null || worker.isShutdown()) {
-			worker = Executors.newCachedThreadPool(CronUtil::newDaemonThread);
-		}
-		scheduler.scheduleAtFixedRate(CronUtil::tick, 0, 1, TimeUnit.SECONDS);
 	}
 
 	/**
 	 * 停止调度并清空任务（幂等）。
 	 */
-	public static synchronized void stop() {
-		started = false;
-		if (scheduler != null) {
-			scheduler.shutdownNow();
+	public static void stop() {
+		synchronized (LOCK) {
+			started = false;
+			if (scheduler != null) {
+				scheduler.shutdownNow();
+			}
+			if (worker != null) {
+				worker.shutdownNow();
+			}
+			JOBS.clear();
 		}
-		if (worker != null) {
-			worker.shutdownNow();
-		}
-		JOBS.clear();
 	}
 
 	/**

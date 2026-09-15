@@ -46,6 +46,7 @@ public class SyncFinisher {
 	private final int workers;
 	private final List<Worker> tasks = new ArrayList<>();
 	private final List<Throwable> errors = new CopyOnWriteArrayList<>();
+	private final Object lock = new Object();
 	private ExecutorService pool;
 	private CountDownLatch latch;
 
@@ -88,22 +89,24 @@ public class SyncFinisher {
 	 *
 	 * @return 当前同步器
 	 */
-	public synchronized SyncFinisher start() {
-		errors.clear();
-		pool = Executors.newFixedThreadPool(workers);
-		latch = new CountDownLatch(tasks.size());
-		for (Worker task : tasks) {
-			pool.submit(() -> {
-				try {
-					task.work();
-				} catch (Throwable t) {
-					errors.add(t);
-				} finally {
-					latch.countDown();
-				}
-			});
+	public SyncFinisher start() {
+		synchronized (lock) {
+			errors.clear();
+			pool = Executors.newFixedThreadPool(workers);
+			latch = new CountDownLatch(tasks.size());
+			for (Worker task : tasks) {
+				pool.submit(() -> {
+					try {
+						task.work();
+					} catch (Throwable t) {
+						errors.add(t);
+					} finally {
+						latch.countDown();
+					}
+				});
+			}
+			return this;
 		}
-		return this;
 	}
 
 	/**

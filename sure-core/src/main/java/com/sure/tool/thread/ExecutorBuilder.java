@@ -31,11 +31,15 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ExecutorBuilder {
 
-	private int corePoolSize = 1;
-	private int maxPoolSize = 200;
-	private long keepAliveTime = 60;
-	private TimeUnit timeUnit = TimeUnit.SECONDS;
-	private int queueCapacity = 1024;
+	/** 核心线程数（构建期可跨线程设置，volatile 保证可见性与 64 位写原子性）。 */
+	private volatile int corePoolSize = 1;
+	/** 最大线程数（构建期可跨线程设置）。 */
+	private volatile int maxPoolSize = 200;
+	/** 空闲线程存活时间（构建期可跨线程设置）。 */
+	private volatile long keepAliveTime = 60;
+	private volatile TimeUnit timeUnit = TimeUnit.SECONDS;
+	/** 任务队列容量（构建期可跨线程设置）。 */
+	private volatile int queueCapacity = 1024;
 	private String threadNamePrefix = "suretool-pool-";
 	private boolean daemon = true;
 	private RejectedExecutionHandler rejectedHandler = new ThreadPoolExecutor.AbortPolicy();

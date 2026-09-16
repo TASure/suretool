@@ -176,4 +176,31 @@ public class WordUtil {
 			sb.append('\n');
 		}
 	}
+
+	/**
+	 * 写入文本；append 为 true 且文件存在时追加段落。
+	 *
+	 * @param file   文档文件
+	 * @param text   文本
+	 * @param append 是否追加
+	 * @return 文件
+	 * @throws IOException IO 异常
+	 */
+	public static File write(File file, String text, boolean append) throws IOException {
+		boolean exists = append && file != null && file.exists() && file.length() > 0;
+		try (XWPFDocument doc = exists
+				? new XWPFDocument(new FileInputStream(file))
+				: new XWPFDocument()) {
+			if (text != null && !text.isEmpty()) {
+				XWPFParagraph paragraph = doc.createParagraph();
+				paragraph.createRun().setText(text);
+			}
+			try (FileOutputStream out = new FileOutputStream(file)) {
+				doc.write(out);
+			}
+		}
+		return file;
+	}
+
+
 }

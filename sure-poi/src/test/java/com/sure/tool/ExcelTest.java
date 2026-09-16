@@ -158,4 +158,95 @@ public class ExcelTest {
 			this.age = age;
 		}
 	}
+
+	@Test
+	public void testReadFromStartRow() throws Exception {
+		java.io.File f = java.io.File.createTempFile("sure-xls-", ".xlsx");
+		f.deleteOnExit();
+		java.util.List<java.util.List<Object>> rows = new java.util.ArrayList<>();
+		rows.add(java.util.Arrays.asList("a", "b"));
+		rows.add(java.util.Arrays.asList("1", "2"));
+		com.sure.tool.poi.ExcelUtil.write(f, "sheet1", rows);
+		java.util.List<java.util.List<Object>> from1 = com.sure.tool.poi.ExcelUtil.read(f, 0, 1);
+		assertEquals(1, from1.size());
+		assertEquals("1", from1.get(0).get(0));
+	}
+
+	@Test
+	public void testWriteBeansWithHeaders() throws Exception {
+		java.io.File f = java.io.File.createTempFile("sure-xls-", ".xlsx");
+		f.deleteOnExit();
+		TestItem item = new TestItem();
+		item.setName("Sure");
+		item.setAge(18);
+		com.sure.tool.poi.ExcelUtil.writeBeans(f, "s1", java.util.List.of(item), "name");
+		java.util.List<java.util.List<Object>> rows = com.sure.tool.poi.ExcelUtil.read(f, 0);
+		assertEquals("name", rows.get(0).get(0));
+		assertEquals("Sure", rows.get(1).get(0));
+	}
+
+	/** 测试用内部 Bean。 */
+	public static class TestItem {
+		private String name;
+		private int age;
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public int getAge() {
+			return age;
+		}
+
+		public void setAge(int age) {
+			this.age = age;
+		}
+	}
+
+
+
+	@Test
+	public void testSetCellValueBranches() throws Exception {
+		java.io.File f = java.io.File.createTempFile("sure-xls-", ".xlsx");
+		f.deleteOnExit();
+		org.apache.poi.xssf.usermodel.XSSFWorkbook wb = new org.apache.poi.xssf.usermodel.XSSFWorkbook();
+		org.apache.poi.ss.usermodel.Sheet sheet = wb.createSheet("s");
+		org.apache.poi.ss.usermodel.Row row = sheet.createRow(0);
+		com.sure.tool.poi.PoiUtil.setCellValue(row.createCell(0), "str");
+		com.sure.tool.poi.PoiUtil.setCellValue(row.createCell(1), 42);
+		com.sure.tool.poi.PoiUtil.setCellValue(row.createCell(2), true);
+		com.sure.tool.poi.PoiUtil.setCellValue(row.createCell(3), new java.util.Date());
+		com.sure.tool.poi.PoiUtil.setCellValue(row.createCell(4), new Object());
+		com.sure.tool.poi.PoiUtil.setCellValue(row.createCell(5), null);
+		com.sure.tool.poi.PoiUtil.setCellValue(null, "noop");
+		assertEquals("str", com.sure.tool.poi.PoiUtil.readCell(row.getCell(0)));
+		assertEquals(42L, com.sure.tool.poi.PoiUtil.readCell(row.getCell(1)));
+		assertEquals(true, com.sure.tool.poi.PoiUtil.readCell(row.getCell(2)));
+		wb.close();
+	}
+
+	@Test
+	public void testReadInvalidSheet() throws Exception {
+		java.io.File f = java.io.File.createTempFile("sure-xls-", ".xlsx");
+		f.deleteOnExit();
+		com.sure.tool.poi.ExcelUtil.write(f, "s1", java.util.List.of(java.util.Arrays.asList("a")));
+		assertTrue(com.sure.tool.poi.ExcelUtil.read(f, 99).isEmpty());
+		assertTrue(com.sure.tool.poi.ExcelUtil.read(f, 99, 0).isEmpty());
+	}
+
+	@Test
+	public void testWriteBeansNullHeaders() throws Exception {
+		java.io.File f = java.io.File.createTempFile("sure-xls-", ".xlsx");
+		f.deleteOnExit();
+		TestItem item = new TestItem();
+		item.setName("X");
+		com.sure.tool.poi.ExcelUtil.writeBeans(f, "s1", java.util.List.of(item), (String[]) null);
+		assertTrue(com.sure.tool.poi.ExcelUtil.read(f, 0).isEmpty());
+	}
+
+
 }

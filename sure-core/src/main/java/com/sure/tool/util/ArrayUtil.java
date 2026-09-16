@@ -824,4 +824,35 @@ public class ArrayUtil {
 	}
 
 
+
+	/**
+	 * 安全读取数组元素，越界或 null 返回 {@code null}。
+	 *
+	 * @param array 数组
+	 * @param index 索引
+	 * @param <T>   元素类型
+	 * @return 元素或 {@code null}
+	 */
+	public static <T> T get(T[] array, int index) {
+		if (array == null || index < 0 || index >= array.length) {
+			return null;
+		}
+		return array[index];
+	}
+
+	/**
+	 * 安全读取数组元素，越界或 null 返回默认值。
+	 *
+	 * @param array        数组
+	 * @param index        索引
+	 * @param defaultValue 默认值
+	 * @param <T>          元素类型
+	 * @return 元素或默认值
+	 */
+	public static <T> T get(T[] array, int index, T defaultValue) {
+		T value = get(array, index);
+		return value == null ? defaultValue : value;
+	}
+
+
 }

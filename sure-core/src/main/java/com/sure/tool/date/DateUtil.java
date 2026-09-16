@@ -1111,4 +1111,22 @@ public class DateUtil {
 	}
 
 
+
+	/**
+	 * 计算周岁年龄。
+	 *
+	 * @param birth 出生日期
+	 * @return 年龄（周岁），null 返回 0
+	 */
+	public static int getAge(Date birth) {
+		if (birth == null) {
+			return 0;
+		}
+		java.time.LocalDate birthDate = birth.toInstant()
+				.atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+		java.time.LocalDate now = java.time.LocalDate.now();
+		return (int) java.time.temporal.ChronoUnit.YEARS.between(birthDate, now);
+	}
+
+
 }

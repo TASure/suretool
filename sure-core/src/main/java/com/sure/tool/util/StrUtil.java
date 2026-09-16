@@ -1589,4 +1589,37 @@ public class StrUtil {
 	}
 
 
+
+	/**
+	 * 忽略大小写替换所有匹配子串。
+	 *
+	 * @param str         字符串
+	 * @param searchStr   查找子串
+	 * @param replacement 替换串
+	 * @return 替换后的字符串
+	 */
+	public static String replaceIgnoreCase(CharSequence str, CharSequence searchStr, CharSequence replacement) {
+		if (str == null) {
+			return null;
+		}
+		if (searchStr == null || searchStr.isEmpty()) {
+			return str.toString();
+		}
+		String s = str.toString();
+		String search = searchStr.toString();
+		String rep = replacement == null ? "" : replacement.toString();
+		String lower = s.toLowerCase();
+		String lowerSearch = search.toLowerCase();
+		StringBuilder sb = new StringBuilder();
+		int from = 0;
+		int idx;
+		while ((idx = lower.indexOf(lowerSearch, from)) >= 0) {
+			sb.append(s, from, idx).append(rep);
+			from = idx + search.length();
+		}
+		sb.append(s, from, s.length());
+		return sb.toString();
+	}
+
+
 }

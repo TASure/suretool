@@ -259,4 +259,72 @@ public class ExcelUtil {
 			cell.setCellValue(String.valueOf(value));
 		}
 	}
+
+	/**
+	 * 从指定行（含）开始读取工作表。
+	 *
+	 * @param file       Excel 文件
+	 * @param sheetIndex 工作表索引
+	 * @param startRow   起始行号（0 起）
+	 * @return 行数据列表
+	 * @throws IOException IO 异常
+	 */
+	public static List<List<Object>> read(File file, int sheetIndex, int startRow) throws IOException {
+		List<List<Object>> rows = new ArrayList<>();
+		try (Workbook workbook = WorkbookFactory.create(file)) {
+			Sheet sheet = PoiUtil.getSheet(workbook, sheetIndex);
+			if (sheet == null) {
+				return rows;
+			}
+			for (Row row : sheet) {
+				if (row.getRowNum() < startRow) {
+					continue;
+				}
+				List<Object> values = new ArrayList<>();
+				for (Cell cell : row) {
+					values.add(PoiUtil.readCell(cell));
+				}
+				rows.add(values);
+			}
+		}
+		return rows;
+	}
+
+	/**
+	 * 写入 Bean 列表，可指定表头（表头同时作为字段选择器）。
+	 *
+	 * @param file      Excel 文件
+	 * @param sheetName 工作表名
+	 * @param beans     Bean 列表
+	 * @param headers   表头字段名（按需选择列）
+	 * @return 文件
+	 * @throws IOException IO 异常
+	 */
+	public static File writeBeans(File file, String sheetName, List<?> beans, String... headers) throws IOException {
+		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+			Sheet sheet = workbook.createSheet(sheetName);
+			if (beans != null && !beans.isEmpty() && headers != null && headers.length > 0) {
+				Row header = sheet.createRow(0);
+				for (int c = 0; c < headers.length; c++) {
+					header.createCell(c).setCellValue(headers[c]);
+				}
+				for (int r = 0; r < beans.size(); r++) {
+					Row row = sheet.createRow(r + 1);
+					Map<String, Object> map = BeanUtil.beanToMap(beans.get(r), false);
+					for (int c = 0; c < headers.length; c++) {
+						Object value = map.get(headers[c]);
+						if (value != null) {
+							PoiUtil.setCellValue(row.createCell(c), value);
+						}
+					}
+				}
+			}
+			try (FileOutputStream out = new FileOutputStream(file)) {
+				workbook.write(out);
+			}
+		}
+		return file;
+	}
+
+
 }

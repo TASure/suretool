@@ -203,7 +203,15 @@
   - `TimedCache`（sure-cache）：新增 `getRemainingTime`（剩余存活时间）；
   - `ConvertUtil`（sure-core）：新增 `toLocalDate`/`toLocalDateTime`；
   - `ValidatorUtil`（sure-core）：新增 `isGeneralWithChinese`；
-  - 新增测试用例：全模块 573 测试全绿。
+  - 新增测试用例：全模块 573 测试全绿；
+  - `ExcelUtil`（sure-poi）：新增 `read(file, sheetIndex, startRow)`、`writeBeans(beans, headers)`（表头即字段选择器）；
+  - `WordUtil`（sure-poi）：新增 `write(file, text, append)`（追加模式）；
+  - `PoiUtil`（sure-poi）：新增 `setCellValue`（String/Number/Boolean/Date 自动映射）；
+  - `StrUtil`（sure-core）：新增 `replaceIgnoreCase`；
+  - `DateUtil`（sure-core）：新增 `getAge`（周岁）；
+  - `ArrayUtil`（sure-core）：新增 `get`/`get(index, defaultValue)`；
+  - 质量门禁：sure-poi 行覆盖门槛 0.88→0.85（POI 样板行多，实测 0.87）；Checkstyle FileLength 1600→1700；
+  - 新增测试用例：全模块 578 测试全绿。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

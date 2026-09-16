@@ -160,4 +160,31 @@ public class PoiUtil {
 	public static boolean isXlsx(String fileName) {
 		return fileName != null && fileName.toLowerCase().endsWith(".xlsx");
 	}
+
+	/**
+	 * 写入单元格值（String/Number/Boolean/Date 类型自动映射）。
+	 *
+	 * @param cell  单元格
+	 * @param value 值
+	 */
+	public static void setCellValue(Cell cell, Object value) {
+		if (cell == null) {
+			return;
+		}
+		if (value == null) {
+			cell.setBlank();
+		} else if (value instanceof String s) {
+			cell.setCellValue(s);
+		} else if (value instanceof Number n) {
+			cell.setCellValue(n.doubleValue());
+		} else if (value instanceof Boolean b) {
+			cell.setCellValue(b);
+		} else if (value instanceof java.util.Date d) {
+			cell.setCellValue(d);
+		} else {
+			cell.setCellValue(String.valueOf(value));
+		}
+	}
+
+
 }

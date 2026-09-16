@@ -1621,5 +1621,62 @@ public class StrUtil {
 		return sb.toString();
 	}
 
+	// ---------------- 包裹处理 ----------------
+
+	/**
+	 * 判断字符串是否被指定前后缀包裹。
+	 *
+	 * <p>例如 {@code isWrap("[abc]", "[", "]")} 返回 {@code true}。</p>
+	 *
+	 * @param str    字符串
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @return 是否被包裹
+	 */
+	public static boolean isWrap(CharSequence str, String prefix, String suffix) {
+		if (str == null || prefix == null || prefix.isEmpty() || suffix == null || suffix.isEmpty()) {
+			return false;
+		}
+		String s = str.toString();
+		return s.startsWith(prefix) && s.endsWith(suffix);
+	}
+
+	/**
+	 * 使用指定前后缀包裹字符串。
+	 *
+	 * @param str    字符串
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @return 包裹后的字符串；{@code str} 为 {@code null} 时返回 {@code null}
+	 */
+	public static String wrap(CharSequence str, CharSequence prefix, CharSequence suffix) {
+		if (str == null) {
+			return null;
+		}
+		String pre = prefix == null ? "" : prefix.toString();
+		String suf = suffix == null ? "" : suffix.toString();
+		return pre + str + suf;
+	}
+
+	/**
+	 * 去除字符串包裹（仅当首尾实际匹配时去除，否则原样返回）。
+	 *
+	 * @param str    字符串
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @return 去除包裹后的字符串；{@code str} 为 {@code null} 时返回 {@code null}
+	 */
+	public static String unWrap(CharSequence str, CharSequence prefix, CharSequence suffix) {
+		if (str == null) {
+			return null;
+		}
+		String s = str.toString();
+		String pre = prefix == null ? "" : prefix.toString();
+		String suf = suffix == null ? "" : suffix.toString();
+		if (s.startsWith(pre) && s.endsWith(suf)) {
+			return s.substring(pre.length(), s.length() - suf.length());
+		}
+		return s;
+	}
 
 }

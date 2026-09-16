@@ -167,6 +167,75 @@ public class FileUtil {
 	}
 
 	/**
+	 * 根据文件扩展名获取常用 MIME 类型（不区分大小写）。
+	 *
+	 * @param fileName 文件名
+	 * @return MIME 类型；未知扩展名返回 {@code application/octet-stream}，无扩展名返回 {@code null}
+	 */
+	public static String getMimeType(String fileName) {
+		if (fileName == null) {
+			return null;
+		}
+		String ext = getExt(fileName).toLowerCase();
+		if (ext.isEmpty()) {
+			return null;
+		}
+		return switch (ext) {
+			case "txt", "log", "md", "java", "c", "cpp", "h", "py", "sql" -> "text/plain";
+			case "html", "htm" -> "text/html";
+			case "css" -> "text/css";
+			case "js", "mjs" -> "application/javascript";
+			case "json" -> "application/json";
+			case "xml", "xsl" -> "application/xml";
+			case "csv" -> "text/csv";
+			case "pdf" -> "application/pdf";
+			case "png" -> "image/png";
+			case "jpg", "jpeg" -> "image/jpeg";
+			case "gif" -> "image/gif";
+			case "bmp" -> "image/bmp";
+			case "webp" -> "image/webp";
+			case "svg" -> "image/svg+xml";
+			case "ico" -> "image/x-icon";
+			case "tif", "tiff" -> "image/tiff";
+			case "zip" -> "application/zip";
+			case "gz", "tgz" -> "application/gzip";
+			case "tar" -> "application/x-tar";
+			case "7z" -> "application/x-7z-compressed";
+			case "rar" -> "application/vnd.rar";
+			case "jar", "war", "ear" -> "application/java-archive";
+			case "doc" -> "application/msword";
+			case "docx" -> "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+			case "xls" -> "application/vnd.ms-excel";
+			case "xlsx" -> "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+			case "ppt" -> "application/vnd.ms-powerpoint";
+			case "pptx" -> "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+			case "mp3" -> "audio/mpeg";
+			case "wav" -> "audio/wav";
+			case "flac" -> "audio/flac";
+			case "aac" -> "audio/aac";
+			case "ogg" -> "audio/ogg";
+			case "mp4" -> "video/mp4";
+			case "avi" -> "video/x-msvideo";
+			case "mkv" -> "video/x-matroska";
+			case "mov" -> "video/quicktime";
+			case "webm" -> "video/webm";
+			case "flv" -> "video/x-flv";
+			case "exe" -> "application/x-msdownload";
+			case "dll" -> "application/x-msdownload";
+			case "sh" -> "application/x-sh";
+			case "bat", "cmd" -> "application/x-msdos-program";
+			case "psd" -> "image/vnd.adobe.photoshop";
+			case "ttf" -> "font/ttf";
+			case "otf" -> "font/otf";
+			case "woff" -> "font/woff";
+			case "woff2" -> "font/woff2";
+			case "wasm" -> "application/wasm";
+			case "bin", "dat" -> "application/octet-stream";
+			default -> "application/octet-stream";
+		};
+	}
+
+	/**
 	 * 获取主文件名（不含扩展名）。
 	 *
 	 * @param file 文件
@@ -505,6 +574,38 @@ public class FileUtil {
 			}
 		}
 		return file.delete();
+	}
+
+	/**
+	 * 递归复制目录到目标位置（目标目录不存在时自动创建）。
+	 *
+	 * @param srcDir  源目录
+	 * @param destDir 目标目录
+	 * @return 目标目录
+	 * @throws IOException IO 异常
+	 */
+	public static File copyDir(File srcDir, File destDir) throws IOException {
+		if (srcDir == null || destDir == null || !srcDir.exists()) {
+			return null;
+		}
+		return copy(srcDir, destDir);
+	}
+
+	/**
+	 * 清空目录内容（保留目录本身）。
+	 *
+	 * @param dir 目录
+	 */
+	public static void clean(File dir) {
+		if (dir == null || !dir.exists() || !dir.isDirectory()) {
+			return;
+		}
+		File[] files = dir.listFiles();
+		if (files != null) {
+			for (File f : files) {
+				delete(f);
+			}
+		}
 	}
 
 	// ---------------- 其他 ----------------

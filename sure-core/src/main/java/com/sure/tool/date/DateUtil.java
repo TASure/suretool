@@ -896,6 +896,31 @@ public class DateUtil {
 	}
 
 	/**
+	 * 两个日期的毫秒差（{@code end - start}）。
+	 *
+	 * @param start 开始日期
+	 * @param end   结束日期
+	 * @return 毫秒差
+	 */
+	public static long betweenMs(java.util.Date start, java.util.Date end) {
+		if (start == null || end == null) {
+			throw new IllegalArgumentException("日期不能为 null");
+		}
+		return end.getTime() - start.getTime();
+	}
+
+	/**
+	 * 两个日期的秒差（{@code end - start}，向下取整）。
+	 *
+	 * @param start 开始日期
+	 * @param end   结束日期
+	 * @return 秒差
+	 */
+	public static long betweenSeconds(java.util.Date start, java.util.Date end) {
+		return betweenMs(start, end) / 1000L;
+	}
+
+	/**
 	 * 日期在当月中的第几周。
 	 *
 	 * @param date 日期

@@ -381,6 +381,20 @@ public class CollUtil {
 	}
 
 	/**
+	 * 获取集合中指定索引的元素，越界或空集合时返回默认值。
+	 *
+	 * @param collection   集合
+	 * @param index        索引（支持负索引，-1 表示倒数第一个）
+	 * @param defaultValue 默认值
+	 * @param <T>          元素类型
+	 * @return 元素或默认值
+	 */
+	public static <T> T get(Collection<T> collection, int index, T defaultValue) {
+		T value = get(collection, index);
+		return (value == null) ? defaultValue : value;
+	}
+
+	/**
 	 * 获取第一个元素。
 	 *
 	 * @param collection 集合

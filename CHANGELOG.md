@@ -253,6 +253,14 @@
   Hutool 对比文档、维护手册、技术文章与 awesome-java 提交材料。
 - **社区规范**：`CODE_OF_CONDUCT.md`（Contributor Covenant 2.1）、中英文双语主页（`README.en.md`）、
   issue / PR 模板、`SECURITY.md` 漏洞应急响应 SOP。
+- **第三十二批（P4 v0.2.0 继续）**：
+  - `StrUtil`：新增 `isWrap`（判断是否被前后缀包裹）、`wrap`（包裹）、`unWrap`（去除包裹，仅实际匹配时去除）；
+  - `FileUtil`：新增 `copyDir`（递归复制目录）、`clean`（清空目录内容，保留目录本身）、
+    `getMimeType`（扩展名 → 常用 MIME，覆盖文本/图像/音视频/办公/压缩/字体等 60+ 类型，未知返回 octet-stream）；
+  - `DateUtil`：新增 `betweenMs`/`betweenSeconds`（日期毫秒/秒差，end - start）；
+  - `MapUtil`：新增 `sortByKey`（按键升序便捷版）、`getStr(map, key)`（单参，缺失返回 null）；
+  - `CollUtil`：新增 `get(collection, index, defaultValue)`（越界/空集合安全取值带默认值，支持负索引）；
+  - 新增 `P4Features27Test`（4 例）；全模块 590 测试全绿，sure-core 指令覆盖率 88.8%，SpotBugs 0 告警。
 
 ### Changed
 

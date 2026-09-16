@@ -166,6 +166,17 @@ public class MapUtil {
 	}
 
 	/**
+	 * 获取 String 值（不存在时返回 {@code null}）。
+	 *
+	 * @param map Map
+	 * @param key key
+	 * @return String 值或 {@code null}
+	 */
+	public static String getStr(Map<?, ?> map, Object key) {
+		return getStr(map, key, null);
+	}
+
+	/**
 	 * 获取 int 值。
 	 *
 	 * @param map          Map
@@ -386,6 +397,18 @@ public class MapUtil {
 			result.put(key, map.get(key));
 		}
 		return result;
+	}
+
+	/**
+	 * 按键升序排序 Map（便捷版，委托 {@link #sort(Map, boolean)}）。
+	 *
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @param map 原 Map
+	 * @return 排序后新 Map
+	 */
+	public static <K extends Comparable<? super K>, V> Map<K, V> sortByKey(Map<K, V> map) {
+		return sort(map, true);
 	}
 
 	/**

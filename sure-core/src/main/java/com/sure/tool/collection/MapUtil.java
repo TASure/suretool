@@ -342,4 +342,23 @@ public class MapUtil {
 	}
 
 
+
+	/**
+	 * Map 转 Properties（值经 String.valueOf 转换）。
+	 *
+	 * @param map Map
+	 * @return Properties
+	 */
+	public static java.util.Properties toProperties(Map<?, ?> map) {
+		java.util.Properties properties = new java.util.Properties();
+		if (isEmpty(map)) {
+			return properties;
+		}
+		for (Map.Entry<?, ?> e : map.entrySet()) {
+			properties.setProperty(String.valueOf(e.getKey()), String.valueOf(e.getValue()));
+		}
+		return properties;
+	}
+
+
 }

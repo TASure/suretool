@@ -60,7 +60,14 @@
   - `DateUtil`：新增 `season`（季度）、`formatChineseDate`、`dayOfYear`、`minute`、`second`；
   - `CollUtil`：新增 `containsAll`（元素数组/集合两种重载）；
   - `MapUtil`：新增 `getBigDecimal`（含默认值）；
-  - 新增 `P4Features7Test`（5 例）；sure-core 指令覆盖率 88.9%。
+  - 新增 `P4Features7Test`（5 例）；sure-core 指令覆盖率 88.9%；
+  - 新增 `CreditCodeUtil`（util 包）：统一社会信用代码校验（GB 32100-2015）+ 掩码；
+  - 新增 `BankCardUtil`（util 包）：Luhn 算法校验 + 卡号掩码；
+  - `DateUtil`：新增 `formatBetween`（可读时长）、`isWeekend`、`offsetWeek`；
+  - `StrUtil`：新增 `indexOf`/`lastIndexOf`；
+  - `CollUtil`：新增按 Bean 属性排序 `sortByProperty`；
+  - `MapUtil`：新增 `toProperties`；
+  - 新增 `P4Features8Test`（5 例）；sure-core 指令覆盖率 89.1%。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

@@ -966,4 +966,34 @@ public class StrUtil {
 	}
 
 
+
+	/**
+	 * 查找子串首次出现位置。
+	 *
+	 * @param str    原字符串
+	 * @param search 子串
+	 * @return 位置；未找到或参数为空返回 -1
+	 */
+	public static int indexOf(CharSequence str, CharSequence search) {
+		if (str == null || search == null || search.isEmpty()) {
+			return -1;
+		}
+		return str.toString().indexOf(search.toString());
+	}
+
+	/**
+	 * 查找子串末次出现位置。
+	 *
+	 * @param str    原字符串
+	 * @param search 子串
+	 * @return 位置；未找到或参数为空返回 -1
+	 */
+	public static int lastIndexOf(CharSequence str, CharSequence search) {
+		if (str == null || search == null || search.isEmpty()) {
+			return -1;
+		}
+		return str.toString().lastIndexOf(search.toString());
+	}
+
+
 }

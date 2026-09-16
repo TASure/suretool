@@ -735,4 +735,45 @@ public class CollUtil {
 	}
 
 
+
+	/**
+	 * 按 Bean 属性排序（反射读取 getter），返回新列表。
+	 *
+	 * @param <T>         元素类型
+	 * @param collection  集合
+	 * @param property    属性名（如 "name"）
+	 * @param isAscending 是否升序
+	 * @return 排序后新列表
+	 */
+	public static <T> List<T> sortByProperty(Collection<T> collection, String property, boolean isAscending) {
+		if (isEmpty(collection)) {
+			return new java.util.ArrayList<>();
+		}
+		List<T> list = new java.util.ArrayList<>(collection);
+		String getter = "get" + Character.toUpperCase(property.charAt(0)) + property.substring(1);
+		list.sort((a, b) -> {
+			try {
+				Object va = a.getClass().getMethod(getter).invoke(a);
+				Object vb = b.getClass().getMethod(getter).invoke(b);
+				int cmp;
+				if (va instanceof Comparable && vb instanceof Comparable) {
+					@SuppressWarnings("unchecked")
+					Comparable<Object> ca = (Comparable<Object>) va;
+					cmp = ca.compareTo(vb);
+				} else if (va == null && vb == null) {
+					cmp = 0;
+				} else if (va == null) {
+					cmp = -1;
+				} else {
+					cmp = 1;
+				}
+				return isAscending ? cmp : -cmp;
+			} catch (ReflectiveOperationException e) {
+				throw new RuntimeException("属性读取失败: " + property, e);
+			}
+		});
+		return list;
+	}
+
+
 }

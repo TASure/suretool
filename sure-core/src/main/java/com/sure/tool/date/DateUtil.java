@@ -588,4 +588,55 @@ public class DateUtil {
 	}
 
 
+
+	/**
+	 * 两时间差的可读文本（x天x小时x分x秒）。
+	 *
+	 * @param start 开始
+	 * @param end   结束
+	 * @return 可读时长
+	 */
+	public static String formatBetween(Date start, Date end) {
+		long ms = Math.abs(end.getTime() - start.getTime());
+		long days = ms / 86_400_000;
+		long hours = ms % 86_400_000 / 3_600_000;
+		long minutes = ms % 3_600_000 / 60_000;
+		long seconds = ms % 60_000 / 1000;
+		StringBuilder sb = new StringBuilder();
+		if (days > 0) {
+			sb.append(days).append("天");
+		}
+		if (hours > 0 || sb.length() > 0) {
+			sb.append(hours).append("小时");
+		}
+		if (minutes > 0 || sb.length() > 0) {
+			sb.append(minutes).append("分");
+		}
+		sb.append(seconds).append("秒");
+		return sb.toString();
+	}
+
+	/**
+	 * 是否为周末（周六/周日）。
+	 *
+	 * @param date 日期
+	 * @return 是否周末
+	 */
+	public static boolean isWeekend(Date date) {
+		int week = dayOfWeek(date);
+		return week == Calendar.SATURDAY || week == Calendar.SUNDAY;
+	}
+
+	/**
+	 * 按周偏移。
+	 *
+	 * @param date   日期
+	 * @param offset 周偏移量（可负）
+	 * @return 偏移后日期
+	 */
+	public static Date offsetWeek(Date date, int offset) {
+		return offset(date, Calendar.WEEK_OF_YEAR, offset);
+	}
+
+
 }

@@ -24,7 +24,14 @@
   - `RetryUtil`：固定间隔重试与条件重试（结果条件、异常重试开关）；
   - `ExceptionUtil`：堆栈转字符串、根源异常、cause 链判定、异常包装；
   - `EnumUtil`：按名称/序号/toString 转换枚举，支持忽略大小写；
-  - 新增 `P4Features2Test`（9 例）；sure-core 指令覆盖率提升至 88.2%。
+  - 新增 `P4Features2Test`（9 例）；sure-core 指令覆盖率提升至 88.2%；
+  - `BloomFilterUtil`：布隆过滤器（可配置预期元素数与误判率，双独立哈希，零依赖）；
+  - `UrlUtil`：URL 编码/解码、URI 解析（host/port/scheme/path）、查询参数提取与拼接；
+  - `ImageUtil`：基于 ImageIO 的图像读写、缩放、裁剪、灰度、旋转、格式转换；
+  - `WeightRandom`：权重随机（任意对象 + 权重项）；
+  - `BoundedPriorityQueue`：有界优先队列（容量固定，自动淘汰最次元素）；
+  - `Pair` / `Triple`：不可变有序二元组/三元组（JDK record）；
+  - 新增 `P4Features3Test`（6 例）；sure-core 指令覆盖率提升至 88.3%。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

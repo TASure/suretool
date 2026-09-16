@@ -380,4 +380,66 @@ public class NumberUtil {
 	public static String toHexStr(int value) {
 		return Integer.toHexString(value);
 	}
+
+	/**
+	 * 数值转普通字符串（避免科学计数法，如 1.0E-4 → 0.0001）。
+	 *
+	 * @param value 数值
+	 * @return 普通十进制字符串
+	 */
+	public static String toStr(double value) {
+		return BigDecimal.valueOf(value).stripTrailingZeros().toPlainString();
+	}
+
+	/**
+	 * 生成整数序列 [start, end)。
+	 *
+	 * @param start 起始（含）
+	 * @param end   结束（不含）
+	 * @return 序列数组
+	 */
+	public static int[] range(int start, int end) {
+		return range(start, end, 1);
+	}
+
+	/**
+	 * 生成整数序列 [start, end)（指定步长）。
+	 *
+	 * @param start 起始（含）
+	 * @param end   结束（不含）
+	 * @param step  步长（&gt;0）
+	 * @return 序列数组
+	 */
+	public static int[] range(int start, int end, int step) {
+		if (step <= 0) {
+			throw new IllegalArgumentException("步长必须大于 0");
+		}
+		int size = Math.max(0, (int) Math.ceil((end - start) / (double) step));
+		int[] result = new int[size];
+		int v = start;
+		for (int i = 0; i < size; i++) {
+			result[i] = v;
+			v += step;
+		}
+		return result;
+	}
+
+	/**
+	 * 阶乘。
+	 *
+	 * @param n 非负整数
+	 * @return n!
+	 */
+	public static long factorial(int n) {
+		if (n < 0) {
+			throw new IllegalArgumentException("n 不能为负: " + n);
+		}
+		long result = 1;
+		for (int i = 2; i <= n; i++) {
+			result *= i;
+		}
+		return result;
+	}
+
+
 }

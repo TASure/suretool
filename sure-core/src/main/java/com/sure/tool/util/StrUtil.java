@@ -868,4 +868,102 @@ public class StrUtil {
 	public static String emptyToDefault(CharSequence str, String defaultStr) {
 		return isEmpty(str) ? defaultStr : str.toString();
 	}
+
+	/**
+	 * 掩码：将 [fromInclude, toExclude) 区间字符替换为掩码符。
+	 *
+	 * @param str        原字符串
+	 * @param fromInclude 起始（含）
+	 * @param toExclude   结束（不含）
+	 * @param maskChar    掩码符
+	 * @return 掩码后字符串；null 返回 null
+	 */
+	public static String hide(CharSequence str, int fromInclude, int toExclude, char maskChar) {
+		if (str == null) {
+			return null;
+		}
+		int len = str.length();
+		int from = Math.max(0, fromInclude);
+		int to = Math.min(len, toExclude);
+		if (from >= to) {
+			return str.toString();
+		}
+		StringBuilder sb = new StringBuilder(len);
+		sb.append(str, 0, from);
+		sb.append(String.valueOf(maskChar).repeat(to - from));
+		sb.append(str, to, len);
+		return sb.toString();
+	}
+
+	/**
+	 * 取两标记之间的内容（第一个匹配）。
+	 *
+	 * @param str    原字符串
+	 * @param prefix 前标记
+	 * @param suffix 后标记
+	 * @return 中间内容；未匹配返回 null
+	 */
+	public static String subBetween(CharSequence str, CharSequence prefix, CharSequence suffix) {
+		if (str == null || prefix == null || suffix == null) {
+			return null;
+		}
+		String text = str.toString();
+		String pre = prefix.toString();
+		String suf = suffix.toString();
+		int start = text.indexOf(pre);
+		if (start < 0) {
+			return null;
+		}
+		start += pre.length();
+		int end = text.indexOf(suf, start);
+		if (end < 0) {
+			return null;
+		}
+		return text.substring(start, end);
+	}
+
+	/**
+	 * 是否为数字字符串（允许正负号、小数点）。
+	 *
+	 * @param str 字符串
+	 * @return 是否数字
+	 */
+	public static boolean isNumeric(CharSequence str) {
+		if (str == null || str.isEmpty()) {
+			return false;
+		}
+		String s = str.toString();
+		try {
+			Double.parseDouble(s);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+
+	/**
+	 * 移除所有指定子串。
+	 *
+	 * @param str    原字符串
+	 * @param values 要移除的子串
+	 * @return 移除后字符串；null 返回 null
+	 */
+	public static String removeAll(CharSequence str, CharSequence... values) {
+		if (str == null) {
+			return null;
+		}
+		String result = str.toString();
+		if (values == null) {
+			return result;
+		}
+		for (CharSequence v : values) {
+			if (v == null || v.isEmpty()) {
+				continue;
+			}
+			result = result.replace(v.toString(), "");
+		}
+		return result;
+	}
+
+
 }

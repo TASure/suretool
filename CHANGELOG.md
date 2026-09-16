@@ -39,7 +39,14 @@
   - `ObjectUtil`：新增 `isAllNotNull`/`isAllNull`/空安全 `compare`；
   - `HashUtil`：新增 MurmurHash3-32 `murmur3_32`、`fnv1a64`、`djb2` 通用哈希；
   - `RandomUtil`：新增 `randomEle`（随机取一个）、`randomEleSet`（随机取 N 个不重复）；
-  - 新增 `P4Features4Test`（7 例）；sure-core 指令覆盖率提升至 88.8%。
+  - 新增 `P4Features4Test`（7 例）；sure-core 指令覆盖率提升至 88.8%；
+  - 新增 `StrSimilarity`（text 包）：Levenshtein 编辑距离、相似度、Jaccard、余弦相似度；
+  - 新增 `HtmlUtil`（util 包）：HTML 转义/反转义、去标签、按标签名移除；
+  - 新增 `BytesUtil`（util 包）：long/int/short 与字节大端互转、拼接/切片/反转/十六进制；
+  - 新增 `BitUtil`（util 包）：单位置位/清除/翻转/读取、int/long 位范围提取；
+  - `NumberUtil`：新增 `toStr`（避免科学计数法）、`range`（整数序列）、`factorial`；
+  - `StrUtil`：新增 `hide`（掩码）、`subBetween`（取标记间）、`isNumeric`、`removeAll`；
+  - 新增 `P4Features5Test`（6 例）；sure-core 指令覆盖率提升至 89.3%。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

@@ -100,5 +100,14 @@ public class IdUtil {
 		return DEFAULT_SNOWFLAKE.nextId();
 	}
 
+	/**
+	 * 快速 UUID（不含连字符，性能优先）。
+	 *
+	 * @return 32 位十六进制字符串
+	 */
+	public static String fastSimpleUUID() {
+		return java.util.UUID.randomUUID().toString().replace("-", "");
+	}
+
 
 }

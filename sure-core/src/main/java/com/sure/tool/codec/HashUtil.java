@@ -276,5 +276,60 @@ public class HashUtil {
 		return h;
 	}
 
+	/**
+	 * 计算字节数组的 MD5 摘要（原始字节）。
+	 *
+	 * @param data 字节数组
+	 * @return MD5 摘要字节（16 字节）
+	 */
+	public static byte[] md5(byte[] data) {
+		return digestBytes("MD5", data);
+	}
+
+	/**
+	 * 计算字节数组的 SHA-1 摘要（原始字节）。
+	 *
+	 * @param data 字节数组
+	 * @return SHA-1 摘要字节（20 字节）
+	 */
+	public static byte[] sha1(byte[] data) {
+		return digestBytes("SHA-1", data);
+	}
+
+	/**
+	 * 计算字节数组的 SHA-256 摘要（原始字节）。
+	 *
+	 * @param data 字节数组
+	 * @return SHA-256 摘要字节（32 字节）
+	 */
+	public static byte[] sha256(byte[] data) {
+		return digestBytes("SHA-256", data);
+	}
+
+	/**
+	 * 计算字节数组的 SHA-512 摘要（原始字节）。
+	 *
+	 * @param data 字节数组
+	 * @return SHA-512 摘要字节（64 字节）
+	 */
+	public static byte[] sha512(byte[] data) {
+		return digestBytes("SHA-512", data);
+	}
+
+	/**
+	 * 计算原始摘要字节。
+	 *
+	 * @param algorithm 算法名
+	 * @param data      数据
+	 * @return 摘要字节
+	 */
+	private static byte[] digestBytes(String algorithm, byte[] data) {
+		try {
+			MessageDigest md = MessageDigest.getInstance(algorithm);
+			return md.digest(data);
+		} catch (java.security.NoSuchAlgorithmException e) {
+			throw new IllegalStateException("不支持的摘要算法: " + algorithm, e);
+		}
+	}
 
 }

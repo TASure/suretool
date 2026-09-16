@@ -168,4 +168,32 @@ public class ImageUtil {
 		}
 		return image.getWidth() + "x" + image.getHeight();
 	}
+
+	/**
+	 * 将图片编码为 Base64 字符串。
+	 *
+	 * @param image  图片
+	 * @param format 格式（png/jpg 等）
+	 * @return Base64 字符串
+	 * @throws java.io.IOException IO 异常
+	 */
+	public static String toBase64(BufferedImage image, String format) throws java.io.IOException {
+		java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+		javax.imageio.ImageIO.write(image, format, out);
+		return java.util.Base64.getEncoder().encodeToString(out.toByteArray());
+	}
+
+	/**
+	 * 将图片编码为 Data URI（可直接用于 &lt;img src&gt;）。
+	 *
+	 * @param image  图片
+	 * @param format 格式（png/jpg 等）
+	 * @return {@code data:image/png;base64,...}
+	 * @throws java.io.IOException IO 异常
+	 */
+	public static String toDataUri(BufferedImage image, String format) throws java.io.IOException {
+		return "data:image/" + format + ";base64," + toBase64(image, format);
+	}
+
+
 }

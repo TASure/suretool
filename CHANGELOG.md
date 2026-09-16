@@ -110,7 +110,14 @@
   - 【sure-captcha】`AbstractCaptcha`：新增 `write(File)`；
   - `StrUtil`（sure-core）：新增 `removePrefix`/`removeSuffix`/`subSuf`/`subPre`；
   - `ValidatorUtil`（sure-core）：新增 `isCreditCode`/`isDate`（含闰年校验）；
-  - 新增 `P4JwtTest`/`P4HmacTest`/`P4CaptchaWriteTest`；全模块 543 测试全绿。
+  - 新增 `P4JwtTest`/`P4HmacTest`/`P4CaptchaWriteTest`；全模块 543 测试全绿；
+  - `DesensitizedUtil`（sure-core）：新增 `carLicense`（车牌脱敏）；
+  - `ImageUtil`（sure-core）：新增 `toBase64`/`toDataUri`（图片 Base64 编码）；
+  - `RandomUtil`（sure-core）：新增 `randomEleWeighted`（权重随机）；
+  - `DateUtil`（sure-core）：新增 `beginOfQuarter`/`endOfQuarter`（季度边界）；
+  - `ConvertUtil`（sure-core）：新增 `toEnum`（字符串转枚举，null 安全）；
+  - 【sure-cron】`CronUtil`：新增 `match`（时刻匹配便捷入口）；
+  - 新增测试用例：全模块 545 测试全绿。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

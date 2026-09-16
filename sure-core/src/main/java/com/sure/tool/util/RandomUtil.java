@@ -268,4 +268,21 @@ public class RandomUtil {
 	}
 
 
+
+	/**
+	 * 按权重随机取一个元素。
+	 *
+	 * @param weights 权重对象集合（{@link com.sure.tool.lang.WeightRandom.WeightObj}）
+	 * @param <T>     元素类型
+	 * @return 随机元素；集合为空返回 null
+	 */
+	public static <T> T randomEleWeighted(java.util.Collection<com.sure.tool.lang.WeightRandom.WeightObj<T>> weights) {
+		com.sure.tool.lang.WeightRandom<T> wr = new com.sure.tool.lang.WeightRandom<>();
+		for (com.sure.tool.lang.WeightRandom.WeightObj<T> w : weights) {
+			wr.add(w.item(), w.weight());
+		}
+		return wr.next();
+	}
+
+
 }

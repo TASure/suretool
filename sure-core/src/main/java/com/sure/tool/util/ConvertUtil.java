@@ -479,4 +479,25 @@ public class ConvertUtil {
 	}
 
 
+
+	/**
+	 * 字符串转枚举。
+	 *
+	 * @param value   枚举名
+	 * @param enumClass 枚举类
+	 * @param <E>     枚举类型
+	 * @return 枚举值；无效返回 null
+	 */
+	public static <E extends Enum<E>> E toEnum(String value, Class<E> enumClass) {
+		if (value == null || enumClass == null) {
+			return null;
+		}
+		try {
+			return Enum.valueOf(enumClass, value.trim());
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
+	}
+
+
 }

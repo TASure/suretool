@@ -174,4 +174,17 @@ public class CronUtil {
 	}
 
 
+
+	/**
+	 * 判断表达式是否匹配指定时间。
+	 *
+	 * @param cron 表达式
+	 * @param date 时间
+	 * @return 是否匹配
+	 */
+	public static boolean match(String cron, java.util.Date date) {
+		return parse(cron).match(date);
+	}
+
+
 }

@@ -167,4 +167,21 @@ public class DesensitizedUtil {
 		}
 		return str.substring(0, start) + StrUtil.repeat("*", end - start) + str.substring(end);
 	}
+
+	/**
+	 * 脱敏车牌号：保留省份汉字与首字母，隐藏中间 4 位，保留末位。
+	 * 如 {@code 陕A12345} → {@code 陕A***45}。
+	 *
+	 * @param carLicense 车牌号
+	 * @return 脱敏结果；null 返回 null
+	 */
+	public static String carLicense(String carLicense) {
+		if (carLicense == null || carLicense.length() < 6) {
+			return carLicense;
+		}
+		// 省份汉字（首字符） + 第二位字母 + *** + 末尾 2 位
+		return carLicense.substring(0, 2) + "***" + carLicense.substring(carLicense.length() - 2);
+	}
+
+
 }

@@ -761,4 +761,39 @@ public class DateUtil {
 	}
 
 
+
+	/**
+	 * 获取季度开始时间（当季第 1 天 00:00:00）。
+	 *
+	 * @param date 日期
+	 * @return 季度开始
+	 */
+	public static java.util.Date beginOfQuarter(java.util.Date date) {
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		cal.setTime(date);
+		int quarterMonth = (cal.get(java.util.Calendar.MONTH) / 3) * 3;
+		cal.set(java.util.Calendar.MONTH, quarterMonth);
+		cal.set(java.util.Calendar.DAY_OF_MONTH, 1);
+		cal.set(java.util.Calendar.HOUR_OF_DAY, 0);
+		cal.set(java.util.Calendar.MINUTE, 0);
+		cal.set(java.util.Calendar.SECOND, 0);
+		cal.set(java.util.Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
+
+	/**
+	 * 获取季度结束时间（当季最后 1 天 23:59:59）。
+	 *
+	 * @param date 日期
+	 * @return 季度结束
+	 */
+	public static java.util.Date endOfQuarter(java.util.Date date) {
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		cal.setTime(beginOfQuarter(date));
+		cal.add(java.util.Calendar.MONTH, 3);
+		cal.add(java.util.Calendar.MILLISECOND, -1);
+		return cal.getTime();
+	}
+
+
 }

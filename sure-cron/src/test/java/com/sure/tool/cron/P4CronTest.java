@@ -44,4 +44,13 @@ public class P4CronTest {
 			// expected
 		}
 	}
+
+	@Test
+	public void testMatch() {
+		Date noon = new Date(2026 - 1900, 8, 16, 12, 0, 0);
+		Assert.assertTrue(CronUtil.match("0 0 12 * * ?", noon));
+		Assert.assertFalse(CronUtil.match("0 0 13 * * ?", noon));
+	}
+
+
 }

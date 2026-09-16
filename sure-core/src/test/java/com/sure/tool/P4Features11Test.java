@@ -195,4 +195,45 @@ public class P4Features11Test {
 	}
 
 
+
+	@Test
+	public void testBatch16() {
+		// DesensitizedUtil.carLicense
+		Assert.assertEquals("陕A***45", com.sure.tool.util.DesensitizedUtil.carLicense("陕A12345"));
+		Assert.assertEquals("粤B***88", com.sure.tool.util.DesensitizedUtil.carLicense("粤B66688"));
+		Assert.assertNull(com.sure.tool.util.DesensitizedUtil.carLicense(null));
+
+		// ImageUtil.toBase64 / toDataUri
+		try {
+			java.awt.image.BufferedImage img = new java.awt.image.BufferedImage(4, 4, java.awt.image.BufferedImage.TYPE_INT_RGB);
+			String b64 = com.sure.tool.image.ImageUtil.toBase64(img, "png");
+			Assert.assertNotNull(b64);
+			Assert.assertTrue(b64.length() > 0);
+			String uri = com.sure.tool.image.ImageUtil.toDataUri(img, "png");
+			Assert.assertTrue(uri.startsWith("data:image/png;base64,"));
+		} catch (Exception e) {
+			Assert.fail("ImageUtil base64 异常: " + e);
+		}
+
+		// RandomUtil.randomEleWeighted
+		java.util.List<com.sure.tool.lang.WeightRandom.WeightObj<String>> weights = new java.util.ArrayList<>();
+		weights.add(new com.sure.tool.lang.WeightRandom.WeightObj<>("A", 10));
+		weights.add(new com.sure.tool.lang.WeightRandom.WeightObj<>("B", 90));
+		String picked = com.sure.tool.util.RandomUtil.randomEleWeighted(weights);
+		Assert.assertTrue("A".equals(picked) || "B".equals(picked));
+
+		// DateUtil.beginOfQuarter / endOfQuarter
+		java.util.Date q = com.sure.tool.date.DateUtil.parse("2026-05-20");
+		java.util.Date qBegin = com.sure.tool.date.DateUtil.beginOfQuarter(q);
+		java.util.Date qEnd = com.sure.tool.date.DateUtil.endOfQuarter(q);
+		Assert.assertEquals("2026-04-01 00:00:00", com.sure.tool.date.DateUtil.format(qBegin, "yyyy-MM-dd HH:mm:ss"));
+		Assert.assertEquals("2026-06-30 23:59:59", com.sure.tool.date.DateUtil.format(qEnd, "yyyy-MM-dd HH:mm:ss"));
+
+		// ConvertUtil.toEnum
+		Assert.assertEquals(java.util.concurrent.TimeUnit.SECONDS, com.sure.tool.util.ConvertUtil.toEnum("SECONDS", java.util.concurrent.TimeUnit.class));
+		Assert.assertNull(com.sure.tool.util.ConvertUtil.toEnum("BAD", java.util.concurrent.TimeUnit.class));
+		Assert.assertNull(com.sure.tool.util.ConvertUtil.toEnum(null, java.util.concurrent.TimeUnit.class));
+	}
+
+
 }

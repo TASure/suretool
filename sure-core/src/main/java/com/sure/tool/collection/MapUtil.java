@@ -361,4 +361,65 @@ public class MapUtil {
 	}
 
 
+
+	/**
+	 * 按 key 排序（key 需可比），返回 LinkedHashMap。
+	 *
+	 * @param <K>         键类型（Comparable）
+	 * @param <V>         值类型
+	 * @param map         原 Map
+	 * @param isAscending 是否升序
+	 * @return 排序后新 Map
+	 */
+	public static <K extends Comparable<? super K>, V> Map<K, V> sort(Map<K, V> map, boolean isAscending) {
+		if (isEmpty(map)) {
+			return map;
+		}
+		List<K> keys = new ArrayList<>(map.keySet());
+		if (isAscending) {
+			keys.sort(Comparator.naturalOrder());
+		} else {
+			keys.sort(Comparator.reverseOrder());
+		}
+		Map<K, V> result = new LinkedHashMap<>();
+		for (K key : keys) {
+			result.put(key, map.get(key));
+		}
+		return result;
+	}
+
+	/**
+	 * 按条件过滤 Map（不修改原 Map）。
+	 *
+	 * @param <K>       键类型
+	 * @param <V>       值类型
+	 * @param map       原 Map
+	 * @param predicate 过滤条件
+	 * @return 过滤后新 Map
+	 */
+	public static <K, V> Map<K, V> filter(Map<K, V> map, java.util.function.Predicate<Map.Entry<K, V>> predicate) {
+		Map<K, V> result = new LinkedHashMap<>();
+		if (isEmpty(map)) {
+			return result;
+		}
+		for (Map.Entry<K, V> e : map.entrySet()) {
+			if (predicate.test(e)) {
+				result.put(e.getKey(), e.getValue());
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 取 Date（支持时间戳与常见日期格式）。
+	 *
+	 * @param map Map
+	 * @param key 键
+	 * @return Date 值；缺失或不可解析返回 null
+	 */
+	public static java.util.Date getDate(Map<?, ?> map, Object key) {
+		return ConvertUtil.toDate(map.get(key));
+	}
+
+
 }

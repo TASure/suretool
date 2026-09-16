@@ -537,4 +537,73 @@ public class ArrayUtil {
 	}
 
 
+
+	/**
+	 * 移除首个匹配元素（返回新数组）。
+	 *
+	 * @param array 数组
+	 * @param value 要移除的值
+	 * @return 新数组
+	 */
+	public static Object remove(Object array, Object value) {
+		if (!isArray(array) || isEmpty(array)) {
+			return array;
+		}
+		int idx = indexOf(array, value);
+		if (idx < 0) {
+			return array;
+		}
+		int len = length(array);
+		Object result = java.lang.reflect.Array.newInstance(array.getClass().getComponentType(), len - 1);
+		System.arraycopy(array, 0, result, 0, idx);
+		System.arraycopy(array, idx + 1, result, idx, len - idx - 1);
+		return result;
+	}
+
+	/**
+	 * 追加元素（返回新数组）。
+	 *
+	 * @param array  原数组
+	 * @param values 追加值
+	 * @return 新数组
+	 */
+	public static Object append(Object array, Object... values) {
+		if (!isArray(array)) {
+			throw new IllegalArgumentException("非数组对象");
+		}
+		int base = length(array);
+		Object result = java.lang.reflect.Array.newInstance(array.getClass().getComponentType(), base + values.length);
+		System.arraycopy(array, 0, result, 0, base);
+		for (int i = 0; i < values.length; i++) {
+			java.lang.reflect.Array.set(result, base + i, values[i]);
+		}
+		return result;
+	}
+
+	/**
+	 * 指定位置插入元素（返回新数组）。
+	 *
+	 * @param array  原数组
+	 * @param index  插入位置（0~length）
+	 * @param values 插入值
+	 * @return 新数组
+	 */
+	public static Object insert(Object array, int index, Object... values) {
+		if (!isArray(array)) {
+			throw new IllegalArgumentException("非数组对象");
+		}
+		int len = length(array);
+		if (index < 0 || index > len) {
+			throw new IllegalArgumentException("插入位置越界: " + index);
+		}
+		Object result = java.lang.reflect.Array.newInstance(array.getClass().getComponentType(), len + values.length);
+		System.arraycopy(array, 0, result, 0, index);
+		for (int i = 0; i < values.length; i++) {
+			java.lang.reflect.Array.set(result, index + i, values[i]);
+		}
+		System.arraycopy(array, index, result, index + values.length, len - index);
+		return result;
+	}
+
+
 }

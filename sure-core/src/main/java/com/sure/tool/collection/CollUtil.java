@@ -842,4 +842,52 @@ public class CollUtil {
 	}
 
 
+
+	/**
+	 * 最小值（Comparable 集合，null 安全）。
+	 *
+	 * @param <T>        元素类型（Comparable）
+	 * @param collection 集合
+	 * @return 最小值；空集合返回 null
+	 */
+	public static <T extends Comparable<? super T>> T min(Collection<T> collection) {
+		if (isEmpty(collection)) {
+			return null;
+		}
+		T min = null;
+		for (T item : collection) {
+			if (item == null) {
+				continue;
+			}
+			if (min == null || item.compareTo(min) < 0) {
+				min = item;
+			}
+		}
+		return min;
+	}
+
+	/**
+	 * 最大值（Comparable 集合，null 安全）。
+	 *
+	 * @param <T>        元素类型（Comparable）
+	 * @param collection 集合
+	 * @return 最大值；空集合返回 null
+	 */
+	public static <T extends Comparable<? super T>> T max(Collection<T> collection) {
+		if (isEmpty(collection)) {
+			return null;
+		}
+		T max = null;
+		for (T item : collection) {
+			if (item == null) {
+				continue;
+			}
+			if (max == null || item.compareTo(max) > 0) {
+				max = item;
+			}
+		}
+		return max;
+	}
+
+
 }

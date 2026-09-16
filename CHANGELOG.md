@@ -74,7 +74,14 @@
   - `StrUtil`：新增 `startWithAny`/`endWithAny`；
   - `CollUtil`：新增 `split`（分块）、`sum`/`sumLong`/`sumDouble`；
   - `ArrayUtil`：新增 `lastIndexOf`、`swap`；
-  - 新增 `P4Features9Test`（5 例）；sure-core 指令覆盖率 89.2%。
+  - 新增 `P4Features9Test`（5 例）；sure-core 指令覆盖率 89.2%；
+  - 新增 `RadixUtil`（util 包）：2~36 进制任意互转（toString/toLong/convert）；
+  - 新增 `EmojiUtil`（util 包）：emoji 与 `\uXXXX` 转义互转（支持代理对）；
+  - `DateUtil`：新增 `getGanzhi`（天干地支）、`offsetSecond`/`offsetYear`、`isIn`（区间判断）；
+  - `ArrayUtil`：新增 `remove`/`append`/`insert`；
+  - `MapUtil`：新增 `sort`（按键排序）、`filter`、`getDate`；
+  - `CollUtil`：新增 `min`/`max`（Comparable 集合）；
+  - 新增 `P4Features10Test`（5 例）；sure-core 指令覆盖率 89.5%。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

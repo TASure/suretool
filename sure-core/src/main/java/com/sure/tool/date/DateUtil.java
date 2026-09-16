@@ -686,4 +686,57 @@ public class DateUtil {
 	}
 
 
+
+	/**
+	 * 年份天干地支（如 2026 → 丙午）。
+	 *
+	 * @param date 日期
+	 * @return 天干地支
+	 */
+	public static String getGanzhi(Date date) {
+		int year = year(date);
+		String[] gan = {"甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"};
+		String[] zhi = {"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"};
+		return gan[(year - 4) % 10] + zhi[(year - 4) % 12];
+	}
+
+	/**
+	 * 按秒偏移。
+	 *
+	 * @param date   日期
+	 * @param offset 秒偏移量（可负）
+	 * @return 偏移后日期
+	 */
+	public static Date offsetSecond(Date date, int offset) {
+		return offset(date, Calendar.SECOND, offset);
+	}
+
+	/**
+	 * 按年偏移。
+	 *
+	 * @param date   日期
+	 * @param offset 年偏移量（可负）
+	 * @return 偏移后日期
+	 */
+	public static Date offsetYear(Date date, int offset) {
+		return offset(date, Calendar.YEAR, offset);
+	}
+
+	/**
+	 * 是否在时间区间内（含边界）。
+	 *
+	 * @param date  待判断日期
+	 * @param start 区间开始（可为 null 表示无下界）
+	 * @param end   区间结束（可为 null 表示无上界）
+	 * @return 是否在区间内
+	 */
+	public static boolean isIn(Date date, Date start, Date end) {
+		if (date == null) {
+			return false;
+		}
+		long t = date.getTime();
+		return (start == null || t >= start.getTime()) && (end == null || t <= end.getTime());
+	}
+
+
 }

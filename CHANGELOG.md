@@ -8,6 +8,17 @@
 
 ### Added
 
+- **P4 核心工具增强（v0.2.0-SNAPSHOT）**：
+  - `CollUtil`：新增分页 `page`、就地洗牌 `shuffle`、频次统计 `countMap`、单向差集 `subtract`、
+    列表转映射 `toMap`、批量追加 `addAll`、`Iterable` 判空重载；
+  - 新增 `com.sure.tool.id.NanoIdUtil`：URL 安全短 ID（默认 21 字符，可定制字母表与随机源）；
+  - 新增 `com.sure.tool.id.UlidUtil`：26 字符 Crockford Base32 ULID，支持单调递增模式；
+  - 新增 `com.sure.tool.system.SystemInfo`：CPU 核数/负载、JVM 堆与系统内存、JVM 启动与运行时长、
+    PID/命令行、OS 家族判断（Windows/Linux/macOS/Unix）；
+  - `ReUtil`：新增正则转义 `escape` / 反转义 `unescape`、按分组提取 `findAll(regex, content, groupIndex)`；
+  - `BeanUtil`：新增深拷贝 `deepCopy`（递归复制 Bean/Map/List/Set/数组，无第三方依赖）；
+  - 新增 `P4FeaturesTest` 覆盖全部新增 API；sure-core 指令覆盖率 87.9%，全模块 SpotBugs 0 告警。
+
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /
   `sure-poi` / `sure-captcha` / `sure-jwt` / `sure-dfa` / `sure-benchmark` / `sure-examples` /

@@ -569,4 +569,129 @@ public class CollUtil {
 		}
 		return new ArrayList<>(collection);
 	}
+
+	// ---------------- P4 增强：分页/洗牌/频次/差集/映射/合并 ----------------
+
+	/**
+	 * Iterable 是否为空。
+	 *
+	 * @param iterable 可迭代对象
+	 * @return 是否为空
+	 */
+	public static boolean isEmpty(Iterable<?> iterable) {
+		return iterable == null || !iterable.iterator().hasNext();
+	}
+
+	/**
+	 * 分页（页码从 1 开始），越界时返回空列表。
+	 *
+	 * @param list 原列表
+	 * @param page 页码（&gt;=1）
+	 * @param size 每页条数（&gt;0）
+	 * @param <T>  元素类型
+	 * @return 当前页元素列表
+	 */
+	public static <T> List<T> page(List<T> list, int page, int size) {
+		if (list == null || list.isEmpty() || page < 1 || size < 1) {
+			return Collections.emptyList();
+		}
+		int from = Math.min((page - 1) * size, list.size());
+		int to = Math.min(from + size, list.size());
+		return new ArrayList<>(list.subList(from, to));
+	}
+
+	/**
+	 * 就地洗牌（Fisher-Yates），返回原列表以便链式调用。
+	 *
+	 * @param list 列表
+	 * @param <T>  元素类型
+	 * @return 洗牌后的原列表
+	 */
+	public static <T> List<T> shuffle(List<T> list) {
+		if (list != null) {
+			Collections.shuffle(list);
+		}
+		return list;
+	}
+
+	/**
+	 * 统计元素出现频次。
+	 *
+	 * @param collection 集合
+	 * @param <T>        元素类型
+	 * @return 元素到频次的映射
+	 */
+	public static <T> Map<T, Integer> countMap(Collection<T> collection) {
+		Map<T, Integer> map = new LinkedHashMap<>();
+		if (collection == null) {
+			return map;
+		}
+		for (T item : collection) {
+			map.merge(item, 1, Integer::sum);
+		}
+		return map;
+	}
+
+	/**
+	 * 单向差集：返回 c1 中存在但 c2 中不存在的元素。
+	 *
+	 * @param c1 左集合
+	 * @param c2 右集合
+	 * @param <T> 元素类型
+	 * @return c1 - c2 的结果列表
+	 */
+	public static <T> List<T> subtract(Collection<T> c1, Collection<T> c2) {
+		List<T> result = new ArrayList<>();
+		if (isEmpty(c1)) {
+			return result;
+		}
+		Set<T> set = (c2 == null || c2.isEmpty()) ? Set.of() : new HashSet<>(c2);
+		for (T item : c1) {
+			if (!set.contains(item)) {
+				result.add(item);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 列表转映射。
+	 *
+	 * @param collection   集合
+	 * @param keyMapper    key 提取函数
+	 * @param valueMapper  value 提取函数
+	 * @param <T>          元素类型
+	 * @param <K>          key 类型
+	 * @param <V>          value 类型
+	 * @return 映射（重复 key 时后者覆盖前者）
+	 */
+	public static <T, K, V> Map<K, V> toMap(Collection<T> collection, Function<T, K> keyMapper, Function<T, V> valueMapper) {
+		Map<K, V> map = new LinkedHashMap<>();
+		if (collection == null) {
+			return map;
+		}
+		for (T item : collection) {
+			map.put(keyMapper.apply(item), valueMapper.apply(item));
+		}
+		return map;
+	}
+
+	/**
+	 * 将 source 全部追加到 target 并返回 target。
+	 *
+	 * @param target 目标集合
+	 * @param source 源集合
+	 * @param <T>    元素类型
+	 * @return target
+	 */
+	public static <T> Collection<T> addAll(Collection<T> target, Collection<T> source) {
+		if (target == null) {
+			throw new IllegalArgumentException("target 不能为 null");
+		}
+		if (source != null) {
+			target.addAll(source);
+		}
+		return target;
+	}
+
 }

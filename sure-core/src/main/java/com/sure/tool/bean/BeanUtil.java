@@ -267,4 +267,72 @@ public class BeanUtil {
 		}
 		return false;
 	}
+
+	/**
+	 * 深拷贝：递归复制 Bean / Map / List / Set / 数组 / 不可变值类型。
+	 * <p>
+	 * 规则：基本类型、包装类型、String、枚举、Date 直接返回原引用（不可变或无需拷贝）；
+	 * 集合与 Map 逐元素深拷贝；数组逐元素深拷贝；其余按 Bean 处理（无参构造 + 属性拷贝）。
+	 * <p>
+	 * 注意：循环引用不处理（会栈溢出），请勿对存在环的对象图调用。
+	 *
+	 * @param source 源对象
+	 * @param <T>    类型
+	 * @return 深拷贝结果，入参为 null 时返回 null
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T deepCopy(T source) {
+		if (source == null) {
+			return null;
+		}
+		Class<?> type = source.getClass();
+		if (type.isPrimitive() || type.isEnum() || source instanceof String
+				|| source instanceof Number || source instanceof Boolean
+				|| source instanceof Character || source instanceof java.util.Date) {
+			return source;
+		}
+		if (source instanceof java.util.List<?> list) {
+			java.util.List<Object> copy = new java.util.ArrayList<>(list.size());
+			for (Object item : list) {
+				copy.add(deepCopy(item));
+			}
+			return (T) copy;
+		}
+		if (source instanceof java.util.Set<?> set) {
+			java.util.Set<Object> copy = new java.util.LinkedHashSet<>(set.size());
+			for (Object item : set) {
+				copy.add(deepCopy(item));
+			}
+			return (T) copy;
+		}
+		if (source instanceof java.util.Map<?, ?> map) {
+			java.util.Map<Object, Object> copy = new java.util.LinkedHashMap<>(map.size());
+			for (java.util.Map.Entry<?, ?> entry : map.entrySet()) {
+				copy.put(deepCopy(entry.getKey()), deepCopy(entry.getValue()));
+			}
+			return (T) copy;
+		}
+		if (type.isArray()) {
+			int len = java.lang.reflect.Array.getLength(source);
+			Object copy = java.lang.reflect.Array.newInstance(type.getComponentType(), len);
+			if (!type.getComponentType().isPrimitive()) {
+				for (int i = 0; i < len; i++) {
+					java.lang.reflect.Array.set(copy, i, deepCopy(java.lang.reflect.Array.get(source, i)));
+				}
+			} else {
+				System.arraycopy(source, 0, copy, 0, len);
+			}
+			return (T) copy;
+		}
+		// Bean：无参构造 + 属性拷贝
+		T target;
+		try {
+			target = (T) type.getDeclaredConstructor().newInstance();
+		} catch (ReflectiveOperationException e) {
+			throw new IllegalArgumentException("deepCopy 需要无参构造: " + type.getName(), e);
+		}
+		copyProperties(source, target);
+		return target;
+	}
+
 }

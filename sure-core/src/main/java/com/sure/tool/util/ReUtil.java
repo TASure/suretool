@@ -258,4 +258,66 @@ public class ReUtil {
 	public static String quote(String regex) {
 		return Pattern.quote(regex);
 	}
+
+
+	/**
+	 * 转义正则表达式特殊字符，使字符串可被字面匹配。
+	 *
+	 * @param content 原始字符串
+	 * @return 转义后的正则表达式
+	 */
+	public static String escape(String content) {
+		if (content == null) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder(content.length() * 2);
+		for (int i = 0; i < content.length(); i++) {
+			char c = content.charAt(i);
+			if ("\\.[]{}()*+-?^$|".indexOf(c) >= 0) {
+				sb.append('\\');
+			}
+			sb.append(c);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * 反转义：移除正则特殊字符前的反斜杠。
+	 *
+	 * @param content 转义后的字符串
+	 * @return 原始字符串
+	 */
+	public static String unescape(String content) {
+		if (content == null) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder(content.length());
+		for (int i = 0; i < content.length(); i++) {
+			char c = content.charAt(i);
+			if (c == '\\' && i + 1 < content.length()) {
+				i++;
+				sb.append(content.charAt(i));
+			} else {
+				sb.append(c);
+			}
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * 查找所有匹配并返回指定分组。
+	 *
+	 * @param regex      正则表达式
+	 * @param content    内容
+	 * @param groupIndex 分组下标（0 为整体）
+	 * @return 分组匹配结果列表
+	 */
+	public static List<String> findAll(String regex, CharSequence content, int groupIndex) {
+		List<String> result = new java.util.ArrayList<>();
+		Matcher matcher = Pattern.compile(regex).matcher(content);
+		while (matcher.find()) {
+			result.add(matcher.group(groupIndex));
+		}
+		return result;
+	}
 }

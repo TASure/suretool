@@ -77,6 +77,24 @@ public class DateUtil {
 	}
 
 	/**
+	 * 当前毫秒时间戳。
+	 *
+	 * @return 当前毫秒
+	 */
+	public static long current() {
+		return System.currentTimeMillis();
+	}
+
+	/**
+	 * 当前秒级时间戳。
+	 *
+	 * @return 当前秒
+	 */
+	public static long currentSeconds() {
+		return System.currentTimeMillis() / 1000;
+	}
+
+	/**
 	 * 时间戳转 Date。
 	 *
 	 * @param timeMillis 毫秒时间戳

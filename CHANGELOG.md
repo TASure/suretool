@@ -310,6 +310,10 @@
   - 【sure-json】`JSONObject`/`JSONArray`：新增 `getLocalDate`、`getLocalDateTime`；
   - `ConvertUtil`：`toLocalDate`/`toLocalDateTime` 支持 Long 时间戳输入；
   - 新增 `P4Features35Test`（2 例）与 `P4JsonLocalDateTimeTest`（2 例）；全模块 623 测试全绿，sure-core 指令覆盖率 89.0%，SpotBugs 0 告警。
+- **第四十一批（P4 v0.2.0 继续）**：
+  - `StrSimilarity`：新增 `identical`（完全相同返回 1.0，否则返回相似度分数）；
+  - `DateUtil`：新增 `current`（当前毫秒时间戳）、`currentSeconds`（当前秒级时间戳）；
+  - 新增 `P4Features36Test`（2 例）；全模块 625 测试全绿，SpotBugs 0 告警。
 
 ### Changed
 

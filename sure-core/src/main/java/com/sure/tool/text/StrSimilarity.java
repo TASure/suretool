@@ -144,4 +144,17 @@ public class StrSimilarity {
 		}
 		return map;
 	}
+
+	/**
+	 * 完全相同返回 1.0，否则返回 {@link #similarity} 相似度分数。
+	 *
+	 * @param a 字符串
+	 * @param b 字符串
+	 * @return 1.0 或相似度
+	 */
+	public static double identical(String a, String b) {
+		String s1 = a == null ? "" : a;
+		String s2 = b == null ? "" : b;
+		return s1.equals(s2) ? 1.0 : similarity(s1, s2);
+	}
 }

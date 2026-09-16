@@ -1036,4 +1036,50 @@ public class StrUtil {
 	}
 
 
+
+	/**
+	 * 分隔为 int 数组（空白分隔），非法元素按 0 处理。
+	 *
+	 * @param str 数字字符串
+	 * @return int 数组
+	 */
+	public static int[] splitToIntArray(String str) {
+		if (isEmpty(str)) {
+			return new int[0];
+		}
+		String[] parts = str.split("\\s+");
+		int[] result = new int[parts.length];
+		for (int i = 0; i < parts.length; i++) {
+			try {
+				result[i] = Integer.parseInt(parts[i].trim());
+			} catch (NumberFormatException e) {
+				result[i] = 0;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 分隔为 long 数组（空白分隔），非法元素按 0 处理。
+	 *
+	 * @param str 数字字符串
+	 * @return long 数组
+	 */
+	public static long[] splitToLongArray(String str) {
+		if (isEmpty(str)) {
+			return new long[0];
+		}
+		String[] parts = str.split("\\s+");
+		long[] result = new long[parts.length];
+		for (int i = 0; i < parts.length; i++) {
+			try {
+				result[i] = Long.parseLong(parts[i].trim());
+			} catch (NumberFormatException e) {
+				result[i] = 0;
+			}
+		}
+		return result;
+	}
+
+
 }

@@ -380,4 +380,103 @@ public class ConvertUtil {
 	}
 
 
+
+	/**
+	 * 转 short。
+	 *
+	 * @param value 值
+	 * @return short；转换失败返回 0
+	 */
+	public static short toShort(Object value) {
+		return toShort(value, (short) 0);
+	}
+
+	/**
+	 * 转 short。
+	 *
+	 * @param value        值
+	 * @param defaultValue 默认值
+	 * @return short；转换失败返回默认值
+	 */
+	public static short toShort(Object value, short defaultValue) {
+		if (value == null) {
+			return defaultValue;
+		}
+		if (value instanceof Number num) {
+			return num.shortValue();
+		}
+		try {
+			return Short.parseShort(String.valueOf(value).trim());
+		} catch (NumberFormatException e) {
+			return defaultValue;
+		}
+	}
+
+	/**
+	 * 转 byte。
+	 *
+	 * @param value 值
+	 * @return byte；转换失败返回 0
+	 */
+	public static byte toByte(Object value) {
+		return toByte(value, (byte) 0);
+	}
+
+	/**
+	 * 转 byte。
+	 *
+	 * @param value        值
+	 * @param defaultValue 默认值
+	 * @return byte；转换失败返回默认值
+	 */
+	public static byte toByte(Object value, byte defaultValue) {
+		if (value == null) {
+			return defaultValue;
+		}
+		if (value instanceof Number num) {
+			return num.byteValue();
+		}
+		try {
+			return Byte.parseByte(String.valueOf(value).trim());
+		} catch (NumberFormatException e) {
+			return defaultValue;
+		}
+	}
+
+	/**
+	 * 转 float。
+	 *
+	 * @param value 值
+	 * @return float；转换失败返回 0
+	 */
+	public static float toFloat(Object value) {
+		return toFloat(value, 0F);
+	}
+
+	/**
+	 * 转字符数组。
+	 *
+	 * @param value 值
+	 * @return 字符数组
+	 */
+	public static char[] toCharArray(Object value) {
+		if (value == null) {
+			return new char[0];
+		}
+		if (value.getClass().isArray()) {
+			if (value instanceof char[] chars) {
+				return chars;
+			}
+			int len = java.lang.reflect.Array.getLength(value);
+			char[] result = new char[len];
+			for (int i = 0; i < len; i++) {
+				Object item = java.lang.reflect.Array.get(value, i);
+				result[i] = item == null ? 0 : String.valueOf(item).charAt(0);
+			}
+			return result;
+		}
+		return String.valueOf(value).toCharArray();
+	}
+
+
 }

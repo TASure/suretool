@@ -890,4 +890,28 @@ public class CollUtil {
 	}
 
 
+
+	/**
+	 * List 转 Map（key 由函数提取，重复 key 后值覆盖）。
+	 *
+	 * @param <T>         元素类型
+	 * @param <K>         键类型
+	 * @param list        列表
+	 * @param keyFunction 键提取函数
+	 * @return Map
+	 */
+	public static <T, K> Map<K, T> listToMap(Collection<T> list, java.util.function.Function<T, K> keyFunction) {
+		Map<K, T> result = new java.util.LinkedHashMap<>();
+		if (isEmpty(list)) {
+			return result;
+		}
+		for (T item : list) {
+			if (item != null) {
+				result.put(keyFunction.apply(item), item);
+			}
+		}
+		return result;
+	}
+
+
 }

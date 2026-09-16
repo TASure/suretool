@@ -739,4 +739,26 @@ public class DateUtil {
 	}
 
 
+
+	/**
+	 * 是否今天。
+	 *
+	 * @param date 日期
+	 * @return 是否今天
+	 */
+	public static boolean isToday(Date date) {
+		return isSameDay(date, now());
+	}
+
+	/**
+	 * 是否昨天。
+	 *
+	 * @param date 日期
+	 * @return 是否昨天
+	 */
+	public static boolean isYesterday(Date date) {
+		return isSameDay(date, offsetDay(now(), -1));
+	}
+
+
 }

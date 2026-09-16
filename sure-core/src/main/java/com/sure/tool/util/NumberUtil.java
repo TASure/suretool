@@ -500,4 +500,50 @@ public class NumberUtil {
 	}
 
 
+
+	/**
+	 * 整数按权重分配（总和不变，余数按权重余数依次+1）。
+	 *
+	 * @param total   总数（≥0）
+	 * @param weights 权重
+	 * @return 分配结果（长度与权重一致）
+	 */
+	public static int[] partValue(int total, int... weights) {
+		if (weights == null || weights.length == 0) {
+			throw new IllegalArgumentException("权重不能为空");
+		}
+		long weightSum = 0;
+		for (int w : weights) {
+			weightSum += Math.max(w, 0);
+		}
+		if (weightSum == 0) {
+			throw new IllegalArgumentException("权重和必须大于 0");
+		}
+		int[] result = new int[weights.length];
+		int assigned = 0;
+		for (int i = 0; i < weights.length; i++) {
+			result[i] = (int) ((long) total * Math.max(weights[i], 0) / weightSum);
+			assigned += result[i];
+		}
+		int remain = total - assigned;
+		for (int i = 0; remain > 0 && i < weights.length; i++) {
+			result[i]++;
+			remain--;
+		}
+		return result;
+	}
+
+
+
+	/**
+	 * 是否为 long 字符串。
+	 *
+	 * @param str 字符串
+	 * @return 是否为 long
+	 */
+	public static boolean isLong(String str) {
+		return isInteger(str);
+	}
+
+
 }

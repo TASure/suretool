@@ -333,4 +333,61 @@ public class ObjectUtil {
 	}
 
 
+
+	/**
+	 * 是否基本类型或其包装类（含 String、BigDecimal 等常用值类型）。
+	 *
+	 * @param obj 对象
+	 * @return 是否值类型
+	 */
+	public static boolean isBasicType(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		return isBasicType(obj.getClass());
+	}
+
+	/**
+	 * 是否基本类型或其包装类（含 String、BigDecimal 等常用值类型）。
+	 *
+	 * @param clazz 类型
+	 * @return 是否值类型
+	 */
+	public static boolean isBasicType(Class<?> clazz) {
+		if (clazz == null) {
+			return false;
+		}
+		if (clazz.isPrimitive()) {
+			return true;
+		}
+		return clazz == String.class || clazz == Integer.class || clazz == Long.class
+				|| clazz == Double.class || clazz == Float.class || clazz == Boolean.class
+				|| clazz == Byte.class || clazz == Short.class || clazz == Character.class
+				|| clazz == java.math.BigDecimal.class || clazz == java.math.BigInteger.class
+				|| clazz == java.util.Date.class;
+	}
+
+	/**
+	 * 类名（数组含维数，如 {@code int[]} → {@code int[]}）。
+	 *
+	 * @param obj 对象
+	 * @return 类名；null 返回 null
+	 */
+	public static String getClassName(Object obj) {
+		if (obj == null) {
+			return null;
+		}
+		Class<?> clazz = obj.getClass();
+		if (clazz.isArray()) {
+			int dims = 0;
+			while (clazz.isArray()) {
+				dims++;
+				clazz = clazz.getComponentType();
+			}
+			return clazz.getName() + "[]".repeat(dims);
+		}
+		return clazz.getName();
+	}
+
+
 }

@@ -81,7 +81,14 @@
   - `ArrayUtil`：新增 `remove`/`append`/`insert`；
   - `MapUtil`：新增 `sort`（按键排序）、`filter`、`getDate`；
   - `CollUtil`：新增 `min`/`max`（Comparable 集合）；
-  - 新增 `P4Features10Test`（5 例）；sure-core 指令覆盖率 89.5%。
+  - 新增 `P4Features10Test`（5 例）；sure-core 指令覆盖率 89.5%；
+  - `ObjectUtil`：新增 `isBasicType`、`getClassName`（数组含维数）；
+  - `DateUtil`：新增 `isToday`/`isYesterday`（`isSameDay` 已存在）；
+  - `StrUtil`：新增 `splitToIntArray`/`splitToLongArray`；
+  - `NumberUtil`：新增 `partValue`（按权重分配）、`isLong`；
+  - `ConvertUtil`：新增 `toShort`/`toByte`/`toFloat`（含默认值重载）、`toCharArray`；
+  - `CollUtil`：新增 `listToMap`（键提取函数转 Map）；
+  - 新增 `P4Features11Test`（6 例）；sure-core 指令覆盖率 89.5%。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

@@ -55,7 +55,8 @@ public class MiscUtilTest {
 		}
 		assertEquals(32, RandomUtil.simpleUUID().length());
 		assertTrue(RandomUtil.randomDouble(0, 1) >= 0);
-		assertTrue(RandomUtil.randomDouble(1, 2, 2) < 2);
+		double scaled = RandomUtil.randomDouble(1, 2, 2);
+		assertTrue(scaled >= 1 && scaled <= 2);
 	}
 
 	// ---------------- ReUtil ----------------

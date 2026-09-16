@@ -397,6 +397,57 @@ public class JSONArray extends ArrayList<Object> {
 		return com.sure.tool.util.ConvertUtil.toBigDecimal(get(index));
 	}
 
+	/**
+	 * 取 BigDecimal 值，越界或转换失败返回默认值。
+	 *
+	 * @param index        下标
+	 * @param defaultValue 默认值
+	 * @return BigDecimal 或默认值
+	 */
+	public java.math.BigDecimal getBigDecimal(int index, java.math.BigDecimal defaultValue) {
+		java.math.BigDecimal value = getBigDecimal(index);
+		return value == null ? defaultValue : value;
+	}
+
+	/**
+	 * 取 BigInteger 值。
+	 *
+	 * @param index 下标
+	 * @return BigInteger；越界或转换失败返回 null
+	 */
+	public java.math.BigInteger getBigInteger(int index) {
+		if (index < 0 || index >= size()) {
+			return null;
+		}
+		Object value = get(index);
+		if (value instanceof java.math.BigInteger) {
+			return (java.math.BigInteger) value;
+		}
+		if (value instanceof Number) {
+			return java.math.BigInteger.valueOf(((Number) value).longValue());
+		}
+		if (value == null) {
+			return null;
+		}
+		try {
+			return new java.math.BigInteger(String.valueOf(value).trim());
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * 取 BigInteger 值，越界或转换失败返回默认值。
+	 *
+	 * @param index        下标
+	 * @param defaultValue 默认值
+	 * @return BigInteger 或默认值
+	 */
+	public java.math.BigInteger getBigInteger(int index, java.math.BigInteger defaultValue) {
+		java.math.BigInteger value = getBigInteger(index);
+		return value == null ? defaultValue : value;
+	}
+
 
 
 	/**

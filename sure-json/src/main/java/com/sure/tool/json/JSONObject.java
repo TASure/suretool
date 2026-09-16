@@ -396,6 +396,54 @@ public class JSONObject extends LinkedHashMap<String, Object> {
 		return com.sure.tool.util.ConvertUtil.toBigDecimal(get(key));
 	}
 
+	/**
+	 * 取 BigDecimal 值，缺失或转换失败返回默认值。
+	 *
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return BigDecimal 或默认值
+	 */
+	public java.math.BigDecimal getBigDecimal(String key, java.math.BigDecimal defaultValue) {
+		java.math.BigDecimal value = getBigDecimal(key);
+		return value == null ? defaultValue : value;
+	}
+
+	/**
+	 * 取 BigInteger 值。
+	 *
+	 * @param key 键
+	 * @return BigInteger；缺失或转换失败返回 null
+	 */
+	public java.math.BigInteger getBigInteger(String key) {
+		Object value = get(key);
+		if (value instanceof java.math.BigInteger) {
+			return (java.math.BigInteger) value;
+		}
+		if (value instanceof Number) {
+			return java.math.BigInteger.valueOf(((Number) value).longValue());
+		}
+		if (value == null) {
+			return null;
+		}
+		try {
+			return new java.math.BigInteger(String.valueOf(value).trim());
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * 取 BigInteger 值，缺失或转换失败返回默认值。
+	 *
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return BigInteger 或默认值
+	 */
+	public java.math.BigInteger getBigInteger(String key, java.math.BigInteger defaultValue) {
+		java.math.BigInteger value = getBigInteger(key);
+		return value == null ? defaultValue : value;
+	}
+
 
 
 	/**

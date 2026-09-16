@@ -283,6 +283,12 @@
   - `RandomUtil`：新增 `randomBigDecimal`（[start, end] 区间随机小数，含端点）；
   - `SystemUtil`：新增 `getTotalThreadCount`（JVM 活动线程数）；
   - 新增 `P4Features30Test`（4 例）；全模块 604 测试全绿，sure-core 指令覆盖率 89.0%，SpotBugs 0 告警。
+- **第三十六批（P4 v0.2.0 继续）**：
+  - 【sure-json】`JSONObject`：新增 `getBigDecimal(key, 默认值)`、`getBigInteger(key[, 默认值])`；
+  - 【sure-json】`JSONArray`：新增 `getBigDecimal(index, 默认值)`、`getBigInteger(index[, 默认值])`；
+  - `CharUtil`：新增 `toString(char)`（字符转字符串）、`isEmoji(char)`（BMP Emoji 区段）与 `isEmoji(int)`（支持补充平面码点，如 U+1F600）；
+  - `UrlUtil`：新增 `normalize`（URL 规范化：缺协议补 `http://`、去末尾斜杠）；
+  - 新增 `P4Features31Test`（2 例）与 `P4JsonBigNumberTest`（3 例）；修正 `MiscUtilTest.testRandom` 脆弱断言（scale 后可能等于上限）；全模块 609 测试全绿，sure-core 指令覆盖率 89.0%，SpotBugs 0 告警。
 
 ### Changed
 

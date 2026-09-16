@@ -164,5 +164,41 @@ public class CharUtil {
 		return c;
 	}
 
+	/**
+	 * 字符转字符串。
+	 *
+	 * @param c 字符
+	 * @return 单字符字符串
+	 */
+	public static String toString(char c) {
+		return String.valueOf(c);
+	}
+
+	/**
+	 * 判断字符是否为 Emoji（BMP 内常见 Emoji 区段）。
+	 *
+	 * @param c 字符
+	 * @return 是否为 Emoji 字符
+	 */
+	public static boolean isEmoji(char c) {
+		return (c >= 0x2600 && c <= 0x27BF)
+				|| (c >= 0xFE00 && c <= 0xFE0F)
+				|| (c >= 0x2190 && c <= 0x21FF)
+				|| (c >= 0x2B00 && c <= 0x2BFF);
+	}
+
+	/**
+	 * 判断码点是否为 Emoji（支持补充平面 Emoji，如 U+1F600）。
+	 *
+	 * @param codePoint Unicode 码点
+	 * @return 是否为 Emoji 码点
+	 */
+	public static boolean isEmoji(int codePoint) {
+		return (codePoint >= 0x1F300 && codePoint <= 0x1FAFF)
+				|| (codePoint >= 0x2600 && codePoint <= 0x27BF)
+				|| (codePoint >= 0xFE00 && codePoint <= 0xFE0F)
+				|| (codePoint >= 0x2190 && codePoint <= 0x21FF)
+				|| (codePoint >= 0x2B00 && codePoint <= 0x2BFF);
+	}
 
 }

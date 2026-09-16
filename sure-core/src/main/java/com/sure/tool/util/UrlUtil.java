@@ -236,4 +236,27 @@ public class UrlUtil {
 		}
 		return sb.toString();
 	}
+
+	/**
+	 * URL 规范化：缺协议补全 {@code http://}、去除末尾斜杠（保留根路径）。
+	 *
+	 * @param url URL
+	 * @return 规范化后的 URL；{@code null} 返回 {@code null}
+	 */
+	public static String normalize(String url) {
+		if (url == null) {
+			return null;
+		}
+		String s = url.trim();
+		if (s.isEmpty()) {
+			return s;
+		}
+		if (!s.matches("^[a-zA-Z][a-zA-Z0-9+.-]*://.*")) {
+			s = "http://" + s;
+		}
+		if (s.length() > 1 && s.endsWith("/") && !s.endsWith("://")) {
+			s = s.substring(0, s.length() - 1);
+		}
+		return s;
+	}
 }

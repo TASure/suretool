@@ -914,4 +914,56 @@ public class CollUtil {
 	}
 
 
+
+	/**
+	 * 按提取函数取最小值。
+	 *
+	 * @param collection 集合
+	 * @param keyMapper  提取函数
+	 * @param <T>        元素类型
+	 * @param <R>        键类型
+	 * @return 最小元素；空集合返回 null
+	 */
+	public static <T, R extends Comparable<R>> T minBy(Collection<T> collection, java.util.function.Function<T, R> keyMapper) {
+		if (collection == null || collection.isEmpty()) {
+			return null;
+		}
+		T best = null;
+		R bestKey = null;
+		for (T item : collection) {
+			R key = keyMapper.apply(item);
+			if (best == null || key.compareTo(bestKey) < 0) {
+				best = item;
+				bestKey = key;
+			}
+		}
+		return best;
+	}
+
+	/**
+	 * 按提取函数取最大值。
+	 *
+	 * @param collection 集合
+	 * @param keyMapper  提取函数
+	 * @param <T>        元素类型
+	 * @param <R>        键类型
+	 * @return 最大元素；空集合返回 null
+	 */
+	public static <T, R extends Comparable<R>> T maxBy(Collection<T> collection, java.util.function.Function<T, R> keyMapper) {
+		if (collection == null || collection.isEmpty()) {
+			return null;
+		}
+		T best = null;
+		R bestKey = null;
+		for (T item : collection) {
+			R key = keyMapper.apply(item);
+			if (best == null || key.compareTo(bestKey) > 0) {
+				best = item;
+				bestKey = key;
+			}
+		}
+		return best;
+	}
+
+
 }

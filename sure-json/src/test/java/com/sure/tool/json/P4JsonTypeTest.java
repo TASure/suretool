@@ -125,4 +125,27 @@ public class P4JsonTypeTest {
 	}
 
 
+
+	@Test
+	public void testDeepClone() {
+		JSONObject obj = new JSONObject();
+		obj.set("name", "suretool");
+		JSONObject nested = new JSONObject();
+		nested.set("x", 1);
+		obj.set("nested", nested);
+		JSONArray arr = new JSONArray();
+		arr.add(1);
+		arr.add(2);
+		obj.set("arr", arr);
+
+		JSONObject copy = obj.deepClone();
+		Assert.assertEquals("suretool", copy.getStr("name"));
+		Assert.assertEquals(Integer.valueOf(1), copy.getJSONObject("nested").getInt("x"));
+		Assert.assertEquals(2, copy.getJSONArray("arr").size());
+		// 修改副本不影响原对象
+		copy.getJSONObject("nested").set("x", 99);
+		Assert.assertEquals(Integer.valueOf(1), obj.getJSONObject("nested").getInt("x"));
+	}
+
+
 }

@@ -397,4 +397,47 @@ public class JSONObject extends LinkedHashMap<String, Object> {
 	}
 
 
+
+	/**
+	 * 深拷贝（嵌套 JSONObject/JSONArray/Map/List 均递归复制）。
+	 *
+	 * @return 深拷贝副本
+	 */
+	public JSONObject deepClone() {
+		JSONObject copy = new JSONObject();
+		for (Map.Entry<String, Object> entry : entrySet()) {
+			copy.set(entry.getKey(), deepCopyValue(entry.getValue()));
+		}
+		return copy;
+	}
+
+	private static Object deepCopyValue(Object value) {
+		if (value instanceof JSONObject obj) {
+			return obj.deepClone();
+		}
+		if (value instanceof JSONArray arr) {
+			JSONArray copy = new JSONArray();
+			for (int i = 0; i < arr.size(); i++) {
+				copy.add(deepCopyValue(arr.get(i)));
+			}
+			return copy;
+		}
+		if (value instanceof Map<?, ?> map) {
+			JSONObject copy = new JSONObject();
+			for (Map.Entry<?, ?> entry : map.entrySet()) {
+				copy.set(String.valueOf(entry.getKey()), deepCopyValue(entry.getValue()));
+			}
+			return copy;
+		}
+		if (value instanceof java.util.List<?> list) {
+			java.util.List<Object> copy = new java.util.ArrayList<>();
+			for (Object item : list) {
+				copy.add(deepCopyValue(item));
+			}
+			return copy;
+		}
+		return value;
+	}
+
+
 }

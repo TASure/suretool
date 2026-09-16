@@ -79,4 +79,33 @@ public class P4HttpTest {
 		Assert.assertTrue(putForm.startsWith("PUT|"));
 		Assert.assertTrue(putForm.contains("k=v"));
 	}
+
+	@Test
+	public void testPatchJson() throws Exception {
+		com.sun.net.httpserver.HttpServer server = com.sun.net.httpserver.HttpServer.create(
+				new java.net.InetSocketAddress(0), 0);
+		String[] method = new String[1];
+		String[] body = new String[1];
+		server.createContext("/patch", exchange -> {
+			method[0] = exchange.getRequestMethod();
+			body[0] = new String(exchange.getRequestBody().readAllBytes(),
+					java.nio.charset.StandardCharsets.UTF_8);
+			byte[] resp = "{\"ok\":true}".getBytes(java.nio.charset.StandardCharsets.UTF_8);
+			exchange.sendResponseHeaders(200, resp.length);
+			exchange.getResponseBody().write(resp);
+			exchange.close();
+		});
+		server.start();
+		try {
+			String url = "http://127.0.0.1:" + server.getAddress().getPort() + "/patch";
+			String result = com.sure.tool.http.HttpUtil.patchJson(url, "{\"a\":1}");
+			Assert.assertEquals("{\"ok\":true}", result);
+			Assert.assertEquals("PATCH", method[0]);
+			Assert.assertEquals("{\"a\":1}", body[0]);
+		} finally {
+			server.stop(0);
+		}
+	}
+
+
 }

@@ -208,4 +208,16 @@ public class BooleanUtil {
 		}
 		return true;
 	}
+
+	/**
+	 * 布尔值转中文"是/否"。
+	 *
+	 * @param value 布尔值
+	 * @return "是"或"否"
+	 */
+	public static String toStringCn(boolean value) {
+		return value ? "是" : "否";
+	}
+
+
 }

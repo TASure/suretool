@@ -152,7 +152,14 @@
   - `CsvUtil`（sure-core）：新增 `read(InputStream, Charset)`/`write(Writer, rows)`；
   - `RsaUtil`（sure-crypto）：新增 `signHex`/`verifyHex`/`signBytes`/`verifyBytes`；
   - `DesUtil`（sure-crypto）：新增 `generateKey`（8 字节 DES 密钥）；
-  - 新增测试用例：全模块 556 测试全绿。
+  - 新增测试用例：全模块 556 测试全绿；
+  - `JSONObject`（sure-json）：新增 `deepClone`（递归深拷贝）；
+  - `StrUtil`（sure-core）：新增 `strip`（去首尾指定字符/空白）；
+  - `HttpUtil`（sure-http）：新增 `patchJson`（基于 JDK HttpClient，HttpURLConnection 不支持 PATCH）；
+  - `CollUtil`（sure-core）：新增 `minBy`/`maxBy`（按提取函数取极值）；
+  - `ValidatorUtil`（sure-core）：新增 `isLowerCase`/`isUpperCase`；
+  - `BooleanUtil`（sure-core）：新增 `toStringCn`（是/否）；
+  - 新增测试用例：全模块 559 测试全绿。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

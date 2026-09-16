@@ -247,4 +247,52 @@ public class ValidatorUtil {
 	}
 
 
+
+	/**
+	 * 校验字符串是否全部为小写字母（允许含数字）。
+	 *
+	 * @param value 字符串
+	 * @return 是否全小写
+	 */
+	public static boolean isLowerCase(String value) {
+		if (value == null || value.isEmpty()) {
+			return false;
+		}
+		boolean hasLetter = false;
+		for (int i = 0; i < value.length(); i++) {
+			char c = value.charAt(i);
+			if (Character.isLetter(c)) {
+				hasLetter = true;
+				if (!Character.isLowerCase(c)) {
+					return false;
+				}
+			}
+		}
+		return hasLetter;
+	}
+
+	/**
+	 * 校验字符串是否全部为大写字母（允许含数字）。
+	 *
+	 * @param value 字符串
+	 * @return 是否全大写
+	 */
+	public static boolean isUpperCase(String value) {
+		if (value == null || value.isEmpty()) {
+			return false;
+		}
+		boolean hasLetter = false;
+		for (int i = 0; i < value.length(); i++) {
+			char c = value.charAt(i);
+			if (Character.isLetter(c)) {
+				hasLetter = true;
+				if (!Character.isUpperCase(c)) {
+					return false;
+				}
+			}
+		}
+		return hasLetter;
+	}
+
+
 }

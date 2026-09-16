@@ -1374,4 +1374,38 @@ public class StrUtil {
 	}
 
 
+
+	/**
+	 * 去除字符串首尾的指定字符。
+	 *
+	 * @param str      字符串
+	 * @param stripChar 要去除的字符
+	 * @return 处理后的字符串
+	 */
+	public static String strip(String str, char stripChar) {
+		if (str == null) {
+			return null;
+		}
+		int start = 0;
+		int end = str.length();
+		while (start < end && str.charAt(start) == stripChar) {
+			start++;
+		}
+		while (end > start && str.charAt(end - 1) == stripChar) {
+			end--;
+		}
+		return str.substring(start, end);
+	}
+
+	/**
+	 * 去除字符串首尾的空白字符。
+	 *
+	 * @param str 字符串
+	 * @return 处理后的字符串
+	 */
+	public static String strip(String str) {
+		return strip(str, ' ');
+	}
+
+
 }

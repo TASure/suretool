@@ -415,4 +415,47 @@ public class HttpUtil {
 	}
 
 
+
+	/**
+	 * PATCH JSON 请求。
+	 *
+	 * @param url  URL
+	 * @param json JSON 字符串
+	 * @return 响应文本（UTF-8）
+	 */
+	public static String patchJson(String url, String json) {
+		return patchJson(url, json, DEFAULT_CONNECT_TIMEOUT);
+	}
+
+	/**
+	 * PATCH JSON 请求（基于 JDK HttpClient，HttpURLConnection 不支持 PATCH）。
+	 *
+	 * @param url           URL
+	 * @param json          JSON 字符串
+	 * @param timeoutMillis 超时（毫秒）
+	 * @return 响应文本（UTF-8）
+	 */
+	public static String patchJson(String url, String json, int timeoutMillis) {
+		try {
+			java.net.http.HttpClient client = java.net.http.HttpClient.newBuilder()
+					.connectTimeout(java.time.Duration.ofMillis(timeoutMillis))
+					.build();
+			java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder()
+					.uri(java.net.URI.create(url))
+					.timeout(java.time.Duration.ofMillis(timeoutMillis))
+					.header("Content-Type", "application/json; charset=UTF-8")
+					.method("PATCH", java.net.http.HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8))
+					.build();
+			java.net.http.HttpResponse<String> response = client.send(request,
+					java.net.http.HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+			return response.body();
+		} catch (IOException e) {
+			throw new HttpException("PATCH 请求失败: " + url, e);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw new HttpException("PATCH 请求被中断: " + url, e);
+		}
+	}
+
+
 }

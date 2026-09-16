@@ -161,4 +161,17 @@ public class CronUtil {
 			this.task = task;
 		}
 	}
+
+	/**
+	 * 计算表达式在指定时间之后的下一次执行时间。
+	 *
+	 * @param cron 表达式
+	 * @param date 基准时间
+	 * @return 下次执行时间；无匹配返回 null
+	 */
+	public static java.util.Date nextTimeAfter(String cron, java.util.Date date) {
+		return parse(cron).getNextTimeAfter(date);
+	}
+
+
 }

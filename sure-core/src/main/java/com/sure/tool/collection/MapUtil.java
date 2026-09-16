@@ -422,4 +422,59 @@ public class MapUtil {
 	}
 
 
+
+	/**
+	 * 取 float（含默认值）。
+	 *
+	 * @param map          Map
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return float
+	 */
+	public static float getFloat(Map<?, ?> map, Object key, float defaultValue) {
+		return ConvertUtil.toFloat(map.get(key), defaultValue);
+	}
+
+	/**
+	 * 取 char（含默认值）。
+	 *
+	 * @param map          Map
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return char
+	 */
+	public static char getChar(Map<?, ?> map, Object key, char defaultValue) {
+		Object value = map.get(key);
+		if (value == null) {
+			return defaultValue;
+		}
+		String s = String.valueOf(value);
+		return s.isEmpty() ? defaultValue : s.charAt(0);
+	}
+
+	/**
+	 * 取 byte（含默认值）。
+	 *
+	 * @param map          Map
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return byte
+	 */
+	public static byte getByte(Map<?, ?> map, Object key, byte defaultValue) {
+		return ConvertUtil.toByte(map.get(key), defaultValue);
+	}
+
+	/**
+	 * 取 short（含默认值）。
+	 *
+	 * @param map          Map
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return short
+	 */
+	public static short getShort(Map<?, ?> map, Object key, short defaultValue) {
+		return ConvertUtil.toShort(map.get(key), defaultValue);
+	}
+
+
 }

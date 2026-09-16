@@ -141,4 +141,28 @@ public class P4Features11Test {
 	}
 
 
+
+	@Test
+	public void testMapAndStrEnhance2() {
+		java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("f", 2.5F);
+		map.put("c", 'A');
+		map.put("b", 7);
+		map.put("s", 12);
+
+		Assert.assertEquals(2.5F, com.sure.tool.collection.MapUtil.getFloat(map, "f", 0F), 1e-6);
+		Assert.assertEquals(1.5F, com.sure.tool.collection.MapUtil.getFloat(map, "x", 1.5F), 1e-6);
+		Assert.assertEquals('A', com.sure.tool.collection.MapUtil.getChar(map, "c", 'Z'));
+		Assert.assertEquals('Z', com.sure.tool.collection.MapUtil.getChar(map, "x", 'Z'));
+		Assert.assertEquals((byte) 7, com.sure.tool.collection.MapUtil.getByte(map, "b", (byte) 3));
+		Assert.assertEquals((byte) 3, com.sure.tool.collection.MapUtil.getByte(map, "x", (byte) 3));
+		Assert.assertEquals((short) 12, com.sure.tool.collection.MapUtil.getShort(map, "s", (short) 9));
+		Assert.assertEquals((short) 9, com.sure.tool.collection.MapUtil.getShort(map, "x", (short) 9));
+
+		Assert.assertArrayEquals(new double[] {1.5, 2.5}, StrUtil.splitToDoubleArray("1.5 2.5"), 1e-9);
+		Assert.assertArrayEquals(new double[] {1.5, 0.0}, StrUtil.splitToDoubleArray("1.5 abc"), 1e-9);
+		Assert.assertArrayEquals(new double[0], StrUtil.splitToDoubleArray(null), 1e-9);
+	}
+
+
 }

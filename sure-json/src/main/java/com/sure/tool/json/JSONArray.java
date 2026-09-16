@@ -265,4 +265,107 @@ public class JSONArray extends ArrayList<Object> {
 	public String toString() {
 		return toJsonString();
 	}
+
+	/**
+	 * 取 char 值。
+	 *
+	 * @param index 下标
+	 * @return char；缺失返回 0
+	 */
+	public char getChar(int index) {
+		return getChar(index, (char) 0);
+	}
+
+	/**
+	 * 取 char 值。
+	 *
+	 * @param index        下标
+	 * @param defaultValue 默认值
+	 * @return char；缺失返回默认值
+	 */
+	public char getChar(int index, char defaultValue) {
+		if (index < 0 || index >= size()) {
+			return defaultValue;
+		}
+		Object value = get(index);
+		if (value == null) {
+			return defaultValue;
+		}
+		String s = String.valueOf(value);
+		return s.isEmpty() ? defaultValue : s.charAt(0);
+	}
+
+	/**
+	 * 取 short 值。
+	 *
+	 * @param index 下标
+	 * @return short；缺失返回 0
+	 */
+	public short getShort(int index) {
+		return getShort(index, (short) 0);
+	}
+
+	/**
+	 * 取 short 值。
+	 *
+	 * @param index        下标
+	 * @param defaultValue 默认值
+	 * @return short；缺失返回默认值
+	 */
+	public short getShort(int index, short defaultValue) {
+		if (index < 0 || index >= size()) {
+			return defaultValue;
+		}
+		return com.sure.tool.util.ConvertUtil.toShort(get(index), defaultValue);
+	}
+
+	/**
+	 * 取 byte 值。
+	 *
+	 * @param index 下标
+	 * @return byte；缺失返回 0
+	 */
+	public byte getByte(int index) {
+		return getByte(index, (byte) 0);
+	}
+
+	/**
+	 * 取 byte 值。
+	 *
+	 * @param index        下标
+	 * @param defaultValue 默认值
+	 * @return byte；缺失返回默认值
+	 */
+	public byte getByte(int index, byte defaultValue) {
+		if (index < 0 || index >= size()) {
+			return defaultValue;
+		}
+		return com.sure.tool.util.ConvertUtil.toByte(get(index), defaultValue);
+	}
+
+	/**
+	 * 取 float 值。
+	 *
+	 * @param index 下标
+	 * @return float；缺失返回 0
+	 */
+	public float getFloat(int index) {
+		return getFloat(index, 0F);
+	}
+
+	/**
+	 * 取 float 值。
+	 *
+	 * @param index        下标
+	 * @param defaultValue 默认值
+	 * @return float；缺失返回默认值
+	 */
+	public float getFloat(int index, float defaultValue) {
+		if (index < 0 || index >= size()) {
+			return defaultValue;
+		}
+		return com.sure.tool.util.ConvertUtil.toFloat(get(index), defaultValue);
+	}
+
+
 }

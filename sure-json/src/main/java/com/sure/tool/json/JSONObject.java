@@ -265,4 +265,95 @@ public class JSONObject extends LinkedHashMap<String, Object> {
 	public String toString() {
 		return toJsonString();
 	}
+
+	/**
+	 * 取 char 值。
+	 *
+	 * @param key 键
+	 * @return char；缺失返回 0
+	 */
+	public char getChar(String key) {
+		return getChar(key, (char) 0);
+	}
+
+	/**
+	 * 取 char 值。
+	 *
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return char；缺失返回默认值
+	 */
+	public char getChar(String key, char defaultValue) {
+		Object value = get(key);
+		if (value == null) {
+			return defaultValue;
+		}
+		String s = String.valueOf(value);
+		return s.isEmpty() ? defaultValue : s.charAt(0);
+	}
+
+	/**
+	 * 取 short 值。
+	 *
+	 * @param key 键
+	 * @return short；缺失返回 0
+	 */
+	public short getShort(String key) {
+		return getShort(key, (short) 0);
+	}
+
+	/**
+	 * 取 short 值。
+	 *
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return short；缺失返回默认值
+	 */
+	public short getShort(String key, short defaultValue) {
+		return com.sure.tool.util.ConvertUtil.toShort(get(key), defaultValue);
+	}
+
+	/**
+	 * 取 byte 值。
+	 *
+	 * @param key 键
+	 * @return byte；缺失返回 0
+	 */
+	public byte getByte(String key) {
+		return getByte(key, (byte) 0);
+	}
+
+	/**
+	 * 取 byte 值。
+	 *
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return byte；缺失返回默认值
+	 */
+	public byte getByte(String key, byte defaultValue) {
+		return com.sure.tool.util.ConvertUtil.toByte(get(key), defaultValue);
+	}
+
+	/**
+	 * 取 float 值。
+	 *
+	 * @param key 键
+	 * @return float；缺失返回 0
+	 */
+	public float getFloat(String key) {
+		return getFloat(key, 0F);
+	}
+
+	/**
+	 * 取 float 值。
+	 *
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return float；缺失返回默认值
+	 */
+	public float getFloat(String key, float defaultValue) {
+		return com.sure.tool.util.ConvertUtil.toFloat(get(key), defaultValue);
+	}
+
+
 }

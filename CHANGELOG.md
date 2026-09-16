@@ -93,7 +93,13 @@
   - 【跨模块】`XmlUtil`（sure-xml）：新增 `readXml`（文件读取）、`format`（缩进格式化）；
   - 【跨模块】`DfaUtil`（sure-dfa）：新增 `replace`（敏感词替换，含端点修正）；
   - `StrUtil`（sure-core）：新增 `subBetweenAll`（提取所有区间内容）；
-  - 新增 `P4JsonPrettyTest`/`P4XmlTest`/`P4DfaTest`；全模块 527 测试全绿。
+  - 新增 `P4JsonPrettyTest`/`P4XmlTest`/`P4DfaTest`；全模块 527 测试全绿；
+  - 【sure-json】`JSONObject`/`JSONArray`：新增 `getChar`/`getShort`/`getByte`/`getFloat`（含默认值，数组越界安全）；
+  - 【sure-cron】`CronUtil`：新增 `nextTimeAfter`（静态便捷入口）；
+  - 【sure-captcha】`AbstractCaptcha`：新增 `getCodeBase64`（Data URI，可直接用于 img）；
+  - `MapUtil`（sure-core）：新增 `getFloat`/`getChar`/`getByte`/`getShort`；
+  - `StrUtil`（sure-core）：新增 `splitToDoubleArray`；
+  - 新增 `P4JsonTypeTest`/`P4CronTest`/`P4CaptchaTest`；全模块 532 测试全绿。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

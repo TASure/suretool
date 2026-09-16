@@ -258,4 +258,15 @@ public abstract class AbstractCaptcha implements Captcha {
 	protected int getWidth() {
 		return width;
 	}
+
+	/**
+	 * 获取验证码图片的 Data URI（可直接用于 &lt;img src&gt;）。
+	 *
+	 * @return {@code data:image/png;base64,...}
+	 */
+	public String getCodeBase64() {
+		return "data:image/png;base64," + getImageBase64();
+	}
+
+
 }

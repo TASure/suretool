@@ -1113,4 +1113,28 @@ public class StrUtil {
 	}
 
 
+
+	/**
+	 * 分隔为 double 数组（空白分隔），非法元素按 0 处理。
+	 *
+	 * @param str 数字字符串
+	 * @return double 数组
+	 */
+	public static double[] splitToDoubleArray(String str) {
+		if (isEmpty(str)) {
+			return new double[0];
+		}
+		String[] parts = str.split("\\s+");
+		double[] result = new double[parts.length];
+		for (int i = 0; i < parts.length; i++) {
+			try {
+				result[i] = Double.parseDouble(parts[i].trim());
+			} catch (NumberFormatException e) {
+				result[i] = 0;
+			}
+		}
+		return result;
+	}
+
+
 }

@@ -1028,4 +1028,23 @@ public class DateUtil {
 	}
 
 
+
+	/**
+	 * 获取一年中的第几周。
+	 *
+	 * @param date 日期
+	 * @return 周序号（1 起）
+	 */
+	public static int getWeekOfYear(Date date) {
+		if (date == null) {
+			return 0;
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setFirstDayOfWeek(Calendar.MONDAY);
+		cal.setMinimalDaysInFirstWeek(4);
+		cal.setTime(date);
+		return cal.get(Calendar.WEEK_OF_YEAR);
+	}
+
+
 }

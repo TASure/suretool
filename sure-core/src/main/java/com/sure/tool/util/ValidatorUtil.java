@@ -315,4 +315,24 @@ public class ValidatorUtil {
 	}
 
 
+
+	/**
+	 * 校验是否为小数（含正负号、指数可选）。
+	 *
+	 * @param value 字符串
+	 * @return 是否小数
+	 */
+	public static boolean isDecimal(String value) {
+		if (value == null || value.isBlank()) {
+			return false;
+		}
+		try {
+			new java.math.BigDecimal(value.trim());
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+
+
 }

@@ -178,7 +178,14 @@
   - `NumberUtil`（sure-core）：新增 `parseNumber`（字符串解析为 Number）；
   - `DateUtil`（sure-core）：新增 `offsetQuarter`/`getYear`/`getMonth`/`getDayOfMonth`/`getHour`；
   - `ValidatorUtil`（sure-core）：新增 `isTime`（HH:mm:ss 校验）；
-  - 新增测试用例：全模块 565 测试全绿；Checkstyle FileLength 上限 1500→1600。
+  - 新增测试用例：全模块 565 测试全绿；Checkstyle FileLength 上限 1500→1600；
+  - `Cache`（sure-cache）：新增 `getOrPut`（default 方法，无值则计算写入）；
+  - `StrUtil`（sure-core）：新增 `isAllNotBlank`/`isAllEmpty`；
+  - `DateUtil`（sure-core）：新增 `getWeekOfYear`（ISO 8601：周一为起点、最少 4 天）；
+  - `MapUtil`（sure-core）：新增 `merge`（两 Map 合并，后者覆盖）；
+  - `ValidatorUtil`（sure-core）：新增 `isDecimal`；
+  - `NumberUtil`（sure-core）：新增 `floor`/`ceil`；
+  - 新增测试用例：全模块 567 测试全绿。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

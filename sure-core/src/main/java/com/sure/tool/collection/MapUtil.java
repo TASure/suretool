@@ -546,4 +546,26 @@ public class MapUtil {
 	}
 
 
+
+	/**
+	 * 合并两个 Map（后者覆盖前者同名键）。
+	 *
+	 * @param map1 Map 一
+	 * @param map2 Map 二
+	 * @param <K>  键类型
+	 * @param <V>  值类型
+	 * @return 合并后的 Map（LinkedHashMap）
+	 */
+	public static <K, V> Map<K, V> merge(Map<K, V> map1, Map<K, V> map2) {
+		Map<K, V> result = new LinkedHashMap<>();
+		if (map1 != null) {
+			result.putAll(map1);
+		}
+		if (map2 != null) {
+			result.putAll(map2);
+		}
+		return result;
+	}
+
+
 }

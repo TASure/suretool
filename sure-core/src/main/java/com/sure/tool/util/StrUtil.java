@@ -1504,4 +1504,42 @@ public class StrUtil {
 	}
 
 
+
+	/**
+	 * 判断字符串数组中是否全部非空白。
+	 *
+	 * @param strs 字符串数组
+	 * @return 是否全部非空白
+	 */
+	public static boolean isAllNotBlank(CharSequence... strs) {
+		if (strs == null) {
+			return false;
+		}
+		for (CharSequence str : strs) {
+			if (isBlank(str)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 判断字符串数组中是否全部为空。
+	 *
+	 * @param strs 字符串数组
+	 * @return 是否全部为空
+	 */
+	public static boolean isAllEmpty(CharSequence... strs) {
+		if (strs == null) {
+			return true;
+		}
+		for (CharSequence str : strs) {
+			if (!isEmpty(str)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
 }

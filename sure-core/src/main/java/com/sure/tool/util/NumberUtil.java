@@ -613,4 +613,26 @@ public class NumberUtil {
 	}
 
 
+
+	/**
+	 * 向下取整。
+	 *
+	 * @param value 数值
+	 * @return 不大于该数的最大整数
+	 */
+	public static long floor(double value) {
+		return (long) Math.floor(value);
+	}
+
+	/**
+	 * 向上取整。
+	 *
+	 * @param value 数值
+	 * @return 不小于该数的最小整数
+	 */
+	public static long ceil(double value) {
+		return (long) Math.ceil(value);
+	}
+
+
 }

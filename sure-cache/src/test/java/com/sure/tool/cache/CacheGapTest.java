@@ -204,4 +204,19 @@ public class CacheGapTest {
 		assertNotNull(CacheUtil.newLfuCache(2));
 		assertNotNull(CacheUtil.newTimedCache(1000));
 	}
+
+	@Test
+	public void testGetOrPut() {
+		com.sure.tool.cache.TimedCache<String, String> cache = com.sure.tool.cache.CacheUtil.newTimedCache(60_000);
+		int[] count = new int[1];
+		java.util.function.Supplier<String> loader = () -> {
+			count[0]++;
+			return "computed";
+		};
+		assertEquals("computed", cache.getOrPut("k", loader));
+		assertEquals("computed", cache.getOrPut("k", loader));
+		assertEquals(1, count[0]);
+	}
+
+
 }

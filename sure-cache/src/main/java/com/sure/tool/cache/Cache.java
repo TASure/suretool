@@ -76,4 +76,25 @@ public interface Cache<K, V> {
 	 * @return 是否为空
 	 */
 	boolean isEmpty();
+
+	/**
+	 * 读取缓存；不存在或已过期时通过 {@code loader} 计算并写入。
+	 *
+	 * @param key   键
+	 * @param loader 值加载函数
+	 * @return 缓存值
+	 */
+	default V getOrPut(K key, java.util.function.Supplier<V> loader) {
+		V value = get(key);
+		if (value != null) {
+			return value;
+		}
+		V computed = loader.get();
+		if (computed != null) {
+			put(key, computed);
+		}
+		return computed;
+	}
+
+
 }

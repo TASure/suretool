@@ -8,6 +8,12 @@
 
 ### Added
 
+（下一批功能开发中）
+
+## [0.2.0] - 2026-09-16
+
+### Added
+
 - **P4 核心工具增强（v0.2.0-SNAPSHOT）**：
   - `CollUtil`：新增分页 `page`、就地洗牌 `shuffle`、频次统计 `countMap`、单向差集 `subtract`、
     列表转映射 `toMap`、批量追加 `addAll`、`Iterable` 判空重载；

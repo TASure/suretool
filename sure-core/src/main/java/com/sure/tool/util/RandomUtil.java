@@ -316,5 +316,20 @@ public class RandomUtil {
 		return new java.util.Date(start.getTime() + randomLong(0, millis));
 	}
 
+	/**
+	 * 生成 [start, end] 区间内的随机 {@link java.math.BigDecimal}（含端点）。
+	 *
+	 * @param start 起始（含）
+	 * @param end   结束（含）
+	 * @return 随机小数（与区间端点同精度）
+	 */
+	public static java.math.BigDecimal randomBigDecimal(java.math.BigDecimal start, java.math.BigDecimal end) {
+		if (start == null || end == null || start.compareTo(end) > 0) {
+			throw new IllegalArgumentException("start/end 不合法");
+		}
+		java.math.BigDecimal range = end.subtract(start);
+		double ratio = start.compareTo(end) == 0 ? 0D : Math.random();
+		return start.add(range.multiply(java.math.BigDecimal.valueOf(ratio)));
+	}
 
 }

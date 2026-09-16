@@ -172,4 +172,18 @@ public class SystemUtil {
 	public static long getMaxMemory() {
 		return Runtime.getRuntime().maxMemory();
 	}
+
+	/**
+	 * 获取当前 JVM 活动线程数。
+	 *
+	 * @return 线程数
+	 */
+	public static int getTotalThreadCount() {
+		ThreadGroup group = Thread.currentThread().getThreadGroup();
+		ThreadGroup top = group;
+		while (top.getParent() != null) {
+			top = top.getParent();
+		}
+		return top.activeCount();
+	}
 }

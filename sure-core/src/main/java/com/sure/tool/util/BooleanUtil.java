@@ -154,6 +154,23 @@ public class BooleanUtil {
 	}
 
 	/**
+	 * 布尔异或（奇数个 {@code true} 返回 {@code true}）。
+	 *
+	 * @param values 布尔数组
+	 * @return 异或结果
+	 */
+	public static boolean xor(boolean... values) {
+		if (values == null || values.length == 0) {
+			return false;
+		}
+		boolean result = values[0];
+		for (int i = 1; i < values.length; i++) {
+			result ^= values[i];
+		}
+		return result;
+	}
+
+	/**
 	 * 布尔值转字符串 {@code "true"/"false"}。
 	 *
 	 * @param value 布尔值

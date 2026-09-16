@@ -439,5 +439,34 @@ public class ObjectUtil {
 		return 1;
 	}
 
+	/**
+	 * 空值转 {@code null}（空字符串、空集合、空 Map、空数组）。
+	 *
+	 * @param obj 对象
+	 * @return 空值返回 {@code null}，否则返回原对象
+	 */
+	public static Object emptyToNull(Object obj) {
+		return isEmpty(obj) ? null : obj;
+	}
+
+	/**
+	 * 判断对象是否为有效数字值（null、空字符串或非数字返回 {@code false}）。
+	 *
+	 * @param obj 对象
+	 * @return 是否为有效数字
+	 */
+	public static boolean isValidIfNumber(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj instanceof Number) {
+			return true;
+		}
+		if (obj instanceof CharSequence cs) {
+			String s = cs.toString().trim();
+			return !s.isEmpty() && com.sure.tool.util.NumberUtil.isNumber(s);
+		}
+		return false;
+	}
 
 }

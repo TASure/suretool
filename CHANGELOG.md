@@ -275,6 +275,14 @@
   - `NetUtil`：新增 `getLocalMacAddress`（本机 MAC，格式 `AA:BB:CC:DD:EE:FF`，优先非回环网卡）；
   - 【sure-crypto】`SecureUtil`：新增 `md5`/`sha1`/`sha256`/`sha512` 字节数组重载（文件摘要场景）；
   - 新增 `P4Features29Test`（4 例）与 `P4HashBytesTest`（2 例）；全模块 600 测试全绿，sure-core 指令覆盖率 88.9%，SpotBugs 0 告警。
+- **第三十五批（P4 v0.2.0 继续）**：
+  - `ArrayUtil`：新增 `distinct`（类型安全去重，保持首次出现顺序）、`empty(Class)`（指定类型空数组）；
+  - `BooleanUtil`：新增 `xor`（布尔异或，奇数个 true 返回 true）；
+  - `ObjectUtil`：新增 `emptyToNull`（空字符串/集合/Map/数组转 null）、`isValidIfNumber`（有效数字判断）；
+  - `HexUtil`：新增 `isHexNumber`（十六进制数判断，支持 `0x` 前缀）；
+  - `RandomUtil`：新增 `randomBigDecimal`（[start, end] 区间随机小数，含端点）；
+  - `SystemUtil`：新增 `getTotalThreadCount`（JVM 活动线程数）；
+  - 新增 `P4Features30Test`（4 例）；全模块 604 测试全绿，sure-core 指令覆盖率 89.0%，SpotBugs 0 告警。
 
 ### Changed
 

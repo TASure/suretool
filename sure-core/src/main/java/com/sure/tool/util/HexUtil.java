@@ -136,4 +136,34 @@ public class HexUtil {
 		}
 		return new String(out);
 	}
+
+	/**
+	 * 判断字符串是否为十六进制数（可含 {@code 0x}/{@code 0X} 前缀，忽略空白）。
+	 *
+	 * @param str 字符串
+	 * @return 是否为十六进制数
+	 */
+	public static boolean isHexNumber(String str) {
+		if (str == null) {
+			return false;
+		}
+		String s = str.trim();
+		if (s.isEmpty()) {
+			return false;
+		}
+		int start = 0;
+		if (s.startsWith("0x") || s.startsWith("0X")) {
+			start = 2;
+			if (s.length() == 2) {
+				return false;
+			}
+		}
+		for (int i = start; i < s.length(); i++) {
+			char c = s.charAt(i);
+			if (!((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'))) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

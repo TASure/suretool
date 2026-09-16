@@ -854,5 +854,35 @@ public class ArrayUtil {
 		return value == null ? defaultValue : value;
 	}
 
+	/**
+	 * 数组去重（保持首次出现顺序）。
+	 *
+	 * @param array 数组
+	 * @param <T>   元素类型
+	 * @return 去重后数组；原数组为 {@code null} 返回 {@code null}
+	 */
+	public static <T> T[] distinct(T[] array) {
+		if (array == null) {
+			return null;
+		}
+		java.util.LinkedHashSet<T> set = new java.util.LinkedHashSet<>();
+		for (T t : array) {
+			set.add(t);
+		}
+		return toArray(set, (Class<T>) (array.getClass().getComponentType()));
+	}
+
+	/**
+	 * 创建指定类型的空数组。
+	 *
+	 * @param componentType 数组元素类型
+	 * @param <T>           元素类型
+	 * @return 空数组
+	 */
+	public static <T> T[] empty(Class<T> componentType) {
+		@SuppressWarnings("unchecked")
+		T[] array = (T[]) java.lang.reflect.Array.newInstance(componentType, 0);
+		return array;
+	}
 
 }

@@ -180,4 +180,62 @@ public class ZipUtil {
 	private static String normalizePath(String path) {
 		return path.replace('\\', '/');
 	}
+
+	/**
+	 * 将多个文件/目录打包为 zip。
+	 *
+	 * @param srcList 源文件/目录列表
+	 * @param zipFile 目标 zip 文件
+	 * @throws IOException IO 异常
+	 */
+	public static void zip(java.util.List<File> srcList, File zipFile) throws IOException {
+		zip(srcList, zipFile, java.nio.charset.Charset.defaultCharset());
+	}
+
+	/**
+	 * 将多个文件/目录打包为 zip。
+	 *
+	 * @param srcList 源文件/目录列表
+	 * @param zipFile 目标 zip 文件
+	 * @param charset 文件名编码
+	 * @throws IOException IO 异常
+	 */
+	public static void zip(java.util.List<File> srcList, File zipFile, java.nio.charset.Charset charset) throws IOException {
+		if (srcList == null || srcList.isEmpty()) {
+			throw new IllegalArgumentException("srcList 不能为空");
+		}
+		if (zipFile == null) {
+			throw new IllegalArgumentException("zipFile 不能为空");
+		}
+		try (java.util.zip.ZipOutputStream zos = new java.util.zip.ZipOutputStream(
+				new java.io.BufferedOutputStream(new java.io.FileOutputStream(zipFile)), charset)) {
+			for (File src : srcList) {
+				if (src == null) {
+					continue;
+				}
+				zipEntry(zos, src, src.getName(), charset);
+			}
+		}
+	}
+
+	private static void zipEntry(java.util.zip.ZipOutputStream zos, File src, String entryName,
+			java.nio.charset.Charset charset) throws IOException {
+		if (src.isDirectory()) {
+			File[] children = src.listFiles();
+			if (children == null) {
+				return;
+			}
+			for (File child : children) {
+				zipEntry(zos, child, entryName + "/" + child.getName(), charset);
+			}
+		} else {
+			zos.putNextEntry(new java.util.zip.ZipEntry(entryName));
+			try (java.io.InputStream in = new java.io.FileInputStream(src)) {
+				in.transferTo(zos);
+			}
+			zos.closeEntry();
+		}
+	}
+
+
 }

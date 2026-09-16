@@ -1408,4 +1408,39 @@ public class StrUtil {
 	}
 
 
+
+	/**
+	 * 将字符串居中对齐，两侧以指定字符填充。
+	 *
+	 * @param str      字符串
+	 * @param size     目标长度
+	 * @param fillChar 填充字符
+	 * @return 居中对齐后的字符串
+	 */
+	public static String center(String str, int size, char fillChar) {
+		return center(str, size, String.valueOf(fillChar));
+	}
+
+	/**
+	 * 将字符串居中对齐，两侧以指定字符串填充。
+	 *
+	 * @param str  字符串
+	 * @param size 目标长度
+	 * @param fill 填充串
+	 * @return 居中对齐后的字符串
+	 */
+	public static String center(String str, int size, String fill) {
+		if (str == null) {
+			return null;
+		}
+		if (size <= str.length()) {
+			return str;
+		}
+		int total = size - str.length();
+		int left = total / 2;
+		int right = total - left;
+		return repeat(fill, left) + str + repeat(fill, right);
+	}
+
+
 }

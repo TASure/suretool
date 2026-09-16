@@ -966,4 +966,28 @@ public class CollUtil {
 	}
 
 
+
+	/**
+	 * 将两个集合按顺序配对为 Map。
+	 *
+	 * @param keys   键集合
+	 * @param values 值集合
+	 * @param <K>    键类型
+	 * @param <V>    值类型
+	 * @return 配对后的 Map（LinkedHashMap，取较短长度）
+	 */
+	public static <K, V> Map<K, V> zip(Collection<K> keys, Collection<V> values) {
+		Map<K, V> map = new LinkedHashMap<>();
+		if (keys == null || values == null) {
+			return map;
+		}
+		java.util.Iterator<K> keyIt = keys.iterator();
+		java.util.Iterator<V> valueIt = values.iterator();
+		while (keyIt.hasNext() && valueIt.hasNext()) {
+			map.put(keyIt.next(), valueIt.next());
+		}
+		return map;
+	}
+
+
 }

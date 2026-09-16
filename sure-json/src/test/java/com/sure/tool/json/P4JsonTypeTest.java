@@ -148,4 +148,21 @@ public class P4JsonTypeTest {
 	}
 
 
+
+	@Test
+	public void testArrayDeepClone() {
+		JSONArray arr = new JSONArray();
+		JSONObject inner = new JSONObject();
+		inner.set("k", "v");
+		arr.add(inner);
+		arr.add(1);
+
+		JSONArray copy = arr.deepClone();
+		Assert.assertEquals(2, copy.size());
+		// 修改副本内层不影响原对象
+		copy.getJSONObject(0).set("k", "changed");
+		Assert.assertEquals("v", arr.getJSONObject(0).getStr("k"));
+	}
+
+
 }

@@ -285,4 +285,36 @@ public class RandomUtil {
 	}
 
 
+
+	/**
+	 * 生成 [start, end] 区间内的随机日期。
+	 *
+	 * @param start 起始日期（含）
+	 * @param end   结束日期（含）
+	 * @return 随机日期
+	 */
+	public static java.time.LocalDate randomDay(java.time.LocalDate start, java.time.LocalDate end) {
+		if (start == null || end == null || start.isAfter(end)) {
+			throw new IllegalArgumentException("start/end 不合法");
+		}
+		long days = java.time.temporal.ChronoUnit.DAYS.between(start, end);
+		return start.plusDays(randomLong(0, days));
+	}
+
+	/**
+	 * 生成 [start, end] 区间内的随机日期。
+	 *
+	 * @param start 起始日期（含）
+	 * @param end   结束日期（含）
+	 * @return 随机日期
+	 */
+	public static java.util.Date randomDay(java.util.Date start, java.util.Date end) {
+		if (start == null || end == null || start.after(end)) {
+			throw new IllegalArgumentException("start/end 不合法");
+		}
+		long millis = end.getTime() - start.getTime();
+		return new java.util.Date(start.getTime() + randomLong(0, millis));
+	}
+
+
 }

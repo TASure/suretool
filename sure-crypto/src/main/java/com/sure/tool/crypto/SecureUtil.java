@@ -48,12 +48,32 @@ public class SecureUtil {
 	}
 
 	/**
+	 * MD5 摘要（32 位小写十六进制）。
+	 *
+	 * @param data 数据（字节数组）
+	 * @return 摘要
+	 */
+	public static String md5(byte[] data) {
+		return HashUtil.md5Hex(data);
+	}
+
+	/**
 	 * SHA-1 摘要（40 位小写十六进制）。
 	 *
 	 * @param data 数据
 	 * @return 摘要
 	 */
 	public static String sha1(String data) {
+		return HashUtil.sha1Hex(data);
+	}
+
+	/**
+	 * SHA-1 摘要（40 位小写十六进制）。
+	 *
+	 * @param data 数据（字节数组）
+	 * @return 摘要
+	 */
+	public static String sha1(byte[] data) {
 		return HashUtil.sha1Hex(data);
 	}
 
@@ -68,12 +88,32 @@ public class SecureUtil {
 	}
 
 	/**
+	 * SHA-256 摘要（64 位小写十六进制）。
+	 *
+	 * @param data 数据（字节数组）
+	 * @return 摘要
+	 */
+	public static String sha256(byte[] data) {
+		return HashUtil.sha256Hex(data);
+	}
+
+	/**
 	 * SHA-512 摘要。
 	 *
 	 * @param data 数据
 	 * @return 摘要
 	 */
 	public static String sha512(String data) {
+		return HashUtil.sha512Hex(data);
+	}
+
+	/**
+	 * SHA-512 摘要。
+	 *
+	 * @param data 数据（字节数组）
+	 * @return 摘要
+	 */
+	public static String sha512(byte[] data) {
 		return HashUtil.sha512Hex(data);
 	}
 

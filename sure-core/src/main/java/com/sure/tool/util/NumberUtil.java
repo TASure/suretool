@@ -425,6 +425,72 @@ public class NumberUtil {
 	}
 
 	/**
+	 * 生成长整型序列 [start, end)（指定步长）。
+	 *
+	 * @param start 起始（含）
+	 * @param end   结束（不含）
+	 * @param step  步长（&gt;0）
+	 * @return 序列数组
+	 */
+	public static long[] range(long start, long end, long step) {
+		if (step <= 0) {
+			throw new IllegalArgumentException("步长必须大于 0");
+		}
+		long size = Math.max(0L, (long) Math.ceil((end - start) / (double) step));
+		long[] result = new long[(int) size];
+		long v = start;
+		for (int i = 0; i < size; i++) {
+			result[i] = v;
+			v += step;
+		}
+		return result;
+	}
+
+	/**
+	 * 求最大值（null 元素忽略，全为 null 返回 {@code null}）。
+	 *
+	 * @param numbers 数字数组
+	 * @return 最大值
+	 */
+	public static Number max(Number... numbers) {
+		if (numbers == null || numbers.length == 0) {
+			return null;
+		}
+		Number max = null;
+		for (Number n : numbers) {
+			if (n == null) {
+				continue;
+			}
+			if (max == null || n.doubleValue() > max.doubleValue()) {
+				max = n;
+			}
+		}
+		return max;
+	}
+
+	/**
+	 * 求最小值（null 元素忽略，全为 null 返回 {@code null}）。
+	 *
+	 * @param numbers 数字数组
+	 * @return 最小值
+	 */
+	public static Number min(Number... numbers) {
+		if (numbers == null || numbers.length == 0) {
+			return null;
+		}
+		Number min = null;
+		for (Number n : numbers) {
+			if (n == null) {
+				continue;
+			}
+			if (min == null || n.doubleValue() < min.doubleValue()) {
+				min = n;
+			}
+		}
+		return min;
+	}
+
+	/**
 	 * 阶乘。
 	 *
 	 * @param n 非负整数

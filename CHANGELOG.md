@@ -268,6 +268,13 @@
   - `MapUtil`：新增 `getInt`/`getLong`/`getDouble`/`getBool` 单参便捷版（缺失返回 0/false）；`MapBuilder` 新增 `create`/`putAll`/`build(immutable)`；
   - Checkstyle `FileLength` 上限调整至 2000（核心工具类持续增长，StrUtil 已 1700+ 行）；
   - 新增 `P4Features28Test`（4 例）；全模块 594 测试全绿，sure-core 指令覆盖率 88.9%，SpotBugs 0 告警。
+- **第三十四批（P4 v0.2.0 继续）**：
+  - `NumberUtil`：新增 `range(long,long,long)`（长整型序列）、`max`/`min`（变参最大/最小值，null 安全）；
+  - `ReUtil`：新增 `getLast`（提取最后一个匹配的分组，支持索引与命名分组）；
+  - `ConvertUtil`：新增 `toByteArray`/`toSet`（数组/集合转 byte 数组与去重集合，保序）；
+  - `NetUtil`：新增 `getLocalMacAddress`（本机 MAC，格式 `AA:BB:CC:DD:EE:FF`，优先非回环网卡）；
+  - 【sure-crypto】`SecureUtil`：新增 `md5`/`sha1`/`sha256`/`sha512` 字节数组重载（文件摘要场景）；
+  - 新增 `P4Features29Test`（4 例）与 `P4HashBytesTest`（2 例）；全模块 600 测试全绿，sure-core 指令覆盖率 88.9%，SpotBugs 0 告警。
 
 ### Changed
 

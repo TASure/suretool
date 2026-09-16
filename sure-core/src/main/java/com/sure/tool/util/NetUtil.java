@@ -74,6 +74,48 @@ public class NetUtil {
 	}
 
 	/**
+	 * 获取本机 MAC 地址（格式 {@code AA:BB:CC:DD:EE:FF}，优先非回环网卡）。
+	 *
+	 * @return MAC 地址，获取失败返回 {@code null}
+	 */
+	public static String getLocalMacAddress() {
+		try {
+			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+			while (interfaces.hasMoreElements()) {
+				NetworkInterface ni = interfaces.nextElement();
+				if (ni.isLoopback() || !ni.isUp()) {
+					continue;
+				}
+				byte[] mac = ni.getHardwareAddress();
+				if (mac != null && mac.length > 0) {
+					StringBuilder sb = new StringBuilder(17);
+					for (int i = 0; i < mac.length; i++) {
+						if (i > 0) {
+							sb.append(':');
+						}
+						sb.append(String.format("%02X", mac[i]));
+					}
+					return sb.toString();
+				}
+			}
+			byte[] fallback = NetworkInterface.getByInetAddress(InetAddress.getLocalHost()).getHardwareAddress();
+			if (fallback != null && fallback.length > 0) {
+				StringBuilder sb = new StringBuilder(17);
+				for (int i = 0; i < fallback.length; i++) {
+					if (i > 0) {
+						sb.append(':');
+					}
+					sb.append(String.format("%02X", fallback[i]));
+				}
+				return sb.toString();
+			}
+			return null;
+		} catch (java.net.SocketException | java.net.UnknownHostException e) {
+			return null;
+		}
+	}
+
+	/**
 	 * 判断 IP 是否为内网地址（10/172.16-31/192.168/127/169.254/0 段）。
 	 *
 	 * @param ip IP 地址

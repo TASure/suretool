@@ -268,6 +268,38 @@ public class ConvertUtil {
 	}
 
 	/**
+	 * 数组或集合转 byte 数组。
+	 *
+	 * @param value 数组（含基本类型数组）或集合
+	 * @return byte 数组
+	 */
+	public static byte[] toByteArray(Object value) {
+		List<Object> list = toList(value);
+		if (list == null) {
+			return null;
+		}
+		byte[] result = new byte[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			result[i] = toByte(list.get(i));
+		}
+		return result;
+	}
+
+	/**
+	 * 数组或集合转 Set（去重，保序）。
+	 *
+	 * @param value 数组（含基本类型数组）或集合
+	 * @return Set
+	 */
+	public static java.util.Set<Object> toSet(Object value) {
+		List<Object> list = toList(value);
+		if (list == null) {
+			return null;
+		}
+		return new java.util.LinkedHashSet<>(list);
+	}
+
+	/**
 	 * 数组或集合转 int 数组。
 	 *
 	 * @param value 数组（含基本类型数组）或集合

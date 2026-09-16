@@ -86,6 +86,46 @@ public class ReUtil {
 	}
 
 	/**
+	 * 提取最后一个匹配的指定分组。
+	 *
+	 * @param regex      正则表达式
+	 * @param content    内容
+	 * @param groupIndex 分组索引，0 表示整个匹配
+	 * @return 分组内容，未匹配返回 {@code null}
+	 */
+	public static String getLast(String regex, CharSequence content, int groupIndex) {
+		if (content == null) {
+			return null;
+		}
+		Matcher matcher = Pattern.compile(regex).matcher(content);
+		String result = null;
+		while (matcher.find()) {
+			result = matcher.group(groupIndex);
+		}
+		return result;
+	}
+
+	/**
+	 * 提取最后一个匹配的指定命名分组。
+	 *
+	 * @param regex     正则表达式
+	 * @param content   内容
+	 * @param groupName 分组名
+	 * @return 分组内容，未匹配返回 {@code null}
+	 */
+	public static String getLast(String regex, CharSequence content, String groupName) {
+		if (content == null) {
+			return null;
+		}
+		Matcher matcher = Pattern.compile(regex).matcher(content);
+		String result = null;
+		while (matcher.find()) {
+			result = matcher.group(groupName);
+		}
+		return result;
+	}
+
+	/**
 	 * 获取第一个匹配的所有分组。
 	 *
 	 * @param regex   正则表达式

@@ -304,6 +304,12 @@
   - `HashUtil`：新增 `md5(byte[])`/`sha1(byte[])`/`sha256(byte[])`/`sha512(byte[])`（返回原始摘要字节，便于流式摘要场景）；
   - `IdUtil`：新增 `fastSimpleUUID`（快速 UUID，不含连字符）；
   - 新增 `P4Features34Test`（2 例）；全模块 619 测试全绿，sure-core 指令覆盖率 89.1%，SpotBugs 0 告警。
+- **第四十批（P4 v0.2.0 继续）**：
+  - `BeanUtil`：新增 `toBean`（统一转换入口：Map 走 mapToBean、Bean 走 copyProperties）；
+  - `Dict`：新增 `getBigDecimal(key[, 默认值])`、`getBigInteger(key[, 默认值])`；
+  - 【sure-json】`JSONObject`/`JSONArray`：新增 `getLocalDate`、`getLocalDateTime`；
+  - `ConvertUtil`：`toLocalDate`/`toLocalDateTime` 支持 Long 时间戳输入；
+  - 新增 `P4Features35Test`（2 例）与 `P4JsonLocalDateTimeTest`（2 例）；全模块 623 测试全绿，sure-core 指令覆盖率 89.0%，SpotBugs 0 告警。
 
 ### Changed
 

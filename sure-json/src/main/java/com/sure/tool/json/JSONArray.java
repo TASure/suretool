@@ -382,6 +382,32 @@ public class JSONArray extends ArrayList<Object> {
 		return com.sure.tool.util.ConvertUtil.toDate(get(index));
 	}
 
+	/**
+	 * 取 LocalDate 值。
+	 *
+	 * @param index 下标
+	 * @return LocalDate；越界或转换失败返回 null
+	 */
+	public java.time.LocalDate getLocalDate(int index) {
+		if (index < 0 || index >= size()) {
+			return null;
+		}
+		return com.sure.tool.util.ConvertUtil.toLocalDate(get(index));
+	}
+
+	/**
+	 * 取 LocalDateTime 值。
+	 *
+	 * @param index 下标
+	 * @return LocalDateTime；越界或转换失败返回 null
+	 */
+	public java.time.LocalDateTime getLocalDateTime(int index) {
+		if (index < 0 || index >= size()) {
+			return null;
+		}
+		return com.sure.tool.util.ConvertUtil.toLocalDateTime(get(index));
+	}
+
 
 
 	/**

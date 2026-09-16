@@ -628,6 +628,10 @@ public class ConvertUtil {
 		if (value instanceof java.util.Date date) {
 			return date.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
 		}
+		if (value instanceof Number num) {
+			return java.time.Instant.ofEpochMilli(num.longValue())
+					.atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+		}
 		String str = String.valueOf(value).trim();
 		if (str.isEmpty()) {
 			return null;
@@ -657,6 +661,10 @@ public class ConvertUtil {
 		}
 		if (value instanceof java.util.Date date) {
 			return java.time.LocalDateTime.ofInstant(date.toInstant(), java.time.ZoneId.systemDefault());
+		}
+		if (value instanceof Number num) {
+			return java.time.LocalDateTime.ofInstant(
+					java.time.Instant.ofEpochMilli(num.longValue()), java.time.ZoneId.systemDefault());
 		}
 		String str = String.valueOf(value).trim();
 		if (str.isEmpty()) {

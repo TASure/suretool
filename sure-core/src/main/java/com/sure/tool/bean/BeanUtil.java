@@ -176,8 +176,7 @@ public class BeanUtil {
 		if (prop != null && prop.getGetter() != null) {
 			return invoke(prop.getGetter(), bean);
 		}
-		if (FieldUtil.getField(bean.getClass(), name) != null) {
-			return ReflectUtil.getFieldValue(bean, name);
+		if (FieldUtil.getField(bean.getClass(), name) != null) {			return ReflectUtil.getFieldValue(bean, name);
 		}
 		return null;
 	}
@@ -201,6 +200,31 @@ public class BeanUtil {
 		if (FieldUtil.getField(bean.getClass(), name) != null) {
 			ReflectUtil.setFieldValue(bean, name, value);
 		}
+	}
+
+	/**
+	 * 对象转 Bean：Map 走 {@link #mapToBean}，普通 Bean 走 {@link #copyProperties}，其他类型返回原对象。
+	 *
+	 * @param source    源对象（Map 或 Bean）
+	 * @param beanClass 目标 Bean 类
+	 * @param <T>       Bean 类型
+	 * @return 转换后的 Bean；源为 {@code null} 返回 {@code null}
+	 */
+	public static <T> T toBean(Object source, Class<T> beanClass) {
+		if (source == null || beanClass == null) {
+			return null;
+		}
+		if (source instanceof Map<?, ?> map) {
+			return mapToBean((Map<String, Object>) map, beanClass);
+		}
+		if (isBean(source.getClass()) || beanClass.isInstance(source)) {
+			T target = ReflectUtil.invokeConstructor(beanClass);
+			if (target != null) {
+				copyProperties(source, target);
+				return target;
+			}
+		}
+		return beanClass.isInstance(source) ? beanClass.cast(source) : null;
 	}
 
 	/**

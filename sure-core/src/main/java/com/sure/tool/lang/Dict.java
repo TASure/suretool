@@ -124,6 +124,68 @@ public class Dict extends LinkedHashMap<String, Object> {
 	}
 
 	/**
+	 * 获取 BigDecimal 值。
+	 *
+	 * @param key 键
+	 * @return BigDecimal，不存在或无法转换返回 {@code null}
+	 */
+	public java.math.BigDecimal getBigDecimal(String key) {
+		Object value = get(key);
+		if (value == null) {
+			return null;
+		}
+		return com.sure.tool.util.ConvertUtil.toBigDecimal(value);
+	}
+
+	/**
+	 * 获取 BigDecimal 值，缺失或转换失败返回默认值。
+	 *
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return BigDecimal 或默认值
+	 */
+	public java.math.BigDecimal getBigDecimal(String key, java.math.BigDecimal defaultValue) {
+		java.math.BigDecimal value = getBigDecimal(key);
+		return value == null ? defaultValue : value;
+	}
+
+	/**
+	 * 获取 BigInteger 值。
+	 *
+	 * @param key 键
+	 * @return BigInteger，不存在或无法转换返回 {@code null}
+	 */
+	public java.math.BigInteger getBigInteger(String key) {
+		Object value = get(key);
+		if (value == null) {
+			return null;
+		}
+		if (value instanceof java.math.BigInteger) {
+			return (java.math.BigInteger) value;
+		}
+		if (value instanceof Number) {
+			return java.math.BigInteger.valueOf(((Number) value).longValue());
+		}
+		try {
+			return new java.math.BigInteger(String.valueOf(value).trim());
+		} catch (NumberFormatException ignore) {
+			return null;
+		}
+	}
+
+	/**
+	 * 获取 BigInteger 值，缺失或转换失败返回默认值。
+	 *
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return BigInteger 或默认值
+	 */
+	public java.math.BigInteger getBigInteger(String key, java.math.BigInteger defaultValue) {
+		java.math.BigInteger value = getBigInteger(key);
+		return value == null ? defaultValue : value;
+	}
+
+	/**
 	 * 获取浮点值。
 	 *
 	 * @param key 键

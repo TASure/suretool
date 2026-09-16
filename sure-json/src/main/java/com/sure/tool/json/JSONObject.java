@@ -384,6 +384,26 @@ public class JSONObject extends LinkedHashMap<String, Object> {
 		return com.sure.tool.util.ConvertUtil.toDate(get(key));
 	}
 
+	/**
+	 * 取 LocalDate 值。
+	 *
+	 * @param key 键
+	 * @return LocalDate；缺失或转换失败返回 null
+	 */
+	public java.time.LocalDate getLocalDate(String key) {
+		return com.sure.tool.util.ConvertUtil.toLocalDate(get(key));
+	}
+
+	/**
+	 * 取 LocalDateTime 值。
+	 *
+	 * @param key 键
+	 * @return LocalDateTime；缺失或转换失败返回 null
+	 */
+	public java.time.LocalDateTime getLocalDateTime(String key) {
+		return com.sure.tool.util.ConvertUtil.toLocalDateTime(get(key));
+	}
+
 
 
 	/**

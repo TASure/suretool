@@ -878,4 +878,34 @@ public class DateUtil {
 	}
 
 
+
+	/**
+	 * 两个日期的自然日天数差（忽略时分秒）。
+	 *
+	 * @param start 开始日期
+	 * @param end   结束日期
+	 * @return 天数差（end - start）
+	 */
+	public static long daysBetween(java.util.Date start, java.util.Date end) {
+		if (start == null || end == null) {
+			throw new IllegalArgumentException("日期不能为 null");
+		}
+		java.time.LocalDate s = start.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+		java.time.LocalDate e = end.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+		return java.time.temporal.ChronoUnit.DAYS.between(s, e);
+	}
+
+	/**
+	 * 日期在当月中的第几周。
+	 *
+	 * @param date 日期
+	 * @return 周序号（1 起）
+	 */
+	public static int getWeekOfMonth(java.util.Date date) {
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		cal.setTime(date);
+		return cal.get(java.util.Calendar.WEEK_OF_MONTH);
+	}
+
+
 }

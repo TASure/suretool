@@ -138,7 +138,14 @@
   - `DateUtil`（sure-core）：新增 `toDate(Calendar)`/`beginOfHour`/`endOfHour`；
   - `NumberUtil`（sure-core）：新增 `percent`（百分比字符串）；
   - `JSONArray`（sure-json）：新增 `toArray`/`toList`（元素转 Bean）；
-  - 新增测试用例：全模块 551 测试全绿。
+  - 新增测试用例：全模块 551 测试全绿；
+  - `ArrayUtil`（sure-core）：`wrap` 补齐 float/short/byte/char/boolean；
+  - `DateUtil`（sure-core）：新增 `daysBetween`/`getWeekOfMonth`；
+  - `MapUtil`（sure-core）：新增 `inverse`（键值互换）；
+  - `StrUtil`（sure-core）：新增 `toUnicode`；
+  - `JSONUtil`（sure-json）：新增 `isJsonObj`/`isJsonArray`；
+  - README 工具类清单同步更新；
+  - 新增测试用例：全模块 553 测试全绿。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

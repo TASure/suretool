@@ -114,4 +114,15 @@ public class P4JsonTypeTest {
 	}
 
 
+
+	@Test
+	public void testIsJsonKind() {
+		Assert.assertTrue(JSONUtil.isJsonObj("{\"a\":1}"));
+		Assert.assertFalse(JSONUtil.isJsonObj("[1,2]"));
+		Assert.assertTrue(JSONUtil.isJsonArray("[1,2]"));
+		Assert.assertFalse(JSONUtil.isJsonArray("{\"a\":1}"));
+		Assert.assertFalse(JSONUtil.isJsonObj("not json"));
+	}
+
+
 }

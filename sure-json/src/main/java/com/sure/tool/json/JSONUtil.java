@@ -641,4 +641,26 @@ public class JSONUtil {
 	}
 
 
+
+	/**
+	 * 判断字符串是否为 JSON 对象（以 { 开头）。
+	 *
+	 * @param json 字符串
+	 * @return 是否为 JSON 对象
+	 */
+	public static boolean isJsonObj(String json) {
+		return isJson(json) && json.trim().startsWith("{");
+	}
+
+	/**
+	 * 判断字符串是否为 JSON 数组（以 [ 开头）。
+	 *
+	 * @param json 字符串
+	 * @return 是否为 JSON 数组
+	 */
+	public static boolean isJsonArray(String json) {
+		return isJson(json) && json.trim().startsWith("[");
+	}
+
+
 }

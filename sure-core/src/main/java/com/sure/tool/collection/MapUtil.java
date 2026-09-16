@@ -525,4 +525,25 @@ public class MapUtil {
 	}
 
 
+
+	/**
+	 * 键值互换（适用于 BiMap 场景；重复值后者覆盖前者）。
+	 *
+	 * @param map 原 Map
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @return 互换后的新 Map
+	 */
+	public static <K, V> Map<V, K> inverse(Map<K, V> map) {
+		if (map == null) {
+			return null;
+		}
+		Map<V, K> result = new LinkedHashMap<>();
+		for (Map.Entry<K, V> entry : map.entrySet()) {
+			result.put(entry.getValue(), entry.getKey());
+		}
+		return result;
+	}
+
+
 }

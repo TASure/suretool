@@ -659,4 +659,91 @@ public class ArrayUtil {
 	}
 
 
+
+	/**
+	 * 基本类型数组转包装类型数组。
+	 *
+	 * @param array 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Float[] wrap(float[] array) {
+		if (array == null) {
+			return null;
+		}
+		Float[] result = new Float[array.length];
+		for (int i = 0; i < array.length; i++) {
+			result[i] = array[i];
+		}
+		return result;
+	}
+
+	/**
+	 * 基本类型数组转包装类型数组。
+	 *
+	 * @param array 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Short[] wrap(short[] array) {
+		if (array == null) {
+			return null;
+		}
+		Short[] result = new Short[array.length];
+		for (int i = 0; i < array.length; i++) {
+			result[i] = array[i];
+		}
+		return result;
+	}
+
+	/**
+	 * 基本类型数组转包装类型数组。
+	 *
+	 * @param array 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Byte[] wrap(byte[] array) {
+		if (array == null) {
+			return null;
+		}
+		Byte[] result = new Byte[array.length];
+		for (int i = 0; i < array.length; i++) {
+			result[i] = array[i];
+		}
+		return result;
+	}
+
+	/**
+	 * 基本类型数组转包装类型数组。
+	 *
+	 * @param array 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Character[] wrap(char[] array) {
+		if (array == null) {
+			return null;
+		}
+		Character[] result = new Character[array.length];
+		for (int i = 0; i < array.length; i++) {
+			result[i] = array[i];
+		}
+		return result;
+	}
+
+	/**
+	 * 基本类型数组转包装类型数组。
+	 *
+	 * @param array 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Boolean[] wrap(boolean[] array) {
+		if (array == null) {
+			return null;
+		}
+		Boolean[] result = new Boolean[array.length];
+		for (int i = 0; i < array.length; i++) {
+			result[i] = array[i];
+		}
+		return result;
+	}
+
+
 }

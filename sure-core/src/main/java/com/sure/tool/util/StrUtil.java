@@ -1325,4 +1325,28 @@ public class StrUtil {
 	}
 
 
+
+	/**
+	 * 转 Unicode 字符串（中文转 \u005cuXXXX，ASCII 保留）。
+	 *
+	 * @param str 字符串
+	 * @return Unicode 表示
+	 */
+	public static String toUnicode(String str) {
+		if (str == null) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < str.length(); i++) {
+			char c = str.charAt(i);
+			if (c > 127) {
+				sb.append('\\').append('u').append(String.format("%04x", (int) c));
+			} else {
+				sb.append(c);
+			}
+		}
+		return sb.toString();
+	}
+
+
 }

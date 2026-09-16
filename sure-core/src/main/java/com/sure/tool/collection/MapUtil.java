@@ -568,4 +568,18 @@ public class MapUtil {
 	}
 
 
+
+	/**
+	 * 按值降序排序（返回 LinkedHashMap 保持顺序）。
+	 *
+	 * @param map 原 Map
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @return 排序后的 Map
+	 */
+	public static <K, V extends Comparable<? super V>> Map<K, V> sortByValueDesc(Map<K, V> map) {
+		return sortByValue(map, false);
+	}
+
+
 }

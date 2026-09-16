@@ -335,4 +335,26 @@ public class BeanUtil {
 		return target;
 	}
 
+
+	/**
+	 * 用 Map 填充 Bean 属性（值为 {@code null} 的键跳过，不覆盖已有值）。
+	 *
+	 * @param bean Bean
+	 * @param map  属性名-值
+	 * @param <T>  Bean 类型
+	 * @return Bean 本身
+	 */
+	public static <T> T fill(T bean, Map<String, Object> map) {
+		if (bean == null || map == null) {
+			return bean;
+		}
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			if (entry.getValue() != null) {
+				setProperty(bean, entry.getKey(), entry.getValue());
+			}
+		}
+		return bean;
+	}
+
+
 }

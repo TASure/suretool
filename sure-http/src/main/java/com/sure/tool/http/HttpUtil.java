@@ -609,4 +609,27 @@ public class HttpUtil {
 	}
 
 
+
+	/**
+	 * GET JSON 请求。
+	 *
+	 * @param url URL
+	 * @return 响应体
+	 */
+	public static String getJson(String url) {
+		return getJson(url, DEFAULT_CONNECT_TIMEOUT);
+	}
+
+	/**
+	 * GET JSON 请求。
+	 *
+	 * @param url           URL
+	 * @param timeoutMillis 超时（毫秒）
+	 * @return 响应体
+	 */
+	public static String getJson(String url, int timeoutMillis) {
+		return execute("GET", url, null, null, null, "application/json; charset=UTF-8", timeoutMillis);
+	}
+
+
 }

@@ -218,7 +218,12 @@
   - `DateUtil`（sure-core）：新增 `beginOfSecond`/`endOfSecond`；
   - `LruCache`（sure-cache）：新增 `getCapacity`；
   - `IdcardUtil`（sure-core）：新增 `getAge`（周岁，补全既有 15/18 位工具）；
-  - 新增测试用例：全模块 582 测试全绿。
+  - 新增测试用例：全模块 582 测试全绿；
+  - `CollUtil`（sure-core）：新增 `sortByProperty`（两参便捷版）、`sortByPropertyDesc`、`indexOf`、`lastIndexOf`；
+  - `MapUtil`（sure-core）：新增 `sortByValueDesc`；
+  - `BeanUtil`（sure-core）：新增 `fill`（Map 填充，null 不覆盖）；
+  - `HttpUtil`（sure-http）：新增 `getJson`；
+  - 新增测试用例：全模块 586 测试全绿。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

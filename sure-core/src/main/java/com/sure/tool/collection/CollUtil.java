@@ -745,6 +745,18 @@ public class CollUtil {
 	 * @param isAscending 是否升序
 	 * @return 排序后新列表
 	 */
+	/**
+	 * 按属性升序排序。
+	 *
+	 * @param collection 集合
+	 * @param property   属性名
+	 * @param <T>        元素类型
+	 * @return 排序后的列表
+	 */
+	public static <T> List<T> sortByProperty(Collection<T> collection, String property) {
+		return sortByProperty(collection, property, true);
+	}
+
 	public static <T> List<T> sortByProperty(Collection<T> collection, String property, boolean isAscending) {
 		if (isEmpty(collection)) {
 			return new java.util.ArrayList<>();
@@ -1009,6 +1021,60 @@ public class CollUtil {
 			}
 		}
 		return result;
+	}
+
+
+
+	/**
+	 * 按属性降序排序。
+	 *
+	 * @param collection 集合
+	 * @param property   属性名
+	 * @param <T>        元素类型
+	 * @return 排序后的列表
+	 */
+	public static <T> List<T> sortByPropertyDesc(Collection<T> collection, String property) {
+		return sortByProperty(collection, property, false);
+	}
+
+	/**
+	 * 在列表中查找元素下标。
+	 *
+	 * @param list  列表
+	 * @param value 元素
+	 * @param <T>   元素类型
+	 * @return 下标或 -1
+	 */
+	public static <T> int indexOf(List<T> list, Object value) {
+		if (list == null) {
+			return -1;
+		}
+		for (int i = 0; i < list.size(); i++) {
+			if (java.util.Objects.equals(list.get(i), value)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * 在列表中查找元素最后出现的下标。
+	 *
+	 * @param list  列表
+	 * @param value 元素
+	 * @param <T>   元素类型
+	 * @return 下标或 -1
+	 */
+	public static <T> int lastIndexOf(List<T> list, Object value) {
+		if (list == null) {
+			return -1;
+		}
+		for (int i = list.size() - 1; i >= 0; i--) {
+			if (java.util.Objects.equals(list.get(i), value)) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 

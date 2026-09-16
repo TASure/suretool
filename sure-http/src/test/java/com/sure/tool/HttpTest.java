@@ -240,4 +240,27 @@ public class HttpTest {
 	public void testNotNullBase() {
 		assertNotNull(base);
 	}
+
+	@Test
+	public void testGetJson() throws Exception {
+		com.sun.net.httpserver.HttpServer server = com.sun.net.httpserver.HttpServer.create(
+				new java.net.InetSocketAddress(0), 0);
+		server.createContext("/j", exchange -> {
+			byte[] body = "{\"ok\":true}".getBytes(java.nio.charset.StandardCharsets.UTF_8);
+			exchange.getResponseHeaders().set("Content-Type", "application/json");
+			exchange.sendResponseHeaders(200, body.length);
+			exchange.getResponseBody().write(body);
+			exchange.close();
+		});
+		server.start();
+		try {
+			String url = "http://127.0.0.1:" + server.getAddress().getPort() + "/j";
+			String resp = com.sure.tool.http.HttpUtil.getJson(url);
+			assertEquals("{\"ok\":true}", resp);
+		} finally {
+			server.stop(0);
+		}
+	}
+
+
 }

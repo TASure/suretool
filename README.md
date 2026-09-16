@@ -55,15 +55,15 @@
 
 
 ```
-\\\<dependency>
+\\\\\\\<dependency>
 
-\&#x20;   \\\<groupId>io.github.tasure\\\</groupId>
+\\\&#x20;   \\\\\\\<groupId>io.github.tasure\\\\\\\</groupId>
 
-\&#x20;   \\\<artifactId>sure-all\\\</artifactId>
+\\\&#x20;   \\\\\\\<artifactId>sure-all\\\\\\\</artifactId>
 
-\&#x20;   \\\<version>0.1.0\\\</version>
+\\\&#x20;   \\\\\\\<version>0.1.0\\\\\\\</version>
 
-\\\</dependency>
+\\\\\\\</dependency>
 ```
 
 或按需按模块引入（依赖更轻）：
@@ -71,25 +71,25 @@
 
 
 ```
-\\\<dependency>
+\\\\\\\<dependency>
 
-\&#x20;   \\\<groupId>io.github.tasure\\\</groupId>
+\\\&#x20;   \\\\\\\<groupId>io.github.tasure\\\\\\\</groupId>
 
-\&#x20;   \\\<artifactId>sure-core\\\</artifactId>
+\\\&#x20;   \\\\\\\<artifactId>sure-core\\\\\\\</artifactId>
 
-\&#x20;   \\\<version>0.1.0\\\</version>
+\\\&#x20;   \\\\\\\<version>0.1.0\\\\\\\</version>
 
-\\\</dependency>
+\\\\\\\</dependency>
 
-\\\<dependency>
+\\\\\\\<dependency>
 
-\&#x20;   \\\<groupId>io.github.tasure\\\</groupId>
+\\\&#x20;   \\\\\\\<groupId>io.github.tasure\\\\\\\</groupId>
 
-\&#x20;   \\\<artifactId>sure-json\\\</artifactId>
+\\\&#x20;   \\\\\\\<artifactId>sure-json\\\\\\\</artifactId>
 
-\&#x20;   \\\<version>0.1.0\\\</version>
+\\\&#x20;   \\\\\\\<version>0.1.0\\\\\\\</version>
 
-\\\</dependency>
+\\\\\\\</dependency>
 ```
 
 或引入 BOM 统一版本管理（import 后无需再写版本号）：
@@ -97,27 +97,27 @@
 
 
 ```
-\\\<dependencyManagement>
+\\\\\\\<dependencyManagement>
 
-\&#x20;   \\\<dependencies>
+\\\&#x20;   \\\\\\\<dependencies>
 
-\&#x20;       \\\<dependency>
+\\\&#x20;       \\\\\\\<dependency>
 
-\&#x20;           \\\<groupId>io.github.tasure\\\</groupId>
+\\\&#x20;           \\\\\\\<groupId>io.github.tasure\\\\\\\</groupId>
 
-\&#x20;           \\\<artifactId>sure-bom\\\</artifactId>
+\\\&#x20;           \\\\\\\<artifactId>sure-bom\\\\\\\</artifactId>
 
-\&#x20;           \\\<version>0.1.0\\\</version>
+\\\&#x20;           \\\\\\\<version>0.1.0\\\\\\\</version>
 
-\&#x20;           \\\<type>pom\\\</type>
+\\\&#x20;           \\\\\\\<type>pom\\\\\\\</type>
 
-\&#x20;           \\\<scope>import\\\</scope>
+\\\&#x20;           \\\\\\\<scope>import\\\\\\\</scope>
 
-\&#x20;       \\\</dependency>
+\\\&#x20;       \\\\\\\</dependency>
 
-\&#x20;   \\\</dependencies>
+\\\&#x20;   \\\\\\\</dependencies>
 
-\\\</dependencyManagement>
+\\\\\\\</dependencyManagement>
 ```
 
 先本地安装：
@@ -257,75 +257,75 @@ import com.sure.tool.io.FileUtil;
 
 import com.sure.tool.lang.Snowflake;
 
-import com.sure.tool.util.\\\*;
+import com.sure.tool.util.\\\\\\\*;
 
 import java.util.Date;
 
 public class Demo {
 
-\&#x20;   public static void main(String\\\[] args) throws Exception {
+\\\&#x20;   public static void main(String\\\\\\\[] args) throws Exception {
 
-\&#x20;       // 字符串
+\\\&#x20;       // 字符串
 
-\&#x20;       StrUtil.isBlank("  ");              // true
+\\\&#x20;       StrUtil.isBlank("  ");              // true
 
-\&#x20;       StrUtil.toCamelCase("user\\\_name");   // userName
+\\\&#x20;       StrUtil.toCamelCase("user\\\\\\\_name");   // userName
 
-\&#x20;       StrUtil.format("你好，{}", "世界");    // 你好，世界
+\\\&#x20;       StrUtil.format("你好，{}", "世界");    // 你好，世界
 
-\&#x20;       // 数值
+\\\&#x20;       // 数值
 
-\&#x20;       NumberUtil.div(10, 3, 2);           // 3.33
+\\\&#x20;       NumberUtil.div(10, 3, 2);           // 3.33
 
-\&#x20;       NumberUtil.round(3.14159, 2);       // 3.14
+\\\&#x20;       NumberUtil.round(3.14159, 2);       // 3.14
 
-\&#x20;       // 日期
+\\\&#x20;       // 日期
 
-\&#x20;       DateUtil.format(DateUtil.now());    // 2026-09-09 16:30:00
+\\\&#x20;       DateUtil.format(DateUtil.now());    // 2026-09-09 16:30:00
 
-\&#x20;       DateUtil.age(DateUtil.parse("2000-05-20"));  // 26
+\\\&#x20;       DateUtil.age(DateUtil.parse("2000-05-20"));  // 26
 
-\&#x20;       // 集合
+\\\&#x20;       // 集合
 
-\&#x20;       CollUtil.union(CollUtil.newArrayList(1, 2), CollUtil.newArrayList(2, 3));  // \\\[1, 2, 3]
+\\\&#x20;       CollUtil.union(CollUtil.newArrayList(1, 2), CollUtil.newArrayList(2, 3));  // \\\\\\\[1, 2, 3]
 
-\&#x20;       // 脱敏
+\\\&#x20;       // 脱敏
 
-\&#x20;       DesensitizedUtil.mobilePhone("13812345678");   // 138\\\*\\\*\\\*\\\*5678
+\\\&#x20;       DesensitizedUtil.mobilePhone("13812345678");   // 138\\\\\\\*\\\\\\\*\\\\\\\*\\\\\\\*5678
 
-\&#x20;       // 加密
+\\\&#x20;       // 加密
 
-\&#x20;       HashUtil.sha256Hex("abc");
+\\\&#x20;       HashUtil.sha256Hex("abc");
 
-\&#x20;       // 文件
+\\\&#x20;       // 文件
 
-\&#x20;       FileUtil.writeUtf8String("hello", new java.io.File("/tmp/a.txt"));
+\\\&#x20;       FileUtil.writeUtf8String("hello", new java.io.File("/tmp/a.txt"));
 
-\&#x20;       FileUtil.readUtf8String(new java.io.File("/tmp/a.txt"));
+\\\&#x20;       FileUtil.readUtf8String(new java.io.File("/tmp/a.txt"));
 
-\&#x20;       // ID
+\\\&#x20;       // ID
 
-\&#x20;       Snowflake snowflake = IdUtil.createSnowflake(1, 1);
+\\\&#x20;       Snowflake snowflake = IdUtil.createSnowflake(1, 1);
 
-\&#x20;       snowflake.nextId();  // 雪花 ID
+\\\&#x20;       snowflake.nextId();  // 雪花 ID
 
-\&#x20;       // 校验
+\\\&#x20;       // 校验
 
-\&#x20;       ValidatorUtil.isEmail("test@example.com");   // true
+\\\&#x20;       ValidatorUtil.isEmail("test@example.com");   // true
 
-\&#x20;       ValidatorUtil.isMobile("13800138000");       // true
+\\\&#x20;       ValidatorUtil.isMobile("13800138000");       // true
 
-\&#x20;       // 身份证
+\\\&#x20;       // 身份证
 
-\&#x20;       IdcardUtil.getBirthDate("11010119900307123X");  // 1990-03-07
+\\\&#x20;       IdcardUtil.getBirthDate("11010119900307123X");  // 1990-03-07
 
-\&#x20;       // 压缩
+\\\&#x20;       // 压缩
 
-\&#x20;       ZipUtil.zip("/tmp/dir", "/tmp/out.zip");
+\\\&#x20;       ZipUtil.zip("/tmp/dir", "/tmp/out.zip");
 
-\&#x20;       ZipUtil.unzip("/tmp/out.zip", "/tmp/out");
+\\\&#x20;       ZipUtil.unzip("/tmp/out.zip", "/tmp/out");
 
-\&#x20;   }
+\\\&#x20;   }
 
 }
 ```
@@ -335,11 +335,11 @@ public class Demo {
 
 
 ```
-\\# 首次运行先安装依赖模块到本地仓库
+\\\\# 首次运行先安装依赖模块到本地仓库
 
 mvn -pl sure-examples -am install -DskipTests
 
-\\# 运行全部示例（聚合入口 ExamplesRunner）
+\\\\# 运行全部示例（聚合入口 ExamplesRunner）
 
 mvn -pl sure-examples exec:java
 ```
@@ -349,11 +349,11 @@ mvn -pl sure-examples exec:java
 
 
 ```
-\\# 编译并运行全部单元测试
+\\\\# 编译并运行全部单元测试
 
 mvn test
 
-\\# 安装到本地仓库
+\\\\# 安装到本地仓库
 
 mvn clean install
 ```

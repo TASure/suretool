@@ -383,4 +383,19 @@ public class JSONArray extends ArrayList<Object> {
 	}
 
 
+
+	/**
+	 * 取 BigDecimal 值（金额场景）。
+	 *
+	 * @param index 下标
+	 * @return BigDecimal；缺失或转换失败返回 null
+	 */
+	public java.math.BigDecimal getBigDecimal(int index) {
+		if (index < 0 || index >= size()) {
+			return null;
+		}
+		return com.sure.tool.util.ConvertUtil.toBigDecimal(get(index));
+	}
+
+
 }

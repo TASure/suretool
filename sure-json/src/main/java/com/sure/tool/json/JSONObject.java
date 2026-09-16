@@ -385,4 +385,16 @@ public class JSONObject extends LinkedHashMap<String, Object> {
 	}
 
 
+
+	/**
+	 * 取 BigDecimal 值（金额场景）。
+	 *
+	 * @param key 键
+	 * @return BigDecimal；缺失或转换失败返回 null
+	 */
+	public java.math.BigDecimal getBigDecimal(String key) {
+		return com.sure.tool.util.ConvertUtil.toBigDecimal(get(key));
+	}
+
+
 }

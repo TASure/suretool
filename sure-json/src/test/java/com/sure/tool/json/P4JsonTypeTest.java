@@ -84,4 +84,19 @@ public class P4JsonTypeTest {
 	}
 
 
+
+	@Test
+	public void testBigDecimal() {
+		JSONObject obj = new JSONObject();
+		obj.set("price", "19.90");
+		Assert.assertEquals(new java.math.BigDecimal("19.90"), obj.getBigDecimal("price"));
+		Assert.assertNull(obj.getBigDecimal("missing"));
+
+		JSONArray arr = new JSONArray();
+		arr.add(100);
+		Assert.assertEquals(new java.math.BigDecimal("100"), arr.getBigDecimal(0));
+		Assert.assertNull(arr.getBigDecimal(9));
+	}
+
+
 }

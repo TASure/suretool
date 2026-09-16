@@ -816,4 +816,25 @@ public class DateUtil {
 	}
 
 
+
+	/**
+	 * 判断两个日期是否同一个月。
+	 *
+	 * @param date1 日期 1
+	 * @param date2 日期 2
+	 * @return 是否同年同月；任一为 null 返回 false
+	 */
+	public static boolean isSameMonth(java.util.Date date1, java.util.Date date2) {
+		if (date1 == null || date2 == null) {
+			return false;
+		}
+		java.util.Calendar cal1 = java.util.Calendar.getInstance();
+		cal1.setTime(date1);
+		java.util.Calendar cal2 = java.util.Calendar.getInstance();
+		cal2.setTime(date2);
+		return cal1.get(java.util.Calendar.YEAR) == cal2.get(java.util.Calendar.YEAR)
+				&& cal1.get(java.util.Calendar.MONTH) == cal2.get(java.util.Calendar.MONTH);
+	}
+
+
 }

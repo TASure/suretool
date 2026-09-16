@@ -500,4 +500,54 @@ public class ConvertUtil {
 	}
 
 
+
+	/**
+	 * 转换为 double 数组（集合/数组/逗号分隔字符串）。
+	 *
+	 * @param value 值
+	 * @return double 数组；null 返回空数组
+	 */
+	public static double[] toDoubleArray(Object value) {
+		if (value == null) {
+			return new double[0];
+		}
+		if (value instanceof double[] arr) {
+			return arr;
+		}
+		String[] strArr = (value instanceof String str) ? str.split(",", -1) : toStrArray(value);
+		if (strArr == null) {
+			return new double[0];
+		}
+		double[] result = new double[strArr.length];
+		for (int i = 0; i < strArr.length; i++) {
+			result[i] = Double.parseDouble(strArr[i].trim());
+		}
+		return result;
+	}
+
+	/**
+	 * 转换为 boolean 数组（集合/数组/逗号分隔字符串）。
+	 *
+	 * @param value 值
+	 * @return boolean 数组；null 返回空数组
+	 */
+	public static boolean[] toBooleanArray(Object value) {
+		if (value == null) {
+			return new boolean[0];
+		}
+		if (value instanceof boolean[] arr) {
+			return arr;
+		}
+		String[] strArr = (value instanceof String str) ? str.split(",", -1) : toStrArray(value);
+		if (strArr == null) {
+			return new boolean[0];
+		}
+		boolean[] result = new boolean[strArr.length];
+		for (int i = 0; i < strArr.length; i++) {
+			result[i] = Boolean.parseBoolean(strArr[i].trim());
+		}
+		return result;
+	}
+
+
 }

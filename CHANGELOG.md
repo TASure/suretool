@@ -124,7 +124,14 @@
   - `NumberUtil`（sure-core）：新增 `isNumber`（BigDecimal 严格数字判断）；
   - `JSONObject`/`JSONArray`（sure-json）：新增 `getDate`（时间戳/日期字符串转 Date）；
   - Checkstyle FileLength 上限 1200→1500（StrUtil 核心大类）；拆分 `P4Features12Test`；
-  - 新增测试用例：全模块 547 测试全绿。
+  - 新增测试用例：全模块 547 测试全绿；
+  - `ConvertUtil`（sure-core）：新增 `toDoubleArray`/`toBooleanArray`（支持逗号分隔字符串）；
+  - `ValidatorUtil`（sure-core）：新增 `isIpv6`/`isMac`；
+  - `StrUtil`（sure-core）：新增 `isUpperCase`/`isLowerCase`；
+  - `DateUtil`（sure-core）：新增 `isSameMonth`；
+  - `ObjectUtil`（sure-core）：新增 `toString`（null 安全）；
+  - `JSONObject`/`JSONArray`（sure-json）：新增 `getBigDecimal`（金额场景）；
+  - 新增测试用例：全模块 549 测试全绿。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

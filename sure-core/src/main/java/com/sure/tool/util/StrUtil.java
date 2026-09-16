@@ -1230,4 +1230,52 @@ public class StrUtil {
 	}
 
 
+
+	/**
+	 * 判断是否全部为大写字母（忽略非字母字符）。
+	 *
+	 * @param str 字符串
+	 * @return 是否全大写；空串返回 false
+	 */
+	public static boolean isUpperCase(String str) {
+		if (isEmpty(str)) {
+			return false;
+		}
+		boolean hasLetter = false;
+		for (int i = 0; i < str.length(); i++) {
+			char c = str.charAt(i);
+			if (Character.isLetter(c)) {
+				hasLetter = true;
+				if (!Character.isUpperCase(c)) {
+					return false;
+				}
+			}
+		}
+		return hasLetter;
+	}
+
+	/**
+	 * 判断是否全部为小写字母（忽略非字母字符）。
+	 *
+	 * @param str 字符串
+	 * @return 是否全小写；空串返回 false
+	 */
+	public static boolean isLowerCase(String str) {
+		if (isEmpty(str)) {
+			return false;
+		}
+		boolean hasLetter = false;
+		for (int i = 0; i < str.length(); i++) {
+			char c = str.charAt(i);
+			if (Character.isLetter(c)) {
+				hasLetter = true;
+				if (!Character.isLowerCase(c)) {
+					return false;
+				}
+			}
+		}
+		return hasLetter;
+	}
+
+
 }

@@ -390,4 +390,27 @@ public class ObjectUtil {
 	}
 
 
+
+	/**
+	 * 对象转字符串，null 返回空串。
+	 *
+	 * @param obj 对象
+	 * @return 字符串
+	 */
+	public static String toString(Object obj) {
+		return obj == null ? "" : obj.toString();
+	}
+
+	/**
+	 * 对象转字符串，null 返回默认值。
+	 *
+	 * @param obj          对象
+	 * @param defaultValue 默认值
+	 * @return 字符串
+	 */
+	public static String toString(Object obj, String defaultValue) {
+		return obj == null ? defaultValue : obj.toString();
+	}
+
+
 }

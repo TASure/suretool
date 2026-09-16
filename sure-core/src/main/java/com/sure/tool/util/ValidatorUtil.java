@@ -201,4 +201,50 @@ public class ValidatorUtil {
 	}
 
 
+
+	/**
+	 * 校验 IPv6 地址（含 IPv4 映射的简化校验）。
+	 *
+	 * @param value IPv6 字符串
+	 * @return 是否合法
+	 */
+	public static boolean isIpv6(String value) {
+		if (value == null || value.isEmpty()) {
+			return false;
+		}
+		if (value.contains("::")) {
+			return value.split("::").length <= 2;
+		}
+		String[] groups = value.split(":", -1);
+		if (groups.length != 8) {
+			return false;
+		}
+		for (String g : groups) {
+			if (g.isEmpty() || g.length() > 4) {
+				return false;
+			}
+			for (int i = 0; i < g.length(); i++) {
+				char c = g.charAt(i);
+				if (!((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'))) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 校验 MAC 地址（xx:xx:xx:xx:xx:xx 或 xx-xx-xx-xx-xx-xx）。
+	 *
+	 * @param value MAC 字符串
+	 * @return 是否合法
+	 */
+	public static boolean isMac(String value) {
+		if (value == null) {
+			return false;
+		}
+		return value.matches("([0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}");
+	}
+
+
 }

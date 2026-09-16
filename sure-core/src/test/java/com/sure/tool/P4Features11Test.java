@@ -175,4 +175,24 @@ public class P4Features11Test {
 	}
 
 
+
+	@Test
+	public void testStrAndValidatorEnhance() {
+		Assert.assertEquals("world", StrUtil.removePrefix("hello world", "hello "));
+		Assert.assertEquals("hello world", StrUtil.removePrefix("hello world", "x"));
+		Assert.assertEquals("hello", StrUtil.removeSuffix("hello world", " world"));
+		Assert.assertEquals("hello world", StrUtil.removeSuffix("hello world", "x"));
+		Assert.assertEquals("world", StrUtil.subSuf("hello world", 5));
+		Assert.assertEquals("", StrUtil.subSuf("hello", 0));
+		Assert.assertEquals("hello", StrUtil.subPre("hello world", 5));
+		Assert.assertEquals("hi", StrUtil.subPre("hi", 5));
+
+		Assert.assertTrue(com.sure.tool.util.ValidatorUtil.isCreditCode("91350100M000100Y43"));
+		Assert.assertFalse(com.sure.tool.util.ValidatorUtil.isCreditCode("91350100M000100Y4X"));
+		Assert.assertTrue(com.sure.tool.util.ValidatorUtil.isDate("2026-02-28"));
+		Assert.assertFalse(com.sure.tool.util.ValidatorUtil.isDate("2025-02-29"));
+		Assert.assertFalse(com.sure.tool.util.ValidatorUtil.isDate("2026/02/28"));
+	}
+
+
 }

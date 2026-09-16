@@ -269,4 +269,16 @@ public abstract class AbstractCaptcha implements Captcha {
 	}
 
 
+
+	/**
+	 * 将验证码图片写入文件。
+	 *
+	 * @param file 目标文件
+	 * @throws java.io.IOException IO 异常
+	 */
+	public void write(java.io.File file) throws java.io.IOException {
+		com.sure.tool.io.FileUtil.writeBytes(getImageBytes(), file);
+	}
+
+
 }

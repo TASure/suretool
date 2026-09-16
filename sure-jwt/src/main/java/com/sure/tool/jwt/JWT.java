@@ -258,20 +258,8 @@ public class JWT {
 	 */
 	public boolean verify() {
 		try {
-			if (rawHeaderPart == null || rawPayloadPart == null || signature == null) {
+			if (!verifySignature()) {
 				return false;
-			}
-			String signingInput = rawHeaderPart + "." + rawPayloadPart;
-			byte[] data = signingInput.getBytes(StandardCharsets.UTF_8);
-			if (ALG_RS256.equals(algorithm)) {
-				if (!rsaVerify(data, signature)) {
-					return false;
-				}
-			} else {
-				byte[] expected = sign(data);
-				if (!MessageDigest.isEqual(expected, signature)) {
-					return false;
-				}
 			}
 			long now = System.currentTimeMillis() / 1000;
 			Long exp = payload.getLong(CLAIM_EXP);
@@ -289,7 +277,26 @@ public class JWT {
 	}
 
 	/**
+	 * 仅校验签名（不检查过期与生效时间）。
+	 *
+	 * @return 签名是否有效
+	 */
+	public boolean verifySignature() {
+		if (rawHeaderPart == null || rawPayloadPart == null || signature == null) {
+			return false;
+		}
+		String signingInput = rawHeaderPart + "." + rawPayloadPart;
+		byte[] data = signingInput.getBytes(StandardCharsets.UTF_8);
+		if (ALG_RS256.equals(algorithm)) {
+			return rsaVerify(data, signature);
+		}
+		byte[] expected = sign(data);
+		return MessageDigest.isEqual(expected, signature);
+	}
+
+	/**
 	 * 获取 payload。
+	 *
 	 *
 	 * @return payload JSON 对象
 	 */

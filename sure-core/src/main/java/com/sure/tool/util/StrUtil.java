@@ -1137,4 +1137,62 @@ public class StrUtil {
 	}
 
 
+
+	/**
+	 * 去除指定前缀（无前缀则原样返回）。
+	 *
+	 * @param str    字符串
+	 * @param prefix 前缀
+	 * @return 结果
+	 */
+	public static String removePrefix(String str, String prefix) {
+		if (isEmpty(str) || isEmpty(prefix)) {
+			return str;
+		}
+		return str.startsWith(prefix) ? str.substring(prefix.length()) : str;
+	}
+
+	/**
+	 * 去除指定后缀（无后缀则原样返回）。
+	 *
+	 * @param str    字符串
+	 * @param suffix 后缀
+	 * @return 结果
+	 */
+	public static String removeSuffix(String str, String suffix) {
+		if (isEmpty(str) || isEmpty(suffix)) {
+			return str;
+		}
+		return str.endsWith(suffix) ? str.substring(0, str.length() - suffix.length()) : str;
+	}
+
+	/**
+	 * 截取尾部 n 个字符。
+	 *
+	 * @param str 字符串
+	 * @param len 长度
+	 * @return 尾部字符串
+	 */
+	public static String subSuf(String str, int len) {
+		if (isEmpty(str)) {
+			return str;
+		}
+		return len <= 0 ? "" : str.substring(Math.max(0, str.length() - len));
+	}
+
+	/**
+	 * 截取头部 n 个字符。
+	 *
+	 * @param str 字符串
+	 * @param len 长度
+	 * @return 头部字符串
+	 */
+	public static String subPre(String str, int len) {
+		if (isEmpty(str)) {
+			return str;
+		}
+		return len <= 0 ? "" : str.substring(0, Math.min(str.length(), len));
+	}
+
+
 }

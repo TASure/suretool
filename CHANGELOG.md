@@ -104,7 +104,13 @@
   - 【sure-crypto】`RsaUtil`：新增 `sign`/`verify`（SHA256withRSA 签名验签）；`SecureUtil`：新增 `rsaSign`/`rsaVerify`；
   - 【sure-json】`JSONObject`：新增 `setAll`（链式批量设置）；
   - `IdUtil`（sure-core）：新增 `getSnowflakeNextId`（默认节点单例，线程安全）；
-  - 新增 `P4HttpTest`/`P4UrlTest`/`P4RsaTest`/`P4JsonSetAllTest`；全模块 537 测试全绿。
+  - 新增 `P4HttpTest`/`P4UrlTest`/`P4RsaTest`/`P4JsonSetAllTest`；全模块 537 测试全绿；
+  - 【sure-jwt】`JwtUtil`：新增 `getClaim`/`getExpireTime`/`isExpired`/`getExpireSecondsLeft`；`JWT`：新增 `verifySignature`（仅验签不查过期）；
+  - 【sure-crypto】`HmacUtil`：新增 `hmacSha384Hex`/`hmacSha384Base64`/`hmacSha512Base64`；
+  - 【sure-captcha】`AbstractCaptcha`：新增 `write(File)`；
+  - `StrUtil`（sure-core）：新增 `removePrefix`/`removeSuffix`/`subSuf`/`subPre`；
+  - `ValidatorUtil`（sure-core）：新增 `isCreditCode`/`isDate`（含闰年校验）；
+  - 新增 `P4JwtTest`/`P4HmacTest`/`P4CaptchaWriteTest`；全模块 543 测试全绿。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

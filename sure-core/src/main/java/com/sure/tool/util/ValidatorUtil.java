@@ -171,4 +171,34 @@ public class ValidatorUtil {
 	public static boolean isMatch(String regex, String value) {
 		return value != null && value.matches(regex);
 	}
+
+	/**
+	 * 校验统一社会信用代码。
+	 *
+	 * @param value 信用代码
+	 * @return 是否合法
+	 */
+	public static boolean isCreditCode(String value) {
+		return CreditCodeUtil.isValidCreditCode(value);
+	}
+
+	/**
+	 * 校验日期字符串（yyyy-MM-dd，含闰年 2 月校验）。
+	 *
+	 * @param value 日期字符串
+	 * @return 是否合法
+	 */
+	public static boolean isDate(String value) {
+		if (value == null || !value.matches("\\d{4}-\\d{2}-\\d{2}")) {
+			return false;
+		}
+		try {
+			java.time.LocalDate.parse(value);
+			return true;
+		} catch (java.time.format.DateTimeParseException e) {
+			return false;
+		}
+	}
+
+
 }

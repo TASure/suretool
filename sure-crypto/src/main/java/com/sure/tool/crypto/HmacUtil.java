@@ -130,4 +130,42 @@ public class HmacUtil {
 	private static byte[] bytes(String value) {
 		return value == null ? new byte[0] : value.getBytes(StandardCharsets.UTF_8);
 	}
+
+	/**
+	 * HmacSHA384 十六进制摘要。
+	 *
+	 * @param data 数据
+	 * @param key  密钥
+	 * @return 十六进制摘要
+	 */
+	public static String hmacSha384Hex(String data, String key) {
+		return com.sure.tool.codec.HexUtil.encodeHexStr(hmac("HmacSHA384", data.getBytes(java.nio.charset.StandardCharsets.UTF_8),
+				key.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+	}
+
+	/**
+	 * HmacSHA384 Base64 摘要。
+	 *
+	 * @param data 数据
+	 * @param key  密钥
+	 * @return Base64 摘要
+	 */
+	public static String hmacSha384Base64(String data, String key) {
+		return java.util.Base64.getEncoder().encodeToString(hmac("HmacSHA384", data.getBytes(java.nio.charset.StandardCharsets.UTF_8),
+				key.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+	}
+
+	/**
+	 * HmacSHA512 Base64 摘要。
+	 *
+	 * @param data 数据
+	 * @param key  密钥
+	 * @return Base64 摘要
+	 */
+	public static String hmacSha512Base64(String data, String key) {
+		return java.util.Base64.getEncoder().encodeToString(hmac("HmacSHA512", data.getBytes(java.nio.charset.StandardCharsets.UTF_8),
+				key.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+	}
+
+
 }

@@ -135,4 +135,72 @@ public class JwtUtil {
 		KeyPair pair = new KeyPair(null, privateKey);
 		return createTokenWithRsa(claims, pair, expireSeconds);
 	}
+
+	/**
+	 * 获取指定 claim 值。
+	 *
+	 * @param token  JWT 字符串
+	 * @param secret 密钥
+	 * @param key    claim 键
+	 * @return claim 值；无则 null
+	 */
+	public static Object getClaim(String token, String secret, String key) {
+		JWT jwt = JWT.of(token).setKey(secret);
+		if (!jwt.verifySignature()) {
+			return null;
+		}
+		return jwt.getPayload().get(key);
+	}
+
+	/**
+	 * 获取过期时间。
+	 *
+	 * @param token  JWT 字符串
+	 * @param secret 密钥
+	 * @return 过期时间；无 exp 则 null
+	 */
+	public static java.util.Date getExpireTime(String token, String secret) {
+		JWT jwt = JWT.of(token).setKey(secret);
+		if (!jwt.verifySignature()) {
+			return null;
+		}
+		JSONObject payload = jwt.getPayload();
+		if (payload == null || !payload.containsKey("exp")) {
+			return null;
+		}
+		Object exp = payload.get("exp");
+		if (exp instanceof Number num) {
+			return new java.util.Date(num.longValue() * 1000);
+		}
+		return null;
+	}
+
+	/**
+	 * 判断 token 是否已过期。
+	 *
+	 * @param token  JWT 字符串
+	 * @param secret 密钥
+	 * @return 已过期或校验失败返回 true；无 exp 返回 false
+	 */
+	public static boolean isExpired(String token, String secret) {
+		java.util.Date expireTime = getExpireTime(token, secret);
+		return expireTime != null && expireTime.getTime() <= System.currentTimeMillis();
+	}
+
+	/**
+	 * 获取剩余有效秒数。
+	 *
+	 * @param token  JWT 字符串
+	 * @param secret 密钥
+	 * @return 剩余秒数；无 exp 返回 0；已过期返回负数
+	 */
+	public static long getExpireSecondsLeft(String token, String secret) {
+		java.util.Date expireTime = getExpireTime(token, secret);
+		if (expireTime == null) {
+			return 0;
+		}
+		return (expireTime.getTime() - System.currentTimeMillis()) / 1000;
+	}
+
+
 }

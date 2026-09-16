@@ -961,4 +961,71 @@ public class DateUtil {
 			"七月", "八月", "九月", "十月", "十一月", "十二月"};
 
 
+
+	/**
+	 * 偏移季度。
+	 *
+	 * @param date   日期
+	 * @param offset 偏移量（可为负）
+	 * @return 偏移后的日期
+	 */
+	public static Date offsetQuarter(Date date, int offset) {
+		if (date == null) {
+			return null;
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.MONTH, offset * 3);
+		return cal.getTime();
+	}
+
+	/**
+	 * 获取年份。
+	 *
+	 * @param date 日期
+	 * @return 年份
+	 */
+	public static int getYear(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		return cal.get(Calendar.YEAR);
+	}
+
+	/**
+	 * 获取月份（1-12）。
+	 *
+	 * @param date 日期
+	 * @return 月份
+	 */
+	public static int getMonth(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		return cal.get(Calendar.MONTH) + 1;
+	}
+
+	/**
+	 * 获取日（1-31）。
+	 *
+	 * @param date 日期
+	 * @return 日
+	 */
+	public static int getDayOfMonth(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		return cal.get(Calendar.DAY_OF_MONTH);
+	}
+
+	/**
+	 * 获取小时（0-23）。
+	 *
+	 * @param date 日期
+	 * @return 小时
+	 */
+	public static int getHour(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		return cal.get(Calendar.HOUR_OF_DAY);
+	}
+
+
 }

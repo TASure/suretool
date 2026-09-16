@@ -172,7 +172,13 @@
   - `StrUtil`（sure-core）：新增 `firstNonBlank`（首个非空白）/`concat`（数组拼接）；
   - `DateUtil`（sure-core）：新增 `getMonthName`（月份中文名）；
   - `ArrayUtil`（sure-core）：新增 `nullToEmpty`（null 转指定类型空数组）；
-  - 新增测试用例：全模块 563 测试全绿。
+  - 新增测试用例：全模块 563 测试全绿；
+  - `HttpUtil`（sure-http）：新增 `upload`（multipart/form-data 文件上传）；
+  - `StrUtil`（sure-core）：新增 `swapCase`（大小写互换）；
+  - `NumberUtil`（sure-core）：新增 `parseNumber`（字符串解析为 Number）；
+  - `DateUtil`（sure-core）：新增 `offsetQuarter`/`getYear`/`getMonth`/`getDayOfMonth`/`getHour`；
+  - `ValidatorUtil`（sure-core）：新增 `isTime`（HH:mm:ss 校验）；
+  - 新增测试用例：全模块 565 测试全绿；Checkstyle FileLength 上限 1500→1600。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

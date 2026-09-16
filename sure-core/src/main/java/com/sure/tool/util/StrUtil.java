@@ -1480,4 +1480,28 @@ public class StrUtil {
 	}
 
 
+
+	/**
+	 * 交换字符串中字母的大小写。
+	 *
+	 * @param str 字符串
+	 * @return 大小写互换后的字符串
+	 */
+	public static String swapCase(String str) {
+		if (str == null) {
+			return null;
+		}
+		char[] chars = str.toCharArray();
+		for (int i = 0; i < chars.length; i++) {
+			char c = chars[i];
+			if (Character.isUpperCase(c)) {
+				chars[i] = Character.toLowerCase(c);
+			} else if (Character.isLowerCase(c)) {
+				chars[i] = Character.toUpperCase(c);
+			}
+		}
+		return new String(chars);
+	}
+
+
 }

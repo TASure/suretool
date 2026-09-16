@@ -587,4 +587,30 @@ public class NumberUtil {
 	}
 
 
+
+	/**
+	 * 解析字符串为数字类型（Integer/Long/BigDecimal）。
+	 *
+	 * @param value 字符串
+	 * @return Number；无法解析返回 null
+	 */
+	public static Number parseNumber(String value) {
+		if (value == null || value.isBlank()) {
+			return null;
+		}
+		String trim = value.trim();
+		try {
+			if (!trim.contains(".")) {
+				if (trim.length() <= 9) {
+					return Integer.valueOf(trim);
+				}
+				return Long.valueOf(trim);
+			}
+			return new java.math.BigDecimal(trim);
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
+
 }

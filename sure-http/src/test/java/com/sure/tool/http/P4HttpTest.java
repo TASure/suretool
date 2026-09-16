@@ -133,4 +133,37 @@ public class P4HttpTest {
 	}
 
 
+
+	@Test
+	public void testUpload() throws Exception {
+		java.io.File tmp = java.io.File.createTempFile("sure", ".txt");
+		com.sure.tool.io.FileUtil.writeString("file-content", tmp, java.nio.charset.StandardCharsets.UTF_8);
+		com.sun.net.httpserver.HttpServer server = com.sun.net.httpserver.HttpServer.create(
+				new java.net.InetSocketAddress(0), 0);
+		String[] body = new String[1];
+		String[] contentType = new String[1];
+		server.createContext("/upload", exchange -> {
+			contentType[0] = exchange.getRequestHeaders().getFirst("Content-Type");
+			body[0] = new String(exchange.getRequestBody().readAllBytes(),
+					java.nio.charset.StandardCharsets.UTF_8);
+			byte[] resp = "ok".getBytes(java.nio.charset.StandardCharsets.UTF_8);
+			exchange.sendResponseHeaders(200, resp.length);
+			exchange.getResponseBody().write(resp);
+			exchange.close();
+		});
+		server.start();
+		try {
+			String url = "http://127.0.0.1:" + server.getAddress().getPort() + "/upload";
+			String result = com.sure.tool.http.HttpUtil.upload(url, java.util.Map.of("k", "v"), "file", tmp);
+			Assert.assertEquals("ok", result);
+			Assert.assertTrue(contentType[0].startsWith("multipart/form-data; boundary="));
+			Assert.assertTrue(body[0].contains("name=\"k\""));
+			Assert.assertTrue(body[0].contains("file-content"));
+		} finally {
+			server.stop(0);
+			tmp.delete();
+		}
+	}
+
+
 }

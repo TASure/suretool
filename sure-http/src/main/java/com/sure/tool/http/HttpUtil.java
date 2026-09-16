@@ -495,4 +495,80 @@ public class HttpUtil {
 	}
 
 
+
+	/**
+	 * multipart/form-data 文件上传。
+	 *
+	 * @param url       URL
+	 * @param form      附加表单字段（可空）
+	 * @param fileField 文件字段名
+	 * @param file      文件
+	 * @return 响应文本（UTF-8）
+	 */
+	public static String upload(String url, Map<String, Object> form, String fileField, File file) {
+		return upload(url, form, fileField, file, DEFAULT_CONNECT_TIMEOUT);
+	}
+
+	/**
+	 * multipart/form-data 文件上传。
+	 *
+	 * @param url           URL
+	 * @param form          附加表单字段（可空）
+	 * @param fileField     文件字段名
+	 * @param file          文件
+	 * @param timeoutMillis 超时（毫秒）
+	 * @return 响应文本（UTF-8）
+	 */
+	public static String upload(String url, Map<String, Object> form, String fileField, File file, int timeoutMillis) {
+		String boundary = "----SureToolBoundary" + System.nanoTime();
+		try {
+			java.io.ByteArrayOutputStream body = new java.io.ByteArrayOutputStream();
+			if (form != null) {
+				for (Map.Entry<String, Object> entry : form.entrySet()) {
+					writeMultipartField(body, boundary, entry.getKey(), String.valueOf(entry.getValue()));
+				}
+			}
+			if (file != null && file.isFile()) {
+				body.write(("--" + boundary + "\r\n").getBytes(StandardCharsets.UTF_8));
+				body.write(("Content-Disposition: form-data; name=\"" + fileField + "\"; filename=\"" + file.getName()
+						+ "\"\r\n").getBytes(StandardCharsets.UTF_8));
+				body.write(("Content-Type: application/octet-stream\r\n\r\n").getBytes(StandardCharsets.UTF_8));
+				try (InputStream in = new java.io.FileInputStream(file)) {
+					in.transferTo(body);
+				}
+				body.write("\r\n".getBytes(StandardCharsets.UTF_8));
+			}
+			body.write(("--" + boundary + "--\r\n").getBytes(StandardCharsets.UTF_8));
+
+			HttpURLConnection conn = openConnection("POST", url, null, timeoutMillis);
+			conn.setDoOutput(true);
+			conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+			conn.setFixedLengthStreamingMode(body.size());
+			try (OutputStream out = conn.getOutputStream()) {
+				body.writeTo(out);
+			}
+			int code = conn.getResponseCode();
+			InputStream in = code >= 400 ? conn.getErrorStream() : conn.getInputStream();
+			if (in == null) {
+				throw new HttpException("无响应内容", code);
+			}
+			byte[] data = IoUtil.readBytes(in);
+			if (code >= 400) {
+				throw new HttpException("请求失败: " + url + "，" + new String(data, StandardCharsets.UTF_8), code);
+			}
+			return new String(data, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			throw new HttpException("上传失败: " + url, e);
+		}
+	}
+
+	private static void writeMultipartField(java.io.ByteArrayOutputStream body, String boundary, String name,
+			String value) throws IOException {
+		body.write(("--" + boundary + "\r\n").getBytes(StandardCharsets.UTF_8));
+		body.write(("Content-Disposition: form-data; name=\"" + name + "\"\r\n\r\n").getBytes(StandardCharsets.UTF_8));
+		body.write(value.getBytes(StandardCharsets.UTF_8));
+		body.write("\r\n".getBytes(StandardCharsets.UTF_8));
+	}
+
+
 }

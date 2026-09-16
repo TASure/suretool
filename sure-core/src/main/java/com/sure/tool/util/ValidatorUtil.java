@@ -295,4 +295,24 @@ public class ValidatorUtil {
 	}
 
 
+
+	/**
+	 * 校验是否为时间格式（HH:mm:ss）。
+	 *
+	 * @param value 字符串
+	 * @return 是否匹配
+	 */
+	public static boolean isTime(String value) {
+		if (value == null || value.isBlank()) {
+			return false;
+		}
+		try {
+			java.time.LocalTime.parse(value, java.time.format.DateTimeFormatter.ISO_LOCAL_TIME);
+			return true;
+		} catch (java.time.format.DateTimeParseException e) {
+			return false;
+		}
+	}
+
+
 }

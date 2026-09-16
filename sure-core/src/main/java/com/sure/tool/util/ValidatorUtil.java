@@ -355,4 +355,27 @@ public class ValidatorUtil {
 	}
 
 
+
+	/**
+	 * 校验是否为通用字符（汉字、字母、数字、下划线）。
+	 *
+	 * @param value 字符串
+	 * @return 是否匹配
+	 */
+	public static boolean isGeneralWithChinese(String value) {
+		if (value == null) {
+			return false;
+		}
+		for (int i = 0; i < value.length(); i++) {
+			char c = value.charAt(i);
+			boolean ok = (c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+					|| c == '_' || (c >= 0x4E00 && c <= 0x9FFF);
+			if (!ok) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
 }

@@ -1075,4 +1075,40 @@ public class DateUtil {
 	}
 
 
+
+	/**
+	 * 获取某时刻所在分钟的开始（秒和毫秒归零）。
+	 *
+	 * @param date 日期
+	 * @return 分钟开始
+	 */
+	public static Date beginOfMinute(Date date) {
+		if (date == null) {
+			return null;
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
+
+	/**
+	 * 获取某时刻所在分钟的结束（秒 59、毫秒 999）。
+	 *
+	 * @param date 日期
+	 * @return 分钟结束
+	 */
+	public static Date endOfMinute(Date date) {
+		if (date == null) {
+			return null;
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.SECOND, 59);
+		cal.set(Calendar.MILLISECOND, 999);
+		return cal.getTime();
+	}
+
+
 }

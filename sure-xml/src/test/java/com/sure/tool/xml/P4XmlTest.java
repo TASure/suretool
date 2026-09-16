@@ -47,4 +47,15 @@ public class P4XmlTest {
 			Files.deleteIfExists(tmp);
 		}
 	}
+
+	@Test
+	public void testGetByXPath() {
+		String xml = "<root><user id=\"1\"><name>Zhang</name><age>30</age></user></root>";
+		Assert.assertEquals("Zhang", com.sure.tool.xml.XmlUtil.getByXPath(xml, "/root/user/name"));
+		Assert.assertEquals("30", com.sure.tool.xml.XmlUtil.getByXPath(xml, "/root/user/age"));
+		Assert.assertNull(com.sure.tool.xml.XmlUtil.getByXPath(xml, "/root/missing"));
+		Assert.assertNull(com.sure.tool.xml.XmlUtil.getByXPath(null, "/root"));
+	}
+
+
 }

@@ -219,4 +219,17 @@ public class CacheGapTest {
 	}
 
 
+
+	@Test
+	public void testGetRemainingTime() {
+		com.sure.tool.cache.TimedCache<String, String> cache = com.sure.tool.cache.CacheUtil.newTimedCache(60_000);
+		cache.put("k", "v");
+		assertTrue(cache.getRemainingTime("k") > 0);
+		assertEquals(0, cache.getRemainingTime("missing-key"));
+		com.sure.tool.cache.TimedCache<String, String> forever = com.sure.tool.cache.CacheUtil.newTimedCache(0);
+		forever.put("k2", "v2");
+		assertEquals(Long.MAX_VALUE, forever.getRemainingTime("k2"));
+	}
+
+
 }

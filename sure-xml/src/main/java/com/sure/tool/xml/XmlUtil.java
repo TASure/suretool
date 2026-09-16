@@ -303,4 +303,31 @@ public class XmlUtil {
 	}
 
 
+
+	/**
+	 * 使用 XPath 表达式从 XML 中取值。
+	 *
+	 * @param xml   XML 字符串
+	 * @param xpath XPath 表达式
+	 * @return 匹配节点的文本值，无匹配返回 {@code null}
+	 */
+	public static String getByXPath(String xml, String xpath) {
+		if (xml == null || xpath == null) {
+			return null;
+		}
+		try {
+			javax.xml.parsers.DocumentBuilderFactory factory = javax.xml.parsers.DocumentBuilderFactory.newInstance();
+			factory.setNamespaceAware(true);
+			org.w3c.dom.Document doc = factory.newDocumentBuilder()
+					.parse(new org.xml.sax.InputSource(new java.io.StringReader(xml)));
+			javax.xml.xpath.XPath xPath = javax.xml.xpath.XPathFactory.newInstance().newXPath();
+			String result = xPath.evaluate(xpath, doc);
+			return result == null || result.isEmpty() ? null : result;
+		} catch (javax.xml.parsers.ParserConfigurationException | org.xml.sax.SAXException | java.io.IOException
+				| javax.xml.xpath.XPathExpressionException e) {
+			return null;
+		}
+	}
+
+
 }

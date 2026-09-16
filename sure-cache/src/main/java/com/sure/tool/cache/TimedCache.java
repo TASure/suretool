@@ -160,4 +160,24 @@ public class TimedCache<K, V> implements Cache<K, V> {
 			return timeout > 0 && System.currentTimeMillis() - createdAt >= timeout;
 		}
 	}
+
+	/**
+	 * 获取键的剩余存活时间。
+	 *
+	 * @param key 键
+	 * @return 剩余毫秒：不存在或已过期返回 0；永不过期返回 {@link Long#MAX_VALUE}
+	 */
+	public synchronized long getRemainingTime(K key) {
+		TimedValue<V> tv = map.get(key);
+		if (tv == null) {
+			return 0;
+		}
+		if (tv.timeout <= 0) {
+			return Long.MAX_VALUE;
+		}
+		long remain = tv.timeout - (System.currentTimeMillis() - tv.createdAt);
+		return remain > 0 ? remain : 0;
+	}
+
+
 }

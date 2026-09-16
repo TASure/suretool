@@ -195,7 +195,15 @@
   - `CollUtil`（sure-core）：新增 `removeNull`；
   - `ValidatorUtil`（sure-core）：新增 `isBirthday`（含闰年 2 月校验）；
   - `NumberUtil`（sure-core）：新增 `pow`（快速幂）；
-  - 新增测试用例：全模块 570 测试全绿。
+  - 新增测试用例：全模块 570 测试全绿；
+  - `XmlUtil`（sure-xml）：新增 `getByXPath`（XPath 表达式取值，JDK 内置实现）；
+  - `StrUtil`（sure-core）：新增 `containsAnyIgnoreCase`；
+  - `DateUtil`（sure-core）：新增 `beginOfMinute`/`endOfMinute`；
+  - `ArrayUtil`（sure-core）：新增 `resize`（扩容/缩容）；
+  - `TimedCache`（sure-cache）：新增 `getRemainingTime`（剩余存活时间）；
+  - `ConvertUtil`（sure-core）：新增 `toLocalDate`/`toLocalDateTime`；
+  - `ValidatorUtil`（sure-core）：新增 `isGeneralWithChinese`；
+  - 新增测试用例：全模块 573 测试全绿。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

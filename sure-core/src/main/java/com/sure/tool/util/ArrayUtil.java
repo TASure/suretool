@@ -801,4 +801,27 @@ public class ArrayUtil {
 	}
 
 
+
+	/**
+	 * 调整数组长度（扩容补 null，缩容截断）。
+	 *
+	 * @param array   原数组
+	 * @param newSize 新长度
+	 * @param <T>     元素类型
+	 * @return 新数组
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T[] resize(T[] array, int newSize) {
+		if (array == null) {
+			return null;
+		}
+		if (newSize <= 0) {
+			return (T[]) java.lang.reflect.Array.newInstance(array.getClass().getComponentType(), 0);
+		}
+		T[] result = (T[]) java.lang.reflect.Array.newInstance(array.getClass().getComponentType(), newSize);
+		System.arraycopy(array, 0, result, 0, Math.min(array.length, newSize));
+		return result;
+	}
+
+
 }

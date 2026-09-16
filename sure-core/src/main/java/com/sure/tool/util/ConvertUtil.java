@@ -576,4 +576,67 @@ public class ConvertUtil {
 	}
 
 
+
+	/**
+	 * 转换为 LocalDate（支持 yyyy-MM-dd / ISO_INSTANT 等标准格式）。
+	 *
+	 * @param value 值
+	 * @return LocalDate 或 {@code null}
+	 */
+	public static java.time.LocalDate toLocalDate(Object value) {
+		if (value == null) {
+			return null;
+		}
+		if (value instanceof java.time.LocalDate localDate) {
+			return localDate;
+		}
+		if (value instanceof java.time.LocalDateTime localDateTime) {
+			return localDateTime.toLocalDate();
+		}
+		if (value instanceof java.util.Date date) {
+			return date.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+		}
+		String str = String.valueOf(value).trim();
+		if (str.isEmpty()) {
+			return null;
+		}
+		try {
+			return java.time.LocalDate.parse(str);
+		} catch (java.time.format.DateTimeParseException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * 转换为 LocalDateTime（支持 yyyy-MM-dd HH:mm:ss 等标准格式）。
+	 *
+	 * @param value 值
+	 * @return LocalDateTime 或 {@code null}
+	 */
+	public static java.time.LocalDateTime toLocalDateTime(Object value) {
+		if (value == null) {
+			return null;
+		}
+		if (value instanceof java.time.LocalDateTime localDateTime) {
+			return localDateTime;
+		}
+		if (value instanceof java.time.LocalDate localDate) {
+			return localDate.atStartOfDay();
+		}
+		if (value instanceof java.util.Date date) {
+			return java.time.LocalDateTime.ofInstant(date.toInstant(), java.time.ZoneId.systemDefault());
+		}
+		String str = String.valueOf(value).trim();
+		if (str.isEmpty()) {
+			return null;
+		}
+		try {
+			return java.time.LocalDateTime.parse(str,
+					java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		} catch (java.time.format.DateTimeParseException e) {
+			return null;
+		}
+	}
+
+
 }

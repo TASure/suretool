@@ -1567,4 +1567,26 @@ public class StrUtil {
 	}
 
 
+
+	/**
+	 * 忽略大小写判断字符串是否包含任意给定子串。
+	 *
+	 * @param str        字符串
+	 * @param searchStrs 子串列表
+	 * @return 是否包含任意一个
+	 */
+	public static boolean containsAnyIgnoreCase(CharSequence str, CharSequence... searchStrs) {
+		if (str == null || searchStrs == null) {
+			return false;
+		}
+		String lower = str.toString().toLowerCase();
+		for (CharSequence search : searchStrs) {
+			if (search != null && lower.contains(search.toString().toLowerCase())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+
 }

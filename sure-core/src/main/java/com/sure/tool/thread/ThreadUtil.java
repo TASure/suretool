@@ -61,6 +61,15 @@ public class ThreadUtil {
 	}
 
 	/**
+	 * 后台线程执行任务（不阻塞当前线程，不捕获异常）。
+	 *
+	 * @param runnable 任务
+	 */
+	public static void execute(Runnable runnable) {
+		POOL.execute(runnable);
+	}
+
+	/**
 	 * 休眠（毫秒），中断时恢复中断标志并抛运行时异常。
 	 *
 	 * @param millis 毫秒数

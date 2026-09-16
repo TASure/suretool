@@ -110,4 +110,21 @@ public class ExceptionUtil {
 		}
 		return new RuntimeException(throwable);
 	}
+
+	/**
+	 * 解包装异常：逐层剥离包装异常，返回最内层异常。
+	 *
+	 * @param throwable 异常
+	 * @return 最内层异常；{@code null} 返回 {@code null}
+	 */
+	public static Throwable unwrap(Throwable throwable) {
+		if (throwable == null) {
+			return null;
+		}
+		Throwable current = throwable;
+		while (current.getCause() != null && current.getCause() != current) {
+			current = current.getCause();
+		}
+		return current;
+	}
 }

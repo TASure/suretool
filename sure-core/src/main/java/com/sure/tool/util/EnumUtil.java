@@ -142,4 +142,31 @@ public class EnumUtil {
 		}
 		return result;
 	}
+
+	/**
+	 * 获取枚举常量指定字段的值列表。
+	 *
+	 * @param enumType  枚举类型
+	 * @param fieldName 字段名（可为枚举名本身）
+	 * @param <E>       枚举类型
+	 * @return 字段值列表
+	 */
+	public static <E extends Enum<E>> java.util.List<Object> getFieldValues(Class<E> enumType, String fieldName) {
+		java.util.List<Object> values = new java.util.ArrayList<>();
+		for (E constant : enumType.getEnumConstants()) {
+			if ("name".equals(fieldName)) {
+				values.add(constant.name());
+				continue;
+			}
+			try {
+				java.lang.reflect.Field field = enumType.getDeclaredField(fieldName);
+				field.setAccessible(true);
+				values.add(field.get(constant));
+			} catch (NoSuchFieldException | IllegalAccessException e) {
+				throw new IllegalArgumentException("枚举 " + enumType.getSimpleName()
+						+ " 无字段: " + fieldName, e);
+			}
+		}
+		return values;
+	}
 }

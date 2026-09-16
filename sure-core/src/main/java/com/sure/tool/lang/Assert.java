@@ -219,4 +219,15 @@ public class Assert {
 			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
 		}
 	}
+
+	/**
+	 * 无条件抛出断言失败异常。
+	 *
+	 * @param errorMsgTemplate 错误信息模板
+	 * @param params           占位符参数
+	 * @throws IllegalArgumentException 始终抛出
+	 */
+	public static void fail(String errorMsgTemplate, Object... params) {
+		throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
+	}
 }

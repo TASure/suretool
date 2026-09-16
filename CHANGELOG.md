@@ -294,6 +294,12 @@
   - `DesensitizedUtil`：新增 `ipv6`（IPv6 脱敏，保留首末段，压缩地址原样返回）；
   - `BitUtil`：新增 `get(byte[], int)`（字节数组指定位读取，大端位序）；
   - 新增 `P4Features32Test`（4 例）；全模块 613 测试全绿，sure-core 指令覆盖率 89.1%，SpotBugs 0 告警。
+- **第三十八批（P4 v0.2.0 继续）**：
+  - `ExceptionUtil`：新增 `unwrap`（逐层剥离包装异常，返回最内层）；
+  - `Assert`：新增 `fail`（无条件抛出断言失败异常，支持模板占位符）；
+  - `ThreadUtil`：新增 `execute`（后台线程池执行任务）；
+  - `EnumUtil`：新增 `getFieldValues`（获取枚举常量指定字段的值列表）；
+  - 新增 `P4Features33Test`（4 例）；全模块 617 测试全绿，sure-core 指令覆盖率 89.1%，SpotBugs 0 告警。
 
 ### Changed
 

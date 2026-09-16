@@ -99,4 +99,19 @@ public class P4JsonTypeTest {
 	}
 
 
+
+	@Test
+	public void testToArrayAndList() {
+		JSONArray arr = new JSONArray();
+		arr.add(new JSONObject().set("name", "张三"));
+		arr.add(new JSONObject().set("name", "李四"));
+		java.util.List<com.sure.tool.json.TestUser> list = arr.toList(com.sure.tool.json.TestUser.class);
+		Assert.assertEquals(2, list.size());
+		Assert.assertEquals("张三", list.get(0).getName());
+		com.sure.tool.json.TestUser[] array = arr.toArray(com.sure.tool.json.TestUser.class);
+		Assert.assertEquals(2, array.length);
+		Assert.assertEquals("李四", array[1].getName());
+	}
+
+
 }

@@ -398,4 +398,34 @@ public class JSONArray extends ArrayList<Object> {
 	}
 
 
+
+	/**
+	 * 转为对象列表（元素为 JSONObject 时按 beanClass 转换）。
+	 *
+	 * @param beanClass 目标类型
+	 * @param <T>       泛型
+	 * @return 对象列表
+	 */
+	public <T> java.util.List<T> toList(Class<T> beanClass) {
+		java.util.List<T> result = new java.util.ArrayList<>();
+		for (int i = 0; i < size(); i++) {
+			result.add(getBean(i, beanClass));
+		}
+		return result;
+	}
+
+	/**
+	 * 转为对象数组（元素为 JSONObject 时按 beanClass 转换）。
+	 *
+	 * @param beanClass 目标类型
+	 * @param <T>       泛型
+	 * @return 对象数组
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T[] toArray(Class<T> beanClass) {
+		java.util.List<T> list = toList(beanClass);
+		return list.toArray((T[]) java.lang.reflect.Array.newInstance(beanClass, list.size()));
+	}
+
+
 }

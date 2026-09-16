@@ -545,4 +545,17 @@ public class NumberUtil {
 		return isInteger(str);
 	}
 
+
+	/**
+	 * 转为百分比字符串（如 0.3456 -> "34.56%"）。
+	 *
+	 * @param value 比率（0-1）
+	 * @param scale 保留小数位
+	 * @return 百分比字符串
+	 */
+	public static String percent(double value, int scale) {
+		return String.format("%." + scale + "f%%", value * 100);
+	}
+
+
 }

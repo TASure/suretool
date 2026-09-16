@@ -1278,4 +1278,51 @@ public class StrUtil {
 	}
 
 
+
+	/**
+	 * 前补位：字符串不足指定长度时在前面填充字符。
+	 *
+	 * @param str     字符串
+	 * @param minLen  最小长度
+	 * @param padChar 填充字符
+	 * @return 补位后的字符串
+	 */
+	public static String fillBefore(String str, int minLen, char padChar) {
+		if (str == null) {
+			return null;
+		}
+		if (str.length() >= minLen) {
+			return str;
+		}
+		StringBuilder sb = new StringBuilder(minLen);
+		for (int i = str.length(); i < minLen; i++) {
+			sb.append(padChar);
+		}
+		return sb.append(str).toString();
+	}
+
+	/**
+	 * 后补位：字符串不足指定长度时在后面填充字符。
+	 *
+	 * @param str     字符串
+	 * @param minLen  最小长度
+	 * @param padChar 填充字符
+	 * @return 补位后的字符串
+	 */
+	public static String fillAfter(String str, int minLen, char padChar) {
+		if (str == null) {
+			return null;
+		}
+		if (str.length() >= minLen) {
+			return str;
+		}
+		StringBuilder sb = new StringBuilder(minLen);
+		sb.append(str);
+		for (int i = str.length(); i < minLen; i++) {
+			sb.append(padChar);
+		}
+		return sb.toString();
+	}
+
+
 }

@@ -837,4 +837,45 @@ public class DateUtil {
 	}
 
 
+
+	/**
+	 * Calendar 转 Date。
+	 *
+	 * @param calendar Calendar
+	 * @return Date；null 返回 null
+	 */
+	public static java.util.Date toDate(java.util.Calendar calendar) {
+		return calendar == null ? null : calendar.getTime();
+	}
+
+	/**
+	 * 当前小时开始时间。
+	 *
+	 * @param date 日期
+	 * @return 小时起点（分钟/秒/毫秒归零）
+	 */
+	public static java.util.Date beginOfHour(java.util.Date date) {
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(java.util.Calendar.MINUTE, 0);
+		cal.set(java.util.Calendar.SECOND, 0);
+		cal.set(java.util.Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
+
+	/**
+	 * 当前小时结束时间。
+	 *
+	 * @param date 日期
+	 * @return 小时终点（下一小时前 1 毫秒）
+	 */
+	public static java.util.Date endOfHour(java.util.Date date) {
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		cal.setTime(beginOfHour(date));
+		cal.add(java.util.Calendar.HOUR_OF_DAY, 1);
+		cal.add(java.util.Calendar.MILLISECOND, -1);
+		return cal.getTime();
+	}
+
+
 }

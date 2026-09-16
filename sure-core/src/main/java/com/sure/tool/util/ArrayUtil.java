@@ -606,4 +606,57 @@ public class ArrayUtil {
 	}
 
 
+
+	/**
+	 * 基本类型数组转包装类型数组。
+	 *
+	 * @param array 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Integer[] wrap(int[] array) {
+		if (array == null) {
+			return null;
+		}
+		Integer[] result = new Integer[array.length];
+		for (int i = 0; i < array.length; i++) {
+			result[i] = array[i];
+		}
+		return result;
+	}
+
+	/**
+	 * 基本类型数组转包装类型数组。
+	 *
+	 * @param array 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Long[] wrap(long[] array) {
+		if (array == null) {
+			return null;
+		}
+		Long[] result = new Long[array.length];
+		for (int i = 0; i < array.length; i++) {
+			result[i] = array[i];
+		}
+		return result;
+	}
+
+	/**
+	 * 基本类型数组转包装类型数组。
+	 *
+	 * @param array 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Double[] wrap(double[] array) {
+		if (array == null) {
+			return null;
+		}
+		Double[] result = new Double[array.length];
+		for (int i = 0; i < array.length; i++) {
+			result[i] = array[i];
+		}
+		return result;
+	}
+
+
 }

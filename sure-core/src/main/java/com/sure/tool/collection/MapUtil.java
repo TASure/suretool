@@ -477,4 +477,52 @@ public class MapUtil {
 	}
 
 
+
+	/**
+	 * 创建 Map 链式构建器（默认 LinkedHashMap 保持插入顺序）。
+	 *
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @return MapBuilder
+	 */
+	public static <K, V> MapBuilder<K, V> builder() {
+		return new MapBuilder<>();
+	}
+
+	/**
+	 * Map 链式构建器。
+	 *
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 */
+	public static class MapBuilder<K, V> {
+		private final Map<K, V> map;
+
+		public MapBuilder() {
+			this.map = new LinkedHashMap<>();
+		}
+
+		/**
+		 * 添加键值。
+		 *
+		 * @param key   键
+		 * @param value 值
+		 * @return this
+		 */
+		public MapBuilder<K, V> put(K key, V value) {
+			this.map.put(key, value);
+			return this;
+		}
+
+		/**
+		 * 构建 Map。
+		 *
+		 * @return 新建的 Map（拷贝，防外部修改内部状态）
+		 */
+		public Map<K, V> build() {
+			return new LinkedHashMap<>(this.map);
+		}
+	}
+
+
 }

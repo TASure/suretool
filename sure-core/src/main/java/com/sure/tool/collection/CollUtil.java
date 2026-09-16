@@ -776,4 +776,70 @@ public class CollUtil {
 	}
 
 
+
+	/**
+	 * 按固定大小切分为多组。
+	 *
+	 * @param <T>      元素类型
+	 * @param list     列表
+	 * @param groupSize 每组大小（&gt;0）
+	 * @return 分组列表
+	 */
+	public static <T> List<List<T>> split(List<T> list, int groupSize) {
+		if (groupSize <= 0) {
+			throw new IllegalArgumentException("groupSize 必须大于 0");
+		}
+		List<List<T>> result = new java.util.ArrayList<>();
+		if (isEmpty(list)) {
+			return result;
+		}
+		for (int i = 0; i < list.size(); i += groupSize) {
+			result.add(new java.util.ArrayList<>(list.subList(i, Math.min(i + groupSize, list.size()))));
+		}
+		return result;
+	}
+
+	/**
+	 * int 集合求和。
+	 *
+	 * @param coll 集合
+	 * @return 和
+	 */
+	public static int sum(Collection<Integer> coll) {
+		int sum = 0;
+		for (Integer v : coll) {
+			sum += v == null ? 0 : v;
+		}
+		return sum;
+	}
+
+	/**
+	 * long 集合求和。
+	 *
+	 * @param coll 集合
+	 * @return 和
+	 */
+	public static long sumLong(Collection<Long> coll) {
+		long sum = 0;
+		for (Long v : coll) {
+			sum += v == null ? 0 : v;
+		}
+		return sum;
+	}
+
+	/**
+	 * double 集合求和。
+	 *
+	 * @param coll 集合
+	 * @return 和
+	 */
+	public static double sumDouble(Collection<Double> coll) {
+		double sum = 0;
+		for (Double v : coll) {
+			sum += v == null ? 0 : v;
+		}
+		return sum;
+	}
+
+
 }

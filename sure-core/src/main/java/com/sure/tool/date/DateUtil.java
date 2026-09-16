@@ -639,4 +639,51 @@ public class DateUtil {
 	}
 
 
+
+	/**
+	 * 年初（1 月 1 日 00:00:00.000）。
+	 *
+	 * @param date 日期
+	 * @return 当年 1 月 1 日 00:00:00.000
+	 */
+	public static Date beginOfYear(Date date) {
+		Calendar c = toCalendar(date);
+		c.set(Calendar.MONTH, Calendar.JANUARY);
+		c.set(Calendar.DAY_OF_MONTH, 1);
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		return c.getTime();
+	}
+
+	/**
+	 * 年末（12 月 31 日 23:59:59.999）。
+	 *
+	 * @param date 日期
+	 * @return 当年 12 月 31 日 23:59:59.999
+	 */
+	public static Date endOfYear(Date date) {
+		Calendar c = toCalendar(date);
+		c.set(Calendar.MONTH, Calendar.DECEMBER);
+		c.set(Calendar.DAY_OF_MONTH, 31);
+		c.set(Calendar.HOUR_OF_DAY, 23);
+		c.set(Calendar.MINUTE, 59);
+		c.set(Calendar.SECOND, 59);
+		c.set(Calendar.MILLISECOND, 999);
+		return c.getTime();
+	}
+
+	/**
+	 * 按月偏移。
+	 *
+	 * @param date   日期
+	 * @param offset 月偏移量（可负）
+	 * @return 偏移后日期
+	 */
+	public static Date offsetMonth(Date date, int offset) {
+		return offset(date, Calendar.MONTH, offset);
+	}
+
+
 }

@@ -996,4 +996,44 @@ public class StrUtil {
 	}
 
 
+
+	/**
+	 * 是否以任一前缀开头。
+	 *
+	 * @param str    字符串
+	 * @param prefixes 前缀组
+	 * @return 是否命中任一
+	 */
+	public static boolean startWithAny(CharSequence str, CharSequence... prefixes) {
+		if (prefixes == null || prefixes.length == 0) {
+			return false;
+		}
+		for (CharSequence prefix : prefixes) {
+			if (startWith(str, prefix)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 是否以任一后缀结尾。
+	 *
+	 * @param str    字符串
+	 * @param suffixes 后缀组
+	 * @return 是否命中任一
+	 */
+	public static boolean endWithAny(CharSequence str, CharSequence... suffixes) {
+		if (suffixes == null || suffixes.length == 0) {
+			return false;
+		}
+		for (CharSequence suffix : suffixes) {
+			if (endWith(str, suffix)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+
 }

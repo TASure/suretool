@@ -494,4 +494,47 @@ public class ArrayUtil {
 		}
 		return StrUtil.toString(array);
 	}
+
+	/**
+	 * 末次出现位置。
+	 *
+	 * @param array 数组
+	 * @param value 值
+	 * @return 位置；未找到返回 -1
+	 */
+	public static int lastIndexOf(Object array, Object value) {
+		if (!isArray(array)) {
+			return -1;
+		}
+		int len = length(array);
+		for (int i = len - 1; i >= 0; i--) {
+			Object item = get(array, i);
+			if (java.util.Objects.equals(item, value)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * 交换数组中两位置元素（原数组修改）。
+	 *
+	 * @param array 数组
+	 * @param i     位置一
+	 * @param j     位置二
+	 */
+	public static void swap(Object array, int i, int j) {
+		if (!isArray(array)) {
+			return;
+		}
+		int len = length(array);
+		if (i < 0 || j < 0 || i >= len || j >= len) {
+			throw new IllegalArgumentException("下标越界: i=" + i + ", j=" + j);
+		}
+		Object tmp = get(array, i);
+		Array.set(array, i, get(array, j));
+		Array.set(array, j, tmp);
+	}
+
+
 }

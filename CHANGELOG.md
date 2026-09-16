@@ -67,7 +67,14 @@
   - `StrUtil`：新增 `indexOf`/`lastIndexOf`；
   - `CollUtil`：新增按 Bean 属性排序 `sortByProperty`；
   - `MapUtil`：新增 `toProperties`；
-  - 新增 `P4Features8Test`（5 例）；sure-core 指令覆盖率 89.1%。
+  - 新增 `P4Features8Test`（5 例）；sure-core 指令覆盖率 89.1%；
+  - `NumberUtil`：新增 `gcd`（最大公约数）、`lcm`（最小公倍数）、`isPrime`（素数）；
+  - `DateUtil`：新增 `beginOfYear`/`endOfYear`、`offsetMonth`；
+  - `ConvertUtil`：新增 `toBigDecimal`、`toDate`（多格式/时间戳解析）；
+  - `StrUtil`：新增 `startWithAny`/`endWithAny`；
+  - `CollUtil`：新增 `split`（分块）、`sum`/`sumLong`/`sumDouble`；
+  - `ArrayUtil`：新增 `lastIndexOf`、`swap`；
+  - 新增 `P4Features9Test`（5 例）；sure-core 指令覆盖率 89.2%。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

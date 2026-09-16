@@ -442,4 +442,62 @@ public class NumberUtil {
 	}
 
 
+
+	/**
+	 * 最大公约数（欧几里得算法）。
+	 *
+	 * @param a 整数
+	 * @param b 整数
+	 * @return 最大公约数（非负）
+	 */
+	public static long gcd(long a, long b) {
+		a = Math.abs(a);
+		b = Math.abs(b);
+		while (b != 0) {
+			long tmp = a % b;
+			a = b;
+			b = tmp;
+		}
+		return a;
+	}
+
+	/**
+	 * 最小公倍数。
+	 *
+	 * @param a 整数
+	 * @param b 整数
+	 * @return 最小公倍数（非负）
+	 */
+	public static long lcm(long a, long b) {
+		if (a == 0 || b == 0) {
+			return 0;
+		}
+		return Math.abs(a) / gcd(a, b) * Math.abs(b);
+	}
+
+	/**
+	 * 素数判断（质数）。
+	 *
+	 * @param n 正整数
+	 * @return 是否素数；n &lt; 2 返回 false
+	 */
+	public static boolean isPrime(int n) {
+		if (n < 2) {
+			return false;
+		}
+		if (n == 2 || n == 3) {
+			return true;
+		}
+		if (n % 2 == 0 || n % 3 == 0) {
+			return false;
+		}
+		for (int i = 5; (long) i * i <= n; i += 6) {
+			if (n % i == 0 || n % (i + 2) == 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
 }

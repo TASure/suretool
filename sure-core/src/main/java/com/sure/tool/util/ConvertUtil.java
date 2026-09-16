@@ -16,6 +16,9 @@
 package com.sure.tool.util;
 
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -322,4 +325,59 @@ public class ConvertUtil {
 		}
 		return result;
 	}
+
+	/**
+	 * 转 BigDecimal。
+	 *
+	 * @param value 值
+	 * @return BigDecimal；null 或转换失败返回 null
+	 */
+	public static BigDecimal toBigDecimal(Object value) {
+		if (value == null) {
+			return null;
+		}
+		if (value instanceof BigDecimal bd) {
+			return bd;
+		}
+		try {
+			return new BigDecimal(String.valueOf(value).trim());
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * 转 Date（支持 yyyy-MM-dd、yyyy-MM-dd HH:mm:ss、时间戳）。
+	 *
+	 * @param value 值
+	 * @return Date；无法解析返回 null
+	 */
+	public static java.util.Date toDate(Object value) {
+		if (value == null) {
+			return null;
+		}
+		if (value instanceof java.util.Date date) {
+			return date;
+		}
+		String str = String.valueOf(value).trim();
+		if (str.isEmpty()) {
+			return null;
+		}
+		try {
+			return new java.util.Date(Long.parseLong(str));
+		} catch (NumberFormatException ignored) {
+			// 非时间戳，尝试日期格式
+		}
+		String[] patterns = {"yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd"};
+		for (String pattern : patterns) {
+			try {
+				return new SimpleDateFormat(pattern).parse(str);
+			} catch (ParseException ignored) {
+				// 继续尝试下一格式
+			}
+		}
+		return null;
+	}
+
+
 }

@@ -116,4 +116,30 @@ public class DfaUtil {
 	public static boolean contains(String text) {
 		return DEFAULT_TREE.contains(text);
 	}
+
+	/**
+	 * 敏感词替换为指定字符（重叠词同样覆盖）。
+	 *
+	 * @param text        待处理文本
+	 * @param replacement 替换字符
+	 * @return 替换后文本
+	 */
+	public static String replace(String text, char replacement) {
+		if (text == null || text.isEmpty()) {
+			return text;
+		}
+		List<FoundWord> words = match(text);
+		if (words.isEmpty()) {
+			return text;
+		}
+		char[] chars = text.toCharArray();
+		for (FoundWord word : words) {
+			for (int i = word.getStartIndex(); i <= word.getEndIndex(); i++) {
+				chars[i] = replacement;
+			}
+		}
+		return new String(chars);
+	}
+
+
 }

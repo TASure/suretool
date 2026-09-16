@@ -534,4 +534,111 @@ public class JSONUtil {
 			return new JSONException("JSON 解析失败（位置 " + pos + "）: " + message + "，附近内容: " + preview(json));
 		}
 	}
+
+	/**
+	 * 格式化为带缩进的 JSON 字符串。
+	 *
+	 * @param obj 任意对象（Bean/Map/集合/数组/日期等）
+	 * @return 格式化 JSON 字符串
+	 */
+	public static String toJsonPrettyStr(Object obj) {
+		StringBuilder sb = new StringBuilder();
+		appendPretty(sb, obj, 0);
+		return sb.toString();
+	}
+
+	private static void appendPretty(StringBuilder sb, Object value, int depth) {
+		String indentInner = "  ".repeat(depth + 1);
+		if (value == null) {
+			sb.append("null");
+			return;
+		}
+		if (value instanceof Map) {
+			Map<?, ?> map = (Map<?, ?>) value;
+			if (map.isEmpty()) {
+				sb.append("{}");
+				return;
+			}
+			sb.append("{\n");
+			int size = map.size();
+			int i = 0;
+			for (Map.Entry<?, ?> e : map.entrySet()) {
+				sb.append(indentInner).append('"').append(escapePretty(String.valueOf(e.getKey()))).append("\": ");
+				appendPretty(sb, e.getValue(), depth + 1);
+				if (++i < size) {
+					sb.append(',');
+				}
+				sb.append('\n');
+			}
+			sb.append("  ".repeat(depth)).append('}');
+		} else if (value instanceof Collection) {
+			Collection<?> coll = (Collection<?>) value;
+			if (coll.isEmpty()) {
+				sb.append("[]");
+				return;
+			}
+			sb.append("[\n");
+			int size = coll.size();
+			int i = 0;
+			for (Object item : coll) {
+				sb.append(indentInner);
+				appendPretty(sb, item, depth + 1);
+				if (++i < size) {
+					sb.append(',');
+				}
+				sb.append('\n');
+			}
+			sb.append("  ".repeat(depth)).append(']');
+		} else if (value.getClass().isArray()) {
+			int len = Array.getLength(value);
+			if (len == 0) {
+				sb.append("[]");
+				return;
+			}
+			sb.append("[\n");
+			for (int i = 0; i < len; i++) {
+				sb.append(indentInner);
+				appendPretty(sb, Array.get(value, i), depth + 1);
+				if (i < len - 1) {
+					sb.append(',');
+				}
+				sb.append('\n');
+			}
+			sb.append("  ".repeat(depth)).append(']');
+		} else if (value instanceof String) {
+			sb.append('"').append(escapePretty((String) value)).append('"');
+		} else if (value instanceof Number || value instanceof Boolean) {
+			sb.append(value);
+		} else if (value instanceof Date) {
+			sb.append('"').append(DateUtil.format((Date) value, "yyyy-MM-dd HH:mm:ss")).append('"');
+		} else {
+			sb.append('"').append(escapePretty(String.valueOf(value))).append('"');
+		}
+	}
+
+	private static String escapePretty(String s) {
+		StringBuilder sb = new StringBuilder(s.length() + 16);
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+			switch (c) {
+				case '"' -> sb.append("\\\"");
+				case '\\' -> sb.append("\\\\");
+				case '\n' -> sb.append("\\n");
+				case '\r' -> sb.append("\\r");
+				case '\t' -> sb.append("\\t");
+				case '\b' -> sb.append("\\b");
+				case '\f' -> sb.append("\\f");
+				default -> {
+					if (c < 0x20) {
+						sb.append(String.format("\\u%04x", (int) c));
+					} else {
+						sb.append(c);
+					}
+				}
+			}
+		}
+		return sb.toString();
+	}
+
+
 }

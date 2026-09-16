@@ -264,4 +264,43 @@ public class XmlUtil {
 		transformer.transform(new DOMSource(doc), new StreamResult(writer));
 		return writer.toString();
 	}
+
+	/**
+	 * 读取 XML 文件并解析为 Map。
+	 *
+	 * @param filePath XML 文件路径
+	 * @return 解析结果 Map
+	 */
+	public static Map<String, Object> readXml(String filePath) {
+		try {
+			String xml = java.nio.file.Files.readString(java.nio.file.Path.of(filePath));
+			return parseXml(xml);
+		} catch (Exception e) {
+			throw new XmlException("读取 XML 文件失败: " + filePath, e);
+		}
+	}
+
+	/**
+	 * 格式化 XML（缩进美化）。
+	 *
+	 * @param xml   XML 字符串
+	 * @param indent 缩进空格数
+	 * @return 格式化后 XML
+	 */
+	public static String format(String xml, int indent) {
+		try {
+			DocumentBuilder builder = newDocumentBuilder();
+			Document doc = builder.parse(new InputSource(new StringReader(xml)));
+			Transformer transformer = TransformerFactory.newInstance().newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(indent));
+			StringWriter writer = new StringWriter();
+			transformer.transform(new DOMSource(doc), new StreamResult(writer));
+			return writer.toString();
+		} catch (Exception e) {
+			throw new XmlException("格式化 XML 失败", e);
+		}
+	}
+
+
 }

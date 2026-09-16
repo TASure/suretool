@@ -132,4 +132,13 @@ public class P4Features11Test {
 		Assert.assertEquals("ccc", map.get("3"));
 		Assert.assertEquals(3, map.size());
 	}
+
+	@Test
+	public void testSubBetweenAll() {
+		Assert.assertEquals(java.util.List.of("b", "c"), StrUtil.subBetweenAll("a[b]a[c]", "[", "]"));
+		Assert.assertEquals(0, StrUtil.subBetweenAll("no brackets", "[", "]").size());
+		Assert.assertEquals(0, StrUtil.subBetweenAll(null, "[", "]").size());
+	}
+
+
 }

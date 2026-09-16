@@ -1082,4 +1082,35 @@ public class StrUtil {
 	}
 
 
+
+	/**
+	 * 提取所有两两之间的内容。
+	 *
+	 * @param str    字符串
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @return 提取结果列表
+	 */
+	public static List<String> subBetweenAll(String str, String prefix, String suffix) {
+		List<String> result = new ArrayList<>();
+		if (isEmpty(str) || prefix == null || suffix == null) {
+			return result;
+		}
+		int from = 0;
+		while (true) {
+			int start = str.indexOf(prefix, from);
+			if (start < 0) {
+				break;
+			}
+			int end = str.indexOf(suffix, start + prefix.length());
+			if (end < 0) {
+				break;
+			}
+			result.add(str.substring(start + prefix.length(), end));
+			from = end + suffix.length();
+		}
+		return result;
+	}
+
+
 }

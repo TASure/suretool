@@ -88,7 +88,12 @@
   - `NumberUtil`：新增 `partValue`（按权重分配）、`isLong`；
   - `ConvertUtil`：新增 `toShort`/`toByte`/`toFloat`（含默认值重载）、`toCharArray`；
   - `CollUtil`：新增 `listToMap`（键提取函数转 Map）；
-  - 新增 `P4Features11Test`（6 例）；sure-core 指令覆盖率 89.5%。
+  - 新增 `P4Features11Test`（6 例）；sure-core 指令覆盖率 89.5%；
+  - 【跨模块】`JSONUtil`（sure-json）：新增 `toJsonPrettyStr`（缩进美化，支持 Map/集合/数组/日期/转义）；
+  - 【跨模块】`XmlUtil`（sure-xml）：新增 `readXml`（文件读取）、`format`（缩进格式化）；
+  - 【跨模块】`DfaUtil`（sure-dfa）：新增 `replace`（敏感词替换，含端点修正）；
+  - `StrUtil`（sure-core）：新增 `subBetweenAll`（提取所有区间内容）；
+  - 新增 `P4JsonPrettyTest`/`P4XmlTest`/`P4DfaTest`；全模块 527 测试全绿。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

@@ -99,7 +99,12 @@
   - 【sure-captcha】`AbstractCaptcha`：新增 `getCodeBase64`（Data URI，可直接用于 img）；
   - `MapUtil`（sure-core）：新增 `getFloat`/`getChar`/`getByte`/`getShort`；
   - `StrUtil`（sure-core）：新增 `splitToDoubleArray`；
-  - 新增 `P4JsonTypeTest`/`P4CronTest`/`P4CaptchaTest`；全模块 532 测试全绿。
+  - 新增 `P4JsonTypeTest`/`P4CronTest`/`P4CaptchaTest`；全模块 532 测试全绿；
+  - 【sure-http】`HttpUtil`：新增 `putJson`/`deleteJson`/`delete`/`put`（含超时重载）；`URLUtil`：新增 `encode`/`decode`（UTF-8 编解码）；
+  - 【sure-crypto】`RsaUtil`：新增 `sign`/`verify`（SHA256withRSA 签名验签）；`SecureUtil`：新增 `rsaSign`/`rsaVerify`；
+  - 【sure-json】`JSONObject`：新增 `setAll`（链式批量设置）；
+  - `IdUtil`（sure-core）：新增 `getSnowflakeNextId`（默认节点单例，线程安全）；
+  - 新增 `P4HttpTest`/`P4UrlTest`/`P4RsaTest`/`P4JsonSetAllTest`；全模块 537 测试全绿。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

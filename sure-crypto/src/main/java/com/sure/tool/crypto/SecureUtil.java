@@ -211,4 +211,29 @@ public class SecureUtil {
 		RANDOM.nextBytes(key);
 		return Base64.getEncoder().encodeToString(key);
 	}
+
+	/**
+	 * RSA 签名（Base64）。
+	 *
+	 * @param data       原文
+	 * @param privateKey 私钥
+	 * @return Base64 签名
+	 */
+	public static String rsaSign(String data, java.security.PrivateKey privateKey) {
+		return RsaUtil.sign(data, privateKey);
+	}
+
+	/**
+	 * RSA 验签（Base64）。
+	 *
+	 * @param data      原文
+	 * @param publicKey 公钥
+	 * @param signature Base64 签名
+	 * @return 是否通过
+	 */
+	public static boolean rsaVerify(String data, java.security.PublicKey publicKey, String signature) {
+		return RsaUtil.verify(data, publicKey, signature);
+	}
+
+
 }

@@ -167,4 +167,40 @@ public class URLUtil {
 			throw new IllegalArgumentException("非法 URL: " + url, e);
 		}
 	}
+
+	/**
+	 * URL 编码（UTF-8）。
+	 *
+	 * @param url 原文
+	 * @return 编码后；null 返回 null
+	 */
+	public static String encode(String url) {
+		if (url == null) {
+			return null;
+		}
+		try {
+			return java.net.URLEncoder.encode(url, "UTF-8");
+		} catch (java.io.UnsupportedEncodingException e) {
+			throw new HttpException("URL 编码失败", e);
+		}
+	}
+
+	/**
+	 * URL 解码（UTF-8）。
+	 *
+	 * @param url 编码串
+	 * @return 解码后；null 返回 null
+	 */
+	public static String decode(String url) {
+		if (url == null) {
+			return null;
+		}
+		try {
+			return java.net.URLDecoder.decode(url, "UTF-8");
+		} catch (java.io.UnsupportedEncodingException e) {
+			throw new HttpException("URL 解码失败", e);
+		}
+	}
+
+
 }

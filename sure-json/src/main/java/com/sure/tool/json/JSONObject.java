@@ -356,4 +356,21 @@ public class JSONObject extends LinkedHashMap<String, Object> {
 	}
 
 
+
+	/**
+	 * 批量设置（链式）。
+	 *
+	 * @param map 键值映射
+	 * @return this
+	 */
+	public JSONObject setAll(Map<?, ?> map) {
+		if (map != null) {
+			for (Map.Entry<?, ?> entry : map.entrySet()) {
+				set(String.valueOf(entry.getKey()), entry.getValue());
+			}
+		}
+		return this;
+	}
+
+
 }

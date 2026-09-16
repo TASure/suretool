@@ -85,4 +85,20 @@ public class IdUtil {
 	}
 
 
+
+	/**
+	 * 默认雪花 ID 生成器单例（节点 0，数据中心 0）。
+	 */
+	private static final Snowflake DEFAULT_SNOWFLAKE = createSnowflake();
+
+	/**
+	 * 获取下一个雪花 ID（默认工作节点，线程安全）。
+	 *
+	 * @return 雪花 ID
+	 */
+	public static long getSnowflakeNextId() {
+		return DEFAULT_SNOWFLAKE.nextId();
+	}
+
+
 }

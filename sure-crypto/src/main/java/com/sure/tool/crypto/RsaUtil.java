@@ -214,4 +214,43 @@ public class RsaUtil {
 	private static byte[] bytes(String value) {
 		return value == null ? new byte[0] : value.getBytes(StandardCharsets.UTF_8);
 	}
+
+	/**
+	 * RSA 签名（SHA256withRSA，Base64 输出）。
+	 *
+	 * @param data       原文
+	 * @param privateKey 私钥
+	 * @return Base64 签名
+	 */
+	public static String sign(String data, PrivateKey privateKey) {
+		try {
+			java.security.Signature signature = java.security.Signature.getInstance("SHA256withRSA");
+			signature.initSign(privateKey);
+			signature.update(data.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+			return java.util.Base64.getEncoder().encodeToString(signature.sign());
+		} catch (Exception e) {
+			throw new CryptoException("RSA 签名失败", e);
+		}
+	}
+
+	/**
+	 * RSA 验签（SHA256withRSA，Base64 输入）。
+	 *
+	 * @param data      原文
+	 * @param publicKey 公钥
+	 * @param signature Base64 签名
+	 * @return 是否通过
+	 */
+	public static boolean verify(String data, PublicKey publicKey, String signature) {
+		try {
+			java.security.Signature verifier = java.security.Signature.getInstance("SHA256withRSA");
+			verifier.initVerify(publicKey);
+			verifier.update(data.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+			return verifier.verify(java.util.Base64.getDecoder().decode(signature));
+		} catch (Exception e) {
+			throw new CryptoException("RSA 验签失败", e);
+		}
+	}
+
+
 }

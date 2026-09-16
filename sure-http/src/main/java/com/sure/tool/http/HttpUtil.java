@@ -323,4 +323,96 @@ public class HttpUtil {
 		}
 		return sb.toString();
 	}
+
+	/**
+	 * PUT JSON 请求。
+	 *
+	 * @param url  URL
+	 * @param json JSON 字符串
+	 * @return 响应文本（UTF-8）
+	 */
+	public static String putJson(String url, String json) {
+		return putJson(url, json, DEFAULT_CONNECT_TIMEOUT);
+	}
+
+	/**
+	 * PUT JSON 请求。
+	 *
+	 * @param url           URL
+	 * @param json          JSON 字符串
+	 * @param timeoutMillis 超时（毫秒）
+	 * @return 响应文本（UTF-8）
+	 */
+	public static String putJson(String url, String json, int timeoutMillis) {
+		return execute("PUT", url, null, null, json, "application/json; charset=UTF-8", timeoutMillis);
+	}
+
+	/**
+	 * DELETE JSON 请求。
+	 *
+	 * @param url  URL
+	 * @param json JSON 字符串
+	 * @return 响应文本（UTF-8）
+	 */
+	public static String deleteJson(String url, String json) {
+		return deleteJson(url, json, DEFAULT_CONNECT_TIMEOUT);
+	}
+
+	/**
+	 * DELETE JSON 请求。
+	 *
+	 * @param url           URL
+	 * @param json          JSON 字符串
+	 * @param timeoutMillis 超时（毫秒）
+	 * @return 响应文本（UTF-8）
+	 */
+	public static String deleteJson(String url, String json, int timeoutMillis) {
+		return execute("DELETE", url, null, null, json, "application/json; charset=UTF-8", timeoutMillis);
+	}
+
+	/**
+	 * DELETE 请求（无请求体）。
+	 *
+	 * @param url URL
+	 * @return 响应文本（UTF-8）
+	 */
+	public static String delete(String url) {
+		return delete(url, DEFAULT_CONNECT_TIMEOUT);
+	}
+
+	/**
+	 * DELETE 请求（无请求体）。
+	 *
+	 * @param url           URL
+	 * @param timeoutMillis 超时（毫秒）
+	 * @return 响应文本（UTF-8）
+	 */
+	public static String delete(String url, int timeoutMillis) {
+		return execute("DELETE", url, null, null, null, null, timeoutMillis);
+	}
+
+	/**
+	 * PUT 表单请求。
+	 *
+	 * @param url  URL
+	 * @param form 表单参数
+	 * @return 响应文本（UTF-8）
+	 */
+	public static String put(String url, Map<String, Object> form) {
+		return put(url, form, DEFAULT_CONNECT_TIMEOUT);
+	}
+
+	/**
+	 * PUT 表单请求。
+	 *
+	 * @param url           URL
+	 * @param form          表单参数
+	 * @param timeoutMillis 超时（毫秒）
+	 * @return 响应文本（UTF-8）
+	 */
+	public static String put(String url, Map<String, Object> form, int timeoutMillis) {
+		return execute("PUT", url, null, form, null, null, timeoutMillis);
+	}
+
+
 }

@@ -165,4 +165,14 @@ public class P4Features11Test {
 	}
 
 
+
+	@Test
+	public void testSnowflakeNextId() {
+		long a = com.sure.tool.util.IdUtil.getSnowflakeNextId();
+		long b = com.sure.tool.util.IdUtil.getSnowflakeNextId();
+		Assert.assertTrue(a > 0);
+		Assert.assertTrue(b > a);
+	}
+
+
 }

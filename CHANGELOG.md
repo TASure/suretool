@@ -31,7 +31,15 @@
   - `WeightRandom`：权重随机（任意对象 + 权重项）；
   - `BoundedPriorityQueue`：有界优先队列（容量固定，自动淘汰最次元素）；
   - `Pair` / `Triple`：不可变有序二元组/三元组（JDK record）；
-  - 新增 `P4Features3Test`（6 例）；sure-core 指令覆盖率提升至 88.3%。
+  - 新增 `P4Features3Test`（6 例）；sure-core 指令覆盖率提升至 88.3%；
+  - `MoneyUtil`：人民币金额转中文大写（负数/角分/万亿级，财务报销场景）；
+  - `CompareUtil`：基础类型与空安全比较、取最值、范围约束；
+  - `DateUtil`：新增星座 `getZodiac`、农历生肖 `getChineseZodiac`；
+  - `NetUtil`：新增 IPv4 与 long 互转 `ipv4ToLong`/`longToIpv4`、合法性校验 `isIpv4`；
+  - `ObjectUtil`：新增 `isAllNotNull`/`isAllNull`/空安全 `compare`；
+  - `HashUtil`：新增 MurmurHash3-32 `murmur3_32`、`fnv1a64`、`djb2` 通用哈希；
+  - `RandomUtil`：新增 `randomEle`（随机取一个）、`randomEleSet`（随机取 N 个不重复）；
+  - 新增 `P4Features4Test`（7 例）；sure-core 指令覆盖率提升至 88.8%。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

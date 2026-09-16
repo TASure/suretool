@@ -130,4 +130,65 @@ public class NetUtil {
 			return false;
 		}
 	}
+
+	/**
+	 * IPv4 地址转 long（大端）。
+	 *
+	 * @param ip IPv4 地址
+	 * @return long 表示
+	 * @throws IllegalArgumentException 非法地址
+	 */
+	public static long ipv4ToLong(String ip) {
+		if (!isIpv4(ip)) {
+			throw new IllegalArgumentException("非法 IPv4 地址: " + ip);
+		}
+		String[] parts = ip.split("\\.");
+		return (Long.parseLong(parts[0]) << 24) | (Long.parseLong(parts[1]) << 16)
+				| (Long.parseLong(parts[2]) << 8) | Long.parseLong(parts[3]);
+	}
+
+	/**
+	 * long 转 IPv4 地址。
+	 *
+	 * @param value long 表示
+	 * @return IPv4 地址
+	 */
+	public static String longToIpv4(long value) {
+		return (value >>> 24 & 0xFF) + "." + (value >>> 16 & 0xFF) + "." + (value >>> 8 & 0xFF) + "." + (value & 0xFF);
+	}
+
+	/**
+	 * 校验是否为合法 IPv4 地址。
+	 *
+	 * @param ip 地址
+	 * @return 是否合法
+	 */
+	public static boolean isIpv4(String ip) {
+		if (ip == null) {
+			return false;
+		}
+		String[] parts = ip.split("\\.", -1);
+		if (parts.length != 4) {
+			return false;
+		}
+		for (String p : parts) {
+			if (p.isEmpty() || p.length() > 3) {
+				return false;
+			}
+			for (int i = 0; i < p.length(); i++) {
+				if (!Character.isDigit(p.charAt(i))) {
+					return false;
+				}
+			}
+			if (p.length() > 1 && p.charAt(0) == '0') {
+				return false; // 拒绝前导零
+			}
+			if (Integer.parseInt(p) > 255) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
 }

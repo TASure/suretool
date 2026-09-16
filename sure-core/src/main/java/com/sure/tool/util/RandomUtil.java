@@ -17,6 +17,12 @@ package com.sure.tool.util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -212,4 +218,54 @@ public class RandomUtil {
 	public static String simpleUUID() {
 		return UUID.randomUUID().toString().replace("-", "");
 	}
+
+	/**
+	 * 从集合中随机取一个元素。
+	 *
+	 * @param list 列表
+	 * @param <T>  类型
+	 * @return 随机元素；空列表返回 null
+	 */
+	public static <T> T randomEle(List<T> list) {
+		if (list == null || list.isEmpty()) {
+			return null;
+		}
+		return list.get(randomInt(list.size()));
+	}
+
+	/**
+	 * 从数组中随机取一个元素。
+	 *
+	 * @param array 数组
+	 * @param <T>   类型
+	 * @return 随机元素；空数组返回 null
+	 */
+	public static <T> T randomEle(T[] array) {
+		if (array == null || array.length == 0) {
+			return null;
+		}
+		return array[randomInt(array.length)];
+	}
+
+	/**
+	 * 随机取 count 个不重复元素。
+	 *
+	 * @param coll  集合
+	 * @param count 数量（不大于集合大小）
+	 * @param <T>   类型
+	 * @return 随机子集
+	 */
+	public static <T> Set<T> randomEleSet(Collection<T> coll, int count) {
+		if (coll == null || coll.isEmpty()) {
+			return Set.of();
+		}
+		List<T> list = new ArrayList<>(coll);
+		if (count >= list.size()) {
+			return new HashSet<>(list);
+		}
+		Collections.shuffle(list);
+		return new HashSet<>(list.subList(0, count));
+	}
+
+
 }

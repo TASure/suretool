@@ -427,4 +427,49 @@ public class DateUtil {
 		calendar.setTime(date);
 		return calendar;
 	}
+
+	/** 星座日期边界（每月起始日）。 */
+	private static final int[][] ZODIAC_BOUNDS = {{1, 20}, {2, 19}, {3, 21}, {4, 20}, {5, 21}, {6, 22},
+			{7, 23}, {8, 23}, {9, 23}, {10, 24}, {11, 23}, {12, 22}};
+	private static final String[] ZODIACS = {"水瓶座", "双鱼座", "白羊座", "金牛座", "双子座", "巨蟹座",
+			"狮子座", "处女座", "天秤座", "天蝎座", "射手座", "摩羯座"};
+	private static final String[] CHINESE_ZODIACS = {"鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪"};
+
+	/**
+	 * 获取星座。
+	 *
+	 * @param date 日期
+	 * @return 星座名，如 白羊座；null 返回 null
+	 */
+	public static String getZodiac(Date date) {
+		if (date == null) {
+			return null;
+		}
+		Calendar c = toCalendar(date);
+		int month = c.get(Calendar.MONTH) + 1;
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		int idx = 0;
+		for (int i = 0; i < 12; i++) {
+			if (month > ZODIAC_BOUNDS[i][0] || (month == ZODIAC_BOUNDS[i][0] && day >= ZODIAC_BOUNDS[i][1])) {
+				idx = i;
+			}
+		}
+		// 1/20 前为摩羯座
+		if (month == 1 && day < 20) {
+			return "摩羯座";
+		}
+		return ZODIACS[idx];
+	}
+
+	/**
+	 * 获取农历生肖（按公历年，1900 年为鼠年）。
+	 *
+	 * @param year 公历年份
+	 * @return 生肖
+	 */
+	public static String getChineseZodiac(int year) {
+		return CHINESE_ZODIACS[Math.floorMod(year - 1900, 12)];
+	}
+
+
 }

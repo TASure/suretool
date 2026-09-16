@@ -172,4 +172,109 @@ public class HashUtil {
 		String hex = Long.toHexString(crc32(data));
 		return "00000000".substring(hex.length()) + hex;
 	}
+
+	/**
+	 * MurmurHash3 x86 32 位（字符串，UTF-8）。
+	 *
+	 * @param data 字符串
+	 * @return 32 位哈希
+	 */
+	public static int murmur3_32(String data) {
+		return data == null ? 0 : murmur3_32(data.getBytes(CharsetUtil.UTF_8));
+	}
+
+	/**
+	 * MurmurHash3 x86 32 位。
+	 *
+	 * @param data 字节
+	 * @return 32 位哈希
+	 */
+	public static int murmur3_32(byte[] data) {
+		if (data == null) {
+			return 0;
+		}
+		int h = 0;
+		int len = data.length;
+		int i = 0;
+		while (i + 4 <= len) {
+			int k = (data[i] & 0xFF) | ((data[i + 1] & 0xFF) << 8)
+					| ((data[i + 2] & 0xFF) << 16) | ((data[i + 3] & 0xFF) << 24);
+			k *= 0xcc9e2d51;
+			k = Integer.rotateLeft(k, 15);
+			k *= 0x1b873593;
+			h ^= k;
+			h = Integer.rotateLeft(h, 13);
+			h = h * 5 + 0xe6546b64;
+			i += 4;
+		}
+		int k = 0;
+		int remaining = len & 3;
+		if (remaining == 3) {
+			k ^= (data[i + 2] & 0xFF) << 16;
+		}
+		if (remaining >= 2) {
+			k ^= (data[i + 1] & 0xFF) << 8;
+		}
+		if (remaining >= 1) {
+			k ^= (data[i] & 0xFF);
+			k *= 0xcc9e2d51;
+			k = Integer.rotateLeft(k, 15);
+			k *= 0x1b873593;
+			h ^= k;
+		}
+		h ^= len;
+		h ^= h >>> 16;
+		h *= 0x85ebca6b;
+		h ^= h >>> 13;
+		h *= 0xc2b2ae35;
+		h ^= h >>> 16;
+		return h;
+	}
+
+	/**
+	 * FNV-1a 64 位（字符串，UTF-8）。
+	 *
+	 * @param data 字符串
+	 * @return 64 位哈希
+	 */
+	public static long fnv1a64(String data) {
+		return data == null ? 0 : fnv1a64(data.getBytes(CharsetUtil.UTF_8));
+	}
+
+	/**
+	 * FNV-1a 64 位。
+	 *
+	 * @param data 字节
+	 * @return 64 位哈希
+	 */
+	public static long fnv1a64(byte[] data) {
+		if (data == null) {
+			return 0;
+		}
+		long h = 0xcbf29ce484222325L;
+		for (byte b : data) {
+			h ^= (b & 0xff);
+			h *= 0x100000001b3L;
+		}
+		return h;
+	}
+
+	/**
+	 * DJB2 哈希（字符串）。
+	 *
+	 * @param data 字符串
+	 * @return 64 位哈希
+	 */
+	public static long djb2(String data) {
+		if (data == null) {
+			return 0;
+		}
+		long h = 5381L;
+		for (int i = 0; i < data.length(); i++) {
+			h = ((h << 5) + h) + data.charAt(i);
+		}
+		return h;
+	}
+
+
 }

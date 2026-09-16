@@ -273,4 +273,64 @@ public class ObjectUtil {
 			return null;
 		}
 	}
+
+	/**
+	 * 是否全部非 null。
+	 *
+	 * @param objs 对象数组
+	 * @return 全部非 null 返回 true
+	 */
+	public static boolean isAllNotNull(Object... objs) {
+		if (objs == null) {
+			return false;
+		}
+		for (Object obj : objs) {
+			if (obj == null) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 是否全部为 null。
+	 *
+	 * @param objs 对象数组
+	 * @return 全部 null 返回 true
+	 */
+	public static boolean isAllNull(Object... objs) {
+		if (objs == null) {
+			return true;
+		}
+		for (Object obj : objs) {
+			if (obj != null) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 空安全比较（null 视为最小），值须实现 Comparable。
+	 *
+	 * @param a 第一个
+	 * @param b 第二个
+	 * @param <T> 类型
+	 * @return -1/0/1
+	 */
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public static <T> int compare(T a, T b) {
+		if (a == null && b == null) {
+			return 0;
+		}
+		if (a == null) {
+			return -1;
+		}
+		if (b == null) {
+			return 1;
+		}
+		return ((Comparable) a).compareTo(b);
+	}
+
+
 }

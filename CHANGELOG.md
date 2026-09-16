@@ -166,7 +166,13 @@
   - `StrUtil`（sure-core）：新增 `center`（居中对齐填充）；
   - `DateUtil`（sure-core）：新增 `isSameYear`；
   - `CollUtil`（sure-core）：新增 `zip`（两集合配对为 Map）；
-  - 新增测试用例：全模块 561 测试全绿。
+  - 新增测试用例：全模块 561 测试全绿；
+  - `HttpUtil`（sure-http）：新增 `head`（HEAD 请求返回响应头）；
+  - `NumberUtil`（sure-core）：新增 `toFixed`（BigDecimal 保留小数位，四舍五入）；
+  - `StrUtil`（sure-core）：新增 `firstNonBlank`（首个非空白）/`concat`（数组拼接）；
+  - `DateUtil`（sure-core）：新增 `getMonthName`（月份中文名）；
+  - `ArrayUtil`（sure-core）：新增 `nullToEmpty`（null 转指定类型空数组）；
+  - 新增测试用例：全模块 563 测试全绿。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

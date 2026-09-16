@@ -558,4 +558,33 @@ public class NumberUtil {
 	}
 
 
+
+	/**
+	 * 保留指定小数位（四舍五入）。
+	 *
+	 * @param value 数值
+	 * @param scale 小数位数
+	 * @return 格式化后的字符串
+	 */
+	public static String toFixed(double value, int scale) {
+		return java.math.BigDecimal.valueOf(value)
+				.setScale(scale, java.math.RoundingMode.HALF_UP)
+				.toPlainString();
+	}
+
+	/**
+	 * 保留指定小数位（四舍五入）。
+	 *
+	 * @param value 数值
+	 * @param scale 小数位数
+	 * @return 格式化后的字符串
+	 */
+	public static String toFixed(java.math.BigDecimal value, int scale) {
+		if (value == null) {
+			return null;
+		}
+		return value.setScale(scale, java.math.RoundingMode.HALF_UP).toPlainString();
+	}
+
+
 }

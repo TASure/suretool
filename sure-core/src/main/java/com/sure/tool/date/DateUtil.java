@@ -928,4 +928,37 @@ public class DateUtil {
 	}
 
 
+
+	/**
+	 * 获取月份中文名（一月～十二月）。
+	 *
+	 * @param month 月份（1-12）
+	 * @return 中文月份名
+	 */
+	public static String getMonthName(int month) {
+		if (month < 1 || month > 12) {
+			throw new IllegalArgumentException("month 超出范围: " + month);
+		}
+		return MONTH_CN[month - 1];
+	}
+
+	/**
+	 * 获取日期所在月份的中文名。
+	 *
+	 * @param date 日期
+	 * @return 中文月份名
+	 */
+	public static String getMonthName(Date date) {
+		if (date == null) {
+			return null;
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		return MONTH_CN[cal.get(Calendar.MONTH)];
+	}
+
+	private static final String[] MONTH_CN = {"一月", "二月", "三月", "四月", "五月", "六月",
+			"七月", "八月", "九月", "十月", "十一月", "十二月"};
+
+
 }

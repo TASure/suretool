@@ -458,4 +458,41 @@ public class HttpUtil {
 	}
 
 
+
+	/**
+	 * HEAD 请求，返回响应头。
+	 *
+	 * @param url URL
+	 * @return 响应头（键为头部名称，值为值列表）
+	 */
+	public static Map<String, java.util.List<String>> head(String url) {
+		return head(url, DEFAULT_CONNECT_TIMEOUT);
+	}
+
+	/**
+	 * HEAD 请求，返回响应头。
+	 *
+	 * @param url           URL
+	 * @param timeoutMillis 超时（毫秒）
+	 * @return 响应头（键为头部名称，值为值列表）
+	 */
+	public static Map<String, java.util.List<String>> head(String url, int timeoutMillis) {
+		HttpURLConnection conn = null;
+		try {
+			conn = (HttpURLConnection) new URL(url).openConnection();
+			conn.setRequestMethod("HEAD");
+			conn.setConnectTimeout(timeoutMillis);
+			conn.setReadTimeout(DEFAULT_READ_TIMEOUT);
+			conn.getResponseCode();
+			return conn.getHeaderFields();
+		} catch (IOException e) {
+			throw new HttpException("HEAD 请求失败: " + url, e);
+		} finally {
+			if (conn != null) {
+				conn.disconnect();
+			}
+		}
+	}
+
+
 }

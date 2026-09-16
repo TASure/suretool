@@ -1443,4 +1443,41 @@ public class StrUtil {
 	}
 
 
+
+	/**
+	 * 返回第一个非空白字符串。
+	 *
+	 * @param values 候选字符串
+	 * @return 第一个非空白值；全为空返回 null
+	 */
+	public static String firstNonBlank(String... values) {
+		if (values == null) {
+			return null;
+		}
+		for (String value : values) {
+			if (isNotBlank(value)) {
+				return value;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 拼接多个字符串为一个字符串。
+	 *
+	 * @param values 字符串数组
+	 * @return 拼接结果
+	 */
+	public static String concat(String... values) {
+		if (values == null) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (String value : values) {
+			sb.append(value);
+		}
+		return sb.toString();
+	}
+
+
 }

@@ -783,4 +783,22 @@ public class ArrayUtil {
 	}
 
 
+
+	/**
+	 * null 数组转换为指定类型的空数组。
+	 *
+	 * @param array         数组
+	 * @param componentType 数组元素类型
+	 * @param <T>           元素类型
+	 * @return 原数组；null 时返回空数组
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T[] nullToEmpty(T[] array, Class<T> componentType) {
+		if (array != null) {
+			return array;
+		}
+		return (T[]) java.lang.reflect.Array.newInstance(componentType, 0);
+	}
+
+
 }

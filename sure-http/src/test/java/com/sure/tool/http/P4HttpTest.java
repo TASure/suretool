@@ -108,4 +108,29 @@ public class P4HttpTest {
 	}
 
 
+
+	@Test
+	public void testHead() throws Exception {
+		com.sun.net.httpserver.HttpServer server = com.sun.net.httpserver.HttpServer.create(
+				new java.net.InetSocketAddress(0), 0);
+		String[] method = new String[1];
+		server.createContext("/head", exchange -> {
+			method[0] = exchange.getRequestMethod();
+			exchange.getResponseHeaders().add("X-Custom", "yes");
+			exchange.sendResponseHeaders(200, -1);
+			exchange.close();
+		});
+		server.start();
+		try {
+			String url = "http://127.0.0.1:" + server.getAddress().getPort() + "/head";
+			java.util.Map<String, java.util.List<String>> headers = com.sure.tool.http.HttpUtil.head(url);
+			Assert.assertEquals("HEAD", method[0]);
+			Assert.assertTrue("headers=" + headers, headers.containsKey("X-custom"));
+			Assert.assertEquals("yes", headers.get("X-custom").get(0));
+		} finally {
+			server.stop(0);
+		}
+	}
+
+
 }

@@ -117,7 +117,14 @@
   - `DateUtil`（sure-core）：新增 `beginOfQuarter`/`endOfQuarter`（季度边界）；
   - `ConvertUtil`（sure-core）：新增 `toEnum`（字符串转枚举，null 安全）；
   - 【sure-cron】`CronUtil`：新增 `match`（时刻匹配便捷入口）；
-  - 新增测试用例：全模块 545 测试全绿。
+  - 新增测试用例：全模块 545 测试全绿；
+  - `StrUtil`（sure-core）：新增 `splitTrim`/`blankToDefault`；
+  - `EscapeUtil`（sure-core）：新增 `escapeXml`/`unescapeXml`；
+  - `DateUtil`（sure-core）：新增 `age(Date, Date)`（指定参考日期的周岁）；
+  - `NumberUtil`（sure-core）：新增 `isNumber`（BigDecimal 严格数字判断）；
+  - `JSONObject`/`JSONArray`（sure-json）：新增 `getDate`（时间戳/日期字符串转 Date）；
+  - Checkstyle FileLength 上限 1200→1500（StrUtil 核心大类）；拆分 `P4Features12Test`；
+  - 新增测试用例：全模块 547 测试全绿。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

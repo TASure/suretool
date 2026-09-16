@@ -1195,4 +1195,39 @@ public class StrUtil {
 	}
 
 
+
+	/**
+	 * 按分隔符拆分并去除每个元素首尾空白（保留空元素）。
+	 *
+	 * @param str       字符串
+	 * @param separator 分隔符
+	 * @return 拆分结果
+	 */
+	public static String[] splitTrim(String str, String separator) {
+		if (isEmpty(str)) {
+			return new String[0];
+		}
+		if (isEmpty(separator)) {
+			return new String[] {str.trim()};
+		}
+		String[] parts = str.split(java.util.regex.Pattern.quote(separator), -1);
+		String[] result = new String[parts.length];
+		for (int i = 0; i < parts.length; i++) {
+			result[i] = parts[i].trim();
+		}
+		return result;
+	}
+
+	/**
+	 * 空字符串（含空白）返回默认值，否则原样返回。
+	 *
+	 * @param str          字符串
+	 * @param defaultValue 默认值
+	 * @return 结果
+	 */
+	public static String blankToDefault(String str, String defaultValue) {
+		return isBlank(str) ? defaultValue : str;
+	}
+
+
 }

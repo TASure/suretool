@@ -368,4 +368,19 @@ public class JSONArray extends ArrayList<Object> {
 	}
 
 
+
+	/**
+	 * 取日期值（支持时间戳与常见日期字符串，转换失败返回 null）。
+	 *
+	 * @param index 下标
+	 * @return 日期；缺失或转换失败返回 null
+	 */
+	public java.util.Date getDate(int index) {
+		if (index < 0 || index >= size()) {
+			return null;
+		}
+		return com.sure.tool.util.ConvertUtil.toDate(get(index));
+	}
+
+
 }

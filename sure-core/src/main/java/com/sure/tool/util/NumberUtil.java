@@ -545,5 +545,4 @@ public class NumberUtil {
 		return isInteger(str);
 	}
 
-
 }

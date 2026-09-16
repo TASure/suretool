@@ -796,4 +796,24 @@ public class DateUtil {
 	}
 
 
+
+	/**
+	 * 计算周岁年龄（指定参考日期）。
+	 *
+	 * @param birthDate 出生日期
+	 * @param date      参考日期
+	 * @return 周岁
+	 */
+	public static int age(java.util.Date birthDate, java.util.Date date) {
+		if (birthDate == null || date == null) {
+			return 0;
+		}
+		java.time.LocalDate birth = birthDate.toInstant()
+				.atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+		java.time.LocalDate ref = date.toInstant()
+				.atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+		return (int) java.time.temporal.ChronoUnit.YEARS.between(birth, ref);
+	}
+
+
 }

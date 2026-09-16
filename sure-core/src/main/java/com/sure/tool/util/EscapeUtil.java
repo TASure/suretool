@@ -81,4 +81,40 @@ public class EscapeUtil {
 				.replace("&apos;", "'")
 				.replace("&amp;", "&");
 	}
+
+	/**
+	 * XML 转义（&amp; &lt; &gt; &quot; &apos;）。
+	 *
+	 * @param xml XML 文本
+	 * @return 转义结果；null 返回 null
+	 */
+	public static String escapeXml(String xml) {
+		if (xml == null) {
+			return null;
+		}
+		return xml.replace("&", "&amp;")
+				.replace("<", "&lt;")
+				.replace(">", "&gt;")
+				.replace("\"", "&quot;")
+				.replace("'", "&apos;");
+	}
+
+	/**
+	 * XML 反转义。
+	 *
+	 * @param xml 转义文本
+	 * @return 原文；null 返回 null
+	 */
+	public static String unescapeXml(String xml) {
+		if (xml == null) {
+			return null;
+		}
+		return xml.replace("&lt;", "<")
+				.replace("&gt;", ">")
+				.replace("&quot;", "\"")
+				.replace("&apos;", "'")
+				.replace("&amp;", "&");
+	}
+
+
 }

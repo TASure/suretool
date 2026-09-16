@@ -373,4 +373,16 @@ public class JSONObject extends LinkedHashMap<String, Object> {
 	}
 
 
+
+	/**
+	 * 取日期值（支持时间戳与常见日期字符串，转换失败返回 null）。
+	 *
+	 * @param key 键
+	 * @return 日期；缺失或转换失败返回 null
+	 */
+	public java.util.Date getDate(String key) {
+		return com.sure.tool.util.ConvertUtil.toDate(get(key));
+	}
+
+
 }

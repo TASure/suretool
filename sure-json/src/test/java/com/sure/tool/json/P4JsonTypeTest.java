@@ -62,4 +62,26 @@ public class P4JsonTypeTest {
 		Assert.assertEquals(2.5F, arr.getFloat(3), 1e-6);
 		Assert.assertEquals(1.5F, arr.getFloat(9, 1.5F), 1e-6);
 	}
+
+	@Test
+	public void testGetDate() {
+		JSONObject obj = new JSONObject();
+		obj.set("ts", 1768550400000L); // 2026-01-16 08:00:00 UTC+8
+		obj.set("str", "2026-01-16");
+		java.util.Date d1 = obj.getDate("ts");
+		java.util.Date d2 = obj.getDate("str");
+		Assert.assertNotNull(d1);
+		Assert.assertNotNull(d2);
+		Assert.assertEquals(2026, 1900 + d1.getYear());
+		Assert.assertEquals(2026, 1900 + d2.getYear());
+		Assert.assertNull(obj.getDate("missing"));
+		Assert.assertNull(obj.getDate("bad"));
+
+		JSONArray arr = new JSONArray();
+		arr.add(1768550400000L);
+		Assert.assertNotNull(arr.getDate(0));
+		Assert.assertNull(arr.getDate(9));
+	}
+
+
 }

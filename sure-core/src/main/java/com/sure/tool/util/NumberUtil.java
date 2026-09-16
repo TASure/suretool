@@ -635,4 +635,31 @@ public class NumberUtil {
 	}
 
 
+
+	/**
+	 * 幂运算。
+	 *
+	 * @param base     底数
+	 * @param exponent 指数（非负）
+	 * @return base 的 exponent 次幂
+	 */
+	public static long pow(long base, int exponent) {
+		if (exponent < 0) {
+			throw new IllegalArgumentException("exponent must be >= 0");
+		}
+		if (exponent == 0) {
+			return 1;
+		}
+		long result = 1;
+		while (exponent > 0) {
+			if ((exponent & 1) == 1) {
+				result *= base;
+			}
+			base *= base;
+			exponent >>= 1;
+		}
+		return result;
+	}
+
+
 }

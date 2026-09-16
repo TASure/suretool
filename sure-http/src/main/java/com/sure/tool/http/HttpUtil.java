@@ -571,4 +571,42 @@ public class HttpUtil {
 	}
 
 
+
+	/**
+	 * 下载 URL 内容为字节数组。
+	 *
+	 * @param url 请求地址
+	 * @return 响应字节
+	 * @throws java.io.IOException IO 异常
+	 */
+	public static byte[] downloadBytes(String url) throws java.io.IOException {
+		return downloadBytes(url, DEFAULT_CONNECT_TIMEOUT);
+	}
+
+	/**
+	 * 下载 URL 内容为字节数组。
+	 *
+	 * @param url          请求地址
+	 * @param timeoutMillis 超时毫秒
+	 * @return 响应字节
+	 * @throws java.io.IOException IO 异常
+	 */
+	public static byte[] downloadBytes(String url, int timeoutMillis) throws java.io.IOException {
+		java.net.HttpURLConnection conn = (java.net.HttpURLConnection) new java.net.URL(url).openConnection();
+		conn.setConnectTimeout(timeoutMillis);
+		conn.setReadTimeout(timeoutMillis);
+		conn.setRequestMethod("GET");
+		int code = conn.getResponseCode();
+		if (code >= 200 && code < 300) {
+			try (java.io.InputStream in = conn.getInputStream()) {
+				return in.readAllBytes();
+			} finally {
+				conn.disconnect();
+			}
+		}
+		conn.disconnect();
+		throw new HttpException("HTTP " + code + " for " + url);
+	}
+
+
 }

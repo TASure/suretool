@@ -1047,4 +1047,32 @@ public class DateUtil {
 	}
 
 
+
+	/**
+	 * 格式化 LocalDate（yyyy-MM-dd）。
+	 *
+	 * @param date 日期
+	 * @return 格式化字符串
+	 */
+	public static String format(java.time.LocalDate date) {
+		if (date == null) {
+			return null;
+		}
+		return date.format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE);
+	}
+
+	/**
+	 * 格式化 LocalDateTime（yyyy-MM-dd HH:mm:ss）。
+	 *
+	 * @param dateTime 日期时间
+	 * @return 格式化字符串
+	 */
+	public static String format(java.time.LocalDateTime dateTime) {
+		if (dateTime == null) {
+			return null;
+		}
+		return dateTime.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+	}
+
+
 }

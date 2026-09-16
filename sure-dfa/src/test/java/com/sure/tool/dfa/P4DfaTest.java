@@ -33,4 +33,12 @@ public class P4DfaTest {
 		Assert.assertNull(DfaUtil.replace(null, '*'));
 		Assert.assertEquals("", DfaUtil.replace("", '*'));
 	}
+
+	@Test
+	public void testReplaceString() {
+		com.sure.tool.dfa.DfaUtil.addWords("敏感", "词库");
+		Assert.assertEquals("****测试**测试", com.sure.tool.dfa.DfaUtil.replace("敏感词库测试敏感测试", "**"));
+	}
+
+
 }

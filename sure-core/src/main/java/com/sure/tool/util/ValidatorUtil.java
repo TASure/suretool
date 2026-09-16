@@ -335,4 +335,24 @@ public class ValidatorUtil {
 	}
 
 
+
+	/**
+	 * 校验是否为生日（yyyyMMdd 八位，含闰年 2 月校验）。
+	 *
+	 * @param value 字符串
+	 * @return 是否生日格式
+	 */
+	public static boolean isBirthday(String value) {
+		if (value == null || !value.matches("\\d{8}")) {
+			return false;
+		}
+		try {
+			java.time.LocalDate.parse(value, java.time.format.DateTimeFormatter.BASIC_ISO_DATE);
+			return true;
+		} catch (java.time.format.DateTimeParseException e) {
+			return false;
+		}
+	}
+
+
 }

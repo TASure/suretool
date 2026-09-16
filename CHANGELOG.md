@@ -185,7 +185,17 @@
   - `MapUtil`（sure-core）：新增 `merge`（两 Map 合并，后者覆盖）；
   - `ValidatorUtil`（sure-core）：新增 `isDecimal`；
   - `NumberUtil`（sure-core）：新增 `floor`/`ceil`；
-  - 新增测试用例：全模块 567 测试全绿。
+  - 新增测试用例：全模块 567 测试全绿；
+  - `DfaUtil`（sure-dfa）：新增 `replace(String, String)`（敏感词替换为字符串）；
+  - `HttpUtil`（sure-http）：新增 `downloadBytes`（URL 下载为字节数组，双超时重载）；
+  - `ObjectUtil`（sure-core）：新增 `length`（数组/CharSequence/Collection/Map 长度）；
+  - `DateUtil`（sure-core）：新增 `format(LocalDate)`/`format(LocalDateTime)`；
+  - `ConvertUtil`（sure-core）：新增 `toBigInteger`；
+  - `StrUtil`（sure-core）：新增 `replace(区间)` 重载；
+  - `CollUtil`（sure-core）：新增 `removeNull`；
+  - `ValidatorUtil`（sure-core）：新增 `isBirthday`（含闰年 2 月校验）；
+  - `NumberUtil`（sure-core）：新增 `pow`（快速幂）；
+  - 新增测试用例：全模块 570 测试全绿。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

@@ -413,4 +413,31 @@ public class ObjectUtil {
 	}
 
 
+
+	/**
+	 * 获取对象长度：数组/CharSequence/Collection/Map，其它类型返回 1，null 返回 0。
+	 *
+	 * @param obj 对象
+	 * @return 长度
+	 */
+	public static int length(Object obj) {
+		if (obj == null) {
+			return 0;
+		}
+		if (obj.getClass().isArray()) {
+			return java.lang.reflect.Array.getLength(obj);
+		}
+		if (obj instanceof CharSequence cs) {
+			return cs.length();
+		}
+		if (obj instanceof java.util.Collection<?> coll) {
+			return coll.size();
+		}
+		if (obj instanceof java.util.Map<?, ?> map) {
+			return map.size();
+		}
+		return 1;
+	}
+
+
 }

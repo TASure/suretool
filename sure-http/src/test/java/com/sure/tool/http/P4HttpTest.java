@@ -166,4 +166,26 @@ public class P4HttpTest {
 	}
 
 
+
+	@Test
+	public void testDownloadBytes() throws Exception {
+		com.sun.net.httpserver.HttpServer server = com.sun.net.httpserver.HttpServer.create(
+				new java.net.InetSocketAddress(0), 0);
+		server.createContext("/dl", exchange -> {
+			byte[] data = "download-data".getBytes(java.nio.charset.StandardCharsets.UTF_8);
+			exchange.sendResponseHeaders(200, data.length);
+			exchange.getResponseBody().write(data);
+			exchange.close();
+		});
+		server.start();
+		try {
+			String url = "http://127.0.0.1:" + server.getAddress().getPort() + "/dl";
+			Assert.assertArrayEquals("download-data".getBytes(java.nio.charset.StandardCharsets.UTF_8),
+					com.sure.tool.http.HttpUtil.downloadBytes(url));
+		} finally {
+			server.stop(0);
+		}
+	}
+
+
 }

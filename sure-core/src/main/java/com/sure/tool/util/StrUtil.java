@@ -1542,4 +1542,29 @@ public class StrUtil {
 	}
 
 
+
+	/**
+	 * 替换字符串中指定区间（含 begin，不含 end）的内容。
+	 *
+	 * @param str         字符串
+	 * @param beginIndex  起始索引（含）
+	 * @param endIndex    结束索引（不含）
+	 * @param replacement 替换串
+	 * @return 替换后的字符串
+	 */
+	public static String replace(CharSequence str, int beginIndex, int endIndex, CharSequence replacement) {
+		if (str == null) {
+			return null;
+		}
+		String s = str.toString();
+		int begin = Math.max(0, beginIndex);
+		int end = Math.min(s.length(), endIndex);
+		if (begin >= end) {
+			return s;
+		}
+		String rep = replacement == null ? "" : replacement.toString();
+		return s.substring(0, begin) + rep + s.substring(end);
+	}
+
+
 }

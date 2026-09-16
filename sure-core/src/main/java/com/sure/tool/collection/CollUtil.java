@@ -990,4 +990,26 @@ public class CollUtil {
 	}
 
 
+
+	/**
+	 * 移除集合中的 null 元素，返回新列表。
+	 *
+	 * @param coll 集合
+	 * @param <T>  元素类型
+	 * @return 不含 null 的新列表
+	 */
+	public static <T> List<T> removeNull(java.util.Collection<T> coll) {
+		if (coll == null || coll.isEmpty()) {
+			return new java.util.ArrayList<>();
+		}
+		List<T> result = new java.util.ArrayList<>(coll.size());
+		for (T item : coll) {
+			if (item != null) {
+				result.add(item);
+			}
+		}
+		return result;
+	}
+
+
 }

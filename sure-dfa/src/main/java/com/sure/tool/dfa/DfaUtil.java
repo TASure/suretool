@@ -142,4 +142,30 @@ public class DfaUtil {
 	}
 
 
+
+	/**
+	 * 将文本中的敏感词替换为指定字符串。
+	 *
+	 * @param text        文本
+	 * @param replacement 替换串
+	 * @return 替换后的文本
+	 */
+	public static String replace(String text, String replacement) {
+		if (text == null || text.isEmpty()) {
+			return text;
+		}
+		java.util.List<FoundWord> words = match(text);
+		if (words.isEmpty()) {
+			return text;
+		}
+		StringBuilder sb = new StringBuilder(text);
+		// 从后往前替换，避免破坏索引
+		for (int i = words.size() - 1; i >= 0; i--) {
+			FoundWord w = words.get(i);
+			sb.replace(w.getStartIndex(), w.getEndIndex() + 1, replacement);
+		}
+		return sb.toString();
+	}
+
+
 }

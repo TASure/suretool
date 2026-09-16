@@ -550,4 +550,30 @@ public class ConvertUtil {
 	}
 
 
+
+	/**
+	 * 转换为 BigInteger。
+	 *
+	 * @param value 值
+	 * @return BigInteger 或 {@code null}
+	 */
+	public static java.math.BigInteger toBigInteger(Object value) {
+		if (value == null) {
+			return null;
+		}
+		if (value instanceof java.math.BigInteger bigInteger) {
+			return bigInteger;
+		}
+		String str = String.valueOf(value).trim();
+		if (str.isEmpty()) {
+			return null;
+		}
+		try {
+			return new java.math.BigInteger(str);
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
+
 }

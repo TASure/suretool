@@ -8,6 +8,8 @@
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue)
 ![Java](https://img.shields.io/badge/Java-21+-blue)
 ![Stars](https://img.shields.io/github/stars/TASure/suretool)
+![Maven Central](https://img.shields.io/maven-central/v/io.github.tasure/suretool)
+![Pages](https://img.shields.io/github/actions/workflow/status/TASure/suretool/pages.yml?branch=main&label=Pages)
 
 一个**小而全**的 Java 工具类库，参考 [Hutool](https://doc.hutool.cn/pages/index/) 的设计理念，通过静态方法封装常用 JDK API，减少重复造轮子、降低开发成本。
 

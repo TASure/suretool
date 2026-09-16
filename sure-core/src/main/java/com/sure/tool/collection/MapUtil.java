@@ -17,7 +17,10 @@ package com.sure.tool.collection;
 
 import com.sure.tool.util.ConvertUtil;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -278,4 +281,32 @@ public class MapUtil {
 		}
 		return sb.toString();
 	}
+
+	/**
+	 * 按值排序（值需可比），返回有序 LinkedHashMap。
+	 *
+	 * @param <K>         键类型
+	 * @param <V>         值类型（Comparable）
+	 * @param map         原 Map
+	 * @param isAscending 是否升序
+	 * @return 排序后的新 Map
+	 */
+	public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map, boolean isAscending) {
+		if (isEmpty(map)) {
+			return map;
+		}
+		List<Map.Entry<K, V>> entries = new ArrayList<>(map.entrySet());
+		Comparator<Map.Entry<K, V>> cmp = Comparator.comparing(Map.Entry::getValue);
+		if (!isAscending) {
+			cmp = cmp.reversed();
+		}
+		entries.sort(cmp);
+		Map<K, V> result = new LinkedHashMap<>();
+		for (Map.Entry<K, V> e : entries) {
+			result.put(e.getKey(), e.getValue());
+		}
+		return result;
+	}
+
+
 }

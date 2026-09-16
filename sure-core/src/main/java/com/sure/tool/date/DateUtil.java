@@ -472,4 +472,68 @@ public class DateUtil {
 	}
 
 
+
+	/**
+	 * 一天开始（周一为一周第一天，00:00:00.000）。
+	 *
+	 * @param date 日期
+	 * @return 当周周一 00:00:00.000
+	 */
+	public static Date beginOfWeek(Date date) {
+		Calendar c = toCalendar(date);
+		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		return c.getTime();
+	}
+
+	/**
+	 * 一周结束（周日 23:59:59.999）。
+	 *
+	 * @param date 日期
+	 * @return 当周周日 23:59:59.999
+	 */
+	public static Date endOfWeek(Date date) {
+		Calendar c = toCalendar(date);
+		c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+		c.set(Calendar.HOUR_OF_DAY, 23);
+		c.set(Calendar.MINUTE, 59);
+		c.set(Calendar.SECOND, 59);
+		c.set(Calendar.MILLISECOND, 999);
+		return c.getTime();
+	}
+
+	/**
+	 * 中文格式日期时间（2026年9月16日 15:30:45）。
+	 *
+	 * @param date 日期
+	 * @return 中文日期时间
+	 */
+	public static String formatChineseDateTime(Date date) {
+		return new SimpleDateFormat("yyyy年M月d日 HH:mm:ss").format(date);
+	}
+
+	/**
+	 * 当月第几天（1~31）。
+	 *
+	 * @param date 日期
+	 * @return 日
+	 */
+	public static int dayOfMonth(Date date) {
+		return toCalendar(date).get(Calendar.DAY_OF_MONTH);
+	}
+
+	/**
+	 * 小时（0~23）。
+	 *
+	 * @param date 日期
+	 * @return 小时
+	 */
+	public static int hour(Date date) {
+		return toCalendar(date).get(Calendar.HOUR_OF_DAY);
+	}
+
+
 }

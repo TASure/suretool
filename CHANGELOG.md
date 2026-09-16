@@ -46,7 +46,14 @@
   - 新增 `BitUtil`（util 包）：单位置位/清除/翻转/读取、int/long 位范围提取；
   - `NumberUtil`：新增 `toStr`（避免科学计数法）、`range`（整数序列）、`factorial`；
   - `StrUtil`：新增 `hide`（掩码）、`subBetween`（取标记间）、`isNumeric`、`removeAll`；
-  - 新增 `P4Features5Test`（6 例）；sure-core 指令覆盖率提升至 89.3%。
+  - 新增 `P4Features5Test`（6 例）；sure-core 指令覆盖率提升至 89.3%；
+  - 新增 `Singleton`（util 包）：类级单例池，线程安全，支持默认/参数构造器；
+  - 新增 `Props`（util 包）：Properties 增强，UTF-8 加载防中文乱码、强类型读取、默认值；
+  - `DateUtil`：新增 `beginOfWeek`/`endOfWeek`（周一为一周起点）、`formatChineseDateTime`、`dayOfMonth`、`hour`；
+  - `CsvUtil`：新增指定字符集读写 `read(File, Charset)`/`write(File, rows, Charset)`；
+  - `IdUtil`：新增 `createSnowflake()` 默认节点快捷创建；
+  - `MapUtil`：新增按值排序 `sortByValue`；
+  - 新增 `P4Features6Test`（5 例）；sure-core 指令覆盖率 88.8%（门禁 70% 以上）。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

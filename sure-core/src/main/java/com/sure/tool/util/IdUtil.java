@@ -74,4 +74,15 @@ public class IdUtil {
 	public static Snowflake createSnowflake(long workerId, long datacenterId) {
 		return new Snowflake(workerId, datacenterId);
 	}
+
+	/**
+	 * 创建默认雪花 ID 生成器（节点 0，数据中心 0）。
+	 *
+	 * @return Snowflake
+	 */
+	public static Snowflake createSnowflake() {
+		return createSnowflake(0, 0);
+	}
+
+
 }

@@ -17,6 +17,7 @@ package com.sure.tool.collection;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -152,4 +153,30 @@ public class CsvUtil {
 		}
 		return '"' + field.replace("\"", "\"\"") + '"';
 	}
+
+	/**
+	 * 读取 CSV 文件（指定字符集）。
+	 *
+	 * @param file    文件
+	 * @param charset 字符集
+	 * @return 行数据
+	 * @throws IOException IO 异常
+	 */
+	public static List<List<String>> read(File file, Charset charset) throws IOException {
+		return read(FileUtil.readString(file, charset));
+	}
+
+	/**
+	 * 写入 CSV 文件（指定字符集）。
+	 *
+	 * @param file    文件
+	 * @param rows    行数据
+	 * @param charset 字符集
+	 * @throws IOException IO 异常
+	 */
+	public static void write(File file, List<List<String>> rows, Charset charset) throws IOException {
+		FileUtil.writeString(toCsv(rows), file, charset);
+	}
+
+
 }

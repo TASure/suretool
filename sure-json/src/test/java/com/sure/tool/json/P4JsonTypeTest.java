@@ -165,4 +165,24 @@ public class P4JsonTypeTest {
 	}
 
 
+
+	@Test
+	public void testJoinAndGetBoolDefault() {
+		com.sure.tool.json.JSONArray arr = new com.sure.tool.json.JSONArray();
+		arr.add("a");
+		arr.add(1);
+		arr.add(null);
+		Assert.assertEquals("a,1,", arr.join(","));
+		Assert.assertEquals("a1", arr.join(null));
+
+		com.sure.tool.json.JSONObject obj = new com.sure.tool.json.JSONObject();
+		obj.set("flag", true);
+		obj.set("no", "x");
+		Assert.assertTrue(obj.getBool("flag", false));
+		Assert.assertFalse(obj.getBool("missing", false));
+		Assert.assertTrue(obj.getBool("missing", true));
+		Assert.assertFalse(obj.getBool("no", true));
+	}
+
+
 }

@@ -210,4 +210,17 @@ public class CryptoTest {
 		String key = AesUtil.generateKey();
 		assertTrue(com.sure.tool.codec.Base64Util.isBase64(key));
 	}
+
+
+
+	@Test
+	public void testSha384() {
+		String hash = com.sure.tool.crypto.SecureUtil.sha384("abc");
+		assertEquals(96, hash.length());
+		assertEquals("cb00753f45a35e8bb5a03d699ac65007272c32ab0eded1631a8b605a43ff5bed"
+				+ "8086072ba1e7cc2358baeca134c825a7", hash);
+		assertTrue(com.sure.tool.crypto.SecureUtil.sha384(null) == null);
+	}
+
+
 }

@@ -1129,4 +1129,38 @@ public class DateUtil {
 	}
 
 
+
+	/**
+	 * 获取某时刻所在秒的开始（毫秒归零）。
+	 *
+	 * @param date 日期
+	 * @return 秒开始
+	 */
+	public static Date beginOfSecond(Date date) {
+		if (date == null) {
+			return null;
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
+
+	/**
+	 * 获取某时刻所在秒的结束（毫秒 999）。
+	 *
+	 * @param date 日期
+	 * @return 秒结束
+	 */
+	public static Date endOfSecond(Date date) {
+		if (date == null) {
+			return null;
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.MILLISECOND, 999);
+		return cal.getTime();
+	}
+
+
 }

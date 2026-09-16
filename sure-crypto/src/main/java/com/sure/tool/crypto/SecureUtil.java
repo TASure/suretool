@@ -236,4 +236,25 @@ public class SecureUtil {
 	}
 
 
+
+	/**
+	 * SHA-384 摘要（十六进制小写）。
+	 *
+	 * @param data 数据
+	 * @return 摘要
+	 */
+	public static String sha384(String data) {
+		if (data == null) {
+			return null;
+		}
+		try {
+			java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-384");
+			byte[] digest = md.digest(data.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+			return java.util.HexFormat.of().formatHex(digest);
+		} catch (java.security.NoSuchAlgorithmException e) {
+			throw new CryptoException("SHA-384 不可用", e);
+		}
+	}
+
+
 }

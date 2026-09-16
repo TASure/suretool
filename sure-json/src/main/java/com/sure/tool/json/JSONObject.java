@@ -440,4 +440,18 @@ public class JSONObject extends LinkedHashMap<String, Object> {
 	}
 
 
+
+	/**
+	 * 获取布尔值，缺失或转换失败返回默认值。
+	 *
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return 布尔值或默认值
+	 */
+	public boolean getBool(String key, boolean defaultValue) {
+		Boolean value = getBool(key);
+		return value == null ? defaultValue : value;
+	}
+
+
 }

@@ -467,4 +467,24 @@ public class JSONArray extends ArrayList<Object> {
 	}
 
 
+
+	/**
+	 * 将数组元素用分隔符拼接。
+	 *
+	 * @param delimiter 分隔符
+	 * @return 拼接字符串
+	 */
+	public String join(String delimiter) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < size(); i++) {
+			if (i > 0 && delimiter != null) {
+				sb.append(delimiter);
+			}
+			Object value = get(i);
+			sb.append(value == null ? "" : value);
+		}
+		return sb.toString();
+	}
+
+
 }

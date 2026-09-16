@@ -206,4 +206,22 @@ public class IdcardUtil {
 	private static boolean isLeapYear(int year) {
 		return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
 	}
+
+	/**
+	 * 计算周岁年龄。
+	 *
+	 * @param idCard 身份证号码
+	 * @return 年龄（周岁），号码不合法返回 -1
+	 */
+	public static int getAge(String idCard) {
+		String birth = getBirthDate(idCard);
+		if (birth == null) {
+			return -1;
+		}
+		java.time.LocalDate birthDate = java.time.LocalDate.parse(birth);
+		java.time.LocalDate now = java.time.LocalDate.now();
+		return (int) java.time.temporal.ChronoUnit.YEARS.between(birthDate, now);
+	}
+
+
 }

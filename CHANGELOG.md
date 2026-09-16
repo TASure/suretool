@@ -211,7 +211,14 @@
   - `DateUtil`（sure-core）：新增 `getAge`（周岁）；
   - `ArrayUtil`（sure-core）：新增 `get`/`get(index, defaultValue)`；
   - 质量门禁：sure-poi 行覆盖门槛 0.88→0.85（POI 样板行多，实测 0.87）；Checkstyle FileLength 1600→1700；
-  - 新增测试用例：全模块 578 测试全绿。
+  - 新增测试用例：全模块 578 测试全绿；
+  - `SecureUtil`（sure-crypto）：新增 `sha384`；
+  - `JSONArray`（sure-json）：新增 `join(delimiter)`；
+  - `JSONObject`（sure-json）：新增 `getBool(key, defaultValue)`；
+  - `DateUtil`（sure-core）：新增 `beginOfSecond`/`endOfSecond`；
+  - `LruCache`（sure-cache）：新增 `getCapacity`；
+  - `IdcardUtil`（sure-core）：新增 `getAge`（周岁，补全既有 15/18 位工具）；
+  - 新增测试用例：全模块 582 测试全绿。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

@@ -232,4 +232,19 @@ public class CacheGapTest {
 	}
 
 
+
+	@Test
+	public void testLruGetCapacity() {
+		com.sure.tool.cache.LruCache<String, String> lru = new com.sure.tool.cache.LruCache<>(3);
+		assertEquals(3, lru.getCapacity());
+		lru.put("a", "1");
+		lru.put("b", "2");
+		lru.put("c", "3");
+		lru.put("d", "4");
+		assertEquals(3, lru.size());
+		assertFalse(lru.containsKey("a"));
+		assertTrue(lru.containsKey("d"));
+	}
+
+
 }

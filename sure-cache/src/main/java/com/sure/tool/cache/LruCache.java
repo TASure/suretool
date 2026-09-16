@@ -87,4 +87,15 @@ public class LruCache<K, V> implements Cache<K, V> {
 	public synchronized boolean isEmpty() {
 		return map.isEmpty();
 	}
+
+	/**
+	 * 获取容量上限。
+	 *
+	 * @return 容量
+	 */
+	public int getCapacity() {
+		return capacity;
+	}
+
+
 }

@@ -17,7 +17,14 @@
     PID/命令行、OS 家族判断（Windows/Linux/macOS/Unix）；
   - `ReUtil`：新增正则转义 `escape` / 反转义 `unescape`、按分组提取 `findAll(regex, content, groupIndex)`；
   - `BeanUtil`：新增深拷贝 `deepCopy`（递归复制 Bean/Map/List/Set/数组，无第三方依赖）；
-  - 新增 `P4FeaturesTest` 覆盖全部新增 API；sure-core 指令覆盖率 87.9%，全模块 SpotBugs 0 告警。
+  - 新增 `P4FeaturesTest` 覆盖全部新增 API；sure-core 指令覆盖率 87.9%，全模块 SpotBugs 0 告警；
+  - `GzipUtil`：GZIP 压缩/解压（字符串/字节/文件，零依赖）；
+  - `SerializeUtil`：JDK 序列化与文件读写、序列化深拷贝；
+  - `RateLimiter`：令牌桶限流器（平滑补充、突发容量、阻塞/非阻塞获取）；
+  - `RetryUtil`：固定间隔重试与条件重试（结果条件、异常重试开关）；
+  - `ExceptionUtil`：堆栈转字符串、根源异常、cause 链判定、异常包装；
+  - `EnumUtil`：按名称/序号/toString 转换枚举，支持忽略大小写；
+  - 新增 `P4Features2Test`（9 例）；sure-core 指令覆盖率提升至 88.2%。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

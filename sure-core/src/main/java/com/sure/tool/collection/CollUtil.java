@@ -694,4 +694,45 @@ public class CollUtil {
 		return target;
 	}
 
+
+	/**
+	 * 是否包含全部指定元素。
+	 *
+	 * @param collection 集合
+	 * @param values     要检查的元素
+	 * @return 是否全部包含
+	 */
+	@SafeVarargs
+	public static <T> boolean containsAll(Collection<T> collection, T... values) {
+		if (values == null || values.length == 0) {
+			return true;
+		}
+		for (T value : values) {
+			if (!contains(collection, value)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 是否包含另一集合全部元素。
+	 *
+	 * @param collection 集合
+	 * @param target     目标集合
+	 * @return 是否全部包含
+	 */
+	public static boolean containsAll(Collection<?> collection, Collection<?> target) {
+		if (isEmpty(target)) {
+			return true;
+		}
+		for (Object item : target) {
+			if (!contains(collection, item)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
 }

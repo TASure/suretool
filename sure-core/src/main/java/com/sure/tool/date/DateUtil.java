@@ -536,4 +536,56 @@ public class DateUtil {
 	}
 
 
+
+	/**
+	 * 季度（1~4）。
+	 *
+	 * @param date 日期
+	 * @return 季度
+	 */
+	public static int season(Date date) {
+		return toCalendar(date).get(Calendar.MONTH) / 3 + 1;
+	}
+
+	/**
+	 * 中文格式日期（2026年9月16日）。
+	 *
+	 * @param date 日期
+	 * @return 中文日期
+	 */
+	public static String formatChineseDate(Date date) {
+		return new SimpleDateFormat("yyyy年M月d日").format(date);
+	}
+
+	/**
+	 * 当年第几天（1~366）。
+	 *
+	 * @param date 日期
+	 * @return 天序号
+	 */
+	public static int dayOfYear(Date date) {
+		return toCalendar(date).get(Calendar.DAY_OF_YEAR);
+	}
+
+	/**
+	 * 分钟（0~59）。
+	 *
+	 * @param date 日期
+	 * @return 分钟
+	 */
+	public static int minute(Date date) {
+		return toCalendar(date).get(Calendar.MINUTE);
+	}
+
+	/**
+	 * 秒（0~59）。
+	 *
+	 * @param date 日期
+	 * @return 秒
+	 */
+	public static int second(Date date) {
+		return toCalendar(date).get(Calendar.SECOND);
+	}
+
+
 }

@@ -53,7 +53,14 @@
   - `CsvUtil`：新增指定字符集读写 `read(File, Charset)`/`write(File, rows, Charset)`；
   - `IdUtil`：新增 `createSnowflake()` 默认节点快捷创建；
   - `MapUtil`：新增按值排序 `sortByValue`；
-  - 新增 `P4Features6Test`（5 例）；sure-core 指令覆盖率 88.8%（门禁 70% 以上）。
+  - 新增 `P4Features6Test`（5 例）；sure-core 指令覆盖率 88.8%（门禁 70% 以上）；
+  - 新增 `TimeInterval`（util 包）：方法耗时统计计时器，毫秒/秒/纳秒/可读文本；
+  - `CharUtil`：新增 `isFileSeparator`/`toUpper`/`toLower`；
+  - 新增 `HexUtil`（util 包）：字节与十六进制互转、字符串与 hex 互转（UTF-8）；
+  - `DateUtil`：新增 `season`（季度）、`formatChineseDate`、`dayOfYear`、`minute`、`second`；
+  - `CollUtil`：新增 `containsAll`（元素数组/集合两种重载）；
+  - `MapUtil`：新增 `getBigDecimal`（含默认值）；
+  - 新增 `P4Features7Test`（5 例）；sure-core 指令覆盖率 88.9%。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

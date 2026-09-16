@@ -127,4 +127,42 @@ public class CharUtil {
 	public static boolean equals(char c1, char c2) {
 		return c1 == c2;
 	}
+
+	/**
+	 * 是否为文件路径分隔符（'/' 或 '\\'）。
+	 *
+	 * @param c 字符
+	 * @return 是否分隔符
+	 */
+	public static boolean isFileSeparator(char c) {
+		return c == '/' || c == '\\';
+	}
+
+	/**
+	 * 转为大写（仅字母）。
+	 *
+	 * @param c 字符
+	 * @return 大写字符
+	 */
+	public static char toUpper(char c) {
+		if (isLowerCase(c)) {
+			return (char) (c - 32);
+		}
+		return c;
+	}
+
+	/**
+	 * 转为小写（仅字母）。
+	 *
+	 * @param c 字符
+	 * @return 小写字符
+	 */
+	public static char toLower(char c) {
+		if (isUpperCase(c)) {
+			return (char) (c + 32);
+		}
+		return c;
+	}
+
+
 }

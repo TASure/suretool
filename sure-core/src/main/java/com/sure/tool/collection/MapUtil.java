@@ -17,6 +17,7 @@ package com.sure.tool.collection;
 
 import com.sure.tool.util.ConvertUtil;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -306,6 +307,38 @@ public class MapUtil {
 			result.put(e.getKey(), e.getValue());
 		}
 		return result;
+	}
+
+
+
+	/**
+	 * 取 BigDecimal。
+	 *
+	 * @param map  Map
+	 * @param key  键
+	 * @return BigDecimal 值；缺失返回 null
+	 */
+	public static BigDecimal getBigDecimal(Map<?, ?> map, Object key) {
+		return getBigDecimal(map, key, null);
+	}
+
+	/**
+	 * 取 BigDecimal（带默认值）。
+	 *
+	 * @param map          Map
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return BigDecimal 值
+	 */
+	public static BigDecimal getBigDecimal(Map<?, ?> map, Object key, BigDecimal defaultValue) {
+		Object value = map.get(key);
+		if (value == null) {
+			return defaultValue;
+		}
+		if (value instanceof BigDecimal bd) {
+			return bd;
+		}
+		return new BigDecimal(String.valueOf(value).trim());
 	}
 
 

@@ -179,4 +179,37 @@ public class CsvUtil {
 	}
 
 
+
+	/**
+	 * 读取 CSV 输入流。
+	 *
+	 * @param in      输入流
+	 * @param charset 字符集
+	 * @return 行列表
+	 * @throws java.io.IOException IO 异常
+	 */
+	public static List<List<String>> read(java.io.InputStream in, Charset charset) throws java.io.IOException {
+		if (in == null) {
+			return new ArrayList<>();
+		}
+		byte[] bytes;
+		try (java.io.InputStream input = in) {
+			bytes = input.readAllBytes();
+		}
+		return read(new String(bytes, charset));
+	}
+
+	/**
+	 * 写出 CSV 到 Writer。
+	 *
+	 * @param writer Writer
+	 * @param rows   行列表
+	 * @throws java.io.IOException IO 异常
+	 */
+	public static void write(java.io.Writer writer, List<List<String>> rows) throws java.io.IOException {
+		writer.write(toCsv(rows));
+		writer.flush();
+	}
+
+
 }

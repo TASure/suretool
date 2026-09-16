@@ -253,4 +253,72 @@ public class RsaUtil {
 	}
 
 
+
+	/**
+	 * RSA 签名（SHA256withRSA，Hex 输出）。
+	 *
+	 * @param data       原文
+	 * @param privateKey 私钥
+	 * @return Hex 签名
+	 */
+	public static String signHex(String data, PrivateKey privateKey) {
+		byte[] sign = signBytes(data, privateKey);
+		return java.util.HexFormat.of().formatHex(sign);
+	}
+
+	/**
+	 * RSA 验签（SHA256withRSA，Hex 输入）。
+	 *
+	 * @param data      原文
+	 * @param publicKey 公钥
+	 * @param signature Hex 签名
+	 * @return 是否通过
+	 */
+	public static boolean verifyHex(String data, PublicKey publicKey, String signature) {
+		try {
+			byte[] sign = java.util.HexFormat.of().parseHex(signature);
+			return verifyBytes(data, publicKey, sign);
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
+	}
+
+	/**
+	 * RSA 签名，返回原始字节。
+	 *
+	 * @param data       原文
+	 * @param privateKey 私钥
+	 * @return 签名字节
+	 */
+	public static byte[] signBytes(String data, PrivateKey privateKey) {
+		try {
+			java.security.Signature signature = java.security.Signature.getInstance("SHA256withRSA");
+			signature.initSign(privateKey);
+			signature.update(data.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+			return signature.sign();
+		} catch (Exception e) {
+			throw new CryptoException("RSA 签名失败", e);
+		}
+	}
+
+	/**
+	 * RSA 验签，字节输入。
+	 *
+	 * @param data      原文
+	 * @param publicKey 公钥
+	 * @param signature 签名字节
+	 * @return 是否通过
+	 */
+	public static boolean verifyBytes(String data, PublicKey publicKey, byte[] signature) {
+		try {
+			java.security.Signature verifier = java.security.Signature.getInstance("SHA256withRSA");
+			verifier.initVerify(publicKey);
+			verifier.update(data.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+			return verifier.verify(signature);
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+
 }

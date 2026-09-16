@@ -38,4 +38,24 @@ public class P4RsaTest {
 		String sig2 = SecureUtil.rsaSign(data, keyPair.getPrivate());
 		Assert.assertTrue(SecureUtil.rsaVerify(data, keyPair.getPublic(), sig2));
 	}
+
+	@Test
+	public void testSignHex() {
+		java.security.KeyPair pair = com.sure.tool.crypto.RsaUtil.generateKeyPair();
+		String sign = com.sure.tool.crypto.RsaUtil.signHex("hello", pair.getPrivate());
+		Assert.assertTrue(com.sure.tool.crypto.RsaUtil.verifyHex("hello", pair.getPublic(), sign));
+		Assert.assertFalse(com.sure.tool.crypto.RsaUtil.verifyHex("world", pair.getPublic(), sign));
+		Assert.assertFalse(com.sure.tool.crypto.RsaUtil.verifyHex("hello", pair.getPublic(), "not-hex"));
+	}
+
+	@Test
+	public void testDesGenerateKey() {
+		String key = com.sure.tool.crypto.DesUtil.generateKey();
+		Assert.assertEquals(16, key.length());
+		String data = "suretool";
+		String enc = com.sure.tool.crypto.DesUtil.encryptHex(data, key);
+		Assert.assertEquals(data, com.sure.tool.crypto.DesUtil.decryptHex(enc, key));
+	}
+
+
 }

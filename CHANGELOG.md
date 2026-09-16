@@ -145,7 +145,14 @@
   - `StrUtil`（sure-core）：新增 `toUnicode`；
   - `JSONUtil`（sure-json）：新增 `isJsonObj`/`isJsonArray`；
   - README 工具类清单同步更新；
-  - 新增测试用例：全模块 553 测试全绿。
+  - 新增测试用例：全模块 553 测试全绿；
+  - `TreeUtil`（sure-core）：新增 `findNode`（按 ID 深度查找）；
+  - `StrUtil`（sure-core）：新增 `maxLength`（截断加省略号）；
+  - `ArrayUtil`（sure-core）：新增 `isSorted`（升序/降序）；
+  - `CsvUtil`（sure-core）：新增 `read(InputStream, Charset)`/`write(Writer, rows)`；
+  - `RsaUtil`（sure-crypto）：新增 `signHex`/`verifyHex`/`signBytes`/`verifyBytes`；
+  - `DesUtil`（sure-crypto）：新增 `generateKey`（8 字节 DES 密钥）；
+  - 新增测试用例：全模块 556 测试全绿。
 
 - **模块化架构（P2）**：拆分为 15 个 Maven 模块，通过 `sure-all` 聚合、`sure-bom` 统一版本管理；
   `sure-core` / `sure-json` / `sure-http` / `sure-crypto` / `sure-cron` / `sure-cache` / `sure-xml` /

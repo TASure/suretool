@@ -1349,4 +1349,29 @@ public class StrUtil {
 	}
 
 
+
+	/**
+	 * 限制字符串最大长度，超出截断并追加省略号。
+	 *
+	 * @param str     字符串
+	 * @param maxLength 最大长度（含省略号）
+	 * @return 截断后的字符串
+	 */
+	public static String maxLength(String str, int maxLength) {
+		if (str == null) {
+			return null;
+		}
+		if (maxLength <= 0) {
+			return "";
+		}
+		if (str.length() <= maxLength) {
+			return str;
+		}
+		if (maxLength <= 3) {
+			return str.substring(0, maxLength);
+		}
+		return str.substring(0, maxLength - 3) + "...";
+	}
+
+
 }

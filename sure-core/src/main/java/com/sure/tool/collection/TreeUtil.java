@@ -128,4 +128,30 @@ public class TreeUtil {
 		}
 		return result;
 	}
+
+	/**
+	 * 按节点 ID 深度优先查找。
+	 *
+	 * @param root 根节点
+	 * @param id   节点 ID
+	 * @param <T>  ID 类型
+	 * @return 匹配节点；未找到返回 null
+	 */
+	public static <T> TreeNode<T> findNode(TreeNode<T> root, T id) {
+		if (root == null) {
+			return null;
+		}
+		if (java.util.Objects.equals(root.getId(), id)) {
+			return root;
+		}
+		for (TreeNode<T> child : root.getChildren()) {
+			TreeNode<T> found = findNode(child, id);
+			if (found != null) {
+				return found;
+			}
+		}
+		return null;
+	}
+
+
 }

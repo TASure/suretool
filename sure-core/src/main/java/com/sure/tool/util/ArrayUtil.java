@@ -746,4 +746,41 @@ public class ArrayUtil {
 	}
 
 
+
+	/**
+	 * 判断数组是否升序（自然顺序）。
+	 *
+	 * @param array 数组
+	 * @param <T>   元素类型
+	 * @return 是否升序
+	 */
+	public static <T extends Comparable<T>> boolean isSorted(T[] array) {
+		return isSorted(array, true);
+	}
+
+	/**
+	 * 判断数组是否有序。
+	 *
+	 * @param array    数组
+	 * @param asc      是否升序
+	 * @param <T>      元素类型
+	 * @return 是否有序
+	 */
+	public static <T extends Comparable<T>> boolean isSorted(T[] array, boolean asc) {
+		if (array == null || array.length < 2) {
+			return true;
+		}
+		for (int i = 1; i < array.length; i++) {
+			int cmp = array[i - 1].compareTo(array[i]);
+			if (asc && cmp > 0) {
+				return false;
+			}
+			if (!asc && cmp < 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
 }

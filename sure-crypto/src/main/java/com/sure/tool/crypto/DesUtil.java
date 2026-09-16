@@ -38,6 +38,8 @@ import javax.crypto.spec.SecretKeySpec;
 @Deprecated
 public class DesUtil {
 
+	private static final java.security.SecureRandom RANDOM = new java.security.SecureRandom();
+
 	/** 变换算法：CBC 模式 + PKCS5 填充 */
 	private static final String TRANSFORMATION = "DES/CBC/PKCS5Padding";
 
@@ -152,4 +154,17 @@ public class DesUtil {
 			throw new CryptoException("DES 密钥派生失败", e);
 		}
 	}
+
+	/**
+	 * 生成 DES 密钥（8 字节，Hex 返回）。
+	 *
+	 * @return Hex 密钥
+	 */
+	public static String generateKey() {
+		byte[] key = new byte[8];
+		RANDOM.nextBytes(key);
+		return java.util.HexFormat.of().formatHex(key);
+	}
+
+
 }

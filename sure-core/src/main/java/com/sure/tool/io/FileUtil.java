@@ -236,6 +236,69 @@ public class FileUtil {
 	}
 
 	/**
+	 * 获取路径的父目录路径（不含末尾分隔符）。
+	 *
+	 * @param path 路径
+	 * @return 父目录路径，无父目录返回 {@code null}
+	 */
+	public static String getParent(String path) {
+		if (path == null) {
+			return null;
+		}
+		int pos = path.lastIndexOf(File.separatorChar);
+		if (pos < 0) {
+			// 兼容正斜杠
+			pos = path.lastIndexOf('/');
+		}
+		if (pos < 0) {
+			return null;
+		}
+		return path.substring(0, pos);
+	}
+
+	/**
+	 * 获取文件的父目录绝对路径。
+	 *
+	 * @param file 文件
+	 * @return 父目录绝对路径，无父目录返回 {@code null}
+	 */
+	public static String getParent(File file) {
+		if (file == null) {
+			return null;
+		}
+		File parent = file.getParentFile();
+		return (parent == null) ? null : parent.getAbsolutePath();
+	}
+
+	/**
+	 * 目录是否为空（不存在或不是目录返回 {@code false}）。
+	 *
+	 * @param dir 目录
+	 * @return 是否为空
+	 */
+	public static boolean isDirEmpty(File dir) {
+		if (dir == null || !dir.isDirectory()) {
+			return false;
+		}
+		String[] files = dir.list();
+		return files == null || files.length == 0;
+	}
+
+	/**
+	 * 比较两个路径是否指向同一位置（规范化后比较，忽略 {@code .} / {@code ..} 与尾分隔符差异）。
+	 *
+	 * @param path1 路径 1
+	 * @param path2 路径 2
+	 * @return 是否相同
+	 */
+	public static boolean pathEquals(String path1, String path2) {
+		if (path1 == null || path2 == null) {
+			return path1 == path2;
+		}
+		return normalize(path1).equals(normalize(path2));
+	}
+
+	/**
 	 * 获取主文件名（不含扩展名）。
 	 *
 	 * @param file 文件

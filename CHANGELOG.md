@@ -261,6 +261,13 @@
   - `MapUtil`：新增 `sortByKey`（按键升序便捷版）、`getStr(map, key)`（单参，缺失返回 null）；
   - `CollUtil`：新增 `get(collection, index, defaultValue)`（越界/空集合安全取值带默认值，支持负索引）；
   - 新增 `P4Features27Test`（4 例）；全模块 590 测试全绿，sure-core 指令覆盖率 88.8%，SpotBugs 0 告警。
+- **第三十三批（P4 v0.2.0 继续）**：
+  - `StrUtil`：新增 `equalsAny`/`equalsAnyIgnoreCase`（等于任意候选值）、`totalLength`（多字符串总长度）；
+  - `FileUtil`：新增 `getParent(String/File)`（父目录路径）、`isDirEmpty`（目录判空）、`pathEquals`（规范化路径比较）；
+  - `DateUtil`：新增 `isOverlap`（时间段重叠判断）、`rangeToList`（按日/时/分等步进生成日期区间，含头含尾）；
+  - `MapUtil`：新增 `getInt`/`getLong`/`getDouble`/`getBool` 单参便捷版（缺失返回 0/false）；`MapBuilder` 新增 `create`/`putAll`/`build(immutable)`；
+  - Checkstyle `FileLength` 上限调整至 2000（核心工具类持续增长，StrUtil 已 1700+ 行）；
+  - 新增 `P4Features28Test`（4 例）；全模块 594 测试全绿，sure-core 指令覆盖率 88.9%，SpotBugs 0 告警。
 
 ### Changed
 

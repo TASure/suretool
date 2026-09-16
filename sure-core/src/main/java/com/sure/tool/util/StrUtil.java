@@ -1679,4 +1679,60 @@ public class StrUtil {
 		return s;
 	}
 
+	// ---------------- 等值判断与长度 ----------------
+
+	/**
+	 * 判断字符串是否等于给定值中的任意一个。
+	 *
+	 * @param str    字符串
+	 * @param values 候选值
+	 * @return 是否等于任意一个
+	 */
+	public static boolean equalsAny(CharSequence str, CharSequence... values) {
+		if (values == null || values.length == 0) {
+			return false;
+		}
+		for (CharSequence v : values) {
+			if (equals(str, v)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 忽略大小写判断字符串是否等于给定值中的任意一个。
+	 *
+	 * @param str    字符串
+	 * @param values 候选值
+	 * @return 是否等于任意一个
+	 */
+	public static boolean equalsAnyIgnoreCase(CharSequence str, CharSequence... values) {
+		if (values == null || values.length == 0) {
+			return false;
+		}
+		for (CharSequence v : values) {
+			if (equalsIgnoreCase(str, v)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 计算多个字符串的总长度（{@code null} 视为空串）。
+	 *
+	 * @param strs 字符串数组
+	 * @return 总长度
+	 */
+	public static int totalLength(CharSequence... strs) {
+		int total = 0;
+		if (strs != null) {
+			for (CharSequence s : strs) {
+				total += (s == null) ? 0 : s.length();
+			}
+		}
+		return total;
+	}
+
 }

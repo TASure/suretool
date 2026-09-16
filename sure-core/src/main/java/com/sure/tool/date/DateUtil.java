@@ -921,6 +921,55 @@ public class DateUtil {
 	}
 
 	/**
+	 * 判断两个时间段是否重叠（含边界相接，{@code start < end} 为前置条件）。
+	 *
+	 * @param start1 时间段 1 开始
+	 * @param end1   时间段 1 结束
+	 * @param start2 时间段 2 开始
+	 * @param end2   时间段 2 结束
+	 * @return 是否重叠
+	 */
+	public static boolean isOverlap(java.util.Date start1, java.util.Date end1,
+			java.util.Date start2, java.util.Date end2) {
+		if (start1 == null || end1 == null || start2 == null || end2 == null) {
+			throw new IllegalArgumentException("日期不能为 null");
+		}
+		return start1.before(end2) && start2.before(end1);
+	}
+
+	/**
+	 * 生成日期区间列表（含头含尾，按指定单位步进）。
+	 *
+	 * @param start 开始日期
+	 * @param end   结束日期
+	 * @param unit  步进单位
+	 * @return 日期列表，{@code start} 晚于 {@code end} 时返回空列表
+	 */
+	public static java.util.List<java.util.Date> rangeToList(java.util.Date start, java.util.Date end, DateUnit unit) {
+		if (start == null || end == null) {
+			throw new IllegalArgumentException("日期不能为 null");
+		}
+		java.util.List<java.util.Date> list = new java.util.ArrayList<>();
+		if (start.after(end)) {
+			return list;
+		}
+		int field = switch (unit) {
+			case MS -> Calendar.MILLISECOND;
+			case SECOND -> Calendar.SECOND;
+			case MINUTE -> Calendar.MINUTE;
+			case HOUR -> Calendar.HOUR_OF_DAY;
+			case DAY -> Calendar.DAY_OF_MONTH;
+			case WEEK -> Calendar.WEEK_OF_YEAR;
+		};
+		java.util.Date current = start;
+		while (!current.after(end)) {
+			list.add(current);
+			current = offset(current, field, 1);
+		}
+		return list;
+	}
+
+	/**
 	 * 日期在当月中的第几周。
 	 *
 	 * @param date 日期

@@ -190,6 +190,17 @@ public class MapUtil {
 	}
 
 	/**
+	 * 获取 int 值（缺失返回 {@code 0}）。
+	 *
+	 * @param map Map
+	 * @param key key
+	 * @return int 值或 {@code 0}
+	 */
+	public static int getInt(Map<?, ?> map, Object key) {
+		return getInt(map, key, 0);
+	}
+
+	/**
 	 * 获取 long 值。
 	 *
 	 * @param map          Map
@@ -200,6 +211,17 @@ public class MapUtil {
 	public static long getLong(Map<?, ?> map, Object key, long defaultValue) {
 		Object value = (map == null) ? null : map.get(key);
 		return ConvertUtil.toLong(value, defaultValue);
+	}
+
+	/**
+	 * 获取 long 值（缺失返回 {@code 0}）。
+	 *
+	 * @param map Map
+	 * @param key key
+	 * @return long 值或 {@code 0}
+	 */
+	public static long getLong(Map<?, ?> map, Object key) {
+		return getLong(map, key, 0L);
 	}
 
 	/**
@@ -216,6 +238,17 @@ public class MapUtil {
 	}
 
 	/**
+	 * 获取 double 值（缺失返回 {@code 0}）。
+	 *
+	 * @param map Map
+	 * @param key key
+	 * @return double 值或 {@code 0}
+	 */
+	public static double getDouble(Map<?, ?> map, Object key) {
+		return getDouble(map, key, 0D);
+	}
+
+	/**
 	 * 获取 boolean 值。
 	 *
 	 * @param map          Map
@@ -226,6 +259,17 @@ public class MapUtil {
 	public static boolean getBool(Map<?, ?> map, Object key, boolean defaultValue) {
 		Object value = (map == null) ? null : map.get(key);
 		return ConvertUtil.toBoolean(value, defaultValue);
+	}
+
+	/**
+	 * 获取 boolean 值（缺失返回 {@code false}）。
+	 *
+	 * @param map Map
+	 * @param key key
+	 * @return boolean 值或 {@code false}
+	 */
+	public static boolean getBool(Map<?, ?> map, Object key) {
+		return getBool(map, key, false);
 	}
 
 	/**
@@ -526,6 +570,17 @@ public class MapUtil {
 		}
 
 		/**
+		 * 创建构建器。
+		 *
+		 * @param <K> 键类型
+		 * @param <V> 值类型
+		 * @return 构建器
+		 */
+		public static <K, V> MapBuilder<K, V> create() {
+			return new MapBuilder<>();
+		}
+
+		/**
 		 * 添加键值。
 		 *
 		 * @param key   键
@@ -538,12 +593,36 @@ public class MapUtil {
 		}
 
 		/**
-		 * 构建 Map。
+		 * 批量添加键值。
 		 *
-		 * @return 新建的 Map（拷贝，防外部修改内部状态）
+		 * @param m 待添加的 Map
+		 * @return this
+		 */
+		public MapBuilder<K, V> putAll(Map<? extends K, ? extends V> m) {
+			if (m != null) {
+				this.map.putAll(m);
+			}
+			return this;
+		}
+
+		/**
+		 * 构建 Map（拷贝，防外部修改内部状态）。
+		 *
+		 * @return 新建的 LinkedHashMap
 		 */
 		public Map<K, V> build() {
-			return new LinkedHashMap<>(this.map);
+			return build(false);
+		}
+
+		/**
+		 * 构建 Map。
+		 *
+		 * @param immutable 是否返回不可变 Map
+		 * @return 新建的 Map；{@code immutable} 为 {@code true} 时返回不可变 Map
+		 */
+		public Map<K, V> build(boolean immutable) {
+			Map<K, V> result = new LinkedHashMap<>(this.map);
+			return immutable ? Collections.unmodifiableMap(result) : result;
 		}
 	}
 

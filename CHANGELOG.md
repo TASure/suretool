@@ -289,6 +289,11 @@
   - `CharUtil`：新增 `toString(char)`（字符转字符串）、`isEmoji(char)`（BMP Emoji 区段）与 `isEmoji(int)`（支持补充平面码点，如 U+1F600）；
   - `UrlUtil`：新增 `normalize`（URL 规范化：缺协议补 `http://`、去末尾斜杠）；
   - 新增 `P4Features31Test`（2 例）与 `P4JsonBigNumberTest`（3 例）；修正 `MiscUtilTest.testRandom` 脆弱断言（scale 后可能等于上限）；全模块 609 测试全绿，sure-core 指令覆盖率 89.0%，SpotBugs 0 告警。
+- **第三十七批（P4 v0.2.0 继续）**：
+  - `EmojiUtil`：新增 `isEmoji(String)`（整串是否全为 Emoji）、`containsEmoji`（是否包含 Emoji）、`removeAllEmojis`（移除全部 Emoji，按码点遍历支持补充平面）；
+  - `DesensitizedUtil`：新增 `ipv6`（IPv6 脱敏，保留首末段，压缩地址原样返回）；
+  - `BitUtil`：新增 `get(byte[], int)`（字节数组指定位读取，大端位序）；
+  - 新增 `P4Features32Test`（4 例）；全模块 613 测试全绿，sure-core 指令覆盖率 89.1%，SpotBugs 0 告警。
 
 ### Changed
 

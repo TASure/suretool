@@ -97,4 +97,65 @@ public class EmojiUtil {
 		}
 		return true;
 	}
+
+	/**
+	 * 判断字符串是否仅由 Emoji 组成（空字符串视为 false）。
+	 *
+	 * @param text 文本
+	 * @return 是否全部为 Emoji
+	 */
+	public static boolean isEmoji(String text) {
+		if (text == null || text.isEmpty()) {
+			return false;
+		}
+		for (int i = 0; i < text.length(); ) {
+			int codePoint = text.codePointAt(i);
+			if (!CharUtil.isEmoji(codePoint)) {
+				return false;
+			}
+			i += Character.charCount(codePoint);
+		}
+		return true;
+	}
+
+	/**
+	 * 判断文本是否包含 Emoji。
+	 *
+	 * @param text 文本
+	 * @return 是否包含 Emoji
+	 */
+	public static boolean containsEmoji(String text) {
+		if (text == null || text.isEmpty()) {
+			return false;
+		}
+		for (int i = 0; i < text.length(); ) {
+			int codePoint = text.codePointAt(i);
+			if (CharUtil.isEmoji(codePoint)) {
+				return true;
+			}
+			i += Character.charCount(codePoint);
+		}
+		return false;
+	}
+
+	/**
+	 * 移除文本中所有 Emoji。
+	 *
+	 * @param text 文本
+	 * @return 去除 Emoji 后的文本；{@code null} 返回 {@code null}
+	 */
+	public static String removeAllEmojis(String text) {
+		if (text == null || text.isEmpty()) {
+			return text;
+		}
+		StringBuilder sb = new StringBuilder(text.length());
+		for (int i = 0; i < text.length(); ) {
+			int codePoint = text.codePointAt(i);
+			if (!CharUtil.isEmoji(codePoint)) {
+				sb.appendCodePoint(codePoint);
+			}
+			i += Character.charCount(codePoint);
+		}
+		return sb.toString();
+	}
 }

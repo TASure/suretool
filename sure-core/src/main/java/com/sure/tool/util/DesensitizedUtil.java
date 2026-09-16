@@ -183,5 +183,20 @@ public class DesensitizedUtil {
 		return carLicense.substring(0, 2) + "***" + carLicense.substring(carLicense.length() - 2);
 	}
 
-
+	/**
+	 * IPv6 地址脱敏：保留首段与末段，中间以 {@code ****} 替代。
+	 *
+	 * @param ip IPv6 地址
+	 * @return 脱敏后的 IP；非法格式原样返回
+	 */
+	public static String ipv6(String ip) {
+		if (StrUtil.isBlank(ip)) {
+			return ip;
+		}
+		String[] parts = StrUtil.split(ip, ':');
+		if (parts.length < 4) {
+			return ip;
+		}
+		return parts[0] + ":****:" + parts[parts.length - 1];
+	}
 }

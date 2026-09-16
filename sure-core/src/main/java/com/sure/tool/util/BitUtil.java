@@ -51,6 +51,22 @@ public class BitUtil {
 	}
 
 	/**
+	 * 获取字节数组指定位（位序按大端：index 0 为第 1 字节最高位）。
+	 *
+	 * @param data 字节数组
+	 * @param pos  位位置（0 ~ data.length*8-1）
+	 * @return 该位 0/1
+	 */
+	public static int get(byte[] data, int pos) {
+		if (data == null || pos < 0 || pos >= data.length * 8) {
+			throw new IllegalArgumentException("pos 越界");
+		}
+		int byteIndex = pos / 8;
+		int bitIndex = 7 - (pos % 8);
+		return (data[byteIndex] >> bitIndex) & 1;
+	}
+
+	/**
 	 * 设置 int 指定位为 1。
 	 *
 	 * @param value 值

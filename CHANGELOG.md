@@ -4,11 +4,13 @@
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-## [Unreleased]
+## [1.0.0] - 2026-09-17
 
 ### Added
 
-（下一批功能开发中）
+- 首个 **1.0.0 稳定版本**：核心 API 正式定型，作为 1.x 系列兼容性基线；
+- 全模块基于 JDK21+，Apache-2.0 协议，覆盖 core/json/xml/http/crypto/captcha/jwt/poi/cache/cron/dfa 等领域；
+- 从 `0.2.x` 升级为 `1.0.0`，标记 API 进入稳定承诺期（保持向后兼容的发布策略）。
 
 ## [0.2.0] - 2026-09-16
 

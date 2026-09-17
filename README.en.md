@@ -71,7 +71,7 @@ static utility methods to reduce boilerplate and lower development cost.
 
 &#x20;           \<artifactId>sure-bom\</artifactId>
 
-&#x20;           \<version>0.1.0\</version>
+&#x20;           \<version>1.0.0\</version>
 
 &#x20;           \<type>pom\</type>
 
@@ -186,7 +186,7 @@ Full class index: [docs/index.md](docs/index.md).
 
 * [x] Open-source excellence: coverage ≥ 85%, docs site, examples, starter, release pipeline
 
-* [ ] 0.1.0 release on Maven Central
+* [ ] 1.0.0 release on Maven Central
 
 * [ ] Spring Boot starter expansion (cache/crypto auto-configuration)
 

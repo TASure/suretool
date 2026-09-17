@@ -28,7 +28,7 @@
 
 
 
-![Maven Central](https://img.shields.io/maven-central/v/io.github.tasure/suretool)
+![Maven Central](https://img.shields.io/maven-central/v/io.github.tasure/sure-core)
 
 
 
@@ -61,7 +61,7 @@
 
 \\\&#x20;   \\\\\\\<artifactId>sure-all\\\\\\\</artifactId>
 
-\\\&#x20;   \\\\\\\<version>0.1.0\\\\\\\</version>
+\\\&#x20;   \\\\\\\<version>1.0.0\\\\\\\</version>
 
 \\\\\\\</dependency>
 ```
@@ -77,7 +77,7 @@
 
 \\\&#x20;   \\\\\\\<artifactId>sure-core\\\\\\\</artifactId>
 
-\\\&#x20;   \\\\\\\<version>0.1.0\\\\\\\</version>
+\\\&#x20;   \\\\\\\<version>1.0.0\\\\\\\</version>
 
 \\\\\\\</dependency>
 
@@ -87,7 +87,7 @@
 
 \\\&#x20;   \\\\\\\<artifactId>sure-json\\\\\\\</artifactId>
 
-\\\&#x20;   \\\\\\\<version>0.1.0\\\\\\\</version>
+\\\&#x20;   \\\\\\\<version>1.0.0\\\\\\\</version>
 
 \\\\\\\</dependency>
 ```
@@ -107,7 +107,7 @@
 
 \\\&#x20;           \\\\\\\<artifactId>sure-bom\\\\\\\</artifactId>
 
-\\\&#x20;           \\\\\\\<version>0.1.0\\\\\\\</version>
+\\\&#x20;           \\\\\\\<version>1.0.0\\\\\\\</version>
 
 \\\&#x20;           \\\\\\\<type>pom\\\\\\\</type>
 
@@ -147,6 +147,7 @@ mvn clean install
 | `sure-dfa`                 | `io.github.tasure:sure-dfa`                 | 敏感词过滤（前缀树 / 停用词）                                   | 零依赖                    |
 | `sure-bom`                 | `io.github.tasure:sure-bom`                 | BOM 统一版本管理                                         | —                      |
 | `sure-all`                 | `io.github.tasure:sure-all`                 | 聚合模块（全部）                                           | 全部                     |
+| `sure-benchmark`           | `io.github.tasure:sure-benchmark`           | JMH 基准测试（性能指标）                                    | sure-all               |
 | `sure-examples`            | `io.github.tasure:sure-examples`            | 可运行示例（14 个 Demo）                                   | sure-all               |
 | `sure-spring-boot-starter` | `io.github.tasure:sure-spring-boot-starter` | Spring Boot 自动装配入口                                 | sure-all + spring-boot |
 

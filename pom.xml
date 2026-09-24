@@ -67,6 +67,7 @@
         <module>sure-captcha</module>
         <module>sure-jwt</module>
         <module>sure-dfa</module>
+        <module>sure-extra</module>
         <module>sure-benchmark</module>
         <module>sure-examples</module>
         <module>sure-spring-boot-starter</module>
@@ -146,6 +147,11 @@
             <dependency>
                 <groupId>io.github.tasure</groupId>
                 <artifactId>sure-dfa</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.tasure</groupId>
+                <artifactId>sure-extra</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

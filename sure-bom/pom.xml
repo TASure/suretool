@@ -98,6 +98,11 @@
             </dependency>
             <dependency>
                 <groupId>io.github.tasure</groupId>
+                <artifactId>sure-extra</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-all</artifactId>
                 <version>${project.version}</version>
             </dependency>

@@ -8,6 +8,11 @@
 
 ### Added
 
+- **新增 sure-extra 扩展模块**（对标 hutool-extra）：
+  - 邮件：`MailUtil`（jakarta.mail，文本/HTML/附件、SSL/TLS/STARTTLS）+ `MailAccount` 配置
+  - FTP：`FtpUtil`（Apache Commons Net，连接/上传下载/列表/目录操作/被动模式/二进制）
+  - 二维码：`QrCodeUtil`（ZXing，PNG/Base64/图片生成与内容解析）
+  - 图像增强：`ImgUtil`（JDK AWT 零依赖，文字/图片水印、横纵拼接、等比缩略）
 - **ThreadUtil（P5，v1.1.0）虚拟线程升级**（JDK 21+）：
   - `startVirtualThread(Runnable)` / `newVirtualThread(Runnable, String)`：虚拟线程启动与创建
   - `virtualExecutor()` / `virtualExecutor(prefix)` / `virtualThreadFactory(prefix)`：每任务一虚拟线程的执行器与命名工厂

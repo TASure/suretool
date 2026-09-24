@@ -27,65 +27,59 @@
         <version>1.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>sure-all</artifactId>
+    <artifactId>sure-extra</artifactId>
     <packaging>jar</packaging>
-    <name>suretool-all</name>
-    <description>聚合模块：一个依赖引入全部工具域（等价旧版 suretool 单模块）。</description>
-
+    <name>suretool-extra</name>
     <properties>
-        <!-- 聚合包无源码，不参与 JaCoCo 覆盖率门禁与 SpotBugs 静态扫描 -->
-        <jacoco.skip>true</jacoco.skip>
-        <spotbugs.skip>true</spotbugs.skip>
+        <jacoco.line.min>0.70</jacoco.line.min>
     </properties>
+    <description>扩展域（对标 hutool-extra）：邮件发送（jakarta.mail）、FTP 客户端（Apache Commons Net）、二维码生成/解析（ZXing）、图像增强（JDK AWT 水印/拼接/缩略图/格式转换）。</description>
 
     <dependencies>
         <dependency>
             <groupId>io.github.tasure</groupId>
             <artifactId>sure-core</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>io.github.tasure</groupId>
-            <artifactId>sure-json</artifactId>
+            <groupId>jakarta.mail</groupId>
+            <artifactId>jakarta.mail-api</artifactId>
+            <version>2.1.3</version>
         </dependency>
         <dependency>
-            <groupId>io.github.tasure</groupId>
-            <artifactId>sure-http</artifactId>
+            <groupId>org.eclipse.angus</groupId>
+            <artifactId>angus-mail</artifactId>
+            <version>2.0.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.11.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.5.3</version>
         </dependency>
         <dependency>
-            <groupId>io.github.tasure</groupId>
-            <artifactId>sure-crypto</artifactId>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.5.3</version>
         </dependency>
+
         <dependency>
-            <groupId>io.github.tasure</groupId>
-            <artifactId>sure-cron</artifactId>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-annotations</artifactId>
+            <version>4.10.4</version>
+            <scope>provided</scope>
         </dependency>
+
         <dependency>
-            <groupId>io.github.tasure</groupId>
-            <artifactId>sure-cache</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.tasure</groupId>
-            <artifactId>sure-xml</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.tasure</groupId>
-            <artifactId>sure-poi</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.tasure</groupId>
-            <artifactId>sure-captcha</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.tasure</groupId>
-            <artifactId>sure-jwt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.tasure</groupId>
-            <artifactId>sure-dfa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.tasure</groupId>
-            <artifactId>sure-extra</artifactId>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

@@ -15,6 +15,7 @@
  */
 package com.sure.tool.thread;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -143,6 +144,137 @@ public class ThreadUtil {
 		} catch (InterruptedException e) {
 			executor.shutdownNow();
 			Thread.currentThread().interrupt();
+		}
+	}
+
+	/**
+	 * 启动一个虚拟线程执行任务（JDK 21+）。
+	 *
+	 * @param runnable 任务
+	 * @return 已启动的虚拟线程
+	 */
+	public static Thread startVirtualThread(Runnable runnable) {
+		return Thread.startVirtualThread(runnable);
+	}
+
+	/**
+	 * 创建虚拟线程（未启动）。
+	 *
+	 * @param runnable 任务
+	 * @param name     线程名
+	 * @return 虚拟线程
+	 */
+	public static Thread newVirtualThread(Runnable runnable, String name) {
+		return Thread.ofVirtual().name(name).unstarted(runnable);
+	}
+
+	/**
+	 * 创建每任务一虚拟线程的执行器（JDK 21+，适合高并发 I/O 密集任务）。
+	 *
+	 * @return ExecutorService
+	 */
+	public static ExecutorService virtualExecutor() {
+		return Executors.newVirtualThreadPerTaskExecutor();
+	}
+
+	/**
+	 * 创建带命名前缀的每任务一虚拟线程执行器。
+	 *
+	 * @param prefix 线程名前缀
+	 * @return ExecutorService
+	 */
+	public static ExecutorService virtualExecutor(String prefix) {
+		return Executors.newThreadPerTaskExecutor(
+				Thread.ofVirtual().name(prefix + "-", 0).factory());
+	}
+
+	/**
+	 * 虚拟线程工厂（Thread.ofVirtual 便捷入口）。
+	 *
+	 * @param prefix 线程名前缀
+	 * @return ThreadFactory
+	 */
+	public static ThreadFactory virtualThreadFactory(String prefix) {
+		return Thread.ofVirtual().name(prefix + "-", 0).factory();
+	}
+
+	/**
+	 * 判断线程是否为虚拟线程。
+	 *
+	 * @param thread 线程
+	 * @return 是否虚拟线程
+	 */
+	public static boolean isVirtual(Thread thread) {
+		return thread != null && thread.isVirtual();
+	}
+
+	/**
+	 * 判断当前线程是否为虚拟线程。
+	 *
+	 * @return 是否虚拟线程
+	 */
+	public static boolean isVirtual() {
+		return Thread.currentThread().isVirtual();
+	}
+
+	/**
+	 * 用虚拟线程并发执行全部任务并等待完成；任一任务抛异常则聚合抛出。
+	 *
+	 * @param tasks 任务列表
+	 */
+	public static void parallel(Runnable... tasks) {
+		if (tasks == null || tasks.length == 0) {
+			return;
+		}
+		ExecutorService executor = virtualExecutor();
+		try {
+			List<Future<?>> futures = new java.util.ArrayList<>(tasks.length);
+			for (Runnable task : tasks) {
+				futures.add(executor.submit(task));
+			}
+			for (Future<?> future : futures) {
+				future.get();
+			}
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw new IllegalStateException("并行任务被中断", e);
+		} catch (java.util.concurrent.ExecutionException e) {
+			Throwable cause = e.getCause() == null ? e : e.getCause();
+			throw cause instanceof RuntimeException ? (RuntimeException) cause
+					: new IllegalStateException("并行任务执行失败", cause);
+		} finally {
+			executor.shutdown();
+		}
+	}
+
+	/**
+	 * 用虚拟线程并发执行有返回值任务并返回结果（按入参顺序）。
+	 *
+	 * @param tasks 任务列表
+	 * @param <T>   返回类型
+	 * @return 结果列表
+	 */
+	public static <T> List<T> invokeAll(java.util.List<java.util.concurrent.Callable<T>> tasks) {
+		if (tasks == null || tasks.isEmpty()) {
+			return java.util.Collections.emptyList();
+		}
+		ExecutorService executor = virtualExecutor();
+		try {
+			List<java.util.concurrent.Future<T>> futures = executor.invokeAll(tasks);
+			List<T> results = new java.util.ArrayList<>(futures.size());
+			for (java.util.concurrent.Future<T> future : futures) {
+				results.add(future.get());
+			}
+			return results;
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw new IllegalStateException("并行任务被中断", e);
+		} catch (java.util.concurrent.ExecutionException e) {
+			Throwable cause = e.getCause() == null ? e : e.getCause();
+			throw cause instanceof RuntimeException ? (RuntimeException) cause
+					: new IllegalStateException("并行任务执行失败", cause);
+		} finally {
+			executor.shutdown();
 		}
 	}
 

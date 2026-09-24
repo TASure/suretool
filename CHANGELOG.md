@@ -8,6 +8,12 @@
 
 ### Added
 
+- **ThreadUtil（P5，v1.1.0）虚拟线程升级**（JDK 21+）：
+  - `startVirtualThread(Runnable)` / `newVirtualThread(Runnable, String)`：虚拟线程启动与创建
+  - `virtualExecutor()` / `virtualExecutor(prefix)` / `virtualThreadFactory(prefix)`：每任务一虚拟线程的执行器与命名工厂
+  - `isVirtual(Thread)` / `isVirtual()`：虚拟线程判定
+  - `parallel(Runnable...)`：虚拟线程并发执行并等待全部完成，任务异常原样透传
+  - `invokeAll(List<Callable<T>>)`：并发执行有返回值任务，按入参顺序返回结果
 - **JSON（P5，v1.1.0）增强**：
   - JSONPath：新增 `JsonPath` 求值器（`JSONUtil.query(json, path)` / `getByPath`），支持对象属性、数组索引、通配 `[*]`、递归下降 `..`、过滤器 `[?(@.price < 10)]`（比较/逻辑/存在性）
   - 流式解析：新增 `StreamJsonParser` 与 `JsonHandler` 事件接口（`JSONUtil.parseStream`），逐 token 回调消费，不整载内存，适合大文件；支持转义、Unicode、数字、嵌套与深度上限（256）

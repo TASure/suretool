@@ -8,7 +8,7 @@
 
 
 
-![Coverage](https://img.shields.io/codecov/c/github/TASure/suretool)
+![Coverage](https://img.shields.io/endpoint?url=https://tasure.github.io/suretool/coverage/badge.json)
 
 
 

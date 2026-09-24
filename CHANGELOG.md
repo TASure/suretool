@@ -8,6 +8,9 @@
 
 ### Added
 
+- **JSON（P5，v1.1.0）增强**：
+  - JSONPath：新增 `JsonPath` 求值器（`JSONUtil.query(json, path)` / `getByPath`），支持对象属性、数组索引、通配 `[*]`、递归下降 `..`、过滤器 `[?(@.price < 10)]`（比较/逻辑/存在性）
+  - 流式解析：新增 `StreamJsonParser` 与 `JsonHandler` 事件接口（`JSONUtil.parseStream`），逐 token 回调消费，不整载内存，适合大文件；支持转义、Unicode、数字、嵌套与深度上限（256）
 - `StrUtil`：新增 `subBefore` / `subAfter` / `trimStart` / `trimEnd` / `surround`
 - `MapUtil`：新增 `values` / `getBigInteger` / `getEnum` / `getLocalDate` / `getLocalDateTime`
 - `ConvertUtil`：新增 `toSqlDate` / `toTimestamp`

@@ -662,5 +662,46 @@ public class JSONUtil {
 		return isJson(json) && json.trim().startsWith("[");
 	}
 
+	/**
+	 * 按 JSONPath 查询，返回所有匹配值。
+	 *
+	 * <p>示例：{@code JSONUtil.query(json, "$.store.book[*].title")} 返回标题数组；
+	 * {@code JSONUtil.query(json, "$.store.book[?(@.price < 10)]")} 返回价格小于 10 的书籍。
+	 *
+	 * @param json JSON 文本
+	 * @param path JSONPath 表达式（详见 {@link JsonPath}）
+	 * @return 匹配值数组（无匹配返回空数组）
+	 */
+	public static JSONArray query(String json, String path) {
+		JSONArray result = new JSONArray();
+		for (Object value : JsonPath.select(parse(json), path)) {
+			result.add(value);
+		}
+		return result;
+	}
+
+	/**
+	 * 按 JSONPath 查询并取首个匹配值，无匹配返回 null。
+	 *
+	 * @param json JSON 文本
+	 * @param path JSONPath 表达式
+	 * @return 首个匹配值，或 null
+	 */
+	public static Object getByPath(String json, String path) {
+		return JsonPath.eval(parse(json), path);
+	}
+
+	/**
+	 * 流式解析 JSON（UTF-8），按事件回调消费，不将整份文档载入内存。
+	 *
+	 * @param in      JSON 输入流
+	 * @param handler 事件回调（见 {@link JsonHandler}）
+	 * @throws java.io.IOException IO 错误
+	 * @throws JSONException       JSON 语法错误
+	 * @see StreamJsonParser
+	 */
+	public static void parseStream(java.io.InputStream in, JsonHandler handler) throws java.io.IOException {
+		StreamJsonParser.parse(in, handler);
+	}
 
 }

@@ -181,4 +181,50 @@ public class HttpResponse {
 	public byte[] bodyBytes() {
 		return bodyBytes.clone();
 	}
+
+	/**
+	 * 解析全部 Set-Cookie 响应头为 Cookie 键值 Map（同名取第一个，忽略 Path/Expires 等属性）。
+	 *
+	 * @return Cookie Map（无 Cookie 时为空 Map）
+	 */
+	public Map<String, String> cookies() {
+		List<String> setCookies = headerValues("Set-Cookie");
+		if (setCookies.isEmpty()) {
+			return Collections.emptyMap();
+		}
+		Map<String, String> result = new LinkedHashMap<>();
+		for (String setCookie : setCookies) {
+			if (setCookie == null) {
+				continue;
+			}
+			int eq = setCookie.indexOf('=');
+			if (eq <= 0) {
+				continue;
+			}
+			String name = setCookie.substring(0, eq).trim();
+			if (name.isEmpty()) {
+				continue;
+			}
+			String value = setCookie.substring(eq + 1);
+			int semi = value.indexOf(';');
+			if (semi >= 0) {
+				value = value.substring(0, semi);
+			}
+			result.putIfAbsent(name, value.trim());
+		}
+		return Collections.unmodifiableMap(result);
+	}
+
+	/**
+	 * 获取指定 Cookie 的值（来自 Set-Cookie 响应头），无则返回 {@code null}。
+	 *
+	 * @param name Cookie 名
+	 * @return Cookie 值或 {@code null}
+	 */
+	public String getCookie(String name) {
+		if (name == null) {
+			return null;
+		}
+		return cookies().get(name);
+	}
 }

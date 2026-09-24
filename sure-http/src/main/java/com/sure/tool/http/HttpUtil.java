@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -42,6 +43,8 @@ public class HttpUtil {
 	public static final int DEFAULT_CONNECT_TIMEOUT = 10_000;
 	/** 默认读取超时（毫秒） */
 	public static final int DEFAULT_READ_TIMEOUT = 10_000;
+	/** JSON Content-Type */
+	private static final String JSON_CONTENT_TYPE = "application/json; charset=UTF-8";
 
 	private HttpUtil() {
 	}
@@ -53,7 +56,7 @@ public class HttpUtil {
 	 * @return 响应文本（UTF-8）
 	 */
 	public static String get(String url) {
-		return get(url, null);
+		return execute("GET", url, null, null, null, null, DEFAULT_CONNECT_TIMEOUT);
 	}
 
 	/**
@@ -631,5 +634,60 @@ public class HttpUtil {
 		return execute("GET", url, null, null, null, "application/json; charset=UTF-8", timeoutMillis);
 	}
 
+	/**
+	 * GET 请求（走代理）。
+	 *
+	 * @param url   URL
+	 * @param proxy 代理（可为 {@code null}）
+	 * @return 响应文本（UTF-8）
+	 */
+	public static String get(String url, Proxy proxy) {
+		return HttpRequest.get(url).proxy(proxy).execute().body();
+	}
+
+	/**
+	 * POST 表单请求（走代理）。
+	 *
+	 * @param url   URL
+	 * @param form  表单
+	 * @param proxy 代理（可为 {@code null}）
+	 * @return 响应文本（UTF-8）
+	 */
+	public static String post(String url, Map<String, Object> form, Proxy proxy) {
+		return HttpRequest.post(url).proxy(proxy).form(form).execute().body();
+	}
+
+	/**
+	 * POST JSON 请求（走代理）。
+	 *
+	 * @param url   URL
+	 * @param json  JSON 字符串
+	 * @param proxy 代理（可为 {@code null}）
+	 * @return 响应文本（UTF-8）
+	 */
+	public static String postJson(String url, String json, Proxy proxy) {
+		return HttpRequest.post(url).proxy(proxy).body(json, JSON_CONTENT_TYPE).execute().body();
+	}
+
+	/**
+	 * multipart/form-data 文件上传（走代理）。
+	 *
+	 * @param url       URL
+	 * @param form      附加表单字段（可空）
+	 * @param fileField 文件字段名
+	 * @param file      文件
+	 * @param proxy     代理（可为 {@code null}）
+	 * @return 响应文本（UTF-8）
+	 */
+	public static String upload(String url, Map<String, Object> form, String fileField, File file, Proxy proxy) {
+		HttpRequest request = HttpRequest.post(url).proxy(proxy);
+		if (form != null) {
+			request.form(form);
+		}
+		if (file != null && file.isFile()) {
+			request.form(fileField, file);
+		}
+		return request.execute().body();
+	}
 
 }

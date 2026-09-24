@@ -35,6 +35,8 @@ import java.nio.charset.StandardCharsets;
  */
 public final class Sm4Util {
 
+	private static final java.security.SecureRandom SECURE_RANDOM = new java.security.SecureRandom();
+
 	private static final int BLOCK = 16;
 
 	private static final int[] FK = {0xa3b1bac6, 0x56aa3350, 0x677d9197, 0xb27022dc};
@@ -81,7 +83,7 @@ public final class Sm4Util {
 	 */
 	public static byte[] generateKey() {
 		byte[] key = new byte[16];
-		new java.security.SecureRandom().nextBytes(key);
+		SECURE_RANDOM.nextBytes(key);
 		return key;
 	}
 

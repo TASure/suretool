@@ -12,6 +12,11 @@
 - `MapUtil`：新增 `values` / `getBigInteger` / `getEnum` / `getLocalDate` / `getLocalDateTime`
 - `ConvertUtil`：新增 `toSqlDate` / `toTimestamp`
 - 覆盖率徽章改为自托管（文档站发布 `coverage/badge.json`，由 pages workflow 生成）
+- **HttpUtil（P5，v1.1.0）增强**：
+  - Cookie：`HttpRequest.cookie(name, value)` / `cookie(String)` 发送 Cookie 头；`HttpResponse.cookies()` / `getCookie(name)` 解析 Set-Cookie
+  - 代理：`HttpRequest.proxy(host, port)` / `proxy(Proxy)`；`HttpUtil.get/post/postJson/upload` 增加 Proxy 重载
+  - multipart：`form(name, File)` 自动升级 multipart/form-data 编码（边界随机、文本字段 + 文件字段、按扩展名推断 Content-Type）
+  - 连接池：新增 `HttpClientBuilder`（JDK HttpClient 构建器，虚拟线程 executor / 连接超时 / HTTP 代理 / HTTP2 可选）；`HttpRequest.client(HttpClient)` / `pool(builder)` 切换 JDK HttpClient 引擎（keep-alive 连接复用）
 
 ### Fixed
 

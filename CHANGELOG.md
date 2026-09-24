@@ -8,7 +8,10 @@
 
 ### Added
 
-（P0/P1/P2 迭代开发中）
+- `StrUtil`：新增 `subBefore` / `subAfter` / `trimStart` / `trimEnd` / `surround`
+- `MapUtil`：新增 `values` / `getBigInteger` / `getEnum` / `getLocalDate` / `getLocalDateTime`
+- `ConvertUtil`：新增 `toSqlDate` / `toTimestamp`
+- 覆盖率徽章改为自托管（文档站发布 `coverage/badge.json`，由 pages workflow 生成）
 
 ## [1.0.0] - 2026-09-17
 

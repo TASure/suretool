@@ -1735,4 +1735,105 @@ public class StrUtil {
 		return total;
 	}
 
+	/**
+	 * 截取指定分隔符之前的子串。
+	 *
+	 * @param str         原字符串
+	 * @param separator   分隔符
+	 * @param isLastMatch 是否匹配最后一个分隔符
+	 * @return 分隔符之前的子串；{@code str} 为 {@code null} 返回 {@code null}；无分隔符返回原串
+	 * @since 1.0.1
+	 */
+	public static String subBefore(String str, String separator, boolean isLastMatch) {
+		if (str == null || isEmpty(separator)) {
+			return str;
+		}
+		int pos = isLastMatch ? str.lastIndexOf(separator) : str.indexOf(separator);
+		if (pos == -1) {
+			return str;
+		}
+		if (pos == 0) {
+			return "";
+		}
+		return str.substring(0, pos);
+	}
+
+	/**
+	 * 截取指定分隔符之后的子串。
+	 *
+	 * @param str         原字符串
+	 * @param separator   分隔符
+	 * @param isLastMatch 是否匹配最后一个分隔符
+	 * @return 分隔符之后的子串；{@code str} 为 {@code null} 返回 {@code null}；无分隔符返回原串
+	 * @since 1.0.1
+	 */
+	public static String subAfter(String str, String separator, boolean isLastMatch) {
+		if (str == null || isEmpty(separator)) {
+			return str;
+		}
+		int pos = isLastMatch ? str.lastIndexOf(separator) : str.indexOf(separator);
+		if (pos == -1) {
+			return str;
+		}
+		if (pos == str.length() - separator.length()) {
+			return "";
+		}
+		return str.substring(pos + separator.length());
+	}
+
+	/**
+	 * 去除字符串首部空白字符。
+	 *
+	 * @param str 原字符串
+	 * @return 去除首部空白后的字符串；{@code null} 返回 {@code null}
+	 * @since 1.0.1
+	 */
+	public static String trimStart(String str) {
+		if (str == null || str.isEmpty()) {
+			return str;
+		}
+		int len = str.length();
+		int start = 0;
+		while (start < len && Character.isWhitespace(str.charAt(start))) {
+			start++;
+		}
+		return start == 0 ? str : str.substring(start);
+	}
+
+	/**
+	 * 去除字符串尾部空白字符。
+	 *
+	 * @param str 原字符串
+	 * @return 去除尾部空白后的字符串；{@code null} 返回 {@code null}
+	 * @since 1.0.1
+	 */
+	public static String trimEnd(String str) {
+		if (str == null || str.isEmpty()) {
+			return str;
+		}
+		int end = str.length();
+		while (end > 0 && Character.isWhitespace(str.charAt(end - 1))) {
+			end--;
+		}
+		return end == str.length() ? str : str.substring(0, end);
+	}
+
+	/**
+	 * 用指定包裹字符串将目标字符串首尾包裹（如用引号包裹）。
+	 *
+	 * @param str  目标字符串
+	 * @param wrap 包裹字符串
+	 * @return 包裹后的字符串；{@code str} 为 {@code null} 返回 {@code null}
+	 * @since 1.0.1
+	 */
+	public static String surround(CharSequence str, CharSequence wrap) {
+		if (str == null) {
+			return null;
+		}
+		if (wrap == null) {
+			return str.toString();
+		}
+		return wrap + str.toString() + wrap;
+	}
+
 }

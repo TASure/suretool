@@ -683,5 +683,76 @@ public class MapUtil {
 		return sortByValue(map, false);
 	}
 
+	/**
+	 * 获取 Map 的值集合（{@code null} 视为空集合）。
+	 *
+	 * @param map 原 Map
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @return 值集合；{@code map} 为 {@code null} 返回空集合
+	 * @since 1.0.1
+	 */
+	public static <K, V> java.util.Collection<V> values(Map<K, V> map) {
+		if (map == null) {
+			return java.util.Collections.emptyList();
+		}
+		return map.values();
+	}
+
+	/**
+	 * 从 Map 中取 {@link java.math.BigInteger} 类型的值。
+	 *
+	 * @param map  Map
+	 * @param key  键
+	 * @param <K>  键类型
+	 * @return 值；不存在或转换失败返回 {@code null}
+	 * @since 1.0.1
+	 */
+	public static <K> java.math.BigInteger getBigInteger(Map<K, ?> map, K key) {
+		return com.sure.tool.util.ConvertUtil.toBigInteger(map.get(key));
+	}
+
+	/**
+	 * 从 Map 中取指定枚举类型的值。
+	 *
+	 * @param map  Map
+	 * @param key  键
+	 * @param type 枚举类型
+	 * @param <K>  键类型
+	 * @param <E>  枚举类型
+	 * @return 枚举值；不存在或转换失败返回 {@code null}
+	 * @since 1.0.1
+	 */
+	public static <K, E extends Enum<E>> E getEnum(Map<K, ?> map, K key, Class<E> type) {
+		Object value = map.get(key);
+		return value == null ? null : com.sure.tool.util.ConvertUtil.toEnum(String.valueOf(value), type);
+	}
+
+	/**
+	 * 从 Map 中取 {@link java.time.LocalDate} 类型的值。
+	 *
+	 * @param map Map
+	 * @param key 键
+	 * @param <K> 键类型
+	 * @return 日期值；不存在或转换失败返回 {@code null}
+	 * @since 1.0.1
+	 */
+	public static <K> java.time.LocalDate getLocalDate(Map<K, ?> map, K key) {
+		return com.sure.tool.util.ConvertUtil.toLocalDate(map.get(key));
+	}
+
+	/**
+	 * 从 Map 中取 {@link java.time.LocalDateTime} 类型的值。
+	 *
+	 * @param map Map
+	 * @param key 键
+	 * @param <K> 键类型
+	 * @return 日期时间值；不存在或转换失败返回 {@code null}
+	 * @since 1.0.1
+	 */
+	public static <K> java.time.LocalDateTime getLocalDateTime(Map<K, ?> map, K key) {
+		return com.sure.tool.util.ConvertUtil.toLocalDateTime(map.get(key));
+	}
+
 
 }

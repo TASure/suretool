@@ -411,6 +411,30 @@ public class ConvertUtil {
 		return null;
 	}
 
+	/**
+	 * 转 {@link java.sql.Date}。
+	 *
+	 * @param value 值
+	 * @return {@code java.sql.Date}；无法解析返回 {@code null}
+	 * @since 1.0.1
+	 */
+	public static java.sql.Date toSqlDate(Object value) {
+		java.util.Date date = toDate(value);
+		return date == null ? null : new java.sql.Date(date.getTime());
+	}
+
+	/**
+	 * 转 {@link java.sql.Timestamp}。
+	 *
+	 * @param value 值
+	 * @return {@code java.sql.Timestamp}；无法解析返回 {@code null}
+	 * @since 1.0.1
+	 */
+	public static java.sql.Timestamp toTimestamp(Object value) {
+		java.util.Date date = toDate(value);
+		return date == null ? null : new java.sql.Timestamp(date.getTime());
+	}
+
 
 
 	/**

@@ -10,6 +10,7 @@ suretool 是一个**小而全**的 Java 工具类库，参考 [Hutool](https://h
 - [软件研发小组工作流](TEAM-WORKFLOW.md)
 - [与 Hutool 对比](comparison-hutool.md)
 - [主流工具包全景与差异化分析](comparison-ecosystem.md)
+- [项目检视报告（2026-09）](project-audit-2026-09.md)
 - [维护者手册](MAINTAINING.md)
 
 ## 模块与类索引

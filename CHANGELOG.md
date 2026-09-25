@@ -7,6 +7,10 @@
 ## [Unreleased]
 
 ### Added
+- docs/project-audit-2026-09.md：项目检视报告（对标主流工具包，含 P0/P1/P2 问题清单与整改任务清单，P5，目标 v1.1.0）
+
+
+### Added
 - docs/comparison-ecosystem.md：主流 Java 工具包全景与 suretool 差异化分析（P5，目标 v1.1.0）
 
 

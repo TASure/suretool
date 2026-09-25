@@ -38,11 +38,19 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Generate aggregated Javadoc (11 JPMS modules)
+        run: mvn -B javadoc:aggregate -pl sure-core,sure-json,sure-http,sure-crypto,sure-cron,sure-cache,sure-xml,sure-poi,sure-captcha,sure-jwt,sure-dfa -am -DskipTests
+
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
           source: ./
           destination: ./_site
+
+      - name: Stage javadoc into _site/api
+        run: |
+          mkdir -p _site/api
+          cp -r target/site/apidocs/. _site/api/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

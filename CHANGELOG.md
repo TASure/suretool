@@ -7,6 +7,16 @@
 ## [Unreleased]
 
 ### Added
+- 二期（P1 全部，P5 目标 v1.1.0）：
+  - 方法-用例映射审计（T6）：952 个 public/protected 方法名 951 命中（99.89%），新增 P6MethodAuditTest 16 例补测，审计报告 docs/method-audit-2026-09.md，审计脚本 .github/scripts/method_audit.py 可复跑
+  - CI 平台矩阵（T7）：ci.yml 扩展为 ubuntu/macos/windows × JDK21（ubuntu 双跑 JDK25），覆盖率上报仅 ubuntu
+  - javadoc 发布（T8）：pages.yml 聚合 11 模块 javadoc 并部署到文档站 api/ 目录
+  - benchmark CI 门禁（T9）：benchmark.yml + benchmark_gate.py，suretool/hutool 关键基准比率 >1.5 报警，每周一定时全量回归
+  - 依赖版本集中治理（T10）：jakarta.mail/angus-mail/commons-net/zxing 版本移入根 pom 与 sure-bom dependencyManagement，sure-extra 单点维护
+  - 版本策略文档（T11）：docs/versioning.md（SemVer 承诺 + 破坏性变更流程 + 发布节奏）
+  - starter 冒烟测试（T12）：SureToolAutoConfigurationTest 3 例（上下文加载/属性绑定/条件装配）全绿，CaptchaGenerator 补 getter，sure-examples README 集成用法
+  - checkstyle 排除 module-info.java（JPMS 描述符非类声明，解析器不支持其语法）
+- 一期工程治理（P0）：sure-core 覆盖率 91.62% 且门禁 0.90；OSV-Scanner + CodeQL；11 模块 JPMS module-info；可复现构建 outputTimestamp
 - docs/project-audit-2026-09.md：项目检视报告（对标主流工具包，含 P0/P1/P2 问题清单与整改任务清单，P5，目标 v1.1.0）
 - 工程治理（P0 一期）：sure-core 覆盖率 91.51% 且门禁提升至 0.90（P5Coverage90CTest 5 例）；接入 OSV-Scanner 与 CodeQL 供应链/源码安全扫描；11 个业务模块提供 JPMS module-info（sure-extra 因依赖无 module-info 的 jakarta.mail-api/angus-mail 保持自动模块）；根 pom 配置 project.build.outputTimestamp 实现可复现构建（同 tag 两次构建 jar 哈希一致，P5，目标 v1.1.0）
 - docs/project-audit-2026-09.md：项目检视报告（对标主流工具包，含 P0/P1/P2 问题清单与整改任务清单，P5，目标 v1.1.0）

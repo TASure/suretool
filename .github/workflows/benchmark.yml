@@ -1,0 +1,45 @@
+name: benchmark
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sure-core/**'
+      - 'sure-json/**'
+      - 'sure-benchmark/**'
+      - 'pom.xml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'sure-core/**'
+      - 'sure-json/**'
+      - 'sure-benchmark/**'
+      - 'pom.xml'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 5 * * 1'   # 每周一 05:00 UTC 全量回归
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      - name: Run JMH benchmarks
+        run: |
+          mvn -B -pl sure-benchmark -am package -DskipTests
+          java -jar sure-benchmark/target/sure-benchmark-*-jar-with-dependencies.jar 2>&1 | tee /tmp/bench.log
+
+      - name: Check regression thresholds
+        run: python3 .github/scripts/benchmark_gate.py /tmp/bench.log

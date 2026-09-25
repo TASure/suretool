@@ -40,6 +40,26 @@ public class CaptchaGenerator {
 	}
 
 	/**
+	 * 验证码宽度。
+	 *
+	 * @return 宽度像素
+	 * @since 1.1.0
+	 */
+	public int getWidth() {
+		return width;
+	}
+
+	/**
+	 * 验证码高度。
+	 *
+	 * @return 高度像素
+	 * @since 1.1.0
+	 */
+	public int getHeight() {
+		return height;
+	}
+
+	/**
 	 * 生成验证码。
 	 *
 	 * @return 验证码对象（含图形字节与验证方法）

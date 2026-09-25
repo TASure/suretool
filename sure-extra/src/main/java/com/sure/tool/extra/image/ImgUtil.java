@@ -21,7 +21,11 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import javax.imageio.ImageIO;
 
 /**
  * 图像增强工具（基于 JDK AWT，零第三方依赖）。
@@ -218,6 +222,104 @@ public class ImgUtil {
 		try {
 			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 			g.drawImage(source, 0, 0, targetWidth, targetHeight, null);
+		} finally {
+			g.dispose();
+		}
+		return target;
+	}
+
+	/**
+	 * 读取图像（支持 PNG/JPG/GIF/BMP 等 {@code ImageIO} 支持的格式）。
+	 *
+	 * @param file 图像文件
+	 * @return 图像，读取失败返回 {@code null}
+	 */
+	public static BufferedImage read(File file) {
+		if (file == null || !file.isFile()) {
+			return null;
+		}
+		try {
+			return ImageIO.read(file);
+		} catch (IOException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * 从输入流读取图像。
+	 *
+	 * @param in 输入流
+	 * @return 图像，读取失败返回 {@code null}
+	 */
+	public static BufferedImage read(InputStream in) {
+		if (in == null) {
+			return null;
+		}
+		try {
+			return ImageIO.read(in);
+		} catch (IOException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * 从字节数组读取图像。
+	 *
+	 * @param bytes 图像字节
+	 * @return 图像，读取失败返回 {@code null}
+	 */
+	public static BufferedImage read(byte[] bytes) {
+		if (bytes == null || bytes.length == 0) {
+			return null;
+		}
+		return read(new java.io.ByteArrayInputStream(bytes));
+	}
+
+	/**
+	 * 缩放图像到指定尺寸（BILINEAR 插值）。
+	 *
+	 * @param source 原图
+	 * @param width  目标宽（<=0 时保持原宽）
+	 * @param height 目标高（<=0 时保持原高）
+	 * @return 缩放结果
+	 */
+	public static BufferedImage scale(BufferedImage source, int width, int height) {
+		if (source == null) {
+			return null;
+		}
+		int w = width <= 0 ? source.getWidth() : width;
+		int h = height <= 0 ? source.getHeight() : height;
+		BufferedImage target = new BufferedImage(w, h, source.getType() == BufferedImage.TYPE_INT_ARGB
+				? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
+		Graphics2D g = target.createGraphics();
+		try {
+			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			g.drawImage(source, 0, 0, w, h, null);
+		} finally {
+			g.dispose();
+		}
+		return target;
+	}
+
+	/**
+	 * 裁剪图像（越界区域留白）。
+	 *
+	 * @param source 原图
+	 * @param x      起始横坐标
+	 * @param y      起始纵坐标
+	 * @param width  裁剪宽
+	 * @param height 裁剪高
+	 * @return 裁剪结果
+	 */
+	public static BufferedImage crop(BufferedImage source, int x, int y, int width, int height) {
+		if (source == null || width <= 0 || height <= 0) {
+			return null;
+		}
+		BufferedImage target = new BufferedImage(width, height, source.getType() == BufferedImage.TYPE_INT_ARGB
+				? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
+		Graphics2D g = target.createGraphics();
+		try {
+			g.drawImage(source, -x, -y, null);
 		} finally {
 			g.dispose();
 		}

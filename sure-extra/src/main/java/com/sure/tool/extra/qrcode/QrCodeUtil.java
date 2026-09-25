@@ -104,6 +104,38 @@ public class QrCodeUtil {
 	 * @throws IOException    图片读取失败
 	 * @throws NotFoundException 未识别到二维码
 	 */
+	/**
+	 * 生成二维码 PNG 并写入文件。
+	 *
+	 * @param content 内容
+	 * @param file    目标文件（父目录需存在）
+	 * @return 是否写入成功
+	 */
+	public static boolean generateFile(String content, java.io.File file) {
+		return generateFile(content, DEFAULT_SIZE, file);
+	}
+
+	/**
+	 * 生成二维码 PNG 并写入文件。
+	 *
+	 * @param content 内容
+	 * @param size    边长像素
+	 * @param file    目标文件（父目录需存在）
+	 * @return 是否写入成功
+	 */
+	public static boolean generateFile(String content, int size, java.io.File file) {
+		if (content == null || content.isEmpty() || file == null) {
+			return false;
+		}
+		byte[] png = generate(content, size);
+		try (java.io.FileOutputStream out = new java.io.FileOutputStream(file)) {
+			out.write(png);
+			return true;
+		} catch (java.io.IOException e) {
+			return false;
+		}
+	}
+
 	public static String decode(byte[] data) throws IOException, NotFoundException {
 		return decode(ImageIO.read(new ByteArrayInputStream(data)));
 	}

@@ -47,3 +47,37 @@
 | 发布失败（Actions） | Secrets 是否配置齐全；GPG key 是否与本地一致；版本号是否已发布过 |
 | 发布失败（本地） | `~/.m2/settings.xml` 凭据与 GPG 配置；`scripts/release.ps1 -DryRun` 演练 |
 | 文档站不更新 | pages.yml 是否成功；pages 分支/目录设置是否正确 |
+
+## 5. benchmark 门禁经验（2026-09 沉淀）
+
+### 5.1 门禁结构与判定
+
+`benchmark.yml`（job: benchmark-gate）按以下顺序执行：
+
+1. **Build benchmark jar**：`mvn -pl sure-benchmark -am package`，显式选取 shade fat jar（排除 `original-*` 残留，避免通配符多匹配导致 `java -jar` 选错）。
+2. **Run JMH benchmarks (attempt 1)**：`java -jar "$JAR"` 输出到 `/tmp/bench.log`。
+3. **Check regression thresholds (attempt 1)**：`benchmark_gate.py /tmp/bench.log` 解析 sure/hutool 配对，**ratio = sure/hutool > 1.5 判 FAIL**；日志含 JMH `<failure` 标记时立即 FAIL（诚实门禁，防静默漏判）。
+4. **Confirm regression (attempt 2, on noise)**：首次 FAIL 时**自动重跑一次**再判，第二次仍 FAIL 才判定回归（job 失败）。此机制用于消除共享 runner 时序噪声误报。
+
+### 5.2 已知误报场景与根因（重要）
+
+- **症状**：`Format` 项 ratio 虚高（历史出现 1.84 / 2.69，均判 FAIL），其余项 PASS。
+- **根因**：GitHub Actions 共享 runner 上，sure/hutool 的 JMH fork 可能落在**不同的 CPU 负载窗口**，比值失真。**不是真实性能回归**——本地独立微基准实测 sure vs hutool 真实差距仅 1.07~1.11，本地 CPU 满载模拟下 ratio 稳定 1.14。
+- **对策**：① BenchmarkRunner forks **1 → 3**（多 fork 聚合抗噪）；② fork JVM 内存 512m → 256m（低配 runner 内存压力）；③ gate 超阈值自动重跑确认一次。
+- **反模式警示**：不要仅凭 CI 单次 ratio 就改业务实现；先本地复现（见 5.3）确认是否存在真实差距，再决定是调实现还是调门禁。
+
+### 5.3 本地复现命令
+
+```bash
+# 本机若默认 JDK 不是 21，先切到 JDK 21（否则报 UnsupportedClassVersionError）
+export JAVA_HOME=<jdk21 路径>; export PATH=$JAVA_HOME/bin:$PATH
+mvn -B -pl sure-benchmark -am package -DskipTests
+java -jar sure-benchmark/target/sure-benchmark-<version>-jar-with-dependencies.jar   # 全量
+java -jar sure-benchmark/target/sure-benchmark-<version>-jar-with-dependencies.jar ".*DateUtilBenchmark.*"  # 单类
+python3 .github/scripts/benchmark_gate.py /tmp/bench.log   # 本地跑 gate
+```
+
+### 5.4 触发规则
+
+- **paths 过滤**：`sure-core/**`、`sure-json/**`、`sure-benchmark/**`、`pom.xml`、`.github/workflows/benchmark.yml`、`.github/scripts/benchmark_gate.py` —— **workflow/脚本自身变更也会自动触发**，无需手动 dispatch。
+- 另有 `schedule: 0 5 * * 1`（每周一 05:00 UTC）与 `workflow_dispatch` 兜底。

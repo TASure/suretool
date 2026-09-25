@@ -1,8 +1,8 @@
 # suretool 性能基准报告（v1.1.0 里程碑 · P5 第 12 项）
 
 > 测量时间：2026-09-25 · 运行方式：`java -jar sure-benchmark-*-jar-with-dependencies.jar`
-> 基准框架：**JMH**（Fork=1，Warmup=3×1s，Measurement=5×1s，`@BenchmarkMode(AverageTime)`，单位 **ns/op**，越低越好）
-> 环境：Linux x86_64 · **JDK 21.0.12（Temurin）** · `-Xms512m -Xmx512m` · suretool 1.0.1-SNAPSHOT vs hutool-core/hutool-json 5.8.x vs guava 33.4.0-jre
+> 基准框架：**JMH**（Fork=3，Warmup=3×1s，Measurement=5×1s，`@BenchmarkMode(AverageTime)`，单位 **ns/op**，越低越好）
+> 环境：Linux x86_64 · **JDK 21.0.12（Temurin）** · `-Xms256m -Xmx256m` · suretool 1.0.1-SNAPSHOT vs hutool-core/hutool-json 5.8.x vs guava 33.4.0-jre
 
 ## 1. 结果总览
 
@@ -52,3 +52,9 @@
 - 微基准反映热路径单次调用开销；真实应用请以 profiler（async-profiler/JFR）为准。
 - 复现：`mvn -pl sure-benchmark -am package && java -jar sure-benchmark/target/sure-benchmark-<version>-jar-with-dependencies.jar`
 - 测量参数可在 `BenchmarkRunner` 调整；数据随 JDK/硬件变化，本报告仅代表上述环境。
+ 
+## 4. CI 门禁与抗噪说明
+
+- 本报告数据即 `benchmark.yml` 门禁判定所依据的本地基准；CI 上 ratio（sure/hutool）> **1.5** 判 FAIL。
+- **共享 runner 噪声对策**：CI 上 sure/hutool 的 fork 可能落在不同 CPU 负载窗口，曾导致 `Format` 项 ratio 虚高误报（1.84 / 2.69，本地实测真实差距仅 1.07~1.11）。已通过 **3 fork 聚合 + fork 内存 256m + 超阈值自动重跑确认一次** 消除（详见 `docs/ci-workflow.md` §5）。
+- 数据会随 JDK/硬件变化，判断回归请以 CI 门禁 + 本地复现双通道为准。

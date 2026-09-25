@@ -90,6 +90,11 @@ public class CollUtilBenchmark {
 	}
 
 	@Benchmark
+	public List<String> guavaNewArrayList() {
+		return com.google.common.collect.Lists.newArrayList("a", "b", "c", "d");
+	}
+
+	@Benchmark
 	public boolean sureContains() {
 		return CollUtil.contains(list, "item-5");
 	}
@@ -97,5 +102,10 @@ public class CollUtilBenchmark {
 	@Benchmark
 	public boolean hutoolContains() {
 		return cn.hutool.core.collection.CollUtil.contains(list, "item-5");
+	}
+
+	@Benchmark
+	public boolean guavaContains() {
+		return com.google.common.collect.Iterables.contains(list, "item-5");
 	}
 }

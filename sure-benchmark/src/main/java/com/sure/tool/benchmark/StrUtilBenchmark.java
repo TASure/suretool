@@ -105,6 +105,11 @@ public class StrUtilBenchmark {
 	}
 
 	@Benchmark
+	public String guavaJoin() {
+		return com.google.common.base.Joiner.on(",").join(parts);
+	}
+
+	@Benchmark
 	public String sureSub() {
 		return StrUtil.sub(text, 2, 7);
 	}

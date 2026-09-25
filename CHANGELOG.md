@@ -7,6 +7,10 @@
 ## [Unreleased]
 
 ### Added
+- 覆盖率补强测试 P5Coverage90BTest：sure-core 行覆盖率 89.34% → 89.70%（P5，目标 v1.1.0 达成 90%）
+
+
+### Added
 
 - **性能基准报告（P5）**：新增 `docs/benchmark-report.md` —— JMH 31 项基准（suretool vs Hutool vs Guava）：字符串/集合 join 快 4.3–4.5×、JSON 解析快 2.3×、JSON 序列化快 4.9×、日期解析快 4.4×、trim 快 46%；Guava 对照 3 项（join/集合构造/contains）；sure-benchmark 新增 guava 依赖与 3 个对照基准点
 - **自动化发布流水线（P5）**：新增 `.github/workflows/release.yml` —— 推送 `v*` 标签即触发：全量门禁 → release profile 构建（源码/JavaDoc/SBOM）→ GPG 签名 bundle → Sonatype Central Portal API 上传发布 → 轮询 repo1 校验 → 自动创建 GitHub Release；支持手动触发；发布指南见 `docs/RELEASING.md`

@@ -8,6 +8,7 @@
 
 ### Added
 
+- **自动化发布流水线（P5）**：新增 `.github/workflows/release.yml` —— 推送 `v*` 标签即触发：全量门禁 → release profile 构建（源码/JavaDoc/SBOM）→ GPG 签名 bundle → Sonatype Central Portal API 上传发布 → 轮询 repo1 校验 → 自动创建 GitHub Release；支持手动触发；发布指南见 `docs/RELEASING.md`
 - **新增 sure-extra 扩展模块**（对标 hutool-extra）：
   - 邮件：`MailUtil`（jakarta.mail，文本/HTML/附件、SSL/TLS/STARTTLS）+ `MailAccount` 配置
   - FTP：`FtpUtil`（Apache Commons Net，连接/上传下载/列表/目录操作/被动模式/二进制）

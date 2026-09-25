@@ -3,6 +3,61 @@
 本文件说明 suretool 从本地构建到发布 Maven Central 的完整流程。
 仅维护者需要执行；日常开发者只需 `mvn verify`。
 
+# suretool 发布指南（自动化流水线版）
+
+> 推荐方式：**GitHub Actions 一键发布**（`.github/workflows/release.yml`）。
+> 推送 `v*` 标签即触发：全量门禁 → 构建发布制品 → GPG 签名 → Sonatype Central Portal
+> 上传发布 → 校验 repo1 可访问 → 自动创建 GitHub Release。
+> 本地手动发布（`scripts/release.ps1`）保留为兜底通道，见文末第 7 节。
+
+## 0. 自动化发布（推荐）
+
+### 0.1 一次性配置 GitHub Secrets
+
+在仓库 **Settings → Secrets and variables → Actions → New repository secret** 添加：
+
+| Secret 名 | 内容 |
+| --- | --- |
+| `SONATYPE_USERNAME` | Sonatype Central 用户令牌 username（User Token，如 `GMFea1`） |
+| `SONATYPE_PASSWORD` | Sonatype Central 用户令牌 password（User Token） |
+| `GPG_PRIVATE_KEY` | GPG 签名私钥 ASCII armor 文本的 base64（`gpg --export-secret-keys --armor <KEYID> \| base64 -w0`） |
+| `GPG_PASSPHRASE` | GPG 私钥口令 |
+
+> 密钥仅在工作流运行时注入，不出现在日志；用户令牌可在
+> [central.sonatype.com](https://central.sonatype.com) → Account → User Token 管理。
+
+### 0.2 发布（日常操作只有两步）
+
+```bash
+# 1. 确认根 pom 版本为非 SNAPSHOT（如 1.1.0）并提交
+# 2. 打标签并推送
+git tag v1.1.0
+git push origin v1.1.0
+```
+
+流水线自动完成：verify 门禁 → `-Prelease` 构建（源码/JavaDoc/SBOM）→
+bundle 打包（maven 布局 + Manifest）→ 逐文件 GPG 签名（.asc）→
+`POST central.sonatype.com/api/v1/publisher/upload` → 轮询 repo1 直到
+`io/github/tasure/sure-core/<ver>/sure-core-<ver>.jar` 返回 200 →
+创建 GitHub Release（附件 bundle.zip）。
+
+### 0.3 手动触发（不带标签）
+
+Actions → Release to Maven Central → Run workflow：从当前 main 分支版本发布，
+标签按 `v<version>` 自动生成。
+
+### 0.4 失败排查
+
+| 现象 | 处理 |
+| --- | --- |
+| `Portal 上传失败` / 401 | 检查 `SONATYPE_USERNAME/PASSWORD` 是否为 User Token（不是账号密码） |
+| `No secret key` | 重新设置 `GPG_PRIVATE_KEY`（base64）并确认与 keyserver 公钥一致 |
+| `Signing failed` | 确认 `GPG_PASSPHRASE` 正确 |
+| 10 分钟未同步 | 到 [central.sonatype.com](https://central.sonatype.com) → Deployments 查看发布状态，多数为排队 |
+| SNAPSHOT 版本被拒 | 发布前必须将根 pom 版本改为非 SNAPSHOT 并提交 |
+
+---
+
 ## 1. 环境要求
 
 - JDK 21+（`maven.compiler.release=21`）

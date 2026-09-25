@@ -1,0 +1,162 @@
+name: Release to Maven Central
+
+# 自动化发布流水线：全量门禁 -> 构建发布制品（含源码/JavaDoc/SBOM）-> GPG 签名 ->
+# Sonatype Central Portal 上传发布 -> 校验 repo1 可访问 -> 创建 GitHub Release。
+#
+# 触发方式：
+#   1) 推送 v* 标签（如 v1.1.0）：git tag v1.1.0 && git push origin v1.1.0
+#   2) 手动触发：Actions -> Release to Maven Central -> Run workflow
+#
+# 前置条件（GitHub 仓库 Settings -> Secrets and variables -> Actions）：
+#   SONATYPE_USERNAME   Sonatype Central 用户令牌用户名（User Token 的 username，如 "GMFea1"）
+#   SONATYPE_PASSWORD   Sonatype Central 用户令牌密码（User Token 的 password）
+#   GPG_PRIVATE_KEY     GPG 签名私钥（ASCII armor 格式，base64 编码后存入）
+#   GPG_PASSPHRASE      GPG 私钥口令
+#
+# 说明：sonatype-central-portal 上传为异步任务，本流水线轮询 repo1 直到制品可访问。
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      - name: Import GPG key
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        run: |
+          echo "$GPG_PRIVATE_KEY" | base64 -d | gpg --batch --import
+          gpg --list-secret-keys --keyid-format=long
+
+      - name: Resolve version and tag
+        id: version
+        run: |
+          VER=$(grep -m1 '<version>' pom.xml | sed 's/.*<version>\(.*\)<\/version>.*/\1/')
+          echo "version=$VER" >> "$GITHUB_OUTPUT"
+          if [[ "$VER" == *-SNAPSHOT ]]; then
+            echo "::error::发布版本不能是 SNAPSHOT: $VER"
+            exit 1
+          fi
+          REF="${{ github.ref_name }}"
+          if [[ "$REF" == v* ]]; then
+            echo "tag=$REF" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=v$VER" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build and verify (release profile, skip gpg inside maven)
+        run: mvn -B -Prelease -Dgpg.skip=true verify
+
+      - name: Stage bundle (maven layout + manifest)
+        run: |
+          set -euo pipefail
+          VER="${{ steps.version.outputs.version }}"
+          rm -rf bundle
+          mkdir -p bundle/META-INF
+          printf 'Manifest-Version: 1.0\ngroupId: io.github.tasure\nartifactId: suretool\nversion: %s\npackaging: pom\n' "$VER" \
+            > bundle/META-INF/MANIFEST.MF
+          # 父 pom
+          mkdir -p "bundle/io/github/tasure/suretool/$VER"
+          cp pom.xml "bundle/io/github/tasure/suretool/$VER/suretool-$VER.pom"
+          # 各模块：pom + 主 jar + sources + javadoc（严格匹配当前版本，排除 tests/original）
+          for pom in */pom.xml; do
+            art="${pom%/pom.xml}"
+            [ "$art" = "." ] && continue
+            base="bundle/io/github/tasure/$art/$VER"
+            mkdir -p "$base"
+            cp "$pom" "$base/$art-$VER.pom"
+            for jar in "$art"/target/*.jar; do
+              [ -f "$jar" ] || continue
+              case "$jar" in
+                *-$VER.jar | *-$VER-sources.jar | *-$VER-javadoc.jar) cp "$jar" "$base/" ;;
+                *) continue ;;
+              esac
+            done
+          done
+          echo "=== bundle 内容 ==="
+          find bundle -type f | sort
+
+      - name: Sign bundle files (GPG detached asc)
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          find bundle -type f | while read -r f; do
+            gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" \
+              --armor --detach-sign --output "$f.asc" "$f"
+          done
+          echo "=== 签名文件 ==="
+          find bundle -name '*.asc' | wc -l
+
+      - name: Package bundle zip
+        run: |
+          VER="${{ steps.version.outputs.version }}"
+          (cd bundle && zip -r "../suretool-$VER-bundle.zip" .)
+
+      - name: Upload and publish to Sonatype Central Portal
+        env:
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+        run: |
+          set -euo pipefail
+          VER="${{ steps.version.outputs.version }}"
+          RESP=$(curl -sS -f -u "$SONATYPE_USERNAME:$SONATYPE_PASSWORD" \
+            -F "file=@suretool-$VER-bundle.zip" \
+            https://central.sonatype.com/api/v1/publisher/upload) || {
+            echo "::error::Portal 上传失败"
+            exit 1
+          }
+          echo "Portal 响应: $RESP"
+
+      - name: Wait for Maven Central sync
+        run: |
+          set -euo pipefail
+          VER="${{ steps.version.outputs.version }}"
+          code=""
+          for i in $(seq 1 60); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' \
+              "https://repo1.maven.org/maven2/io/github/tasure/sure-core/$VER/sure-core-$VER.jar")
+            if [ "$code" = "200" ]; then
+              echo "repo1 已同步 sure-core $VER"
+              break
+            fi
+            echo "[$i/60] 等待中央仓库同步 (HTTP $code)…"
+            sleep 10
+          done
+          if [ "$code" != "200" ]; then
+            echo "::error::发布后 10 分钟仍未在 repo1 可见，请检查 Sonatype Portal 状态"
+            exit 1
+          fi
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VER="${{ steps.version.outputs.version }}"
+          TAG="${{ steps.version.outputs.tag }}"
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" "suretool-$VER-bundle.zip" \
+              --title "suretool $VER" \
+              --notes "suretool $VER 已发布到 Maven Central：io.github.tasure:*"
+          else
+            echo "Release $TAG 已存在，跳过创建"
+          fi

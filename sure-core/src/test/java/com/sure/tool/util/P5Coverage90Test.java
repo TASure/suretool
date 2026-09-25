@@ -113,7 +113,7 @@ public class P5Coverage90Test {
 		Assert.assertEquals("bcbc", StrUtil.removeAll("abcabc", "a"));
 		Assert.assertEquals("bc", StrUtil.subSuf("abc", 2));
 		Assert.assertEquals("ab", StrUtil.subPre("abc", 2));
-		Assert.assertEquals("a,b", StrUtil.join(",", new String[] { "a", "b" }));
+		Assert.assertEquals("a,b", StrUtil.join(",", (Object[]) new String[] { "a", "b" }));
 		Assert.assertEquals("ab", StrUtil.concat("a", "b"));
 		Assert.assertEquals(6, StrUtil.totalLength("ab", "cd", null, "ef"));
 		Assert.assertTrue(StrUtil.isLowerCase("abc"));

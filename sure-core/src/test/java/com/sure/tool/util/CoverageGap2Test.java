@@ -251,7 +251,7 @@ public class CoverageGap2Test {
 		java.io.StringWriter writer = new java.io.StringWriter();
 		IoUtil.write("w", writer);
 		Assert.assertEquals("w", writer.toString());
-		IoUtil.closeQuietly(null);
+		IoUtil.closeQuietly((java.io.Closeable) null);
 		Assert.assertTrue(IoUtil.contentEquals(new ByteArrayInputStream("a".getBytes()), new ByteArrayInputStream("a".getBytes())));
 		ByteArrayOutputStream out4 = new ByteArrayOutputStream();
 		Assert.assertEquals(1L, IoUtil.toOutput(new ByteArrayInputStream("a".getBytes()), out4));

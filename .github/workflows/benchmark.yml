@@ -8,6 +8,8 @@ on:
       - 'sure-json/**'
       - 'sure-benchmark/**'
       - 'pom.xml'
+      - '.github/workflows/benchmark.yml'
+      - '.github/scripts/benchmark_gate.py'
   pull_request:
     branches: [main]
     paths:

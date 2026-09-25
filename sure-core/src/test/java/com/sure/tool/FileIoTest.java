@@ -153,6 +153,6 @@ public class FileIoTest {
 	public void testIoLinesAndClose() throws IOException {
 		InputStream in = new ByteArrayInputStream("a\nb\nc".getBytes(StandardCharsets.UTF_8));
 		Assert.assertEquals(Arrays.asList("a", "b", "c"), IoUtil.readUtf8Lines(in));
-		IoUtil.closeQuietly(null);
+		IoUtil.closeQuietly((java.io.Closeable) null);
 	}
 }

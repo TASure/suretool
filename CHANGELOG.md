@@ -8,6 +8,8 @@
 
 ### Added
 - docs/project-audit-2026-09.md：项目检视报告（对标主流工具包，含 P0/P1/P2 问题清单与整改任务清单，P5，目标 v1.1.0）
+- 工程治理（P0 一期）：sure-core 覆盖率 91.51% 且门禁提升至 0.90（P5Coverage90CTest 5 例）；接入 OSV-Scanner 与 CodeQL 供应链/源码安全扫描；11 个业务模块提供 JPMS module-info（sure-extra 因依赖无 module-info 的 jakarta.mail-api/angus-mail 保持自动模块）；根 pom 配置 project.build.outputTimestamp 实现可复现构建（同 tag 两次构建 jar 哈希一致，P5，目标 v1.1.0）
+- docs/project-audit-2026-09.md：项目检视报告（对标主流工具包，含 P0/P1/P2 问题清单与整改任务清单，P5，目标 v1.1.0）
 
 
 ### Added

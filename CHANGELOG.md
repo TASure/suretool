@@ -7,6 +7,10 @@
 ## [Unreleased]
 
 ### Added
+- docs/comparison-ecosystem.md：主流 Java 工具包全景与 suretool 差异化分析（P5，目标 v1.1.0）
+
+
+### Added
 - 覆盖率补强测试 P5Coverage90BTest：sure-core 行覆盖率 89.34% → 89.70%（P5，目标 v1.1.0 达成 90%）
 
 

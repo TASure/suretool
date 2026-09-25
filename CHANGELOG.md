@@ -7,6 +7,13 @@
 ## [Unreleased]
 
 ### Added
+- 三期（P2 全部）：
+  - 属性测试（T13）：引入 jqwik 1.10.1（sure-core 模块级 test 依赖 + 双测试框架 provider），新增 StrUtil/ArrayUtil/CollUtil 三组共 36 个生成式属性（约 7000 次随机输入验证不变量），sure-core 覆盖率 91.62%→91.73%
+  - 影响力内容（T14）：新增 5 篇教程（5 分钟上手 / 字符串集合速查 / 加解密默认安全 / JSON+HTTP 实战 / Starter 集成），教程总数 6 篇达验收；README 与 docs/index.md 增加教程索引；awesome-java 提交材料检查清单已更新为就绪状态
+  - 双 CI 一致性文档（P2-3）：docs/ci-workflow.md 明确本地 release.ps1 与 6 个 Actions workflow 的职责边界与防漂移规则
+  - 社区可见性（P2-4）：README 新增 Maven Central Downloads 徽章（中英双语）；新增 CONTRIBUTING.md（Good First Issue 指引、提交规范、测试/覆盖率要求、PR 流程）
+- 一期工程治理（P0）：sure-core 覆盖率 91.73% 且门禁 0.90；OSV-Scanner + CodeQL；11 模块 JPMS module-info；可复现构建 outputTimestamp
+- 二期（P1 全部）：方法-用例映射审计 99.89% 命中 + P6 补测 16 例；三平台 CI 矩阵；javadoc 发布到文档站；benchmark CI 门禁；第三方依赖版本集中到 sure-bom；版本策略文档；starter 冒烟测试；checkstyle 排除 module-info
 - 二期（P1 全部，P5 目标 v1.1.0）：
   - 方法-用例映射审计（T6）：952 个 public/protected 方法名 951 命中（99.89%），新增 P6MethodAuditTest 16 例补测，审计报告 docs/method-audit-2026-09.md，审计脚本 .github/scripts/method_audit.py 可复跑
   - CI 平台矩阵（T7）：ci.yml 扩展为 ubuntu/macos/windows × JDK21（ubuntu 双跑 JDK25），覆盖率上报仅 ubuntu

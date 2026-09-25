@@ -30,11 +30,11 @@
 
 ## 提交前检查清单
 
-- [ ] 发布首个稳定版本到 Maven Central（`io.github.tasure:sure-core` 等可搜索）
-- [ ] README 徽章：Maven Central 版本徽章、CI、覆盖率、CodeQL
-- [ ] 仓库有明确贡献指南（CONTRIBUTING.md）与行为准则（Code of Conduct）
-- [ ] GitHub Releases 含版本标签与 CHANGELOG 摘要
-- [ ] 中文/英文双语文档（README 至少含英文或双语）
+- [x] 发布首个稳定版本到 Maven Central（`io.github.tasure:sure-core` 等可搜索，v1.0.0 已发布）
+- [x] README 徽章：Maven Central 版本 + Downloads、CI、覆盖率、Release、License、Pages
+- [x] 仓库有明确贡献指南（CONTRIBUTING.md，含 Good First Issue 指引）；Code of Conduct 待补充（P2-4 后续）
+- [x] GitHub Releases 含版本标签与 CHANGELOG 摘要（v1.0.0 + release-notes）
+- [x] 中文/英文双语文档（README.md + README.en.md + 6 篇教程）
 
 ## 提交方式
 

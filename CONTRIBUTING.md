@@ -1,70 +1,60 @@
-# 参与贡献指南
+# 贡献指南（CONTRIBUTING）
 
-感谢你对 suretool 的关注！在提交 PR 前请阅读以下约定。
+欢迎为 suretool 贡献代码、文档、示例或 issue。请先阅读并遵守本指南。
 
-## 项目约定
+## 1. 社区规范
 
-- **环境要求**：JDK 21+（项目基线，`maven.compiler.release=21`，CI 在 JDK 21/25 上验证；写法自由使用 JDK21 特性，不考虑低版本兼容）。
-- **包结构**：所有工具类位于 `com.sure.tool.*`，按能力域分包（`util/codec/collection/date/io/lang` 等）。
-- **命名**：工具类统一 `XxxUtil` 命名，全部方法为 `public static`，类提供私有构造器。
-- **设计原则**：参考 [Hutool](https://doc.hutool.cn/pages/index/) 的静态方法封装风格，但：
-  - 日期一律基于 `java.time`，不使用 `java.util.Date` 做新 API；
-  - 空输入默认不抛 NPE（除 `Assert` 语义外）；
-  - 集合工具默认返回不可变视图。
-- **编码风格**：Tab 缩进、UTF-8、单行单语句，由 Checkstyle（`config/checkstyle/checkstyle.xml`）在 `verify` 阶段强制检查。
-- **覆盖率门禁**：每个模块在 `verify` 阶段受 JaCoCo 行覆盖率下限约束（`jacoco.line.min`，各模块 pom 配置），提交不得使其降低。
+- 所有互动遵守 [行为准则](CODE_OF_CONDUCT.md)（若尚未建立，以"尊重、专业、友善"为原则）。
+- 讨论使用中文或英文均可，PR 描述建议中英双语标题。
 
-## API 稳定性约定
+## 2. 快速上手
 
-suretool 遵循语义化版本：`0.x` 阶段允许破坏性变更但需在 ROADMAP 记录；进入 `1.0` 后破坏性变更只允许在 `minor` 版本发布。
+```bash
+git clone https://github.com/TASure/suretool.git
+cd suretool
+# 需要 JDK 21+ 与 Maven 3.8+
+mvn -pl sure-core test        # 单模块测试
+mvn test                      # 全量测试
+mvn -pl sure-core verify      # 含 Checkstyle + 覆盖率门禁
+```
 
-- **`@since` 必填**：类级 Javadoc 必须标注引入版本（当前基线 `0.1.0`）；新增 public 方法建议同时标注 `@since`。
-- **`@deprecated` 流程**：计划移除的 API 先标记 `@deprecated` 并注明替代方案，至少保留一个 `minor` 版本后再移除。
-- **不静默改名/改签名**：重命名或变更签名必须同步更新测试与 README/ROADMAP 示例，并在提交信息中说明。
-- **新增公共方法检查**：纳入下方清单，缺 `@since` 视为未完成。
+## 3. 分支与提交
 
-## 提交规范
+- 开发基于 `main`，请新建分支：`git checkout -b feat/xxx` 或 `fix/xxx`。
+- 提交信息规范：`type(scope): 描述`，type 取 `feat` / `fix` / `docs` / `test` / `build` / `refactor` / `perf`。
+- 提交前：`mvn -pl <受影响模块> verify` 必须通过；新增/修改公共 API 需补测试（见 §5）。
+- 变更登记：涉及用户可见行为/API 的变更，需在 `CHANGELOG.md` 的 `Unreleased` 节追加一行。
 
-提交信息使用以下前缀：
+## 4. Good First Issue（新手任务）
 
-| 前缀 | 用途 |
-| --- | --- |
-| `feat:` | 新工具类 / 新方法 |
-| `fix:` | 缺陷修复 |
-| `docs:` | 文档、示例、注释 |
-| `test:` | 测试 |
-| `build:` / `ci:` | 构建、CI 配置 |
-| `refactor:` | 重构（不改变行为） |
+适合首次贡献者的任务会打 `good first issue` 标签：
 
-## 团队研发工作流
+- **如何找**：仓库 Issues 页筛选 `good first issue` 标签，任务通常标注"预计改动范围"与"验收标准"。
+- **如何认领**：在 issue 下评论"我想认领这个任务"，维护者会分配给你。
+- **完成标准**：满足 issue 描述的验收条件，PR 通过 CI（三平台）即合并。
 
-suretool 的迭代由「软件研发小组」负责，按 **PRD（产品）→ 架构评审（架构师）→ 实现（工程师）→ 质检门禁（质检官）→ 验收（组长）** 五步闭环执行，完整协议见 [docs/TEAM-WORKFLOW.md](docs/TEAM-WORKFLOW.md)。
+## 5. 测试要求（质量门禁）
 
-- **新功能**：先有 PRD 或 Issue（含验收标准）再开工；涉及模块归属 / API 设计 / 依赖边界时须先架构评审。
-- **缺陷修复**：Issue 写明复现步骤与期望行为，直接进入实现 + 质检两步。
-- **质检硬标准**：`mvn -B verify` 全绿（测试 / Checkstyle / SpotBugs 0 / JaCoCo 覆盖率不低于门禁）+ CodeQL 安全扫描无未关闭的 P0。
-- **高影响动作**：发布、打标签、删除、权限变更等必须给出影响与验证方案并等待用户确认。
+- **覆盖率**：sure-core 行覆盖率门禁 ≥90%，新增代码必须带测试。
+- **测试框架**：默认 JUnit 4；生成式/属性测试用 jqwik（仅 sure-core 启用，见其 pom）。
+- **必测路径**：新增 public/protected 方法必须至少一个用例命中（仓库有 `method_audit.py` 审计脚本可自查）：
 
-## 开发流程
+```bash
+python3 .github/scripts/method_audit.py   # 检查是否有 public/protected 方法未被测试命中
+```
 
-1. Fork 本仓库并克隆到本地。
-2. 创建特性分支：`git checkout -b feat/xxx-util`。
-3. **测试先行**：为新增/修改的方法编写 JUnit 4 测试，覆盖正常、边界与异常路径。
-4. 本地验证全绿后提交：
+- **风格**：遵循 Checkstyle（Tab 缩进、import 排序、Apache License 头），`mvn verify` 会自动检查。
 
-   ```bash
-   mvn -B verify
-   ```
+## 6. PR 流程
 
-   通过标准：`Tests run` 全部通过、Checkstyle 无违规、JaCoCo 覆盖率不低于门禁下限。
+1. Fork 仓库，基于最新 main 建分支开发；
+2. 提交并 push 到你的 fork；
+3. 创建 PR：描述改动动机、影响范围、测试结果截图/日志；
+4. 等待 CI（ubuntu/macOS/Windows 三平台）通过；
+5. 维护者 review：公共 API 变更会有 API 兼容性检查（见 `docs/versioning.md`）；
+6. 合并后维护者关闭对应 issue。
 
-5. 推送分支并发起 PR，关联对应 issue（如有）。
+## 7. 需要帮助？
 
-## 新增工具类检查清单
-
-- [ ] 类注释说明用途，并标注 `@author` 与 `@since`
-- [ ] 私有构造器（工具类不可实例化）
-- [ ] 公开方法均有中文 Javadoc（`@param` / `@return` / `@throws`）
-- [ ] 测试覆盖：正常路径 + 边界（`null`、空、越界）+ 异常路径
-- [ ] 无第三方运行期依赖（核心模块）
-- [ ] `mvn -B verify` 全绿
+- 文档：[类索引](docs/index.md) · [构建与测试](README.md#构建与测试) · [发布指南](docs/RELEASING.md)
+- 提问：GitHub Discussions（如已启用）或 issue 标签 `question`

@@ -88,3 +88,12 @@ String joined = StrUtil.join(",", "a", "b", "c"); // a,b,c
 ```
 
 完整用法示例见 [sure-examples](../sure-examples) 模块。
+
+## 教程与文章（posts/）
+
+- [5 分钟上手 suretool](posts/quickstart.md)
+- [StrUtil / CollUtil 日常场景速查](posts/string-collection-cookbook.md)
+- [加解密正确姿势：默认安全指南](posts/security-crypto-guide.md)
+- [JSON + HTTP 实战](posts/json-http-integration.md)
+- [Spring Boot Starter 集成指南](posts/spring-boot-starter-guide.md)
+- [发布介绍：用 suretool 重构你的 Java 工具层](posts/introducing-suretool.md)

@@ -192,7 +192,7 @@ Full class index: [docs/index.md](docs/index.md).
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). All PRs must pass: Checkstyle 0 violations, SpotBugs, JaCoCo ≥ 85% (business modules), license headers.
+See [CONTRIBUTING.md](CONTRIBUTING.md). All PRs must pass: Checkstyle 0 violations, SpotBugs, JaCoCo ≥ 90% (sure-core), license headers.
 
 
 

@@ -30,6 +30,8 @@
 
 ![Maven Central](https://img.shields.io/maven-central/v/io.github.tasure/sure-core)
 
+![Maven Central Downloads](https://img.shields.io/maven-central/d/io.github.tasure/sure-core?label=Central%20Downloads)
+
 
 
 ![Pages](https://img.shields.io/github/actions/workflow/status/TASure/suretool/pages.yml?branch=main\&label=Pages)
@@ -44,7 +46,8 @@
 
 * 许可：Apache License 2.0
 
-* 文档：[类索引](docs/index.md) · [Hutool 对比](docs/comparison-hutool.md) · [发布指南](docs/RELEASING.md) · [维护手册](docs/MAINTAINING.md) · [仓库设置](docs/github-setup.md) · [依赖清单](docs/dependencies.md)
+* 文档：[类索引](docs/index.md) · [Hutool 对比](docs/comparison-hutool.md) · [发布指南](docs/RELEASING.md) · [维护手册](docs/MAINTAINING.md) · [仓库设置](docs/github-setup.md) · [依赖清单](docs/dependencies.md) · [CI 工作流职责](docs/ci-workflow.md)
+* 教程：[5 分钟上手](docs/posts/quickstart.md) · [字符串/集合速查](docs/posts/string-collection-cookbook.md) · [加解密默认安全](docs/posts/security-crypto-guide.md) · [JSON+HTTP 实战](docs/posts/json-http-integration.md) · [Starter 集成](docs/posts/spring-boot-starter-guide.md)
 
 ## 快速开始
 
@@ -366,6 +369,9 @@ mvn clean install
 本项目的 API 设计参考 [Hutool](https://doc.hutool.cn/pages/index/)（[Gitee 仓库](https://gitee.com/chinabugotech/hutool)），实现为独立编写的原始代码，无代码复制。
 
 ## 贡献与安全
+
+欢迎贡献！请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)（含 Good First Issue 指引）。安全问题请走 GitHub Security Advisory 或直接联系维护者。
+
 
 
 

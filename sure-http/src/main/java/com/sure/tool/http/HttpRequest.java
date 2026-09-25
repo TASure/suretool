@@ -85,6 +85,7 @@ public class HttpRequest {
 	private String userAgent = DEFAULT_USER_AGENT;
 	private Proxy proxy;
 	private String cookieHeader;
+	private CookieStore cookieStore;
 	private java.net.http.HttpClient httpClient;
 
 	private HttpRequest(String url, String method) {
@@ -437,6 +438,18 @@ public class HttpRequest {
 	}
 
 	/**
+	 * 绑定会话级 Cookie 管理器：请求自动携带 store 内 Cookie，响应中的 Set-Cookie 自动收集。
+	 *
+	 * @param store Cookie 管理器（可为空，表示不启用会话保持）
+	 * @return 本构建器
+	 */
+	@edu.umd.cs.findbugs.annotations.SuppressFBWarnings("EI_EXPOSE_REP2")
+	public HttpRequest cookieStore(CookieStore store) {
+		this.cookieStore = store;
+		return this;
+	}
+
+	/**
 	 * 注入 JDK {@link java.net.http.HttpClient}（自带连接池/keep-alive 复用，虚拟线程友好）。
 	 * 注入后 {@link #execute()} 走 HttpClient 引擎；未注入时走 {@link HttpURLConnection}。
 	 *
@@ -486,8 +499,12 @@ public class HttpRequest {
 			for (Map.Entry<String, String> entry : headers.entrySet()) {
 				builder.header(entry.getKey(), entry.getValue());
 			}
+			String sessionCookie = cookieStore == null ? null : cookieStore.header(CookieStore.hostOf(target));
 			if (cookieHeader != null) {
 				builder.header("Cookie", cookieHeader);
+			}
+			if (sessionCookie != null) {
+				builder.header("Cookie", sessionCookie);
 			}
 			if (contentType != null) {
 				builder.header("Content-Type", contentType);
@@ -497,8 +514,14 @@ public class HttpRequest {
 					java.net.http.HttpResponse.BodyHandlers.ofByteArray());
 			Map<String, List<String>> headerMap = new LinkedHashMap<>();
 			resp.headers().map().forEach(headerMap::put);
+			if (cookieStore != null) {
+				cookieStore.collect(target, headerMap);
+			}
 			return new HttpResponse(resp.statusCode(), target, headerMap, resp.body());
-		} catch (Exception e) {
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw new HttpException("请求失败: " + url, e);
+		} catch (java.io.IOException | java.net.URISyntaxException e) {
 			throw new HttpException("请求失败: " + url, e);
 		}
 	}
@@ -520,8 +543,12 @@ public class HttpRequest {
 			for (Map.Entry<String, String> entry : headers.entrySet()) {
 				conn.setRequestProperty(entry.getKey(), entry.getValue());
 			}
+			String sessionCookie = cookieStore == null ? null : cookieStore.header(CookieStore.hostOf(target));
 			if (cookieHeader != null) {
 				conn.setRequestProperty("Cookie", cookieHeader);
+			}
+			if (sessionCookie != null) {
+				conn.setRequestProperty("Cookie", sessionCookie);
 			}
 			String effectiveContentType = contentType;
 			if (bodyBytes == null && !fileParams.isEmpty() && effectiveContentType == null) {
@@ -545,6 +572,9 @@ public class HttpRequest {
 				try (OutputStream out = conn.getOutputStream()) {
 					out.write(payload);
 				}
+			}
+			if (cookieStore != null) {
+				cookieStore.collect(target, conn.getHeaderFields());
 			}
 			int code = conn.getResponseCode();
 			InputStream in = code >= 400 ? conn.getErrorStream() : conn.getInputStream();

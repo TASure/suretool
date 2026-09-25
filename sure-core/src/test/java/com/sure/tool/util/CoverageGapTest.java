@@ -280,7 +280,8 @@ public class CoverageGapTest {
 		double dr = RandomUtil.randomDouble(1.0, 2.0);
 		Assert.assertTrue(dr >= 1.0 && dr < 2.0);
 		double ds = RandomUtil.randomDouble(1.0, 2.0, 2);
-		Assert.assertTrue(ds >= 1.0 && ds < 2.0);
+		// HALF_UP 四舍五入边界可能到 2.00，断言上界含 2.0
+		Assert.assertTrue(ds >= 1.0 && ds <= 2.0);
 		RandomUtil.randomBoolean();
 		Assert.assertEquals(10, RandomUtil.randomString(10).length());
 		Assert.assertEquals(8, RandomUtil.randomString("AB", 8).length());

@@ -334,4 +334,16 @@ public class P5JsonPathTest {
 			Assert.assertTrue("应报深度超限: " + expected.getMessage(), expected.getMessage().contains("深度"));
 		}
 	}
+
+	@Test
+	public void lengthAggregation() {
+		Object obj = JSONUtil.parseObj("{\"items\":[{\"name\":\"a\"},{\"name\":\"b\"},{\"name\":\"c\"}],\"tags\":[1,2],\"text\":\"hello\"}");
+		Assert.assertEquals(3, JsonPath.eval(obj, "$.items.length()"));
+		Assert.assertEquals(3, JsonPath.eval(obj, "$.items.length()"));
+		Assert.assertEquals(3, JsonPath.eval(JsonPath.eval(obj, "$.items"), "$.length()"));
+		Assert.assertEquals(2, JsonPath.eval(obj, "$.tags.size()"));
+		Assert.assertEquals(5, JsonPath.eval(obj, "$.text.length()"));
+		Assert.assertEquals(3, JsonPath.eval(JSONUtil.parseObj("{\"x\":{\"a\":1,\"b\":2,\"c\":3}}"), "$.x.length()"));
+	}
+
 }

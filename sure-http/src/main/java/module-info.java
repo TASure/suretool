@@ -18,5 +18,6 @@ module sure.http {
 
 	requires java.net.http;
 	requires jdk.httpserver;
+	requires static com.github.spotbugs.annotations;
 	exports com.sure.tool.http;
 }

@@ -99,3 +99,4 @@ String joined = StrUtil.join(",", "a", "b", "c"); // a,b,c
 - [JSON + HTTP 实战](posts/json-http-integration.md)
 - [Spring Boot Starter 集成指南](posts/spring-boot-starter-guide.md)
 - [发布介绍：用 suretool 重构你的 Java 工具层](posts/introducing-suretool.md)
+- [性能实测：凭什么比 Hutool 快 4 倍？](posts/benchmark-guide.md)

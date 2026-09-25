@@ -111,8 +111,16 @@ public final class JsonPath {
 					i++;
 				} else {
 					int end = readNameEnd(path, i);
-					segments.add(Segment.key(path.substring(i, end)));
-					i = end;
+					String name = path.substring(i, end);
+					// 聚合函数：.length() / .size() → 对当前值求长度
+					if (("length".equals(name) || "size".equals(name)) && end < path.length()
+							&& path.charAt(end) == '(' && path.indexOf(')', end) == end + 1) {
+						segments.add(Segment.length());
+						i = end + 2;
+					} else {
+						segments.add(Segment.key(name));
+						i = end;
+					}
 				}
 			} else if (c == '[') {
 				int end = path.indexOf(']', i);
@@ -147,7 +155,7 @@ public final class JsonPath {
 		int i = from;
 		while (i < path.length()) {
 			char c = path.charAt(i);
-			if (c == '.' || c == '[') {
+			if (c == '.' || c == '[' || c == '(') {
 				break;
 			}
 			i++;
@@ -202,6 +210,19 @@ public final class JsonPath {
 					}
 				}
 			}
+			return;
+		}
+		if (seg.type == SegmentType.LENGTH) {
+			if (current instanceof java.util.Collection<?> collection) {
+				results.add(collection.size());
+			} else if (current instanceof Map<?, ?> map) {
+				results.add(map.size());
+			} else if (current instanceof String str) {
+				results.add(str.length());
+			} else if (current != null) {
+				results.add(0);
+			}
+			return;
 		}
 	}
 
@@ -238,7 +259,7 @@ public final class JsonPath {
 	// ================= 内部结构 =================
 
 	private enum SegmentType {
-		KEY, INDEX, WILDCARD, RECURSIVE_KEY, RECURSIVE_WILDCARD, FILTER
+		KEY, INDEX, WILDCARD, RECURSIVE_KEY, RECURSIVE_WILDCARD, FILTER, LENGTH
 	}
 
 	private static final class Segment {
@@ -276,6 +297,10 @@ public final class JsonPath {
 
 		static Segment filter(FilterExpr expr) {
 			return new Segment(SegmentType.FILTER, null, -1, expr);
+		}
+
+		static Segment length() {
+			return new Segment(SegmentType.LENGTH, null, -1, null);
 		}
 	}
 

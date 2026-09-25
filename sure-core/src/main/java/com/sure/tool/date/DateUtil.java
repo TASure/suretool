@@ -121,7 +121,10 @@ public class DateUtil {
 	 * @return 格式化字符串，空值返回 {@code null}
 	 */
 	public static String format(Date date) {
-		return format(date, NORM_DATETIME_PATTERN);
+		if (date == null) {
+			return null;
+		}
+		return getFormatter(NORM_DATETIME_PATTERN).format(date);
 	}
 
 	/**

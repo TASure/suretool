@@ -17,6 +17,10 @@ def main() -> int:
         log = open(sys.argv[1], encoding="utf-8").read()
     else:
         log = sys.stdin.read()
+    # 诚实门禁：任何 benchmark fork 出现 <failure>（如 VM 提前退出）立即 FAIL，避免静默漏判
+    if "<failure" in log:
+        print("JMH FAILURE DETECTED: at least one benchmark fork failed to complete")
+        return 1
     pairs: dict[str, dict[str, float]] = {}
     for m in LINE.finditer(log):
         method = m.group(1)

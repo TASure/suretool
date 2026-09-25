@@ -39,7 +39,11 @@ jobs:
       - name: Run JMH benchmarks
         run: |
           mvn -B -pl sure-benchmark -am package -DskipTests
-          java -jar sure-benchmark/target/sure-benchmark-*-jar-with-dependencies.jar 2>&1 | tee /tmp/bench.log
+          # 显式选取 shade fat jar（排除 original-* 与旧版本残留，避免通配符多匹配导致 java -jar 选错）
+          JAR=$(ls sure-benchmark/target/sure-benchmark-*-jar-with-dependencies.jar 2>/dev/null | grep -v '^sure-benchmark/target/original-' | head -1)
+          if [ -z "$JAR" ]; then echo "::error::fat jar not found"; exit 1; fi
+          echo "using $JAR"
+          java -jar "$JAR" 2>&1 | tee /tmp/bench.log
 
       - name: Check regression thresholds
         run: python3 .github/scripts/benchmark_gate.py /tmp/bench.log

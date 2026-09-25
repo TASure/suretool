@@ -18,6 +18,7 @@ package com.sure.tool.benchmark;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.openjdk.jmh.runner.options.ChainedOptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 
 /**
@@ -43,15 +44,22 @@ public class BenchmarkRunner {
 	 * @throws Exception 基准执行异常
 	 */
 	public static void main(String[] args) throws Exception {
-		Options options = new OptionsBuilder()
-				.include("com\\.sure\\.tool\\.benchmark\\..*")
-				.forks(1)
+		ChainedOptionsBuilder builder = new OptionsBuilder()
+				// 3 个 fork：共享 runner 上单次 fork 噪声大（曾出现 Format 项 ratio 虚高 1.84 而误报回归）
+				.forks(3)
 				.warmupIterations(3)
 				.warmupTime(TimeValue.seconds(1))
 				.measurementIterations(5)
 				.measurementTime(TimeValue.seconds(1))
-				.jvmArgs("-Xms512m", "-Xmx512m")
-				.build();
+				// 降低 fork JVM 内存占用，避免低配环境内存压力导致 fork 进程被杀
+				.jvmArgs("-Xms256m", "-Xmx256m");
+		if (args.length > 0) {
+			// 传入过滤参数时仅跑指定基准（本地排查用）；否则跑全部
+			builder.include(args[0]);
+		} else {
+			builder.include("com\\.sure\\.tool\\.benchmark\\..*");
+		}
+		Options options = builder.build();
 		new Runner(options).run();
 	}
 }

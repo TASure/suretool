@@ -1091,5 +1091,103 @@ public class CollUtil {
 		return -1;
 	}
 
+	/**
+	 * 将集合按指定大小分片。
+	 *
+	 * @param collection 输入集合，可为空
+	 * @param size       每片大小，必须大于 0
+	 * @param <T>        元素类型
+	 * @return 分片列表；输入为空时返回空列表
+	 * @throws IllegalArgumentException size 不大于 0
+	 * @since 1.1.0
+	 */
+	public static <T> List<List<T>> chunk(Collection<T> collection, int size) {
+		if (size <= 0) {
+			throw new IllegalArgumentException("chunk size 必须大于 0");
+		}
+		if (collection == null || collection.isEmpty()) {
+			return List.of();
+		}
+		List<T> list = collection instanceof List<T> l ? l : new ArrayList<>(collection);
+		List<List<T>> chunks = new ArrayList<>((list.size() + size - 1) / size);
+		for (int i = 0; i < list.size(); i += size) {
+			chunks.add(List.copyOf(list.subList(i, Math.min(list.size(), i + size))));
+		}
+		return List.copyOf(chunks);
+	}
+
+	/**
+	 * 从集合中随机取一个元素。
+	 *
+	 * @param collection 输入集合，不允许为空
+	 * @param <T>        元素类型
+	 * @return 随机元素
+	 * @throws IllegalArgumentException 集合为空
+	 * @since 1.1.0
+	 */
+	public static <T> T randomItem(Collection<T> collection) {
+		if (collection == null || collection.isEmpty()) {
+			throw new IllegalArgumentException("randomItem 集合不允许为空");
+		}
+		if (collection instanceof List<T> list) {
+			return list.get(java.util.concurrent.ThreadLocalRandom.current().nextInt(list.size()));
+		}
+		List<T> list = new ArrayList<>(collection);
+		return list.get(java.util.concurrent.ThreadLocalRandom.current().nextInt(list.size()));
+	}
+
+	/**
+	 * 从集合中随机取指定数量的元素（不重复）。
+	 *
+	 * @param collection 输入集合，可为空
+	 * @param count      取样数量
+	 * @param <T>        元素类型
+	 * @return 随机取样列表；count 不大于 0 时返回空列表
+	 * @since 1.1.0
+	 */
+	public static <T> List<T> randomItems(Collection<T> collection, int count) {
+		if (count <= 0 || collection == null || collection.isEmpty()) {
+			return List.of();
+		}
+		List<T> list = new ArrayList<>(collection);
+		if (count >= list.size()) {
+			Collections.shuffle(list);
+			return List.copyOf(list);
+		}
+		Collections.shuffle(list);
+		return List.copyOf(list.subList(0, count));
+	}
+
+	/**
+	 * 返回集合的不可变副本。
+	 *
+	 * @param collection 输入集合，可为空
+	 * @param <T>        元素类型
+	 * @return 不可变列表；输入为空时返回空列表
+	 * @since 1.1.0
+	 */
+	public static <T> List<T> toImmutable(Collection<T> collection) {
+		if (collection == null || collection.isEmpty()) {
+			return List.of();
+		}
+		return List.copyOf(collection);
+	}
+
+	/**
+	 * 统计元素在集合中出现的次数（基于 {@link java.util.Objects#equals}）。
+	 *
+	 * @param collection 输入集合，可为空
+	 * @param value      目标元素
+	 * @param <T>        元素类型
+	 * @return 出现次数
+	 * @since 1.1.0
+	 */
+	public static <T> int frequency(Collection<T> collection, T value) {
+		if (collection == null || collection.isEmpty()) {
+			return 0;
+		}
+		return Collections.frequency(collection, value);
+	}
+
 
 }

@@ -184,11 +184,12 @@ mvn clean install
 |                            | `HexUtil`          | 十六进制编解码                                         |
 |                            | `HashUtil`         | MD5 / SHA-1 / SHA-256 / SHA-512 / CRC32         |
 |                            | `EncodeUtil`       | URL 百分号编解码                                      |
-| `com.sure.tool.collection` | `CollUtil`         | 集合判空 / 交并差 / 分组 / 过滤 / 映射                       |
+| `com.sure.tool.collection` | `CollUtil`         | 集合判空 / 交并差 / 分组 / 过滤 / 映射 / 分片 / 随机取样 / 不可变 |
 |                            | `ListUtil`         | 列表切分 / 分页 / 反转                                  |
 |                            | `MapUtil`          | Map 创建 / 取值 / 链式构建 / 键值互换 / 排序 / 过滤             |
 |                            | `TreeUtil`         | 树结构构建 / 遍历 / 深度计算                               |
 |                            | `TreeNode`         | 通用树节点                                           |
+|                            | `SeqUtil`          | Sequenced 集合（首尾访问 / 倒序快照 / 不可变前置追加）           |
 |                            | `BiMap`            | 双向映射（键值互查）                                      |
 |                            | `StrJoiner`        | 字符串拼接器（分隔符 / 前缀 / 后缀）                           |
 |                            | `CsvUtil`          | CSV 读写（引号 / 转义处理）                               |

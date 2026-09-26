@@ -49,6 +49,8 @@ jobs:
 
       - name: Stage javadoc into _site/api
         run: |
+          # jekyll-build-pages@v1 生成的 _site 属 root，先解锁再写入
+          sudo chmod -R a+rwX _site
           mkdir -p _site/api
           cp -r target/site/apidocs/. _site/api/
 

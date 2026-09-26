@@ -279,8 +279,8 @@ public class ImgUtil {
 	 * 缩放图像到指定尺寸（BILINEAR 插值）。
 	 *
 	 * @param source 原图
-	 * @param width  目标宽（<=0 时保持原宽）
-	 * @param height 目标高（<=0 时保持原高）
+	 * @param width  目标宽（&lt;=0 时保持原宽）
+	 * @param height 目标高（&lt;=0 时保持原高）
 	 * @return 缩放结果
 	 */
 	public static BufferedImage scale(BufferedImage source, int width, int height) {

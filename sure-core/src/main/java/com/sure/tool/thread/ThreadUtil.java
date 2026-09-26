@@ -279,6 +279,46 @@ public class ThreadUtil {
 	}
 
 	/**
+	 * 并行执行全部任务并在指定时限内返回结果（限时版本）。
+	 *
+	 * <p>超时后未完成的任务会被取消，并抛出 {@link IllegalStateException}（携带超时原因）。</p>
+	 *
+	 * @param tasks   任务列表，可为空
+	 * @param timeout 整体执行时限，不允许为 {@code null}
+	 * @param <T>     返回类型
+	 * @return 结果列表；输入为空时返回空列表
+	 * @since 1.1.0
+	 */
+	public static <T> List<T> invokeAll(java.util.List<java.util.concurrent.Callable<T>> tasks, java.time.Duration timeout) {
+		if (tasks == null || tasks.isEmpty()) {
+			return java.util.Collections.emptyList();
+		}
+		ExecutorService executor = virtualExecutor();
+		try {
+			List<java.util.concurrent.Future<T>> futures = executor.invokeAll(tasks,
+					timeout.toMillis(), java.util.concurrent.TimeUnit.MILLISECONDS);
+			List<T> results = new java.util.ArrayList<>(futures.size());
+			for (java.util.concurrent.Future<T> future : futures) {
+				try {
+					results.add(future.get());
+				} catch (java.util.concurrent.CancellationException ce) {
+					throw new IllegalStateException("并行任务执行超时", ce);
+				}
+			}
+			return results;
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw new IllegalStateException("并行任务被中断", e);
+		} catch (java.util.concurrent.ExecutionException e) {
+			Throwable cause = e.getCause() == null ? e : e.getCause();
+			throw cause instanceof RuntimeException ? (RuntimeException) cause
+					: new IllegalStateException("并行任务执行失败", cause);
+		} finally {
+			executor.shutdown();
+		}
+	}
+
+	/**
 	 * 命名线程工厂。
 	 */
 	public static class NamedThreadFactory implements ThreadFactory {

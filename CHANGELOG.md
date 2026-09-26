@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### Added
+- P0 批 1（结构化并发，v1.1.0 目标）：新增 `StructuredTaskUtil`（JDK 21 `StructuredTaskScope` 封装）——`parallel` 并行聚合（含超时）、`anyOf` 首成功短路（含超时）、失败传播与中断语义；`ThreadUtil` 新增 `invokeAll(tasks, timeout)` 限时重载（超时自动取消未完成任务）
+
 ## [1.0.1] - 2026-09-26
 
 ### Fixed

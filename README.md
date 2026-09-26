@@ -223,6 +223,7 @@ mvn clean install
 | `com.sure.tool.thread`     | `ThreadUtil`       | 异步执行 / 休眠 / 线程工厂                                |
 |                            | `ExecutorBuilder`  | 线程池构造器                                          |
 |                            | `SyncFinisher`     | 并发同步器（固定线程并发 + 等待）                              |
+|                            | `StructuredTaskUtil`| 结构化并发（parallel 聚合 / anyOf 首成功短路 / 超时）          |
 | `com.sure.tool.http`       | `HttpUtil`         | 零依赖 HTTP 客户端（GET/POST/JSON/ 下载 / 超时）            |
 |                            | `URLUtil`          | URL 域名 / 路径 / 参数提取与拼接                           |
 |                            | `HttpException`    | HTTP 异常（携带状态码）                                  |

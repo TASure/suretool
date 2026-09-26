@@ -138,6 +138,7 @@ mvn clean install
 | 模块                         | 坐标                                          | 能力                                                 | 运行期依赖                  |
 | -------------------------- | ------------------------------------------- | -------------------------------------------------- | ---------------------- |
 | `sure-core`                | `io.github.tasure:sure-core`                | util/codec/collection/date/io/lang/bean/thread 核心域 | 零依赖                    |
+| `sure-log`                 | `io.github.tasure:sure-log`                 | 零依赖日志门面（SLF4J 自动委托 / Console 兜底）                 | core                   |
 | `sure-json`                | `io.github.tasure:sure-json`                | JSON 解析 / 序列化 / Bean 互转                            | core                   |
 | `sure-http`                | `io.github.tasure:sure-http`                | HTTP 客户端 / URL 工具                                  | core                   |
 | `sure-crypto`              | `io.github.tasure:sure-crypto`              | 哈希 / AES/DES/RSA/HMAC                              | core                   |
@@ -215,6 +216,9 @@ mvn clean install
 |                            | `StopWatch`        | 秒表计时器                                           |
 |                            | `Console`          | 控制台格式化打印                                        |
 |                            | `Dict`             | 便捷字典（类型化取值）                                     |
+| `com.sure.tool.config`     | `SettingUtil`      | 分层配置读取（系统属性 > 环境变量 > 文件 > 默认值）                  |
+| `com.sure.tool.log`        | `LogUtil`          | 日志门面（SLF4J 自动委托 / Console 兜底）                    |
+|                            | `LogFactory`       | 日志工厂（按名称/类获取，实例缓存）                              |
 | `com.sure.tool.bean`       | `BeanUtil`         | 属性拷贝（含类型转换）/Bean↔Map / 属性读写                     |
 |                            | `BeanDesc`         | Bean 属性描述（getter/setter/ 字段扫描缓存）                |
 |                            | `FieldUtil`        | 字段遍历 / 查找 / 常量读取                                |

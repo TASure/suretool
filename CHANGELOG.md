@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### Added
+- P1 批 3（日志与配置，v1.2.0 目标）：新增 `sure-log` 模块——零依赖日志门面 `LogUtil`/`LogFactory`/`Log`（classpath 探测 SLF4J 自动委托，未命中回退 Console 输出，占位符/异常堆栈/级别开关齐全）；`sure-core` 新增 `SettingUtil` 分层配置读取（系统属性 > 环境变量 > 文件 > 默认值，UTF-8 `key=value` 解析，类型化取值，Copy-on-Write 线程安全）
+
 ## [1.1.0] - 2026-09-26
 
 ### Added

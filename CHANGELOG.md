@@ -6,6 +6,13 @@
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-09-26
+
+### Fixed
+- 修复 sure-extra javadoc 裸 `<` 未转义（ImgUtil `@param <=` → `&lt;=`）导致的 javadoc 构建失败
+- OSV-Scanner 改用官方 v2 reusable workflow（漏洞即失败 + SARIF 上报 Code scanning）
+- CI 流水线修复：pages `_site` 权限 + apidocs 动态定位；CodeQL 切换 advanced（停用 default setup）
+
 ### Added
 - 三期（P2 全部）：
   - 属性测试（T13）：引入 jqwik 1.10.1（sure-core 模块级 test 依赖 + 双测试框架 provider），新增 StrUtil/ArrayUtil/CollUtil 三组共 36 个生成式属性（约 7000 次随机输入验证不变量），sure-core 覆盖率 91.62%→91.73%

@@ -52,6 +52,10 @@ jobs:
           # jekyll-build-pages@v1 生成的 _site 属 root，先解锁再写入
           sudo chmod -R a+rwX _site
           mkdir -p _site/api
+          echo "--- ls target/site ---"
+          ls -la target/site/ 2>&1 || echo "target/site 不存在"
+          echo "--- find apidocs (maxdepth 4) ---"
+          find . -maxdepth 4 -type d -name apidocs 2>/dev/null | head -5
           cp -r target/site/apidocs/. _site/api/
 
       - name: Upload artifact

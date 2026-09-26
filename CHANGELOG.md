@@ -8,6 +8,7 @@
 
 ### Added
 - P1 批 3（日志与配置，v1.2.0 目标）：新增 `sure-log` 模块——零依赖日志门面 `LogUtil`/`LogFactory`/`Log`（classpath 探测 SLF4J 自动委托，未命中回退 Console 输出，占位符/异常堆栈/级别开关齐全）；`sure-core` 新增 `SettingUtil` 分层配置读取（系统属性 > 环境变量 > 文件 > 默认值，UTF-8 `key=value` 解析，类型化取值，Copy-on-Write 线程安全）
+- P1 批 4（数据访问，v1.2.0 目标）：新增 `sure-db` 模块——零依赖 JDBC 数据访问层 `Db`/`DbUtil`/`SqlRunner`/`Entity`/`SimpleDataSource`/`PageResult`（PreparedStatement 参数绑定防注入、IDENTITY 主键回读、事务回调自动提交/回滚、LIMIT/OFFSET 分页、内置最小连接池）
 
 ## [1.1.0] - 2026-09-26
 

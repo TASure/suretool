@@ -139,6 +139,7 @@ mvn clean install
 | -------------------------- | ------------------------------------------- | -------------------------------------------------- | ---------------------- |
 | `sure-core`                | `io.github.tasure:sure-core`                | util/codec/collection/date/io/lang/bean/thread 核心域 | 零依赖                    |
 | `sure-log`                 | `io.github.tasure:sure-log`                 | 零依赖日志门面（SLF4J 自动委托 / Console 兜底）                 | core                   |
+| `sure-db`                  | `io.github.tasure:sure-db`                  | JDBC 数据访问（Entity / SqlRunner / 内置连接池 / 事务 / 分页）    | core                   |
 | `sure-json`                | `io.github.tasure:sure-json`                | JSON 解析 / 序列化 / Bean 互转                            | core                   |
 | `sure-http`                | `io.github.tasure:sure-http`                | HTTP 客户端 / URL 工具                                  | core                   |
 | `sure-crypto`              | `io.github.tasure:sure-crypto`              | 哈希 / AES/DES/RSA/HMAC                              | core                   |
@@ -219,6 +220,12 @@ mvn clean install
 | `com.sure.tool.config`     | `SettingUtil`      | 分层配置读取（系统属性 > 环境变量 > 文件 > 默认值）                  |
 | `com.sure.tool.log`        | `LogUtil`          | 日志门面（SLF4J 自动委托 / Console 兜底）                    |
 |                            | `LogFactory`       | 日志工厂（按名称/类获取，实例缓存）                              |
+| `com.sure.tool.db`         | `Db`               | 数据库门面（CRUD / 事务 / 分页）                            |
+|                            | `DbUtil`           | 数据库静态门面（全局默认数据源）                                |
+|                            | `SqlRunner`        | SQL 执行器（PreparedStatement 参数绑定 / Entity 映射）         |
+|                            | `Entity`           | 数据库实体（Map 风格 + 表名 + 类型化取值）                       |
+|                            | `SimpleDataSource` | 零依赖最小连接池（借用 / 校验 / 上限等待）                        |
+|                            | `PageResult`       | 分页结果（总数 / 总页数 / 当前页）                             |
 | `com.sure.tool.bean`       | `BeanUtil`         | 属性拷贝（含类型转换）/Bean↔Map / 属性读写                     |
 |                            | `BeanDesc`         | Bean 属性描述（getter/setter/ 字段扫描缓存）                |
 |                            | `FieldUtil`        | 字段遍历 / 查找 / 常量读取                                |

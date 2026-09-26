@@ -48,4 +48,12 @@
         <Bug pattern="EI_EXPOSE_REP"/>
     </Match>
 
+    <!-- 全局默认数据源存入静态字段（EI_EXPOSE_STATIC_REP2）：
+         DbUtil.setDefaultDataSource 为设计意图的全局默认数据源（对齐 Hutool DbUtil.use()），
+         DataSource 无防御性拷贝语义；调用方应持有并管理自己的数据源生命周期。 -->
+    <Match>
+        <Class name="com.sure.tool.db.DbUtil"/>
+        <Bug pattern="EI_EXPOSE_STATIC_REP2"/>
+    </Match>
+
 </FindBugsFilter>

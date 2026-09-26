@@ -64,7 +64,7 @@
 
     <artifactId>sure-all</artifactId>
 
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 
 </dependency>
 ```
@@ -80,7 +80,7 @@
 
     <artifactId>sure-core</artifactId>
 
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 
 </dependency>
 
@@ -90,7 +90,7 @@
 
     <artifactId>sure-json</artifactId>
 
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 
 </dependency>
 ```
@@ -110,7 +110,7 @@
 
             <artifactId>sure-bom</artifactId>
 
-            <version>1.0.1</version>
+            <version>1.1.0</version>
 
             <type>pom</type>
 

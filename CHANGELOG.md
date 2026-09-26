@@ -6,9 +6,11 @@
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-26
+
 ### Added
-- P0 批 1（结构化并发，v1.1.0 目标）：新增 `StructuredTaskUtil`（JDK 21 `StructuredTaskScope` 封装）——`parallel` 并行聚合（含超时）、`anyOf` 首成功短路（含超时）、失败传播与中断语义；`ThreadUtil` 新增 `invokeAll(tasks, timeout)` 限时重载（超时自动取消未完成任务）
-- P0 批 2（现代集合，v1.1.0 目标）：新增 `SeqUtil`（JDK 21 Sequenced 集合）——倒序快照、首尾安全访问、不可变前置/追加、有序 Map 首尾键值；`CollUtil` 增补 `chunk` 分片、`randomItem/randomItems` 随机取样、`toImmutable` 不可变副本、`frequency` 频次统计
+- P0 批 1（结构化并发）：新增 `StructuredTaskUtil`——`parallel` 并行聚合（含超时）、`anyOf` 首成功短路（含超时）、失败传播与中断语义；`ThreadUtil` 新增 `invokeAll(tasks, timeout)` 限时重载（超时自动取消未完成任务）
+- P0 批 2（现代集合）：新增 `SeqUtil`（JDK 21 Sequenced 集合）——倒序快照、首尾安全访问、不可变前置/追加、有序 Map 首尾键值；`CollUtil` 增补 `chunk` 分片、`randomItem/randomItems` 随机取样、`toImmutable` 不可变副本、`frequency` 频次统计
 
 ## [1.0.1] - 2026-09-26
 

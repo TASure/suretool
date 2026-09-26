@@ -58,15 +58,15 @@
 
 
 ```
-\\\\\\\<dependency>
+<dependency>
 
-\\\&#x20;   \\\\\\\<groupId>io.github.tasure\\\\\\\</groupId>
+    <groupId>io.github.tasure</groupId>
 
-\\\&#x20;   \\\\\\\<artifactId>sure-all\\\\\\\</artifactId>
+    <artifactId>sure-all</artifactId>
 
-\\\&#x20;   \\\\\\\<version>1.0.0\\\\\\\</version>
+    <version>1.0.0</version>
 
-\\\\\\\</dependency>
+</dependency>
 ```
 
 或按需按模块引入（依赖更轻）：
@@ -74,25 +74,25 @@
 
 
 ```
-\\\\\\\<dependency>
+<dependency>
 
-\\\&#x20;   \\\\\\\<groupId>io.github.tasure\\\\\\\</groupId>
+    <groupId>io.github.tasure</groupId>
 
-\\\&#x20;   \\\\\\\<artifactId>sure-core\\\\\\\</artifactId>
+    <artifactId>sure-core</artifactId>
 
-\\\&#x20;   \\\\\\\<version>1.0.0\\\\\\\</version>
+    <version>1.0.0</version>
 
-\\\\\\\</dependency>
+</dependency>
 
-\\\\\\\<dependency>
+<dependency>
 
-\\\&#x20;   \\\\\\\<groupId>io.github.tasure\\\\\\\</groupId>
+    <groupId>io.github.tasure</groupId>
 
-\\\&#x20;   \\\\\\\<artifactId>sure-json\\\\\\\</artifactId>
+    <artifactId>sure-json</artifactId>
 
-\\\&#x20;   \\\\\\\<version>1.0.0\\\\\\\</version>
+    <version>1.0.0</version>
 
-\\\\\\\</dependency>
+</dependency>
 ```
 
 或引入 BOM 统一版本管理（import 后无需再写版本号）：
@@ -100,27 +100,27 @@
 
 
 ```
-\\\\\\\<dependencyManagement>
+<dependencyManagement>
 
-\\\&#x20;   \\\\\\\<dependencies>
+    <dependencies>
 
-\\\&#x20;       \\\\\\\<dependency>
+        <dependency>
 
-\\\&#x20;           \\\\\\\<groupId>io.github.tasure\\\\\\\</groupId>
+            <groupId>io.github.tasure</groupId>
 
-\\\&#x20;           \\\\\\\<artifactId>sure-bom\\\\\\\</artifactId>
+            <artifactId>sure-bom</artifactId>
 
-\\\&#x20;           \\\\\\\<version>1.0.0\\\\\\\</version>
+            <version>1.0.0</version>
 
-\\\&#x20;           \\\\\\\<type>pom\\\\\\\</type>
+            <type>pom</type>
 
-\\\&#x20;           \\\\\\\<scope>import\\\\\\\</scope>
+            <scope>import</scope>
 
-\\\&#x20;       \\\\\\\</dependency>
+        </dependency>
 
-\\\&#x20;   \\\\\\\</dependencies>
+    </dependencies>
 
-\\\\\\\</dependencyManagement>
+</dependencyManagement>
 ```
 
 先本地安装：
@@ -261,75 +261,75 @@ import com.sure.tool.io.FileUtil;
 
 import com.sure.tool.lang.Snowflake;
 
-import com.sure.tool.util.\\\\\\\*;
+import com.sure.tool.util.*;
 
 import java.util.Date;
 
 public class Demo {
 
-\\\&#x20;   public static void main(String\\\\\\\[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
 
-\\\&#x20;       // 字符串
+        // 字符串
 
-\\\&#x20;       StrUtil.isBlank("  ");              // true
+        StrUtil.isBlank("  ");              // true
 
-\\\&#x20;       StrUtil.toCamelCase("user\\\\\\\_name");   // userName
+        StrUtil.toCamelCase("user_name");   // userName
 
-\\\&#x20;       StrUtil.format("你好，{}", "世界");    // 你好，世界
+        StrUtil.format("你好，{}", "世界");    // 你好，世界
 
-\\\&#x20;       // 数值
+        // 数值
 
-\\\&#x20;       NumberUtil.div(10, 3, 2);           // 3.33
+        NumberUtil.div(10, 3, 2);           // 3.33
 
-\\\&#x20;       NumberUtil.round(3.14159, 2);       // 3.14
+        NumberUtil.round(3.14159, 2);       // 3.14
 
-\\\&#x20;       // 日期
+        // 日期
 
-\\\&#x20;       DateUtil.format(DateUtil.now());    // 2026-09-09 16:30:00
+        DateUtil.format(DateUtil.now());    // 2026-09-09 16:30:00
 
-\\\&#x20;       DateUtil.age(DateUtil.parse("2000-05-20"));  // 26
+        DateUtil.age(DateUtil.parse("2000-05-20"));  // 26
 
-\\\&#x20;       // 集合
+        // 集合
 
-\\\&#x20;       CollUtil.union(CollUtil.newArrayList(1, 2), CollUtil.newArrayList(2, 3));  // \\\\\\\[1, 2, 3]
+        CollUtil.union(CollUtil.newArrayList(1, 2), CollUtil.newArrayList(2, 3));  // [1, 2, 3]
 
-\\\&#x20;       // 脱敏
+        // 脱敏
 
-\\\&#x20;       DesensitizedUtil.mobilePhone("13812345678");   // 138\\\\\\\*\\\\\\\*\\\\\\\*\\\\\\\*5678
+        DesensitizedUtil.mobilePhone("13812345678");   // 138****5678
 
-\\\&#x20;       // 加密
+        // 加密
 
-\\\&#x20;       HashUtil.sha256Hex("abc");
+        HashUtil.sha256Hex("abc");
 
-\\\&#x20;       // 文件
+        // 文件
 
-\\\&#x20;       FileUtil.writeUtf8String("hello", new java.io.File("/tmp/a.txt"));
+        FileUtil.writeUtf8String("hello", new java.io.File("/tmp/a.txt"));
 
-\\\&#x20;       FileUtil.readUtf8String(new java.io.File("/tmp/a.txt"));
+        FileUtil.readUtf8String(new java.io.File("/tmp/a.txt"));
 
-\\\&#x20;       // ID
+        // ID
 
-\\\&#x20;       Snowflake snowflake = IdUtil.createSnowflake(1, 1);
+        Snowflake snowflake = IdUtil.createSnowflake(1, 1);
 
-\\\&#x20;       snowflake.nextId();  // 雪花 ID
+        snowflake.nextId();  // 雪花 ID
 
-\\\&#x20;       // 校验
+        // 校验
 
-\\\&#x20;       ValidatorUtil.isEmail("test@example.com");   // true
+        ValidatorUtil.isEmail("test@example.com");   // true
 
-\\\&#x20;       ValidatorUtil.isMobile("13800138000");       // true
+        ValidatorUtil.isMobile("13800138000");       // true
 
-\\\&#x20;       // 身份证
+        // 身份证
 
-\\\&#x20;       IdcardUtil.getBirthDate("11010119900307123X");  // 1990-03-07
+        IdcardUtil.getBirthDate("11010119900307123X");  // 1990-03-07
 
-\\\&#x20;       // 压缩
+        // 压缩
 
-\\\&#x20;       ZipUtil.zip("/tmp/dir", "/tmp/out.zip");
+        ZipUtil.zip("/tmp/dir", "/tmp/out.zip");
 
-\\\&#x20;       ZipUtil.unzip("/tmp/out.zip", "/tmp/out");
+        ZipUtil.unzip("/tmp/out.zip", "/tmp/out");
 
-\\\&#x20;   }
+    }
 
 }
 ```
@@ -339,11 +339,11 @@ public class Demo {
 
 
 ```
-\\\\# 首次运行先安装依赖模块到本地仓库
+# 首次运行先安装依赖模块到本地仓库
 
 mvn -pl sure-examples -am install -DskipTests
 
-\\\\# 运行全部示例（聚合入口 ExamplesRunner）
+# 运行全部示例（聚合入口 ExamplesRunner）
 
 mvn -pl sure-examples exec:java
 ```
@@ -353,11 +353,11 @@ mvn -pl sure-examples exec:java
 
 
 ```
-\\\\# 编译并运行全部单元测试
+# 编译并运行全部单元测试
 
 mvn test
 
-\\\\# 安装到本地仓库
+# 安装到本地仓库
 
 mvn clean install
 ```
@@ -377,7 +377,7 @@ mvn clean install
 
 * 贡献指南：[CONTRIBUTING.md](CONTRIBUTING.md)（环境要求 / PR 流程 / 门禁标准）
 
-* 行为准则：[CODE\_OF\_CONDUCT.md](CODE_OF_CONDUCT.md)（Contributor Covenant 2.1）
+* 行为准则：[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)（Contributor Covenant 2.1）
 
 * 安全策略：[SECURITY.md](SECURITY.md)（漏洞报告与响应承诺 24h）
 

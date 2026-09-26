@@ -23,7 +23,7 @@
 
     <groupId>io.github.tasure</groupId>
     <artifactId>suretool</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.1.0</version>
     <packaging>pom</packaging>
 
     <name>suretool</name>
@@ -78,7 +78,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Reproducible Builds：同 tag 两次构建产物字节一致（ISO-8601 固定时间戳） -->
-        <project.build.outputTimestamp>2026-09-26T02:48:05Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2026-09-26T06:21:17Z</project.build.outputTimestamp>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <junit.version>4.13.2</junit.version>
         <jqwik.version>1.10.1</jqwik.version>

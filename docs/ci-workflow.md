@@ -81,3 +81,17 @@ python3 .github/scripts/benchmark_gate.py /tmp/bench.log   # 本地跑 gate
 
 - **paths 过滤**：`sure-core/**`、`sure-json/**`、`sure-benchmark/**`、`pom.xml`、`.github/workflows/benchmark.yml`、`.github/scripts/benchmark_gate.py` —— **workflow/脚本自身变更也会自动触发**，无需手动 dispatch。
 - 另有 `schedule: 0 5 * * 1`（每周一 05:00 UTC）与 `workflow_dispatch` 兜底。
+
+### 5.5 pages.yml 文档站构建的两个坑（2026-09-26 修复实录）
+
+- **坑 1：`_site` 属主为 root，后续写入 Permission denied**。`actions/jekyll-build-pages@v1` 在容器内以 root 构建，生成的 `_site/` 属主为 root；紧接着在同一 job 里 `mkdir -p _site/api` 会报 `Permission denied`，导致 pages 部署连续失败（站点停留在更早的成功构建，新增文档 404）。
+  - **对策**：写入 `_site` 前先 `sudo chmod -R a+rwX _site` 解锁。
+  - **注意**：此问题会让"代码修复已 push 但线上不更新"——文档站排查先看 pages workflow 是否绿，再看站点内容。
+- **坑 2：javadoc:aggregate 产物路径在 CI 与本地不一致**。GitHub runner 自带 Maven 执行 `mvn -B javadoc:aggregate` 输出到 `target/reports/apidocs`，本地 Maven 输出到 `target/site/apidocs`（插件 3.6.3 默认 site，runner 环境差异导致）。`cp -r target/site/apidocs/. _site/api/` 在 CI 上报 `No such file or directory`。
+  - **对策**：不硬编码路径，动态定位：
+    ```bash
+    APIDOCS=$(find target -maxdepth 4 -type d -name apidocs 2>/dev/null | head -1)
+    [ -n "$APIDOCS" ] || { echo "未找到聚合 javadoc 产物"; exit 1; }
+    cp -r "$APIDOCS/." _site/api/
+    ```
+- **连带修复**：README.md 源文件曾被历史提交写入反斜杠污染（`\\\\<dependency>`、`\&#x20;`），GitHub Pages 首页由 jekyll-readme-index 渲染 README.md，导致首页代码块显示乱码。修复 = 清理 README.md 代码块内全部反斜杠转义（保留徽章 URL 的合法 `\&`）。

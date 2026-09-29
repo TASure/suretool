@@ -41,6 +41,7 @@ jobs:
           cache: maven
 
       - name: Import GPG key
+        if: steps.check.outputs.published != 'true'
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
         run: |
@@ -63,10 +64,24 @@ jobs:
             echo "tag=v$VER" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Check already published (idempotent release)
+        id: check
+        run: |
+          VER="${{ steps.version.outputs.version }}"
+          echo "published=false" >> "$GITHUB_OUTPUT"
+          code=$(curl -s -o /dev/null -w '%{http_code}' \
+            "https://repo1.maven.org/maven2/io/github/tasure/sure-core/$VER/sure-core-$VER.jar")
+          if [ "$code" = "200" ]; then
+            echo "版本 $VER 已在 Maven Central（repo1 可访问），跳过发布流程"
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build and verify (release profile, skip gpg inside maven)
+        if: steps.check.outputs.published != 'true'
         run: mvn -B -Prelease -Dgpg.skip=true verify
 
       - name: Stage bundle (maven layout + manifest)
+        if: steps.check.outputs.published != 'true'
         run: |
           set -euo pipefail
           VER="${{ steps.version.outputs.version }}"
@@ -96,6 +111,7 @@ jobs:
           find bundle -type f | sort
 
       - name: Sign bundle files (GPG detached asc)
+        if: steps.check.outputs.published != 'true'
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
@@ -108,11 +124,13 @@ jobs:
           find bundle -name '*.asc' | wc -l
 
       - name: Package bundle zip
+        if: steps.check.outputs.published != 'true'
         run: |
           VER="${{ steps.version.outputs.version }}"
           (cd bundle && zip -r "../suretool-$VER-bundle.zip" .)
 
       - name: Upload and publish to Sonatype Central Portal
+        if: steps.check.outputs.published != 'true'
         env:
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
@@ -128,6 +146,7 @@ jobs:
           echo "Portal 响应: $RESP"
 
       - name: Wait for Maven Central sync
+        if: steps.check.outputs.published != 'true'
         run: |
           set -euo pipefail
           VER="${{ steps.version.outputs.version }}"
@@ -148,6 +167,7 @@ jobs:
           fi
 
       - name: Create GitHub Release
+        if: steps.check.outputs.published != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

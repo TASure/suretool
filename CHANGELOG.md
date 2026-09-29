@@ -8,6 +8,7 @@
 
 ### Added
 - P2 批 7（进程 / 数学 / 高压缩率）：新增 `sure-process` 模块——零依赖进程门面 `ProcessUtil`（String/List/ProcessBuilder 多重载、`execWithTimeout` 超时 destroyForcibly、stdout/stderr 虚拟线程并发读防管道死锁）+ `ProcessResult`（exitCode/stdout/stderr/timedOut）；新增 `sure-math` 模块——零依赖数学与数值工具 `MathUtil`（isPrime/nextPrime/埃氏筛 primes/gcd/lcm/factorial/fibonacci/comb/perm/进制转换/isPowerOfTwo/nextPowerOfTwo）+ `BigDecimalUtil`（默认 10 位 HALF_UP 四则、round/roundHalfUp/忽略尾零 equals）+ `NumberUtil`（parse 容错回退/min/max）+ `RandomUtil`（ThreadLocalRandom 主 + SecureRandom 变体/randomString/randomNumbers/randomBytes/randomElement/shuffle）；新增 `sure-compress` 模块——`SevenZUtil`（目录递归 7z/LZMA2 压缩与解压、解压路径穿越校验、魔数检测，基于 commons-compress 1.27.1）+ `BrotliUtil`（官方 org.brotli:dec 纯 Java 解码、魔数检测，编码侧因官方无 Java 编码器/原生依赖冲突而裁减）
+- P2 批 8（网络与事件）：新增 `sure-socket` 模块——零依赖 TCP 门面 `SocketUtil`（带超时 connect / isReachable 探测 / isPortAvailable / getLocalHost 本机 IPv4 / isInnerIP 内网判断 / safeClose / readLine / writeString）+ `SocketServer`（port=0 自动分配、每连接一个虚拟线程执行 SocketHandler、stop 幂等）+ `SocketClient`（send/sendString/receive/receiveLine/receiveAll、幂等 close，`SocketRuntimeException`）；新增 `sure-event` 模块——零依赖轻量事件总线 `EventBus`（函数式 subscribe/Subscription 取消、`@EventSubscribe` 注解 register/unregister、父类事件兼容匹配、`postAsync` 虚拟线程异步投递、`EventExceptionHandler` 可插拔异常处理、并发安全）
 
 ## [1.3.0] - 2026-09-29
 

@@ -66,6 +66,8 @@
         <module>sure-process</module>
         <module>sure-math</module>
         <module>sure-compress</module>
+        <module>sure-socket</module>
+        <module>sure-event</module>
         <module>sure-json</module>
         <module>sure-http</module>
         <module>sure-crypto</module>
@@ -162,6 +164,16 @@
             <dependency>
                 <groupId>io.github.tasure</groupId>
                 <artifactId>sure-compress</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.tasure</groupId>
+                <artifactId>sure-socket</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.tasure</groupId>
+                <artifactId>sure-event</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

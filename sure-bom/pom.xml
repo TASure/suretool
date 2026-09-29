@@ -98,6 +98,16 @@
             </dependency>
             <dependency>
                 <groupId>io.github.tasure</groupId>
+                <artifactId>sure-socket</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.tasure</groupId>
+                <artifactId>sure-event</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.tasure</groupId>
                 <artifactId>sure-json</artifactId>
                 <version>${project.version}</version>
             </dependency>

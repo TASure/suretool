@@ -48,6 +48,24 @@
         <Bug pattern="EI_EXPOSE_REP"/>
     </Match>
 
+    <!-- SocketClient 暴露/接收底层 Socket（EI_EXPOSE_REP / EI_EXPOSE_REP2）：
+         SocketClient 为轻量门面，getSocket() 与构造注入均有意暴露底层 Socket 供
+         高级 IO / 自定义操作使用（对齐 Hutool SocketClient 设计）；Socket 为 JDK 标准
+         类，无防御性拷贝可行做法，生命周期由 SocketClient.close() 幂等管理。 -->
+    <Match>
+        <Class name="com.sure.tool.socket.SocketClient"/>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+    </Match>
+
+    <!-- EventBus 全局默认实例暴露（MS_EXPOSE_REP）与非私有构造器（SING_SINGLETON_HAS_NONPRIVATE_CONSTRUCTOR）：
+         EventBus 采用「全局默认实例 + 独立实例」双模式：getDefault() 返回共享总线供
+         快速使用，同时允许 new EventBus() 构造隔离总线（如按模块隔离事件域）；
+         可变总线本身就是被使用的对象，无防御性拷贝语义。 -->
+    <Match>
+        <Class name="com.sure.tool.event.EventBus"/>
+        <Bug pattern="MS_EXPOSE_REP,SING_SINGLETON_HAS_NONPRIVATE_CONSTRUCTOR"/>
+    </Match>
+
     <!-- 全局默认数据源存入静态字段（EI_EXPOSE_STATIC_REP2）：
          DbUtil.setDefaultDataSource 为设计意图的全局默认数据源（对齐 Hutool DbUtil.use()），
          DataSource 无防御性拷贝语义；调用方应持有并管理自己的数据源生命周期。 -->

@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-09-29
+
 ### Added
 - P2 批 5（脚本与模板）：新增 `sure-script` 模块——零依赖 JSR-223 脚本门面 `ScriptUtil`（引擎探测 / 编译缓存 / 快速求值，缺失引擎抛带依赖指引异常，`ScriptRuntimeException`）；新增 `sure-template` 模块——零依赖模板引擎 `Template`/`TemplateUtil`/`SimpleTemplate`（`${}` 占位符 / `\${}` 转义 / Map 与 Bean 渲染 / 点号路径 / null 值空串 / 未知变量保留原样）
 - P2 批 6（AOP 与 PDF）：新增 `sure-aop` 模块——零依赖 AOP 门面 `Aspect` 切面 + `ProxyUtil` 代理工厂（JDK 动态代理，方法级匹配，before/after/afterException 三通知点，非接口目标抛带 CGLIB 指引异常）；新增 `sure-pdf` 模块——基于 Apache PDFBox 3.0.4 的 PDF 轻量门面 `PdfWriter`（标题/文本/表格/图片/自动分页/自定义 TTF 字体）+ `PdfUtil`（文本提取/页数/合并/魔数校验，`PdfRuntimeException`）

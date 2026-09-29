@@ -4,7 +4,7 @@
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-## [Unreleased]
+## [1.4.0] - 2026-09-30
 
 ### Added
 - P2 批 7（进程 / 数学 / 高压缩率）：新增 `sure-process` 模块——零依赖进程门面 `ProcessUtil`（String/List/ProcessBuilder 多重载、`execWithTimeout` 超时 destroyForcibly、stdout/stderr 虚拟线程并发读防管道死锁）+ `ProcessResult`（exitCode/stdout/stderr/timedOut）；新增 `sure-math` 模块——零依赖数学与数值工具 `MathUtil`（isPrime/nextPrime/埃氏筛 primes/gcd/lcm/factorial/fibonacci/comb/perm/进制转换/isPowerOfTwo/nextPowerOfTwo）+ `BigDecimalUtil`（默认 10 位 HALF_UP 四则、round/roundHalfUp/忽略尾零 equals）+ `NumberUtil`（parse 容错回退/min/max）+ `RandomUtil`（ThreadLocalRandom 主 + SecureRandom 变体/randomString/randomNumbers/randomBytes/randomElement/shuffle）；新增 `sure-compress` 模块——`SevenZUtil`（目录递归 7z/LZMA2 压缩与解压、解压路径穿越校验、魔数检测，基于 commons-compress 1.27.1）+ `BrotliUtil`（官方 org.brotli:dec 纯 Java 解码、魔数检测，编码侧因官方无 Java 编码器/原生依赖冲突而裁减）

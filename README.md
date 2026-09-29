@@ -144,6 +144,9 @@ mvn clean install
 | `sure-template`            | `io.github.tasure:sure-template`            | 模板引擎（Template 接口 / SimpleTemplate / 转义 / Bean 渲染）     | core                   |
 | `sure-aop`                 | `io.github.tasure:sure-aop`                 | 零依赖 AOP（Aspect 切面 / ProxyUtil 代理工厂 / 方法级匹配）       | core                   |
 | `sure-pdf`                 | `io.github.tasure:sure-pdf`                 | PDF 轻量门面（PdfWriter / PdfUtil，基于 PDFBox 3，Apache-2.0）    | core + pdfbox          |
+| `sure-process`             | `io.github.tasure:sure-process`             | 进程门面（ProcessUtil 多重载 / 超时强杀 / 虚拟线程防管道死锁）    | core                   |
+| `sure-math`                | `io.github.tasure:sure-math`                | 数学与数值（MathUtil 质数/组合/进制 / BigDecimalUtil / RandomUtil）| core                   |
+| `sure-compress`            | `io.github.tasure:sure-compress`            | 高压缩率门面（SevenZUtil 7z/LZMA2 防路径穿越 / BrotliUtil 解码检测）| core + compress        |
 | `sure-json`                | `io.github.tasure:sure-json`                | JSON 解析 / 序列化 / Bean 互转                            | core                   |
 | `sure-http`                | `io.github.tasure:sure-http`                | HTTP 客户端 / URL 工具                                  | core                   |
 | `sure-crypto`              | `io.github.tasure:sure-crypto`              | 哈希 / AES/DES/RSA/HMAC                              | core                   |

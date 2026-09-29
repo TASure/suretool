@@ -63,6 +63,9 @@
         <module>sure-template</module>
         <module>sure-aop</module>
         <module>sure-pdf</module>
+        <module>sure-process</module>
+        <module>sure-math</module>
+        <module>sure-compress</module>
         <module>sure-json</module>
         <module>sure-http</module>
         <module>sure-crypto</module>
@@ -96,6 +99,9 @@
         <angus.activation.version>2.0.2</angus.activation.version>
         <commons.net.version>3.11.1</commons.net.version>
         <zxing.version>3.5.3</zxing.version>
+        <commons.compress.version>1.27.1</commons.compress.version>
+        <xz.version>1.10</xz.version>
+        <brotli.version>0.1.2</brotli.version>
         <!-- 安全版本基线：log4j-core < 2.25.4 存在 CVE-2026-34477/34478/34480（TLS 主机名验证绕过/日志注入），测试日志后端随本版本升级 -->
         <log4j.version>2.26.1</log4j.version>
         <!-- JaCoCo 行覆盖率门禁下限（各模块在自身 pom 中覆盖，见 ROADMAP P2） -->
@@ -141,6 +147,21 @@
             <dependency>
                 <groupId>io.github.tasure</groupId>
                 <artifactId>sure-pdf</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.tasure</groupId>
+                <artifactId>sure-process</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.tasure</groupId>
+                <artifactId>sure-math</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.tasure</groupId>
+                <artifactId>sure-compress</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -248,6 +269,21 @@
                 <groupId>com.google.zxing</groupId>
                 <artifactId>javase</artifactId>
                 <version>${zxing.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>${commons.compress.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.tukaani</groupId>
+                <artifactId>xz</artifactId>
+                <version>${xz.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.brotli</groupId>
+                <artifactId>dec</artifactId>
+                <version>${brotli.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>

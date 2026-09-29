@@ -53,6 +53,14 @@
         </dependency>
         <dependency>
             <groupId>io.github.tasure</groupId>
+            <artifactId>sure-script</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.tasure</groupId>
+            <artifactId>sure-template</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.tasure</groupId>
             <artifactId>sure-json</artifactId>
         </dependency>
         <dependency>

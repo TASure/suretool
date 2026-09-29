@@ -59,6 +59,8 @@
         <module>sure-core</module>
         <module>sure-log</module>
         <module>sure-db</module>
+        <module>sure-script</module>
+        <module>sure-template</module>
         <module>sure-json</module>
         <module>sure-http</module>
         <module>sure-crypto</module>
@@ -117,6 +119,16 @@
             <dependency>
                 <groupId>io.github.tasure</groupId>
                 <artifactId>sure-db</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.tasure</groupId>
+                <artifactId>sure-script</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.tasure</groupId>
+                <artifactId>sure-template</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

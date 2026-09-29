@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### Added
+- P2 批 5（脚本与模板）：新增 `sure-script` 模块——零依赖 JSR-223 脚本门面 `ScriptUtil`（引擎探测 / 编译缓存 / 快速求值，缺失引擎抛带依赖指引异常，`ScriptRuntimeException`）；新增 `sure-template` 模块——零依赖模板引擎 `Template`/`TemplateUtil`/`SimpleTemplate`（`${}` 占位符 / `\${}` 转义 / Map 与 Bean 渲染 / 点号路径 / null 值空串 / 未知变量保留原样）
+
 ## [1.2.0] - 2026-09-29
 
 ### Added

@@ -140,6 +140,8 @@ mvn clean install
 | `sure-core`                | `io.github.tasure:sure-core`                | util/codec/collection/date/io/lang/bean/thread 核心域 | 零依赖                    |
 | `sure-log`                 | `io.github.tasure:sure-log`                 | 零依赖日志门面（SLF4J 自动委托 / Console 兜底）                 | core                   |
 | `sure-db`                  | `io.github.tasure:sure-db`                  | JDBC 数据访问（Entity / SqlRunner / 内置连接池 / 事务 / 分页）    | core                   |
+| `sure-script`              | `io.github.tasure:sure-script`              | JSR-223 脚本门面（引擎探测 / 编译缓存 / 快速求值）                | core                   |
+| `sure-template`            | `io.github.tasure:sure-template`            | 模板引擎（Template 接口 / SimpleTemplate / 转义 / Bean 渲染）     | core                   |
 | `sure-json`                | `io.github.tasure:sure-json`                | JSON 解析 / 序列化 / Bean 互转                            | core                   |
 | `sure-http`                | `io.github.tasure:sure-http`                | HTTP 客户端 / URL 工具                                  | core                   |
 | `sure-crypto`              | `io.github.tasure:sure-crypto`              | 哈希 / AES/DES/RSA/HMAC                              | core                   |

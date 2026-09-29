@@ -142,6 +142,8 @@ mvn clean install
 | `sure-db`                  | `io.github.tasure:sure-db`                  | JDBC 数据访问（Entity / SqlRunner / 内置连接池 / 事务 / 分页）    | core                   |
 | `sure-script`              | `io.github.tasure:sure-script`              | JSR-223 脚本门面（引擎探测 / 编译缓存 / 快速求值）                | core                   |
 | `sure-template`            | `io.github.tasure:sure-template`            | 模板引擎（Template 接口 / SimpleTemplate / 转义 / Bean 渲染）     | core                   |
+| `sure-aop`                 | `io.github.tasure:sure-aop`                 | 零依赖 AOP（Aspect 切面 / ProxyUtil 代理工厂 / 方法级匹配）       | core                   |
+| `sure-pdf`                 | `io.github.tasure:sure-pdf`                 | PDF 轻量门面（PdfWriter / PdfUtil，基于 PDFBox 3，Apache-2.0）    | core + pdfbox          |
 | `sure-json`                | `io.github.tasure:sure-json`                | JSON 解析 / 序列化 / Bean 互转                            | core                   |
 | `sure-http`                | `io.github.tasure:sure-http`                | HTTP 客户端 / URL 工具                                  | core                   |
 | `sure-crypto`              | `io.github.tasure:sure-crypto`              | 哈希 / AES/DES/RSA/HMAC                              | core                   |

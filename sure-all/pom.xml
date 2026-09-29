@@ -61,6 +61,14 @@
         </dependency>
         <dependency>
             <groupId>io.github.tasure</groupId>
+            <artifactId>sure-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.tasure</groupId>
+            <artifactId>sure-pdf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.tasure</groupId>
             <artifactId>sure-json</artifactId>
         </dependency>
         <dependency>

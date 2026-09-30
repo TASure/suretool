@@ -1,7 +1,7 @@
 # PRD：sure-event 模块（轻量事件总线）
 
 - 状态：Accepted（2026-09-29）｜ 模块：`sure-event` ｜ 包：`com.sure.tool.event` ｜ 版本：1.4.0
-- 依赖：仅 sure-core（零第三方运行时依赖）｜ JDK 21+ ｜ 模块化：`module sure.event`
+- 依赖：仅 sure-core（零第三方运行时依赖）｜ JDK 25+ ｜ 模块化：`module sure.event`
 - 对标：Guava EventBus 简化 + 现代 Java（虚拟线程）
 
 ## A. 目标与定位

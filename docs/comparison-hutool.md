@@ -8,7 +8,7 @@
 | 维度 | suretool | Hutool |
 | --- | --- | --- |
 | 定位 | 小而全的 Java 工具库，聚焦常用高频能力 | 大型工具库，覆盖面极广（含更多领域扩展） |
-| JDK 要求 | **仅 JDK 21+**（`maven.compiler.release=21`） | JDK 8+（5.x 支持 JDK8+；兼容老版本） |
+| JDK 要求 | **仅 JDK 25+**（`maven.compiler.release=21`） | JDK 8+（5.x 支持 JDK8+；兼容老版本） |
 | 包名 | `com.sure.tool` | `cn.hutool` |
 | 模块数 | 11 个业务模块 + bom/all/examples | 数十个模块（hutool-all 聚合） |
 | 依赖策略 | **零第三方依赖**（除 POI 等专项模块） | 核心零依赖，部分模块带第三方依赖 |
@@ -41,7 +41,7 @@ String md5 = com.sure.tool.crypto.SecureUtil.md5("data");
 ## 四、何时选择
 
 **选择 suretool：**
-- 项目已基于 JDK 21+（虚拟线程、record、switch 模式匹配等新特性）；
+- 项目已基于 JDK 25+（虚拟线程、record、switch 模式匹配等新特性）；
 - 希望依赖最小、安全默认值开箱即用；
 - 需要经 CodeQL / SpotBugs / JaCoCo 门禁验证的"小而可信"组件；
 - 希望以 `sure-bom` 统一版本管理、按需引入模块。

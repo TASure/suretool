@@ -8,13 +8,13 @@
 ### Tools / Utilities 分类
 
 ```markdown
-* [suretool](https://github.com/TASure/suretool) - A small but complete Java utility library for JDK 21+, secure-by-default crypto, zero-dependency core, with BOM and Spring Boot starter.
+* [suretool](https://github.com/TASure/suretool) - A small but complete Java utility library for JDK 25+, secure-by-default crypto, zero-dependency core, with BOM and Spring Boot starter.
 ```
 
 ### 可选补充（JSON / Security 分类）
 
 ```markdown
-* [suretool-json](https://github.com/TASure/suretool) - Lightweight JSON parser and serializer (JSONObject/JSONArray/JSONUtil) for JDK 21+.
+* [suretool-json](https://github.com/TASure/suretool) - Lightweight JSON parser and serializer (JSONObject/JSONArray/JSONUtil) for JDK 25+.
 * [suretool-crypto](https://github.com/TASure/suretool) - Secure-by-default crypto utilities: AES-GCM, RSA-OAEP, HMAC, deprecated DES for legacy data.
 ```
 
@@ -23,10 +23,10 @@
 | 字段 | 值 |
 | --- | --- |
 | 名称 | suretool |
-| 描述 | 小而全的 Java 工具库（JDK 21+、默认安全、零依赖核心、BOM + Starter） |
+| 描述 | 小而全的 Java 工具库（JDK 25+、默认安全、零依赖核心、BOM + Starter） |
 | 主页 | https://github.com/TASure/suretool |
 | 许可证 | Apache-2.0 |
-| 标签 | java, utility, toolkit, jdk21, security, json, cache, jwt, captcha |
+| 标签 | java, utility, toolkit, jdk25, security, json, cache, jwt, captcha |
 
 ## 提交前检查清单
 

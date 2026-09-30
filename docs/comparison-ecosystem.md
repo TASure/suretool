@@ -23,7 +23,7 @@
 | 领域 | 主流选择 | 说明 |
 | --- | --- | --- |
 | JSON | Jackson、Gson、Fastjson2 | Jackson 是事实标准；Fastjson 历史上有过安全争议 |
-| HTTP | OkHttp、Apache HttpClient、JDK HttpClient | OkHttp 易用性好；JDK 21 内置 HttpClient 已够日常使用 |
+| HTTP | OkHttp、Apache HttpClient、JDK HttpClient | OkHttp 易用性好；JDK 25 内置 HttpClient 已够日常使用 |
 | 缓存 | Caffeine、Guava Cache | Caffeine 是性能标杆，Guava Cache 更轻 |
 | Office | Apache POI、EasyExcel | POI 全功能；EasyExcel 面向大数据量读写 |
 | 时间 | java.time（JDK 内置） | Joda-Time 已完成历史使命，被 java.time 取代 |
@@ -39,15 +39,15 @@
 | 维度 | Apache Commons | Guava | Hutool | suretool |
 | --- | --- | --- | --- | --- |
 | 形态 | 多个独立子模块 | 单一库 + 若干模块 | 多模块（hutool-all 聚合） | 多模块（sure-all 聚合） |
-| JDK 要求 | 视版本，历史包袱重 | JDK 8+ | JDK 8+（5.x） | **仅 JDK 21+** |
+| JDK 要求 | 视版本，历史包袱重 | JDK 8+ | JDK 8+（5.x） | **仅 JDK 25+** |
 | 核心依赖 | 各模块不同，部分依赖外部 | 零（核心） | 零（核心） | **零第三方运行期依赖（核心）** |
 | API 风格 | 偏保守、历史兼容 | 优雅、文档极佳 | 中文文档、XxxUtil 聚合 | XxxUtil 聚合 + 现代 API |
 | 时间 API | 部分基于 Date | java.time | 部分基于 Date（历史包袱） | **全部 java.time** |
-| 并发支持 | 一般 | 强（ListenableFuture 等） | 中等 | **虚拟线程优先（JDK 21 独占）** |
+| 并发支持 | 一般 | 强（ListenableFuture 等） | 中等 | **虚拟线程优先（JDK 25 独占）** |
 | 文档 | 官方站点全，英文 | 官方 wiki 极佳，英文 | 中文教程丰富 | 中文文档站（GitHub Pages） |
 | 生态影响力 | 行业老牌、被广泛引用 | 行业标杆 | Gitee 高 star、中文事实标准 | 起步阶段（发布 v1.0.0） |
 
-**结论**：通用型四家中，Commons 胜在"覆盖面 + 资历"，Guava 胜在"工程与 API 质量"，Hutool 胜在"中文生态 + 聚合体验"。suretool 的差异化空间不在"复制覆盖"，而在 **"JDK 21+ 专属的现代化写法 + 默认安全基线 + 零依赖核心 + 可审计工程质量"**。
+**结论**：通用型四家中，Commons 胜在"覆盖面 + 资历"，Guava 胜在"工程与 API 质量"，Hutool 胜在"中文生态 + 聚合体验"。suretool 的差异化空间不在"复制覆盖"，而在 **"JDK 25+ 专属的现代化写法 + 默认安全基线 + 零依赖核心 + 可审计工程质量"**。
 
 ---
 
@@ -68,10 +68,10 @@
 
 ## 四、suretool 差异化定位（一句话）
 
-> **面向 JDK 21+ 的"小而全"现代 Java 工具库：零第三方运行期依赖、默认安全基线、虚拟线程优先、每批发布可审计（CI + 覆盖率门禁 + 中央仓库 + GitHub Pages 文档）。**
+> **面向 JDK 25+ 的"小而全"现代 Java 工具库：零第三方运行期依赖、默认安全基线、虚拟线程优先、每批发布可审计（CI + 覆盖率门禁 + 中央仓库 + GitHub Pages 文档）。**
 
 - **对 Hutool**：功能上"高频 80% 追平"，体验上"更现代"（java.time / 虚拟线程 / 安全默认值），工程上"质量即影响力"。
-- **对 Guava / Commons**：不做它们的全集，做"零依赖 + JDK 21 独占特性"的轻量替代；覆盖它们的日常高频子集即可。
+- **对 Guava / Commons**：不做它们的全集，做"零依赖 + JDK 25 独占特性"的轻量替代；覆盖它们的日常高频子集即可。
 - **对领域库（Jackson / OkHttp / POI）**：sure-json / sure-http / sure-poi 定位"开箱即用的轻封装"，重型需求仍可对接领域库。
 
 ---

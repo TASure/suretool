@@ -1,6 +1,6 @@
 # 数学 · 进程 · 压缩 三合一速查（sure-math / sure-process / sure-compress）
 
-> 适用版本：suretool ≥ 1.4.0 ｜ JDK 21+ ｜ Maven 坐标 `io.github.tasure:sure-math`（其余模块同理）
+> 适用版本：suretool ≥ 1.4.0 ｜ JDK 25+ ｜ Maven 坐标 `io.github.tasure:sure-math`（其余模块同理）
 
 ## 1. sure-math：大数、素数、随机与精确小数
 

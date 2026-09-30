@@ -22,11 +22,11 @@ jobs:
         uses: actions/checkout@v4
 
       # 生成 sure-core 覆盖率 badge（随文档站一起发布，README 徽章引用）
-      - name: Set up JDK 21
+      - name: Set up JDK 25
         uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 21
+          java-version: 25
           cache: maven
 
       - name: Generate sure-core coverage report

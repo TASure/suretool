@@ -64,7 +64,7 @@ public class QuickStart {
 
 ## 4. 环境要求
 
-- **JDK 21+**（suretool 仅支持 JDK 21 及以上，全部写法均为现代 JDK 特性，不做老版本兼容）
+- **JDK 25+**（suretool 仅支持 JDK 25 及以上，全部写法均为现代 JDK 特性，不做老版本兼容）
 - Maven 3.8+ / Gradle 8+
 
 > 完整 API 见 [文档站](https://tasure.github.io/suretool/)；示例工程见 [sure-examples](../../sure-examples/README.md)。

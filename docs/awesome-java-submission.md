@@ -8,13 +8,13 @@
 在 `README.md` 的 **Libraries → Utilities** 分类追加：
 
 ```markdown
-- [SureTool](https://github.com/TASure/suretool) - 模块化 Java 工具库，面向 JDK 21+，提供集合、字符串、日期、JSON、加密、Office、进程、数学、压缩、Socket、事件总线等 15+ 工具域，零第三方运行时依赖（sure-core 及其子模块），Apache-2.0
+- [SureTool](https://github.com/TASure/suretool) - 模块化 Java 工具库，面向 JDK 25+，提供集合、字符串、日期、JSON、加密、Office、进程、数学、压缩、Socket、事件总线等 15+ 工具域，零第三方运行时依赖（sure-core 及其子模块），Apache-2.0
 ```
 
 - **分类**：Libraries → Utilities（如列表按字母序，插入 `S` 位置）
 - **链接**：https://github.com/TASure/suretool
 - **许可证**：Apache License 2.0（仓库 LICENSE 文件已存在）
-- **主题标签**（GitHub topics 已配置）：`java` `java-library` `toolkit` `utilities` `jdk21` `maven`
+- **主题标签**（GitHub topics 已配置）：`java` `java-library` `toolkit` `utilities` `jdk25` `maven`
 
 ## 2. 提交流程（用户操作）
 
@@ -30,7 +30,7 @@
 ## What does this PR do?
 
 Adds [SureTool](https://github.com/TASure/suretool), a modular Java utility
-library for JDK 21+ (collection, string, date, JSON, crypto, office, process,
+library for JDK 25+ (collection, string, date, JSON, crypto, office, process,
 math, compression, socket, event-bus and more). Core modules have zero
 third-party runtime dependencies; licensed under Apache-2.0.
 

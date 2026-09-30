@@ -3,7 +3,7 @@
 - 状态：已评审通过（产品经理 → 架构师 → 工程师）
 - 目标版本：v1.3.0（与 sure-aop 同批发布）
 - 对标：Hutool Poi PDF 支持面（`cn.hutool.poi`，基于 OpenPDF/PDFBox）
-- 硬约束：仅 JDK21+；XxxUtil 命名 + 私有构造器 + @since + 中文 Javadoc + Tab 缩进；新模块同步 root modules / dependencyManagement / sure-all / sure-bom / README / CHANGELOG。
+- 硬约束：仅 JDK25+；XxxUtil 命名 + 私有构造器 + @since + 中文 Javadoc + Tab 缩进；新模块同步 root modules / dependencyManagement / sure-all / sure-bom / README / CHANGELOG。
 - 依赖许可：PDFBox 为 Apache-2.0（与项目一致，区别于 OpenPDF 的 LGPL/MPL）
 
 ## 1. 背景与目标

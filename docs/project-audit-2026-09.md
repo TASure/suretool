@@ -16,7 +16,7 @@
 | 测试用例 | 749 个 `@Test`（测试类约 100 个） |
 | sure-core 行覆盖率 | 89.70%（covered 25391/28308） |
 | 覆盖率门禁 | 根 pom 0.70 / sure-core 0.71（**与公开承诺 0.90 不符**） |
-| CI | GitHub Actions：JDK 21+25 双跑、仅 ubuntu-latest、verify + JaCoCo artifact |
+| CI | GitHub Actions：JDK 25+25 双跑、仅 ubuntu-latest、verify + JaCoCo artifact |
 | 供应链 | dependabot.yml（maven + actions，每周一）✅；**无 CodeQL、无 OSV-Scanner** ❌ |
 | 工程文件 | LICENSE / NOTICE / CONTRIBUTING / CODE_OF_CONDUCT / SECURITY / CHANGELOG / ROADMAP / README.en ✅ |
 | 协作模板 | ISSUE_TEMPLATE（bug/feature）、PULL_REQUEST_TEMPLATE ✅ |
@@ -50,7 +50,7 @@
 | --- | --- | --- | --- |
 | P0-1 | **覆盖率门禁与公开承诺不符**：sure-core 门禁 0.71，公开宣称 ≥90%，实测 89.70% | sure-core/pom.xml `jacoco.line.min=0.71`；README/ROADMAP 承诺 90% | 引用方信任受损；"优秀可靠"承诺未兑现 |
 | P0-2 | **无供应链漏洞扫描**：缺 OSV-Scanner（依赖漏洞）与 CodeQL（源码安全） | workflows 无 codeql/osv job；曾有 security code-scanning 修复历史但未固化为 CI | 作为被引用组件，依赖 CVE 无人盯防，安全红线 |
-| P0-3 | **无 JPMS 模块化**：JDK 21 项目零 module-info.java | `find . -name module-info.java` = 0 | Guava/Commons 均提供 module-info；无模块化影响强封装与 jlink 场景引用 |
+| P0-3 | **无 JPMS 模块化**：JDK 25 项目零 module-info.java | `find . -name module-info.java` = 0 | Guava/Commons 均提供 module-info；无模块化影响强封装与 jlink 场景引用 |
 | P0-4 | **无可复现构建**：未配置 project.build.outputTimestamp | pom.xml 无 outputTimestamp | Reproducible Builds 是开源信任标准；同一 tag 不同机器产物哈希不一致 |
 
 ### P1 —— 影响工程质量与长期可维护性，纳入下一迭代

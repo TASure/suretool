@@ -42,7 +42,7 @@
 
 * 包前缀：`com.sure.tool`
 
-* 语言：Java 21+（核心域零第三方运行期依赖；Office 域基于 Apache POI 5.5.1）
+* 语言：Java 25+（核心域零第三方运行期依赖；Office 域基于 Apache POI 5.5.1）
 
 * 许可：Apache License 2.0
 

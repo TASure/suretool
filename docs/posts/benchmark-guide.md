@@ -35,7 +35,7 @@
 ## 4. 怎么复现
 
 ```bash
-export JAVA_HOME=<jdk21>; export PATH=$JAVA_HOME/bin:$PATH
+export JAVA_HOME=<jdk25>; export PATH=$JAVA_HOME/bin:$PATH
 mvn -B -pl sure-benchmark -am package -DskipTests
 java -jar sure-benchmark/target/sure-benchmark-<version>-jar-with-dependencies.jar
 # 只看日期工具：java -jar ...jar ".*DateUtilBenchmark.*"

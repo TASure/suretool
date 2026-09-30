@@ -1,11 +1,11 @@
 # Release Notes — suretool 0.1.0
 
-> 发布时复制到 GitHub Releases（正文），标题建议：`suretool 0.1.0 — 小而全、默认安全的 Java 工具库（JDK 21+）`
+> 发布时复制到 GitHub Releases（正文），标题建议：`suretool 0.1.0 — 小而全、默认安全的 Java 工具库（JDK 25+）`
 > 完整变更见 [CHANGELOG.md](../CHANGELOG.md)。
 
 ## 中文摘要
 
-**suretool 0.1.0** — 参考 Hutool 设计理念、专为 JDK 21+ 打造的"小而全"Java 工具库。
+**suretool 0.1.0** — 参考 Hutool 设计理念、专为 JDK 25+ 打造的"小而全"Java 工具库。
 
 ### ✨ 亮点
 - **11 个业务模块 + BOM + 示例 + Spring Boot Starter**：按需引入，`sure-bom` 统一版本；
@@ -42,7 +42,7 @@ String token = JwtUtil.createToken(Map.of("uid", 1001), "secret", 3600);
 
 ## English Summary
 
-**suretool 0.1.0** — a small-but-complete Java utility library for JDK 21+, inspired by Hutool.
+**suretool 0.1.0** — a small-but-complete Java utility library for JDK 25+, inspired by Hutool.
 
 - **Secure by default**: AES-GCM, RSA-OAEP-SHA256, min 2048-bit keys, DES kept for legacy only.
 - **Quality-gated**: line coverage ≥ 85% across all business modules, Checkstyle 0 violations,

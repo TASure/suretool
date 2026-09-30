@@ -60,7 +60,7 @@ Actions → Release to Maven Central → Run workflow：从当前 main 分支版
 
 ## 1. 环境要求
 
-- JDK 21+（`maven.compiler.release=21`）
+- JDK 25+（`maven.compiler.release=25`）
 - Maven 3.9+
 - GPG 密钥对（用于制品签名）
 - Sonatype Central Portal 账号 + `io.github.tasure` namespace 权限

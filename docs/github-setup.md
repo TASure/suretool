@@ -9,11 +9,11 @@
 
 - **Description**（建议，英文优先）：
   ```
-  A small but complete Java utility library for JDK 21+. Secure-by-default crypto (AES-GCM, RSA-OAEP), zero-dependency core, BOM & Spring Boot starter.
+  A small but complete Java utility library for JDK 25+. Secure-by-default crypto (AES-GCM, RSA-OAEP), zero-dependency core, BOM & Spring Boot starter.
   ```
 - **Website**：`https://tasure.github.io/suretool/`（Pages 文档站，部署后生效）
 - **Topics**（标签，建议勾选）：
-  `java` · `utility` · `toolkit` · `jdk21` · `security` · `crypto` · `json` · `cache` · `jwt` · `captcha` · `dfa` · `apache-license-2.0` · `hutool`
+  `java` · `utility` · `toolkit` · `jdk25` · `security` · `crypto` · `json` · `cache` · `jwt` · `captcha` · `dfa` · `apache-license-2.0` · `hutool`
 
 ## 2. 开启 Discussions
 
@@ -33,7 +33,7 @@ README 已含 Codecov 徽章，但上传需要 token：
 3. 回到 GitHub 仓库 **Settings → Secrets and variables → Actions → New repository secret**：
    - Name：`CODECOV_TOKEN`
    - Value：粘贴 token
-4. 下次 CI 运行（JDK 21 job）即会上传覆盖率，徽章变为绿色。
+4. 下次 CI 运行（JDK 25 job）即会上传覆盖率，徽章变为绿色。
 
 > 未配置 token 时 CI 仍正常（`fail_ci_if_error: false`），只是不上传覆盖率。
 

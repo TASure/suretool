@@ -3,7 +3,7 @@
 - 状态：已评审通过（产品经理 → 架构师 → 工程师）
 - 目标版本：v1.3.0（与 sure-template 同批发布）
 - 对标：Hutool ScriptUtil（`cn.hutool.script`）
-- 硬约束：仅 JDK21+；核心模块零第三方**运行期**依赖；XxxUtil 命名 + 私有构造器 + @since + 中文 Javadoc + Tab 缩进；新模块同步 root modules / dependencyManagement / sure-all / sure-bom / README / CHANGELOG。
+- 硬约束：仅 JDK25+；核心模块零第三方**运行期**依赖；XxxUtil 命名 + 私有构造器 + @since + 中文 Javadoc + Tab 缩进；新模块同步 root modules / dependencyManagement / sure-all / sure-bom / README / CHANGELOG。
 
 ## 1. 背景与目标
 
@@ -15,7 +15,7 @@ Java 生态脚本互操作由 JSR-223（`javax.script`）标准化，但 JDK15+ 
 
 - 模块：`sure-script`，坐标 `io.github.tasure:sure-script`，包 `com.sure.tool.script`
 - 运行期依赖：**无第三方**（仅 JDK `java.scripting`）
-- 测试依赖：无第三方——用测试替身 ScriptEngineFactory 验证 SPI 探测/编译缓存/求值逻辑（JDK21 无内置引擎，属预期）
+- 测试依赖：无第三方——用测试替身 ScriptEngineFactory 验证 SPI 探测/编译缓存/求值逻辑（JDK25 无内置引擎，属预期）
 - module-info：`module sure.script { requires transitive sure.core; requires java.scripting; exports com.sure.tool.script; }`
 
 ## 3. API 设计
@@ -54,6 +54,6 @@ Java 生态脚本互操作由 JSR-223（`javax.script`）标准化，但 JDK15+ 
 ## 5. 架构评审结论
 
 - **零依赖可行性**：javax.script 为 JDK 标准 API，SPI 由 ScriptEngineManager 加载，本模块不绑定任何具体引擎——通过。
-- **引擎缺失语义**：JDK21 无内置引擎，缺失时抛带指引的异常而非 NPE——与 Hutool 语义对齐且更友好。
+- **引擎缺失语义**：JDK25 无内置引擎，缺失时抛带指引的异常而非 NPE——与 Hutool 语义对齐且更友好。
 - **缓存一致性**：引擎与编译缓存均以并发容器承载，`ScriptEngine` 与 `CompiledScript` 线程安全性由实现方保证；并发场景由调用方按引擎文档约束。
 - **命名与包**：`com.sure.tool.script` 与既有 `com.sure.tool.*` 命名一致；ScriptUtil 私有构造器 + @since 1.3.0。

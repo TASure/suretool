@@ -69,8 +69,8 @@
 ### 5.3 本地复现命令
 
 ```bash
-# 本机若默认 JDK 不是 21，先切到 JDK 21（否则报 UnsupportedClassVersionError）
-export JAVA_HOME=<jdk21 路径>; export PATH=$JAVA_HOME/bin:$PATH
+# 本机若默认 JDK 不是 21，先切到 JDK 25（否则报 UnsupportedClassVersionError）
+export JAVA_HOME=<jdk25 路径>; export PATH=$JAVA_HOME/bin:$PATH
 mvn -B -pl sure-benchmark -am package -DskipTests
 java -jar sure-benchmark/target/sure-benchmark-<version>-jar-with-dependencies.jar   # 全量
 java -jar sure-benchmark/target/sure-benchmark-<version>-jar-with-dependencies.jar ".*DateUtilBenchmark.*"  # 单类

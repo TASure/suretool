@@ -5,7 +5,7 @@
 
 ## 1. 目标与范围
 
-在 `sure-core` 提供基于 JDK 21 `StructuredTaskScope` 的结构化并发编排 API，兑现「JDK 21+ 独占差异化」——Guava、Hutool、Apache Commons 均无等价能力。
+在 `sure-core` 提供基于 JDK 25 `StructuredTaskScope` 的结构化并发编排 API，兑现「JDK 25+ 独占差异化」——Guava、Hutool、Apache Commons 均无等价能力。
 
 **范围内**：
 - `StructuredTaskUtil`：并行聚合（parallel）、首成功短路（anyOf）、超时控制；

@@ -2,7 +2,7 @@
 
 > 测量时间：2026-09-25 · 运行方式：`java -jar sure-benchmark-*-jar-with-dependencies.jar`
 > 基准框架：**JMH**（Fork=3，Warmup=3×1s，Measurement=5×1s，`@BenchmarkMode(AverageTime)`，单位 **ns/op**，越低越好）
-> 环境：Linux x86_64 · **JDK 21.0.12（Temurin）** · `-Xms256m -Xmx256m` · suretool 1.0.1-SNAPSHOT vs hutool-core/hutool-json 5.8.x vs guava 33.4.0-jre
+> 环境：Linux x86_64 · **JDK 25.0.12（Temurin）** · `-Xms256m -Xmx256m` · suretool 1.0.1-SNAPSHOT vs hutool-core/hutool-json 5.8.x vs guava 33.4.0-jre
 
 ## 1. 结果总览
 

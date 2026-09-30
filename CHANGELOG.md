@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+### Changed
+- **基线升级 JDK 21 → JDK 25（LTS）**：全仓 `maven.compiler.release=25`，CI 矩阵统一 JDK 25（三平台），Spring Boot Starter 升级至 3.5.16 以支持 JDK25 class 文件
+- 文档与教程基线表述同步更新为 JDK 25+
+
 ## [1.5.0] - 2026-09-30
 
 ### Added

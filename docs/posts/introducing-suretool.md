@@ -1,4 +1,4 @@
-# 用 suretool 重构你的 Java 工具层：小而全、默认安全、JDK 21+
+# 用 suretool 重构你的 Java 工具层：小而全、默认安全、JDK 25+
 
 > 本文是 suretool 的发布介绍文章，可发布于掘金/CSDN/公众号等平台。
 
@@ -14,7 +14,7 @@
 开源社区已有成熟方案（如 Hutool），但对部分团队来说，引入全量大型工具库
 意味着依赖膨胀与老版本兼容负担。suretool 选择了另一条路：
 
-**只做高频、只支持 JDK 21+、默认安全、零第三方依赖（核心域），并用工程化门禁把质量锁死。**
+**只做高频、只支持 JDK 25+、默认安全、零第三方依赖（核心域），并用工程化门禁把质量锁死。**
 
 ## 设计理念
 
@@ -40,7 +40,7 @@
 - `DesUtil` 标记 `@Deprecated`，仅用于解密存量数据；
 - 代码扫描（CodeQL）、静态检查（SpotBugs）、覆盖率（JaCoCo）全部进入 CI 门禁。
 
-### 3. 只支持 JDK 21+：用上现代 Java
+### 3. 只支持 JDK 25+：用上现代 Java
 
 `maven.compiler.release=21`，意味着代码里可以放心使用 record、密封类、
 switch 模式匹配、虚拟线程等特性，不需要为老版本做兼容体操。
@@ -88,5 +88,5 @@ String token = JwtUtil.createToken(Map.of("uid", 1001), "secret", 3600);
 
 ## 结语
 
-suretool 的目标不是替代 Hutool，而是为 **JDK 21+、追求小而可信** 的团队
+suretool 的目标不是替代 Hutool，而是为 **JDK 25+、追求小而可信** 的团队
 提供一个开箱即用的选择。欢迎 Star、提 Issue、参与贡献。

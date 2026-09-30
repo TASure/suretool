@@ -34,6 +34,6 @@
 
 ## 架构评审
 
-- 零依赖，仅 JDK API；虚拟线程利用 JDK21 特性。
+- 零依赖，仅 JDK API；虚拟线程利用 JDK25 特性。
 - 不引入进程池/守护进程管理等重能力，保持门面轻量。
 - 异常策略：IO 异常包装为 `ProcessRuntimeException`。

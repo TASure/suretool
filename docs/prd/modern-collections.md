@@ -5,7 +5,7 @@
 
 ## 1. 目标与范围
 
-兑现 JDK 21「不可变 + Sequenced 集合」独占差异化：Guava / Hutool / Apache Commons 均无 Sequenced 集合工具。
+兑现 JDK 25「不可变 + Sequenced 集合」独占差异化：Guava / Hutool / Apache Commons 均无 Sequenced 集合工具。
 
 **范围内**：
 - 新增 `SeqUtil`（`com.sure.tool.collection`）：Sequenced 语义的首尾安全访问、倒序、不可变前置/追加、有序 Map 首尾键值；
@@ -14,7 +14,7 @@
 **范围外（不做）**：
 - 不自造不可变集合实现（JDK `List.copyOf` 等原生能力足够）；
 - 不改动既有 API 签名（向后兼容）；
-- 不做 Guava ImmutableCollection Builder（JDK 21 流式工厂已覆盖）。
+- 不做 Guava ImmutableCollection Builder（JDK 25 流式工厂已覆盖）。
 
 ## 2. 用户场景
 

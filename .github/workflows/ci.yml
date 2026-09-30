@@ -14,12 +14,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # 平台 × JDK：ubuntu 双跑 LTS 21 与当前 25；macOS/Windows 验证 JDK21（跨平台文件/换行/字体/网络回归）
+        # 平台 × JDK：全平台统一 JDK 25（LTS）基线
         os: [ubuntu-latest, macos-latest, windows-latest]
-        java: [21]
-        include:
-          - os: ubuntu-latest
-            java: 25
+        java: [25]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -37,7 +34,7 @@ jobs:
 
       # 覆盖率上报只在单一 JDK 上执行，避免重复上传
       - name: Upload JaCoCo coverage report
-        if: matrix.os == 'ubuntu-latest' && matrix.java == '21'
+        if: matrix.os == 'ubuntu-latest' && matrix.java == '25'
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report-jdk${{ matrix.java }}
@@ -55,7 +52,7 @@ jobs:
             sure-dfa/target/site/jacoco
 
       - name: Upload coverage to Codecov
-        if: matrix.os == 'ubuntu-latest' && matrix.java == '21'
+        if: matrix.os == 'ubuntu-latest' && matrix.java == '25'
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

@@ -1,6 +1,6 @@
 # suretool 性能基准报告
 
-> 生成时间：2026-09-30 · 环境：Linux VM，JDK 21.0.12，JMH forks=3 × 5×1s 测量
+> 生成时间：2026-09-30 · 环境：Linux VM，JDK 25.0.12，JMH forks=3 × 5×1s 测量
 > 门禁规则：sureX ↔ hutoolX 配对 ratio ≤ 1.5 通过（.github/scripts/benchmark_gate.py）
 
 ## 门禁配对（sure vs hutool）

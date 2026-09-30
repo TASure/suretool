@@ -1,7 +1,7 @@
 # PRD：sure-socket 网络模块（TCP Socket 门面）
 
 - 状态：Accepted（2026-09-29）｜ 模块：`sure-socket` ｜ 包：`com.sure.tool.socket` ｜ 版本：1.4.0
-- 依赖：仅 sure-core（零第三方运行时依赖）｜ JDK 21+ ｜ 模块化：`module sure.socket`
+- 依赖：仅 sure-core（零第三方运行时依赖）｜ JDK 25+ ｜ 模块化：`module sure.socket`
 - 对标：Hutool socket（SocketUtil / NioServer / NioClient）
 
 ## A. 目标与定位

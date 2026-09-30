@@ -1,6 +1,6 @@
 # sure-socket + sure-event 实战：TCP 门面与零依赖事件总线
 
-> 适用版本：suretool ≥ 1.4.0 ｜ JDK 21+ ｜ 零第三方运行时依赖
+> 适用版本：suretool ≥ 1.4.0 ｜ JDK 25+ ｜ 零第三方运行时依赖
 
 ## 1. sure-socket：30 秒搭一个并发 TCP 服务
 

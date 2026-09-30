@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-09-30
+
 ### Added
 
 - **sure-benchmark**：新增 MathBenchmark（素数/随机串/高精度/进位）、EventBenchmark（事件总线 vs Guava）基准，纳入 CI 门禁（benchmark.yml paths 覆盖 sure-math/sure-event）

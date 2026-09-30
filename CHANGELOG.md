@@ -4,6 +4,12 @@
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.6.0] - 2026-09-30
+
+### Changed
+- **基线升级 JDK 21 → JDK 25（LTS）**：全仓 `maven.compiler.release=25`，CI 矩阵统一 JDK 25（三平台），文档与教程基线表述同步更新
+- **Spring Boot Starter 升级至 4.1.1**（Spring Framework 7）：在 JDK25 下全量验证通过，自动配置零适配
+
 ## [Unreleased]
 
 ### Changed

@@ -6,6 +6,8 @@ on:
     paths:
       - 'sure-core/**'
       - 'sure-json/**'
+      - 'sure-math/**'
+      - 'sure-event/**'
       - 'sure-benchmark/**'
       - 'pom.xml'
       - '.github/workflows/benchmark.yml'
@@ -15,6 +17,8 @@ on:
     paths:
       - 'sure-core/**'
       - 'sure-json/**'
+      - 'sure-math/**'
+      - 'sure-event/**'
       - 'sure-benchmark/**'
       - 'pom.xml'
   workflow_dispatch:

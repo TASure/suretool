@@ -47,7 +47,7 @@
 * 许可：Apache License 2.0
 
 * 文档：[类索引](docs/index.md) · [Hutool 对比](docs/comparison-hutool.md) · [发布指南](docs/RELEASING.md) · [维护手册](docs/MAINTAINING.md) · [仓库设置](docs/github-setup.md) · [依赖清单](docs/dependencies.md) · [CI 工作流职责](docs/ci-workflow.md)
-* 教程：[5 分钟上手](docs/posts/quickstart.md) · [字符串/集合速查](docs/posts/string-collection-cookbook.md) · [加解密默认安全](docs/posts/security-crypto-guide.md) · [JSON+HTTP 实战](docs/posts/json-http-integration.md) · [Starter 集成](docs/posts/spring-boot-starter-guide.md)
+* 教程：[5 分钟上手](docs/posts/quickstart.md) · [字符串/集合速查](docs/posts/string-collection-cookbook.md) · [加解密默认安全](docs/posts/security-crypto-guide.md) · [JSON+HTTP 实战](docs/posts/json-http-integration.md) · [Starter 集成](docs/posts/spring-boot-starter-guide.md) · [数学/进程/压缩速查](docs/posts/math-process-compress-guide.md) · [Socket+事件总线实战](docs/posts/socket-event-guide.md)
 
 ## 快速开始
 
@@ -162,7 +162,7 @@ mvn clean install
 | `sure-bom`                 | `io.github.tasure:sure-bom`                 | BOM 统一版本管理                                         | —                      |
 | `sure-all`                 | `io.github.tasure:sure-all`                 | 聚合模块（全部）                                           | 全部                     |
 | `sure-benchmark`           | `io.github.tasure:sure-benchmark`           | JMH 基准测试（性能指标）                                    | sure-all               |
-| `sure-examples`            | `io.github.tasure:sure-examples`            | 可运行示例（14 个 Demo）                                   | sure-all               |
+| `sure-examples`            | `io.github.tasure:sure-examples`            | 可运行示例（19 个 Demo）                                   | sure-all               |
 | `sure-spring-boot-starter` | `io.github.tasure:sure-spring-boot-starter` | Spring Boot 自动装配入口                                 | sure-all + spring-boot |
 
 ### 模块与工具类
@@ -356,7 +356,7 @@ public class Demo {
 }
 ```
 
-### 运行全部示例（sure-examples 模块，14 个 Demo）
+### 运行全部示例（sure-examples 模块，19 个 Demo）
 
 
 

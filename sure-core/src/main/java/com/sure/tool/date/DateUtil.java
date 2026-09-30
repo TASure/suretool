@@ -19,10 +19,13 @@ import com.sure.tool.util.StrUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 日期时间工具类，参考 Hutool 的 {@code DateUtil} 设计。
@@ -63,6 +66,19 @@ public class DateUtil {
 		}
 		return format;
 	}
+
+	/**
+	 * 获取线程安全的格式器（format 专用）。
+	 *
+	 * <p>{@link DateTimeFormatter} 不可变且线程安全，静态缓存避免每次调用重复创建；
+	 * 与 {@link #getFormatter(String)}（parse 专用，线程本地 SimpleDateFormat）分离。</p>
+	 */
+	private static DateTimeFormatter getDateTimeFormatter(String pattern) {
+		return FORMATTERS.computeIfAbsent(pattern, DateTimeFormatter::ofPattern);
+	}
+
+	/** 线程安全的格式器缓存。 */
+	private static final ConcurrentHashMap<String, DateTimeFormatter> FORMATTERS = new ConcurrentHashMap<>(8);
 
 	private DateUtil() {
 	}
@@ -124,7 +140,7 @@ public class DateUtil {
 		if (date == null) {
 			return null;
 		}
-		return getFormatter(NORM_DATETIME_PATTERN).format(date);
+		return date.toInstant().atZone(ZoneId.systemDefault()).format(getDateTimeFormatter(NORM_DATETIME_PATTERN));
 	}
 
 	/**
@@ -138,7 +154,7 @@ public class DateUtil {
 		if (date == null) {
 			return null;
 		}
-		return getFormatter(format).format(date);
+		return date.toInstant().atZone(ZoneId.systemDefault()).format(getDateTimeFormatter(format));
 	}
 
 	/**

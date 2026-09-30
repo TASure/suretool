@@ -42,6 +42,11 @@ public class ExamplesRunner {
 		PoiDemo.run();
 		ThreadDemo.run();
 		UserServiceDemo.run();
+		MathDemo.run();
+		ProcessDemo.run();
+		CompressDemo.run();
+		SocketDemo.run();
+		EventBusDemo.run();
 		System.out.println("=== 全部示例执行完成 ===");
 	}
 }

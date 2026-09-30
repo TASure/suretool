@@ -7,6 +7,16 @@
 ## [Unreleased]
 
 ### Added
+
+- **sure-benchmark**：新增 MathBenchmark（素数/随机串/高精度/进位）、EventBenchmark（事件总线 vs Guava）基准，纳入 CI 门禁（benchmark.yml paths 覆盖 sure-math/sure-event）
+- **影响力内容**：教程《数学/进程/压缩速查》《Socket+事件总线实战》（docs/posts/）、awesome-java 提交内容（docs/awesome-java-submission.md）、sure-examples 新增 Math/Process/Compress/Socket/EventBus 5 个 Demo（示例数 14→19）
+- **性能基准报告**：docs/benchmark/REPORT.md（门禁配对表 + 复现步骤）
+
+### Changed
+
+- **DateUtil 性能优化**：`format(Date)`/`format(Date, String)` 由线程本地 SimpleDateFormat 改为线程安全 DateTimeFormatter 静态缓存，format 耗时约 613ns→125ns（Hutool 对照 272ns），JMH 门禁 ratio 2.23→0.46
+
+### Added
 - （待发布）
 
 ## [1.4.0] - 2026-09-30

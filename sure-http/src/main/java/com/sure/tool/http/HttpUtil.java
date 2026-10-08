@@ -565,6 +565,127 @@ public class HttpUtil {
 		}
 	}
 
+	/**
+	 * multipart/form-data 文件上传（同一字段多个文件）。
+	 *
+	 * @param url       URL
+	 * @param form      附加表单字段（可空）
+	 * @param fileField 文件字段名
+	 * @param files     文件数组（可空）
+	 * @return 响应文本（UTF-8）
+	 * @since 1.7.0
+	 */
+	public static String upload(String url, Map<String, Object> form, String fileField, File[] files) {
+		return upload(url, form, fileField, files, DEFAULT_CONNECT_TIMEOUT);
+	}
+
+	/**
+	 * multipart/form-data 文件上传（同一字段多个文件）。
+	 *
+	 * @param url           URL
+	 * @param form          附加表单字段（可空）
+	 * @param fileField     文件字段名
+	 * @param files         文件数组（可空）
+	 * @param timeoutMillis 超时（毫秒）
+	 * @return 响应文本（UTF-8）
+	 * @since 1.7.0
+	 */
+	public static String upload(String url, Map<String, Object> form, String fileField, File[] files,
+			int timeoutMillis) {
+		Map<String, File[]> multi = new java.util.LinkedHashMap<>();
+		multi.put(fileField, files);
+		return uploadMulti(url, form, multi, timeoutMillis);
+	}
+
+	/**
+	 * multipart/form-data 文件上传（多字段，每字段一个文件，按 Map 迭代顺序）。
+	 *
+	 * @param url   URL
+	 * @param form  附加表单字段（可空）
+	 * @param files 字段名 → 文件映射（可空）
+	 * @return 响应文本（UTF-8）
+	 * @since 1.7.0
+	 */
+	public static String upload(String url, Map<String, Object> form, Map<String, File> files) {
+		return upload(url, form, files, DEFAULT_CONNECT_TIMEOUT);
+	}
+
+	/**
+	 * multipart/form-data 文件上传（多字段，每字段一个文件）。
+	 *
+	 * @param url           URL
+	 * @param form          附加表单字段（可空）
+	 * @param files         字段名 → 文件映射（可空）
+	 * @param timeoutMillis 超时（毫秒）
+	 * @return 响应文本（UTF-8）
+	 * @since 1.7.0
+	 */
+	public static String upload(String url, Map<String, Object> form, Map<String, File> files,
+			int timeoutMillis) {
+		Map<String, File[]> multi = new java.util.LinkedHashMap<>();
+		if (files != null) {
+			for (Map.Entry<String, File> entry : files.entrySet()) {
+				multi.put(entry.getKey(), new File[] { entry.getValue() });
+			}
+		}
+		return uploadMulti(url, form, multi, timeoutMillis);
+	}
+
+	private static String uploadMulti(String url, Map<String, Object> form, Map<String, File[]> files,
+			int timeoutMillis) {
+		String boundary = "----SureToolBoundary" + System.nanoTime();
+		try {
+			java.io.ByteArrayOutputStream body = new java.io.ByteArrayOutputStream();
+			if (form != null) {
+				for (Map.Entry<String, Object> entry : form.entrySet()) {
+					writeMultipartField(body, boundary, entry.getKey(), String.valueOf(entry.getValue()));
+				}
+			}
+			if (files != null) {
+				for (Map.Entry<String, File[]> entry : files.entrySet()) {
+					File[] fileArray = entry.getValue();
+					if (fileArray == null) {
+						continue;
+					}
+					for (File file : fileArray) {
+						if (file == null || !file.isFile()) {
+							continue;
+						}
+						body.write(("--" + boundary + "\r\n").getBytes(StandardCharsets.UTF_8));
+						body.write(("Content-Disposition: form-data; name=\"" + entry.getKey()
+								+ "\"; filename=\"" + file.getName() + "\"\r\n").getBytes(StandardCharsets.UTF_8));
+						body.write(("Content-Type: application/octet-stream\r\n\r\n").getBytes(StandardCharsets.UTF_8));
+						try (InputStream in = new java.io.FileInputStream(file)) {
+							in.transferTo(body);
+						}
+						body.write("\r\n".getBytes(StandardCharsets.UTF_8));
+					}
+				}
+			}
+			body.write(("--" + boundary + "--\r\n").getBytes(StandardCharsets.UTF_8));
+
+			HttpURLConnection conn = openConnection("POST", url, null, timeoutMillis);
+			conn.setDoOutput(true);
+			conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+			conn.setFixedLengthStreamingMode(body.size());
+			try (OutputStream out = conn.getOutputStream()) {
+				body.writeTo(out);
+			}
+			int code = conn.getResponseCode();
+			InputStream in = code >= 400 ? conn.getErrorStream() : conn.getInputStream();
+			if (in == null) {
+				throw new HttpException("无响应内容", code);
+			}
+			byte[] data = IoUtil.readBytes(in);
+			if (code >= 400) {
+				throw new HttpException("请求失败: " + url + "，" + new String(data, StandardCharsets.UTF_8), code);
+			}
+			return new String(data, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			throw new HttpException("上传失败: " + url, e);
+		}
+	}
+
 	private static void writeMultipartField(java.io.ByteArrayOutputStream body, String boundary, String name,
 			String value) throws IOException {
 		body.write(("--" + boundary + "\r\n").getBytes(StandardCharsets.UTF_8));

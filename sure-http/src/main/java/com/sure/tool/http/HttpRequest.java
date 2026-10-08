@@ -27,6 +27,7 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +77,7 @@ public class HttpRequest {
 	private final Map<String, String> headers = new LinkedHashMap<>();
 	private final Map<String, Object> queryParams = new LinkedHashMap<>();
 	private final Map<String, Object> formParams = new LinkedHashMap<>();
-	private final Map<String, File> fileParams = new LinkedHashMap<>();
+	private final Map<String, List<File>> fileParams = new LinkedHashMap<>();
 	private byte[] bodyBytes;
 	private String contentType;
 	private int connectTimeout = DEFAULT_CONNECT_TIMEOUT;
@@ -252,9 +253,52 @@ public class HttpRequest {
 			throw new IllegalArgumentException("参数名不能为空");
 		}
 		if (value instanceof File file) {
-			fileParams.put(name.trim(), file);
+			fileParams.computeIfAbsent(name.trim(), k -> new ArrayList<>()).add(file);
 		} else {
 			formParams.put(name.trim(), value);
+		}
+		return this;
+	}
+
+	/**
+	 * 添加文件字段（multipart/form-data），支持同一字段多个文件。
+	 * 注意：字面量 {@code null} 会被 Java 重载决议选中本方法（较具体），
+	 * 此时视为空值文本字段（输出 {@code name=}），与 {@link #form(String, Object)} 契约一致。
+	 *
+	 * @param name  字段名
+	 * @param files 文件（可多个，可空数组）
+	 * @return 本构建器
+	 * @since 1.7.0
+	 */
+	public HttpRequest form(String name, File... files) {
+		if (name == null || name.trim().isEmpty()) {
+			throw new IllegalArgumentException("参数名不能为空");
+		}
+		if (files == null) {
+			// 字面量 null：重载决议落入本方法，按既有契约作为空值文本字段处理
+			formParams.put(name.trim(), null);
+			return this;
+		}
+		for (File file : files) {
+			if (file != null) {
+				fileParams.computeIfAbsent(name.trim(), k -> new ArrayList<>()).add(file);
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * 批量添加文件字段（每字段一个文件）。
+	 *
+	 * @param files 字段名 → 文件映射
+	 * @return 本构建器
+	 * @since 1.7.0
+	 */
+	public HttpRequest formFiles(Map<String, File> files) {
+		if (files != null) {
+			for (Map.Entry<String, File> entry : files.entrySet()) {
+				form(entry.getKey(), entry.getValue());
+			}
 		}
 		return this;
 	}
@@ -634,15 +678,16 @@ public class HttpRequest {
 				buf.write(String.valueOf(entry.getValue()).getBytes(StandardCharsets.UTF_8));
 				buf.write("\r\n".getBytes(StandardCharsets.UTF_8));
 			}
-			for (Map.Entry<String, File> entry : fileParams.entrySet()) {
-				File file = entry.getValue();
-				buf.write(("--" + boundary + "\r\n").getBytes(StandardCharsets.UTF_8));
-				buf.write(("Content-Disposition: form-data; name=\"" + entry.getKey() + "\"; filename=\"" + file.getName() + "\"\r\n").getBytes(StandardCharsets.UTF_8));
-				buf.write(("Content-Type: " + contentTypeOf(file) + "\r\n\r\n").getBytes(StandardCharsets.UTF_8));
-				try (FileInputStream in = new FileInputStream(file)) {
-					IoUtil.copy(in, buf);
+			for (Map.Entry<String, List<File>> entry : fileParams.entrySet()) {
+				for (File file : entry.getValue()) {
+					buf.write(("--" + boundary + "\r\n").getBytes(StandardCharsets.UTF_8));
+					buf.write(("Content-Disposition: form-data; name=\"" + entry.getKey() + "\"; filename=\"" + file.getName() + "\"\r\n").getBytes(StandardCharsets.UTF_8));
+					buf.write(("Content-Type: " + contentTypeOf(file) + "\r\n\r\n").getBytes(StandardCharsets.UTF_8));
+					try (FileInputStream in = new FileInputStream(file)) {
+						IoUtil.copy(in, buf);
+					}
+					buf.write("\r\n".getBytes(StandardCharsets.UTF_8));
 				}
-				buf.write("\r\n".getBytes(StandardCharsets.UTF_8));
 			}
 			buf.write(("--" + boundary + "--\r\n").getBytes(StandardCharsets.UTF_8));
 			return buf.toByteArray();

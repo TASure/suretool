@@ -13,6 +13,10 @@
 ## [Unreleased]
 
 ### Added
+- **sure-http multipart 多文件上传增强**（对标 Hutool HttpRequest.form(name, File...)）：
+  - `HttpRequest`：新增 `form(String, File...)`（同一字段多个文件）与 `formFiles(Map<String, File>)`（多字段文件）；`fileParams` 升级为多文件模型，`buildMultipart` 按字段写出全部文件
+  - `HttpUtil`：新增 `upload(url, form, fileField, File[])` 与 `upload(url, form, Map<String, File>)` 多文件重载（含超时版本），统一走私有 `uploadMulti`
+  - 新增 `P6HttpMultipartTest`（本地 HttpServer 实测 multipart 解析）：同字段多文件 / 多字段文件 / 文件数组 / 文件 Map / 单文件兼容，共 5 用例
 - **sure-crypto 新增 JDK25 现代密码学工具**（JEP 510 KDF / JEP 496 ML-KEM）：
   - `KdfUtil`：HKDF-SHA256/384/512 密钥派生（extract-then-expand / expand-only）
   - `MlKemUtil`：ML-KEM-512/768/1024 后量子密钥对生成与 X.509/PKCS8 编解码

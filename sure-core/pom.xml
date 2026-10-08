@@ -62,6 +62,37 @@
                     </dependency>
                 </dependencies>
             </plugin>
+            <!-- japicmp 二进制兼容门禁：对比上一发布版本 v1.8.0，破坏性 API 变更即失败 -->
+            <plugin>
+                <groupId>com.github.siom79.japicmp</groupId>
+                <artifactId>japicmp-maven-plugin</artifactId>
+                <version>0.23.1</version>
+                <configuration>
+                    <oldVersion>
+                        <dependency>
+                            <groupId>io.github.tasure</groupId>
+                            <artifactId>sure-core</artifactId>
+                            <version>1.8.0</version>
+                        </dependency>
+                    </oldVersion>
+                    <newVersion>
+                        <file>
+                            <path>${project.build.directory}/${project.artifactId}-${project.version}.jar</path>
+                        </file>
+                    </newVersion>
+                    <breakOnBinaryIncompatibleModifications>true</breakOnBinaryIncompatibleModifications>
+                    <onlyModified>true</onlyModified>
+                    <ignoreMissingClasses>true</ignoreMissingClasses>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>cmp</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>

@@ -25,6 +25,13 @@
 ## [Unreleased]
 
 ### Added
+- **批14（v1.9.0）：Props / 表达式引擎 / 兼容门禁**：
+  - `config.Props`（对标 Hutool Props）：`java.util.Properties` 增强——classpath/文件加载（UTF-8）、`getStr/getInt/getLong/getDouble/getBool/getBigDecimal/getObj`（类型安全 + 默认值回退）、`toBean(Class)`（属性名直匹配 + 类型转换）、`toMap()` 快照
+  - `util.ExpressionUtil`（零运行期依赖）：LL(1) 递归下降算术表达式求值——`+ - * / %`、括号、一元负号、整数/小数/科学计数法、变量替换、`BigDecimal` 高精度；`eval(String)`、`eval(String, Map)`、`evalNumber`、`check`
+  - **japicmp 二进制兼容门禁**：sure-core `verify` 阶段对比上一发布版本 v1.8.0，破坏性 API 变更即失败
+  - 新增 `Batch14CoreTest`（Props 5 例 + ExpressionUtil 7 例，共 12 用例）
+
+### Added
 - **sure-http multipart 多文件上传增强**（对标 Hutool HttpRequest.form(name, File...)）：
   - `HttpRequest`：新增 `form(String, File...)`（同一字段多个文件）与 `formFiles(Map<String, File>)`（多字段文件）；`fileParams` 升级为多文件模型，`buildMultipart` 按字段写出全部文件
   - `HttpUtil`：新增 `upload(url, form, fileField, File[])` 与 `upload(url, form, Map<String, File>)` 多文件重载（含超时版本），统一走私有 `uploadMulti`

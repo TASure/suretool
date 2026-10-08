@@ -10,6 +10,8 @@
 - **基线升级 JDK 21 → JDK 25（LTS）**：全仓 `maven.compiler.release=25`，CI 矩阵统一 JDK 25（三平台），文档与教程基线表述同步更新
 - **Spring Boot Starter 升级至 4.1.1**（Spring Framework 7）：在 JDK25 下全量验证通过，自动配置零适配
 
+## [Unreleased]
+
 ## [1.8.0] - 2026-10-08
 
 ### Added

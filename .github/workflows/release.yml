@@ -160,9 +160,32 @@ jobs:
         if: steps.check.outputs.published != 'true'
         run: mvn -B -Prelease deploy
 
-      - name: Release staging repository to Central
+      - name: Publish staging deployment to Maven Central (Portal API)
         if: steps.check.outputs.published != 'true'
-        run: mvn -B -Prelease nexus-staging:release
+        env:
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+        run: |
+          set -euo pipefail
+          # deploy 产生的部署进入 VALIDATED 后，调用 Portal publish API 发布到 Central。
+          # （nexus-staging:release 在 JDK25 因 XStream 模块访问报错，改用官方 Portal publish 端点，v1.7.0 已验证 HTTP 204）
+          ID=""
+          for i in $(seq 1 30); do
+            ID=$(curl -s -u "$SONATYPE_USERNAME:$SONATYPE_PASSWORD" \
+              https://central.sonatype.com/api/v1/publisher/deployments \
+              | jq -r '[.deployments[] | select(.deploymentState=="VALIDATED")] | sort_by(.createTimestamp) | .[-1].deploymentId // empty')
+            if [ -n "$ID" ]; then break; fi
+            echo "[$i/30] 等待部署进入 VALIDATED…"
+            sleep 10
+          done
+          if [ -z "$ID" ]; then
+            echo "::error::未找到 VALIDATED 部署，请检查 deploy 结果"
+            exit 1
+          fi
+          echo "发布部署: $ID"
+          curl -sS -X POST -u "$SONATYPE_USERNAME:$SONATYPE_PASSWORD" \
+            -o /dev/null -w 'publish HTTP %{http_code}\n' \
+            "https://central.sonatype.com/api/v1/publisher/deployment/$ID"
 
       - name: Wait for Maven Central sync
         if: steps.check.outputs.published != 'true'

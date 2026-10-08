@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+groupId: io.github.tasure
+artifactId: suretool
+version: 1.6.0
+packaging: pom

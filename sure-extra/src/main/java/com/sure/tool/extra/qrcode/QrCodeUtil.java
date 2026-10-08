@@ -47,9 +47,6 @@ import java.util.Map;
  */
 public class QrCodeUtil {
 
-	private static final int DEFAULT_SIZE = 256;
-	private static final Map<EncodeHintType, Object> DEFAULT_HINTS = defaultHints();
-
 	private QrCodeUtil() {
 	}
 
@@ -60,7 +57,7 @@ public class QrCodeUtil {
 	 * @return PNG 字节
 	 */
 	public static byte[] generate(String content) {
-		return generate(content, DEFAULT_SIZE);
+		return generate(content, new QrConfig());
 	}
 
 	/**
@@ -71,7 +68,19 @@ public class QrCodeUtil {
 	 * @return PNG 字节
 	 */
 	public static byte[] generate(String content, int size) {
-		return toBytes(toImage(content, size), "png");
+		return generate(content, new QrConfig().setSize(size));
+	}
+
+	/**
+	 * 按自定义配置生成二维码 PNG 字节。
+	 *
+	 * @param content 内容
+	 * @param config  二维码配置（尺寸 / 纠错 / 颜色 / Logo）
+	 * @return PNG 字节
+	 * @since 1.7.0
+	 */
+	public static byte[] generate(String content, QrConfig config) {
+		return toBytes(toImage(content, config), "png");
 	}
 
 	/**
@@ -82,7 +91,19 @@ public class QrCodeUtil {
 	 * @return BufferedImage
 	 */
 	public static BufferedImage generateImage(String content, int size) {
-		return toImage(content, size);
+		return toImage(content, new QrConfig().setSize(size));
+	}
+
+	/**
+	 * 按自定义配置生成二维码图片对象。
+	 *
+	 * @param content 内容
+	 * @param config  二维码配置
+	 * @return BufferedImage
+	 * @since 1.7.0
+	 */
+	public static BufferedImage generateImage(String content, QrConfig config) {
+		return toImage(content, config);
 	}
 
 	/**
@@ -94,6 +115,18 @@ public class QrCodeUtil {
 	 */
 	public static String generateBase64(String content, int size) {
 		return java.util.Base64.getEncoder().encodeToString(generate(content, size));
+	}
+
+	/**
+	 * 按自定义配置生成二维码并返回 Base64 数据（无前缀）。
+	 *
+	 * @param content 内容
+	 * @param config  二维码配置
+	 * @return Base64 字符串
+	 * @since 1.7.0
+	 */
+	public static String generateBase64(String content, QrConfig config) {
+		return java.util.Base64.getEncoder().encodeToString(generate(content, config));
 	}
 
 	/**
@@ -112,7 +145,7 @@ public class QrCodeUtil {
 	 * @return 是否写入成功
 	 */
 	public static boolean generateFile(String content, java.io.File file) {
-		return generateFile(content, DEFAULT_SIZE, file);
+		return generateFile(content, new QrConfig(), file);
 	}
 
 	/**
@@ -124,10 +157,23 @@ public class QrCodeUtil {
 	 * @return 是否写入成功
 	 */
 	public static boolean generateFile(String content, int size, java.io.File file) {
+		return generateFile(content, new QrConfig().setSize(size), file);
+	}
+
+	/**
+	 * 按自定义配置生成二维码 PNG 并写入文件。
+	 *
+	 * @param content 内容
+	 * @param config  二维码配置
+	 * @param file    目标文件（父目录需存在）
+	 * @return 是否写入成功
+	 * @since 1.7.0
+	 */
+	public static boolean generateFile(String content, QrConfig config, java.io.File file) {
 		if (content == null || content.isEmpty() || file == null) {
 			return false;
 		}
-		byte[] png = generate(content, size);
+		byte[] png = generate(content, config);
 		try (java.io.FileOutputStream out = new java.io.FileOutputStream(file)) {
 			out.write(png);
 			return true;
@@ -156,14 +202,38 @@ public class QrCodeUtil {
 		return result.getText();
 	}
 
-	private static BufferedImage toImage(String content, int size) {
+	private static BufferedImage toImage(String content, QrConfig config) {
 		try {
+			int size = config.getSize();
+			Map<EncodeHintType, Object> hints = new EnumMap<>(EncodeHintType.class);
+			hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+			hints.put(EncodeHintType.MARGIN, config.getMargin());
+			hints.put(EncodeHintType.ERROR_CORRECTION, config.getErrorCorrection());
 			BitMatrix matrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE,
-					size, size, DEFAULT_HINTS);
-			MatrixToImageConfig config = new MatrixToImageConfig(0xFF000000, 0xFFFFFFFF);
-			return MatrixToImageWriter.toBufferedImage(matrix, config);
+					size, size, hints);
+			MatrixToImageConfig imageConfig = new MatrixToImageConfig(config.getForeColor(),
+					config.getBackColor());
+			BufferedImage image = MatrixToImageWriter.toBufferedImage(matrix, imageConfig);
+			if (config.getLogo() != null) {
+				drawLogo(image, config.getLogo());
+			}
+			return image;
 		} catch (Exception e) {
 			throw new IllegalArgumentException("二维码生成失败: " + e.getMessage(), e);
+		}
+	}
+
+	private static void drawLogo(BufferedImage qr, BufferedImage logo) {
+		int target = Math.max(1, qr.getWidth() / 5);
+		int x = (qr.getWidth() - target) / 2;
+		int y = (qr.getHeight() - target) / 2;
+		java.awt.Graphics2D g = qr.createGraphics();
+		try {
+			g.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING,
+					java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+			g.drawImage(logo, x, y, target, target, null);
+		} finally {
+			g.dispose();
 		}
 	}
 
@@ -175,13 +245,5 @@ public class QrCodeUtil {
 			throw new IllegalStateException("二维码图片写出失败", e);
 		}
 		return out.toByteArray();
-	}
-
-	private static Map<EncodeHintType, Object> defaultHints() {
-		Map<EncodeHintType, Object> hints = new EnumMap<>(EncodeHintType.class);
-		hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-		hints.put(EncodeHintType.MARGIN, 1);
-		hints.put(EncodeHintType.ERROR_CORRECTION, com.google.zxing.qrcode.decoder.ErrorCorrectionLevel.M);
-		return hints;
 	}
 }

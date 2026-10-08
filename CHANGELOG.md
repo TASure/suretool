@@ -17,6 +17,11 @@
   - `KdfUtil`：HKDF-SHA256/384/512 密钥派生（extract-then-expand / expand-only）
   - `MlKemUtil`：ML-KEM-512/768/1024 后量子密钥对生成与 X.509/PKCS8 编解码
   - `EcdhUtil`：X25519 / EC 共享密钥协商
+- **sure-extra 邮件 / FTP / 二维码 / 图像处理增强**（对标 Hutool 补齐能力）：
+  - `QrCodeUtil`：新增 `QrConfig` 配置类（尺寸 / 纠错等级 / 边距 / 前景背景色 / Logo），generate / generateImage / generateBase64 / generateFile 支持自定义配置
+  - `ImgUtil`：新增 `write`（PNG/JPG 等格式写出）、`rotate`（任意角度旋转）、`gray`（灰度化）、`round`（圆角裁剪）
+  - `MailAccount`：新增 `charset`（默认 UTF-8）与 `timeout`（默认 10000ms）配置；`MailUtil` 新增全参数 `send`（TO/CC/BCC + HTML + 附件）
+  - `FtpUtil`：新增编码 / 连接读写超时 connect 重载、`rename`、`exist`
 
 ### Changed
 - **基线升级 JDK 21 → JDK 25（LTS）**：全仓 `maven.compiler.release=25`，CI 矩阵统一 JDK 25（三平台），文档与教程基线表述同步更新

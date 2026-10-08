@@ -30,6 +30,8 @@ public class MailAccount {
 	private String password;
 	private boolean ssl;
 	private boolean starttls;
+	private String charset = "UTF-8";
+	private int timeout = 10000;
 
 	/**
 	 * 创建空配置。
@@ -102,5 +104,45 @@ public class MailAccount {
 
 	public void setStarttls(boolean starttls) {
 		this.starttls = starttls;
+	}
+
+	/**
+	 * 获取正文与主题编码。
+	 *
+	 * @return 字符编码，默认 UTF-8
+	 * @since 1.7.0
+	 */
+	public String getCharset() {
+		return charset;
+	}
+
+	/**
+	 * 设置正文与主题编码。
+	 *
+	 * @param charset 字符编码（如 UTF-8 / GBK）
+	 * @since 1.7.0
+	 */
+	public void setCharset(String charset) {
+		this.charset = charset;
+	}
+
+	/**
+	 * 获取 SMTP 连接/读写超时（毫秒）。
+	 *
+	 * @return 超时毫秒数，默认 10000
+	 * @since 1.7.0
+	 */
+	public int getTimeout() {
+		return timeout;
+	}
+
+	/**
+	 * 设置 SMTP 连接/读写超时（毫秒）。
+	 *
+	 * @param timeout 超时毫秒数（&gt;=0）
+	 * @since 1.7.0
+	 */
+	public void setTimeout(int timeout) {
+		this.timeout = timeout;
 	}
 }

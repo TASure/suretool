@@ -59,7 +59,7 @@ public class FtpUtil implements Closeable {
 	}
 
 	/**
-	 * 连接并登录。
+	 * 连接并登录（UTF-8 控制连接编码，默认超时）。
 	 *
 	 * @param host     主机
 	 * @param port     端口（21 常用）
@@ -68,8 +68,49 @@ public class FtpUtil implements Closeable {
 	 * @throws IOException 连接或登录失败
 	 */
 	public void connect(String host, int port, String username, String password) throws IOException {
+		connect(host, port, username, password, StandardCharsets.UTF_8.name());
+	}
+
+	/**
+	 * 连接并登录，指定控制连接编码。
+	 *
+	 * @param host     主机
+	 * @param port     端口
+	 * @param username 用户名
+	 * @param password 密码
+	 * @param encoding 控制连接编码（中文文件名场景使用 UTF-8 或 GBK）
+	 * @throws IOException 连接或登录失败
+	 * @since 1.7.0
+	 */
+	public void connect(String host, int port, String username, String password,
+			String encoding) throws IOException {
+		connect(host, port, username, password, 0, 0, encoding);
+	}
+
+	/**
+	 * 连接并登录，指定超时与控制连接编码。
+	 *
+	 * @param host           主机
+	 * @param port           端口
+	 * @param username       用户名
+	 * @param password       密码
+	 * @param connectTimeout 连接超时毫秒数（&lt;=0 使用系统默认）
+	 * @param soTimeout      读写超时毫秒数（&lt;=0 使用系统默认）
+	 * @param encoding       控制连接编码（可为 {@code null}，默认 UTF-8）
+	 * @throws IOException 连接或登录失败
+	 * @since 1.7.0
+	 */
+	public void connect(String host, int port, String username, String password,
+			int connectTimeout, int soTimeout, String encoding) throws IOException {
+		String controlEncoding = encoding == null ? StandardCharsets.UTF_8.name() : encoding;
+		client.setControlEncoding(controlEncoding);
+		if (connectTimeout > 0) {
+			client.setConnectTimeout(connectTimeout);
+		}
 		client.connect(host, port);
-		client.setControlEncoding(StandardCharsets.UTF_8.name());
+		if (soTimeout > 0) {
+			client.setSoTimeout(soTimeout);
+		}
 		if (!client.login(username, password)) {
 			throw new IOException("FTP 登录失败: " + client.getReplyString());
 		}
@@ -173,6 +214,32 @@ public class FtpUtil implements Closeable {
 	 */
 	public boolean delete(String remotePath) throws IOException {
 		return client.deleteFile(remotePath);
+	}
+
+	/**
+	 * 重命名 / 移动远端文件。
+	 *
+	 * @param fromPath 原路径
+	 * @param toPath   新路径
+	 * @return 是否成功
+	 * @throws IOException IO 异常
+	 * @since 1.7.0
+	 */
+	public boolean rename(String fromPath, String toPath) throws IOException {
+		return client.rename(fromPath, toPath);
+	}
+
+	/**
+	 * 判断远端文件或目录是否存在。
+	 *
+	 * @param remotePath 远端路径
+	 * @return 是否存在
+	 * @throws IOException IO 异常
+	 * @since 1.7.0
+	 */
+	public boolean exist(String remotePath) throws IOException {
+		FTPFile[] files = client.listFiles(remotePath);
+		return files != null && files.length > 0;
 	}
 
 	/**

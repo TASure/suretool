@@ -326,6 +326,119 @@ public class ImgUtil {
 		return target;
 	}
 
+	/**
+	 * 将图像写出为 PNG 文件（父目录需存在）。
+	 *
+	 * @param image 图像
+	 * @param file  目标文件
+	 * @throws IOException 写出失败
+	 * @since 1.7.0
+	 */
+	public static void write(BufferedImage image, File file) throws IOException {
+		write(image, file, "png");
+	}
+
+	/**
+	 * 将图像按指定格式写出到文件（父目录需存在）。
+	 *
+	 * @param image  图像
+	 * @param file   目标文件
+	 * @param format 图像格式（png / jpg / gif / bmp 等，{@code ImageIO} 支持）
+	 * @throws IOException 写出失败
+	 * @since 1.7.0
+	 */
+	public static void write(BufferedImage image, File file, String format) throws IOException {
+		if (image == null || file == null) {
+			throw new IllegalArgumentException("image 与 file 不能为空");
+		}
+		if (!ImageIO.write(image, format, file)) {
+			throw new IOException("不支持的图像格式: " + format);
+		}
+	}
+
+	/**
+	 * 旋转图像（任意角度，画布自动扩展并保留透明背景）。
+	 *
+	 * @param source 原图
+	 * @param degrees 旋转角度（顺时针，可为负）
+	 * @return 旋转结果
+	 * @since 1.7.0
+	 */
+	public static BufferedImage rotate(BufferedImage source, double degrees) {
+		if (source == null) {
+			return null;
+		}
+		double radians = Math.toRadians(degrees);
+		int w = source.getWidth();
+		int h = source.getHeight();
+		double sin = Math.abs(Math.sin(radians));
+		double cos = Math.abs(Math.cos(radians));
+		int nw = Math.max(1, (int) Math.round(w * cos + h * sin));
+		int nh = Math.max(1, (int) Math.round(w * sin + h * cos));
+		BufferedImage target = new BufferedImage(nw, nh, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = target.createGraphics();
+		try {
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			g.translate(nw / 2.0, nh / 2.0);
+			g.rotate(radians);
+			g.translate(-w / 2.0, -h / 2.0);
+			g.drawImage(source, 0, 0, null);
+		} finally {
+			g.dispose();
+		}
+		return target;
+	}
+
+	/**
+	 * 灰度化图像。
+	 *
+	 * @param source 原图
+	 * @return 灰度图
+	 * @since 1.7.0
+	 */
+	public static BufferedImage gray(BufferedImage source) {
+		if (source == null) {
+			return null;
+		}
+		BufferedImage target = new BufferedImage(source.getWidth(), source.getHeight(),
+				BufferedImage.TYPE_BYTE_GRAY);
+		Graphics2D g = target.createGraphics();
+		try {
+			g.drawImage(source, 0, 0, null);
+		} finally {
+			g.dispose();
+		}
+		return target;
+	}
+
+	/**
+	 * 圆角处理（四角透明）。
+	 *
+	 * @param source 原图
+	 * @param radius 圆角半径（像素，&gt;=0）
+	 * @return 圆角图（ARGB）
+	 * @since 1.7.0
+	 */
+	public static BufferedImage round(BufferedImage source, int radius) {
+		if (source == null) {
+			return null;
+		}
+		BufferedImage target = new BufferedImage(source.getWidth(), source.getHeight(),
+				BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = target.createGraphics();
+		try {
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			java.awt.geom.RoundRectangle2D clip = new java.awt.geom.RoundRectangle2D.Double(0, 0,
+					source.getWidth(), source.getHeight(), radius * 2.0, radius * 2.0);
+			g.setClip(clip);
+			g.drawImage(source, 0, 0, null);
+		} finally {
+			g.dispose();
+		}
+		return target;
+	}
+
 	private static BufferedImage copy(BufferedImage source) {
 		BufferedImage copy = new BufferedImage(source.getWidth(), source.getHeight(),
 				source.getType() == BufferedImage.TYPE_INT_ARGB ? BufferedImage.TYPE_INT_ARGB

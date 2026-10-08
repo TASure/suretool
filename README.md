@@ -156,6 +156,7 @@ mvn clean install
 | `sure-cache`               | `io.github.tasure:sure-cache`               | FIFO/LRU/LFU/Timed 缓存                              | core                   |
 | `sure-xml`                 | `io.github.tasure:sure-xml`                 | XML 与 Map/Bean 互转                                  | core                   |
 | `sure-poi`                 | `io.github.tasure:sure-poi`                 | Excel/Word 读写                                      | core + POI             |
+| `sure-extra`               | `io.github.tasure:sure-extra`               | 邮件（SMTP）/ FTP / 二维码 / 图像处理                      | core + jakarta.mail + commons-net + zxing |
 | `sure-captcha`             | `io.github.tasure:sure-captcha`             | 图形验证码（线段 / 圆圈 / 扭曲）                                | 零依赖                    |
 | `sure-jwt`                 | `io.github.tasure:sure-jwt`                 | JWT 签发 / 校验（HS/RS）                                 | core + crypto + json   |
 | `sure-dfa`                 | `io.github.tasure:sure-dfa`                 | 敏感词过滤（前缀树 / 停用词）                                   | 零依赖                    |
@@ -220,6 +221,12 @@ mvn clean install
 | `com.sure.tool.poi`        | `ExcelUtil`        | Excel 读写（类型感知 / 表头 / Bean 导出）                   |
 |                            | `WordUtil`         | Word（docx）读写（段落 / 表格文本提取）                       |
 |                            | `PoiUtil`          | POI 通用门面（单元格取值 / 越界容错）                          |
+| `com.sure.tool.extra`      | `MailUtil`         | SMTP 邮件发送（抄送 / 密送 / HTML / 附件，编码与超时可配）          |
+|                            | `MailAccount`      | 邮箱账户配置（host / 认证 / SSL / STARTTLS / 编码 / 超时）       |
+|                            | `FtpUtil`          | FTP 连接 / 上传下载 / 目录操作 / 重命名 / 存在判断（编码 / 超时可配）   |
+|                            | `QrCodeUtil`       | 二维码生成（PNG / 图片 / Base64 / 文件，自定义颜色与 Logo）         |
+|                            | `QrConfig`         | 二维码配置（尺寸 / 纠错 / 边距 / 前景背景色 / Logo）                |
+|                            | `ImgUtil`          | 图像读取 / 缩放 / 裁剪 / 旋转 / 灰度 / 圆角 / 格式写出              |
 | `com.sure.tool.lang`       | `Assert`           | 断言工具（非空 / 为真 / 正则匹配）                            |
 |                            | `Snowflake`        | 雪花算法 ID 生成器                                     |
 |                            | `PatternPool`      | 常用正则模式池                                         |

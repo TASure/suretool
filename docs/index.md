@@ -61,6 +61,10 @@ suretool 是一个**小而全**的 Java 工具类库，参考 [Hutool](https://h
 
 `ExcelUtil`、`WordUtil`、`PoiUtil`
 
+### sure-extra（邮件 / FTP / 二维码 / 图像处理）
+
+`MailUtil`、`MailAccount`、`FtpUtil`、`QrCodeUtil`、`QrConfig`、`ImgUtil`
+
 ### sure-captcha（验证码）
 
 `Captcha`、`AbstractCaptcha`、`CaptchaUtil`、`CircleCaptcha`、`LineCaptcha`、`ShearCaptcha`

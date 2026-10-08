@@ -53,7 +53,7 @@ public class MailUtil {
 	 */
 	public static void sendText(MailAccount account, List<String> to, String subject,
 			String content) throws MessagingException {
-		send(account, to, subject, content, false, null);
+		send(account, to, null, null, subject, content, false, null);
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class MailUtil {
 	 */
 	public static void sendHtml(MailAccount account, List<String> to, String subject,
 			String html) throws MessagingException {
-		send(account, to, subject, html, true, null);
+		send(account, to, null, null, subject, html, true, null);
 	}
 
 	/**
@@ -82,27 +82,45 @@ public class MailUtil {
 	 */
 	public static void sendWithAttachments(MailAccount account, List<String> to, String subject,
 			String content, List<File> attachments) throws MessagingException {
-		send(account, to, subject, content, false, attachments);
+		send(account, to, null, null, subject, content, false, attachments);
 	}
 
-	private static void send(MailAccount account, List<String> to, String subject,
-			String content, boolean html, List<File> attachments) throws MessagingException {
+	/**
+	 * 高级发送：支持抄送 / 密送 / HTML / 附件（全参数版本）。
+	 *
+	 * <p>正文与主题编码、SMTP 超时均取自 {@link MailAccount}（{@code charset} / {@code timeout}）。
+	 *
+	 * @param account     邮箱账户配置
+	 * @param to          收件人（可多个）
+	 * @param cc          抄送人（可为 {@code null} / 空）
+	 * @param bcc         密送人（可为 {@code null} / 空）
+	 * @param subject     主题
+	 * @param content     正文
+	 * @param html        {@code true} 按 HTML 发送
+	 * @param attachments 附件文件（可为 {@code null}）
+	 * @throws MessagingException 发送失败
+	 * @since 1.7.0
+	 */
+	public static void send(MailAccount account, List<String> to, List<String> cc, List<String> bcc,
+			String subject, String content, boolean html, List<File> attachments) throws MessagingException {
 		if (account == null || account.getHost() == null || account.getHost().isEmpty()) {
 			throw new IllegalArgumentException("SMTP 主机不能为空");
 		}
 		Session session = Session.getInstance(properties(account));
 		MimeMessage message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(account.getFrom(), true));
-		for (String recipient : to) {
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient, true));
-		}
-		message.setSubject(subject, "UTF-8");
+		addRecipients(message, Message.RecipientType.TO, to);
+		addRecipients(message, Message.RecipientType.CC, cc);
+		addRecipients(message, Message.RecipientType.BCC, bcc);
+		message.setSubject(subject, account.getCharset());
 		if (attachments == null || attachments.isEmpty()) {
-			message.setContent(content, html ? "text/html; charset=UTF-8" : "text/plain; charset=UTF-8");
+			message.setContent(content, (html ? "text/html" : "text/plain")
+					+ "; charset=" + account.getCharset());
 		} else {
 			MimeMultipart multipart = new MimeMultipart();
 			MimeBodyPart body = new MimeBodyPart();
-			body.setContent(content, html ? "text/html; charset=UTF-8" : "text/plain; charset=UTF-8");
+			body.setContent(content, (html ? "text/html" : "text/plain")
+					+ "; charset=" + account.getCharset());
 			multipart.addBodyPart(body);
 			for (File file : attachments) {
 				MimeBodyPart part = new MimeBodyPart();
@@ -123,14 +141,24 @@ public class MailUtil {
 		}
 	}
 
+	private static void addRecipients(MimeMessage message, Message.RecipientType type,
+			List<String> recipients) throws MessagingException {
+		if (recipients == null) {
+			return;
+		}
+		for (String recipient : recipients) {
+			message.addRecipient(type, new InternetAddress(recipient, true));
+		}
+	}
+
 	private static Properties properties(MailAccount account) {
 		Properties props = new Properties();
 		props.put("mail.smtp.host", account.getHost());
 		props.put("mail.smtp.port", String.valueOf(account.getPort()));
 		props.put("mail.smtp.auth", String.valueOf(
 				account.getUsername() != null && !account.getUsername().isEmpty()));
-		props.put("mail.smtp.connectiontimeout", "10000");
-		props.put("mail.smtp.timeout", "10000");
+		props.put("mail.smtp.connectiontimeout", String.valueOf(account.getTimeout()));
+		props.put("mail.smtp.timeout", String.valueOf(account.getTimeout()));
 		if (account.isSsl()) {
 			props.put("mail.smtp.ssl.enable", "true");
 		}

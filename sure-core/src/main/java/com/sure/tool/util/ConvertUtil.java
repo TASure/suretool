@@ -15,13 +15,17 @@
  */
 package com.sure.tool.util;
 
+import com.sure.tool.bean.BeanUtil;
+
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 类型转换工具类，参考 Hutool 的 {@code Convert} 设计。
@@ -702,5 +706,49 @@ public class ConvertUtil {
 		}
 	}
 
+	/**
+	 * 键值数组转为 Map（偶数个元素两两成键值对）。
+	 *
+	 * @param keysAndValues 键值数组，如 {@code toMap("a", 1, "b", 2)}
+	 * @return Map，null 键跳过；元素个数为奇数抛异常
+	 */
+	public static Map<String, Object> toMap(Object... keysAndValues) {
+		if (keysAndValues == null) {
+			return new LinkedHashMap<>();
+		}
+		if (keysAndValues.length % 2 != 0) {
+			throw new IllegalArgumentException("键值必须成对: " + keysAndValues.length + " 个元素");
+		}
+		Map<String, Object> map = new LinkedHashMap<>();
+		for (int i = 0; i < keysAndValues.length; i += 2) {
+			Object key = keysAndValues[i];
+			if (key != null) {
+				map.put(key.toString(), keysAndValues[i + 1]);
+			}
+		}
+		return map;
+	}
+
+	/**
+	 * 按 Bean 属性字段将集合转为 Map。
+	 *
+	 * @param collection   对象集合
+	 * @param keyFieldName 作为 key 的字段名
+	 * @return Map（字段值 → 元素）；字段值取不到则抛异常
+	 */
+	public static Map<String, Object> toMap(Collection<?> collection, String keyFieldName) {
+		if (collection == null || keyFieldName == null) {
+			return new LinkedHashMap<>();
+		}
+		Map<String, Object> map = new LinkedHashMap<>();
+		for (Object bean : collection) {
+			Object key = BeanUtil.getProperty(bean, keyFieldName);
+			if (key == null) {
+				throw new IllegalArgumentException("字段值不能为 null: " + keyFieldName + " 于 " + bean);
+			}
+			map.put(key.toString(), bean);
+		}
+		return map;
+	}
 
 }

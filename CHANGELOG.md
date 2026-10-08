@@ -12,6 +12,14 @@
 
 ## [Unreleased]
 
+### Added
+- **sure-core 批13：核心工具类高频方法补齐（对标 Hutool，目标 v1.8.0）**：
+  - `ReflectUtil`：新增 `getClassByName`（基础/包装类型映射）、`getMethodByName`（继承链+接口默认方法）、`getTypeArguments`（泛型父类类型参数解析）、`getFieldMap`（含继承字段表）、`hasField`（含 ignoreCase 重载）、`invoke` 显式参数类型重载、`setAccessible`
+  - `ConvertUtil`：新增 `toMap(Object...)`（键值对数组转 Map，奇数抛异常）与 `toMap(Collection, keyFieldName)`（Bean 集合按字段转 Map）
+  - `RandomUtil`：新增 `randomLetter(int)`、`randomChinese(int)`（CJK 基本区）、`randomString(int, char[])`（指定字符集）
+  - `CollUtil`：新增 `rotate`（正右旋/负左旋）、`removeEmpty`、`removeAny`、`isAllEmpty`、`isAllNotNull`（`removeNull` 原已有）
+  - `BeanUtil`：新增 `copyToList`（含 ignoreNullValue 重载）、`toBean(Object, Class, boolean)`、`mapToBean(Map, Class, boolean ignoreError)`；`getProperty` 支持多级路径（`a.b.c`）与 Map 取值；`setPropValue` 对基本类型属性的 null 值安全跳过
+
 ## [1.7.0] - 2026-10-08
 
 ### Added

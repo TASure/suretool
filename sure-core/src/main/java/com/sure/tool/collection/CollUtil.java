@@ -1189,5 +1189,106 @@ public class CollUtil {
 		return Collections.frequency(collection, value);
 	}
 
+	/**
+	 * 旋转列表元素（正数为右旋，负数为左旋）。
+	 *
+	 * @param list  列表
+	 * @param steps 旋转步数（可为负）
+	 * @param <T>   元素类型
+	 * @return 原列表（原地操作）
+	 */
+	public static <T> List<T> rotate(List<T> list, int steps) {
+		if (list != null && list.size() > 1) {
+			Collections.rotate(list, steps);
+		}
+		return list;
+	}
+
+	/**
+	 * 移除集合中的 null 与空元素（空字符串/空集合/空 Map）。
+	 *
+	 * @param collection 集合
+	 * @param <T>        元素类型
+	 * @return 过滤后的集合（原地移除）
+	 */
+	public static <T> Collection<T> removeEmpty(Collection<T> collection) {
+		if (collection == null) {
+			return null;
+		}
+		collection.removeIf(CollUtil::isEmptyValue);
+		return collection;
+	}
+
+	/**
+	 * 移除集合中的指定元素。
+	 *
+	 * @param collection 集合
+	 * @param values     要移除的元素
+	 * @param <T>        元素类型
+	 * @return 过滤后的集合（原地移除）
+	 */
+	@SafeVarargs
+	public static <T> Collection<T> removeAny(Collection<T> collection, T... values) {
+		if (collection == null || values == null || values.length == 0) {
+			return collection;
+		}
+		Set<T> removeSet = new HashSet<>(java.util.Arrays.asList(values));
+		collection.removeIf(removeSet::contains);
+		return collection;
+	}
+
+	/**
+	 * 判断多个集合是否全部为空（null 或空集合视为空）。
+	 *
+	 * @param collections 集合数组
+	 * @return 全部为空返回 {@code true}
+	 */
+	@SafeVarargs
+	public static boolean isAllEmpty(Collection<?>... collections) {
+		if (collections == null || collections.length == 0) {
+			return false;
+		}
+		for (Collection<?> collection : collections) {
+			if (!isEmpty(collection)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 判断多个集合是否全部非空（非 null 且非空集合）。
+	 *
+	 * @param collections 集合数组
+	 * @return 全部非空返回 {@code true}
+	 */
+	@SafeVarargs
+	public static boolean isAllNotNull(Collection<?>... collections) {
+		if (collections == null || collections.length == 0) {
+			return false;
+		}
+		for (Collection<?> collection : collections) {
+			if (isEmpty(collection)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private static boolean isEmptyValue(Object value) {
+		if (value == null) {
+			return true;
+		}
+		if (value instanceof CharSequence str) {
+			return str.isEmpty();
+		}
+		if (value instanceof Collection<?> collection) {
+			return collection.isEmpty();
+		}
+		if (value instanceof Map<?, ?> map) {
+			return map.isEmpty();
+		}
+		return false;
+	}
 
 }

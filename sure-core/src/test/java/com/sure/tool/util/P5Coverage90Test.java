@@ -292,7 +292,8 @@ public class P5Coverage90Test {
 	public void testBeanGaps() {
 		Map<String, Object> bean = new HashMap<>();
 		bean.put("name", "sure");
-		Assert.assertNull(BeanUtil.getProperty(bean, "name"));
+		// 批13 起 getProperty 支持 Map 取值
+		Assert.assertEquals("sure", BeanUtil.getProperty(bean, "name"));
 
 		User u = new User("sure", 3, Arrays.asList("a", "b"));
 		Assert.assertNull(BeanUtil.deepCopy(null));

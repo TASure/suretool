@@ -15,11 +15,13 @@
  */
 package com.sure.tool.bean;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.sure.tool.util.ConvertUtil;
@@ -172,11 +174,30 @@ public class BeanUtil {
 		if (bean == null || name == null) {
 			return null;
 		}
+		if (name.contains(".")) {
+			// 多级路径 a.b.c 逐级读取，中间为 null 返回 null
+			Object current = bean;
+			for (String part : name.split("\\.")) {
+				if (current == null) {
+					return null;
+				}
+				current = getPropertyOnce(current, part);
+			}
+			return current;
+		}
+		return getPropertyOnce(bean, name);
+	}
+
+	private static Object getPropertyOnce(Object bean, String name) {
 		PropDesc prop = getBeanDesc(bean.getClass()).getProp(name);
 		if (prop != null && prop.getGetter() != null) {
 			return invoke(prop.getGetter(), bean);
 		}
-		if (FieldUtil.getField(bean.getClass(), name) != null) {			return ReflectUtil.getFieldValue(bean, name);
+		if (FieldUtil.getField(bean.getClass(), name) != null) {
+			return ReflectUtil.getFieldValue(bean, name);
+		}
+		if (bean instanceof Map<?, ?> map) {
+			return map.get(name);
 		}
 		return null;
 	}
@@ -254,6 +275,10 @@ public class BeanUtil {
 	 * @param value 值
 	 */
 	private static void setPropValue(PropDesc prop, Object bean, Object value) {
+		if (value == null && prop.getType().isPrimitive()) {
+			// null 无法赋给基本类型属性，跳过
+			return;
+		}
 		Object converted = ConvertUtil.convert(prop.getType(), value);
 		Method setter = prop.getSetter();
 		if (setter != null) {
@@ -380,5 +405,105 @@ public class BeanUtil {
 		return bean;
 	}
 
+	/**
+	 * 将对象集合复制为指定 Bean 类型的列表（深复制，忽略源 null 值）。
+	 *
+	 * @param collection 源对象集合（元素可为 Bean 或 Map）
+	 * @param targetClass 目标 Bean 类
+	 * @param <T>        目标 Bean 类型
+	 * @return 新列表；输入为 null 返回 null，元素转换失败返回 null 元素
+	 */
+	public static <T> List<T> copyToList(Collection<?> collection, Class<T> targetClass) {
+		return copyToList(collection, targetClass, true);
+	}
+
+	/**
+	 * 将对象集合复制为指定 Bean 类型的列表。
+	 *
+	 * @param collection       源对象集合（元素可为 Bean 或 Map）
+	 * @param targetClass      目标 Bean 类
+	 * @param ignoreNullValue  是否忽略源 null 值属性
+	 * @param <T>              目标 Bean 类型
+	 * @return 新列表；输入为 null 返回 null，元素转换失败返回 null 元素
+	 */
+	public static <T> List<T> copyToList(Collection<?> collection, Class<T> targetClass, boolean ignoreNullValue) {
+		if (collection == null || targetClass == null) {
+			return null;
+		}
+		List<T> list = new java.util.ArrayList<>(collection.size());
+		for (Object source : collection) {
+			if (source == null) {
+				list.add(null);
+				continue;
+			}
+			T target = ReflectUtil.invokeConstructor(targetClass);
+			if (target == null) {
+				list.add(null);
+				continue;
+			}
+			copyProperties(source, target, ignoreNullValue);
+			list.add(target);
+		}
+		return list;
+	}
+
+	/**
+	 * 对象转 Bean，可指定是否忽略源 null 值。
+	 *
+	 * @param source          源对象（Map 或 Bean）
+	 * @param beanClass       目标 Bean 类
+	 * @param ignoreNullValue 是否忽略 null 值属性
+	 * @param <T>             目标 Bean 类型
+	 * @return 转换后的 Bean；源为 null 返回 null
+	 */
+	public static <T> T toBean(Object source, Class<T> beanClass, boolean ignoreNullValue) {
+		if (source == null || beanClass == null) {
+			return null;
+		}
+		if (source instanceof Map<?, ?> map) {
+			return mapToBean((Map<String, Object>) map, beanClass);
+		}
+		if (isBean(source.getClass()) || beanClass.isInstance(source)) {
+			T target = ReflectUtil.invokeConstructor(beanClass);
+			if (target != null) {
+				copyProperties(source, target, ignoreNullValue);
+				return target;
+			}
+		}
+		return beanClass.isInstance(source) ? beanClass.cast(source) : null;
+	}
+
+	/**
+	 * Map 转 Bean，可指定是否忽略转换异常（出错属性跳过）。
+	 *
+	 * @param map        Map
+	 * @param beanClass  Bean 类
+	 * @param ignoreError 是否忽略属性转换异常
+	 * @param <T>        Bean 类型
+	 * @return Bean 实例
+	 */
+	public static <T> T mapToBean(Map<String, ? extends Object> map, Class<T> beanClass, boolean ignoreError) {
+		if (map == null || beanClass == null) {
+			return null;
+		}
+		T bean = ReflectUtil.invokeConstructor(beanClass);
+		if (bean == null) {
+			return null;
+		}
+		BeanDesc desc = getBeanDesc(beanClass);
+		for (Map.Entry<String, ? extends Object> entry : map.entrySet()) {
+			PropDesc prop = desc.getProp(entry.getKey());
+			if (prop != null && prop.isWritable()) {
+				try {
+					setPropValue(prop, bean, entry.getValue());
+				} catch (RuntimeException e) {
+					if (!ignoreError) {
+						throw e;
+					}
+				}
+			}
+		}
+		return bean;
+	}
 
 }

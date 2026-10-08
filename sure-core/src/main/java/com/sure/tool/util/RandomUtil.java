@@ -332,4 +332,54 @@ public class RandomUtil {
 		return start.add(range.multiply(java.math.BigDecimal.valueOf(ratio)));
 	}
 
+	/**
+	 * 生成随机小写字母字符串。
+	 *
+	 * @param count 长度
+	 * @return 随机字母串
+	 */
+	public static String randomLetter(int count) {
+		return randomString(count, LETTER_CHARS);
+	}
+
+	/**
+	 * 生成随机中文字符串（CJK 统一表意文字基本区）。
+	 *
+	 * @param count 长度
+	 * @return 随机汉字串
+	 */
+	public static String randomChinese(int count) {
+		if (count <= 0) {
+			return "";
+		}
+		StringBuilder sb = new StringBuilder(count);
+		for (int i = 0; i < count; i++) {
+			sb.append((char) (ThreadLocalRandom.current().nextInt(0x4E00, 0x9FFF + 1)));
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * 从指定字符集生成随机字符串。
+	 *
+	 * @param count 长度
+	 * @param chars 字符集（可重复），为 null 或空时使用默认字母数字集
+	 * @return 随机字符串
+	 */
+	public static String randomString(int count, char[] chars) {
+		if (count <= 0) {
+			return "";
+		}
+		char[] pool = (chars == null || chars.length == 0) ? DEFAULT_CHARS : chars;
+		StringBuilder sb = new StringBuilder(count);
+		for (int i = 0; i < count; i++) {
+			sb.append(pool[ThreadLocalRandom.current().nextInt(pool.length)]);
+		}
+		return sb.toString();
+	}
+
+	private static final char[] LETTER_CHARS = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+
+	private static final char[] DEFAULT_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
+
 }

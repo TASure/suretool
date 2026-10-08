@@ -139,18 +139,18 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml <<'SETTINGS'
+          cat > ~/.m2/settings.xml <<SETTINGS
           <settings>
             <servers>
               <server>
                 <id>ossrh</id>
-                <username>${env.SONATYPE_USERNAME}</username>
-                <password>${env.SONATYPE_PASSWORD}</password>
+                <username>$SONATYPE_USERNAME</username>
+                <password>$SONATYPE_PASSWORD</password>
               </server>
             </servers>
             <properties>
               <gpg.keyname>D4CB857FBF6D720F38F26062350F235EAF989176</gpg.keyname>
-              <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
+              <gpg.passphrase>$GPG_PASSPHRASE</gpg.passphrase>
             </properties>
           </settings>
           SETTINGS

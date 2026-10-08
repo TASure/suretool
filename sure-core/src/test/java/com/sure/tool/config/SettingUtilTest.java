@@ -76,9 +76,12 @@ public class SettingUtilTest {
 	@Test
 	public void 环境变量优先于文件() {
 		SettingUtil.load(file.toFile());
-		// key=home 映射环境变量 HOME（真实存在且非空）
+		// key=home 映射用户主目录环境变量：Unix 为 HOME，Windows 为 USERPROFILE
 		String home = System.getenv("HOME");
-		Assert.assertNotNull("测试前提：HOME 环境变量存在", home);
+		if (home == null) {
+			home = System.getenv("USERPROFILE");
+		}
+		Assert.assertNotNull("测试前提：用户主目录环境变量存在", home);
 		Assert.assertEquals(home, SettingUtil.getString("home"));
 		Assert.assertNotEquals("file_value", SettingUtil.getString("home"));
 	}

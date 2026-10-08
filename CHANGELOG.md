@@ -12,6 +12,8 @@
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-10-08
+
 ### Added
 - **sure-http multipart 多文件上传增强**（对标 Hutool HttpRequest.form(name, File...)）：
   - `HttpRequest`：新增 `form(String, File...)`（同一字段多个文件）与 `formFiles(Map<String, File>)`（多字段文件）；`fileParams` 升级为多文件模型，`buildMultipart` 按字段写出全部文件

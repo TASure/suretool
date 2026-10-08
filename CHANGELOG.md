@@ -12,6 +12,12 @@
 
 ## [Unreleased]
 
+### Added
+- **sure-crypto 新增 JDK25 现代密码学工具**（JEP 510 KDF / JEP 496 ML-KEM）：
+  - `KdfUtil`：HKDF-SHA256/384/512 密钥派生（extract-then-expand / expand-only）
+  - `MlKemUtil`：ML-KEM-512/768/1024 后量子密钥对生成与 X.509/PKCS8 编解码
+  - `EcdhUtil`：X25519 / EC 共享密钥协商
+
 ### Changed
 - **基线升级 JDK 21 → JDK 25（LTS）**：全仓 `maven.compiler.release=25`，CI 矩阵统一 JDK 25（三平台），文档与教程基线表述同步更新
 - **Spring Boot Starter 升级至 4.1.1**（Spring Framework 7）：在 JDK25 下全量验证通过，自动配置零适配

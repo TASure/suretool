@@ -151,7 +151,7 @@ mvn clean install
 | `sure-event`               | `io.github.tasure:sure-event`               | 轻量事件总线（函数式/注解注册、同步/虚拟线程异步投递）               | core                   |
 | `sure-json`                | `io.github.tasure:sure-json`                | JSON 解析 / 序列化 / Bean 互转                            | core                   |
 | `sure-http`                | `io.github.tasure:sure-http`                | HTTP 客户端 / URL 工具                                  | core                   |
-| `sure-crypto`              | `io.github.tasure:sure-crypto`              | 哈希 / AES/DES/RSA/HMAC                              | core                   |
+| `sure-crypto`              | `io.github.tasure:sure-crypto`              | 哈希 / AES/DES/RSA/HMAC / HKDF / ML-KEM / ECDH          | core                   |
 | `sure-cron`                | `io.github.tasure:sure-cron`                | Cron 表达式 / 调度器                                     | core                   |
 | `sure-cache`               | `io.github.tasure:sure-cache`               | FIFO/LRU/LFU/Timed 缓存                              | core                   |
 | `sure-xml`                 | `io.github.tasure:sure-xml`                 | XML 与 Map/Bean 互转                                  | core                   |
@@ -251,6 +251,9 @@ mvn clean install
 |                            | `HttpRequest`      | 链式 HTTP 请求（query / 表单 /body/ 超时 / 重定向）          |
 |                            | `HttpResponse`     | 链式 HTTP 响应（状态 / 头 / 字符集解析）                      |
 | `com.sure.tool.crypto`     | `SecureUtil`       | 安全门面：哈希 / AES/DES/RSA/HMAC/ 随机密钥                |
+| `com.sure.tool.crypto`     | `KdfUtil`          | HKDF 密钥派生（JEP 510）                               |
+| `com.sure.tool.crypto`     | `MlKemUtil`        | ML-KEM 后量子密钥对（JEP 496）                          |
+| `com.sure.tool.crypto`     | `EcdhUtil`         | X25519 / EC 共享密钥协商                                |
 |                            | `AesUtil`          | AES-GCM 加解密（随机 IV，hex/Base64 双输出）               |
 |                            | `DesUtil`          | DES 加解密（兼容旧系统）                                  |
 |                            | `RsaUtil`          | RSA 密钥对生成 / 加解密 / 密钥序列化                         |

@@ -39,3 +39,8 @@ dependency-reduced-pom.xml
 # 本地构建产物
 *.log
 .jqwik-database
+
+# 本地诊断/打包产物（不入库）
+bundle/
+suretool-*-bundle.zip
+diag-*-bundle.zip

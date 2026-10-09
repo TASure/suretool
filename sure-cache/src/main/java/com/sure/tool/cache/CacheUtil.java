@@ -73,4 +73,28 @@ public class CacheUtil {
 	public static <K, V> TimedCache<K, V> newTimedCache(long defaultTimeout) {
 		return new TimedCache<>(defaultTimeout);
 	}
+
+	/**
+	 * 创建弱引用缓存（值可被 GC 回收，自动清理）。
+	 *
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @return 缓存
+	 */
+	public static <K, V> WeakCache<K, V> newWeakCache() {
+		return new WeakCache<>();
+	}
+
+	/**
+	 * 创建弱引用缓存。
+	 *
+	 * @param capacity       容量上限，&lt;=0 表示无上限
+	 * @param defaultTimeout 默认存活时间（毫秒），&lt;=0 表示不过期
+	 * @param <K>            键类型
+	 * @param <V>            值类型
+	 * @return 缓存
+	 */
+	public static <K, V> WeakCache<K, V> newWeakCache(int capacity, long defaultTimeout) {
+		return new WeakCache<>(capacity, defaultTimeout);
+	}
 }

@@ -30,6 +30,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -1287,6 +1289,142 @@ public class CollUtil {
 		}
 		if (value instanceof Map<?, ?> map) {
 			return map.isEmpty();
+		}
+		return false;
+	}
+
+	/**
+	 * 创建带比较器的有序 Set（TreeSet），并填充元素。
+	 *
+	 * @param comparator 比较器（可空，空则自然序）
+	 * @param values     元素
+	 * @param <T>        元素类型
+	 * @return TreeSet
+	 * @since 1.10.0
+	 */
+	@SafeVarargs
+	public static <T> TreeSet<T> newTreeSet(Comparator<? super T> comparator, T... values) {
+		TreeSet<T> set = comparator == null ? new TreeSet<>() : new TreeSet<>(comparator);
+		if (values != null) {
+			Collections.addAll(set, values);
+		}
+		return set;
+	}
+
+	/**
+	 * 创建线程安全的 Set（基于 ConcurrentHashMap），并填充元素。
+	 *
+	 * @param values 元素
+	 * @param <T>    元素类型
+	 * @return 并发 Set
+	 * @since 1.10.0
+	 */
+	@SafeVarargs
+	public static <T> Set<T> newConcurrentHashSet(T... values) {
+		Set<T> set = ConcurrentHashMap.newKeySet();
+		if (values != null) {
+			Collections.addAll(set, values);
+		}
+		return set;
+	}
+
+	/**
+	 * 展平一层嵌套集合。
+	 *
+	 * @param nested 嵌套集合（内层可为空）
+	 * @param <T>    元素类型
+	 * @return 展平后的列表
+	 * @since 1.10.0
+	 */
+	public static <T> List<T> flatMap(Collection<? extends Collection<? extends T>> nested) {
+		List<T> result = new ArrayList<>();
+		if (nested == null) {
+			return result;
+		}
+		for (Collection<? extends T> inner : nested) {
+			if (inner != null) {
+				result.addAll(inner);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 交换列表中两个位置的元素。
+	 *
+	 * @param list  列表
+	 * @param index1 位置一
+	 * @param index2 位置二
+	 * @param <T>   元素类型
+	 * @return 本列表，支持链式调用
+	 * @throws IndexOutOfBoundsException 下标越界
+	 * @since 1.10.0
+	 */
+	public static <T> List<T> swap(List<T> list, int index1, int index2) {
+		Collections.swap(list, index1, index2);
+		return list;
+	}
+
+	/**
+	 * 集合转数组。
+	 *
+	 * @param iterable 可迭代对象
+	 * @param type     数组元素类型
+	 * @param <T>      元素类型
+	 * @return 数组
+	 * @since 1.10.0
+	 */
+	public static <T> T[] toArray(Iterable<T> iterable, Class<T> type) {
+		if (iterable == null) {
+			return null;
+		}
+		List<T> list = toList(iterable);
+		@SuppressWarnings("unchecked")
+		T[] array = (T[]) java.lang.reflect.Array.newInstance(type, list.size());
+		return list.toArray(array);
+	}
+
+	/**
+	 * 返回集合中出现次数最多的元素（众数）；并列时取先出现的元素。
+	 *
+	 * @param collection 集合
+	 * @param <T>        元素类型
+	 * @return 众数元素；集合为空返回 {@code null}
+	 * @since 1.10.0
+	 */
+	public static <T> T maxCount(Collection<T> collection) {
+		if (collection == null || collection.isEmpty()) {
+			return null;
+		}
+		Map<T, Integer> freq = countMap(collection);
+		T mode = null;
+		int max = 0;
+		for (T item : collection) {
+			int c = freq.getOrDefault(item, 0);
+			if (c > max) {
+				max = c;
+				mode = item;
+			}
+		}
+		return mode;
+	}
+
+	/**
+	 * 两个集合是否存在交集。
+	 *
+	 * @param c1 集合一
+	 * @param c2 集合二
+	 * @return 存在交集返回 {@code true}
+	 * @since 1.10.0
+	 */
+	public static boolean containsAny(Collection<?> c1, Collection<?> c2) {
+		if (c1 == null || c2 == null || c1.isEmpty() || c2.isEmpty()) {
+			return false;
+		}
+		for (Object o : c1) {
+			if (c2.contains(o)) {
+				return true;
+			}
 		}
 		return false;
 	}

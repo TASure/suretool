@@ -29,6 +29,9 @@
     <artifactId>sure-math</artifactId>
     <packaging>jar</packaging>
     <name>sure-math</name>
+    <properties>
+		<jacoco.line.min>0.98</jacoco.line.min>
+	</properties>
     <description>数学工具门面：素数/公约数/阶乘组合/进制/位运算/BigDecimal 精确运算/随机数/数字解析，零第三方依赖</description>
 
     <dependencies>

@@ -29,6 +29,9 @@
     <artifactId>sure-process</artifactId>
     <packaging>jar</packaging>
     <name>sure-process</name>
+    <properties>
+		<jacoco.line.min>0.98</jacoco.line.min>
+	</properties>
     <description>进程管理门面：启动外部进程、超时强杀、并发捕获输出（虚拟线程），零第三方依赖</description>
 
     <dependencies>

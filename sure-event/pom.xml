@@ -29,6 +29,9 @@
     <artifactId>sure-event</artifactId>
     <packaging>jar</packaging>
     <name>sure-event</name>
+    <properties>
+		<jacoco.line.min>0.98</jacoco.line.min>
+	</properties>
     <description>轻量事件总线：函数式/注解注册，同步/虚拟线程异步投递（零第三方依赖）</description>
 
     <dependencies>

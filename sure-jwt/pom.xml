@@ -31,7 +31,7 @@
     <packaging>jar</packaging>
     <name>suretool-jwt</name>
     <properties>
-        <jacoco.line.min>0.70</jacoco.line.min>
+        <jacoco.line.min>0.98</jacoco.line.min>
     </properties>
     <description>JWT 域：HS256/HS384/HS512/RS256 令牌签发与校验，基于 sure-crypto 与 sure-json，纯 JDK。</description>
 

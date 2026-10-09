@@ -31,7 +31,7 @@
     <packaging>jar</packaging>
     <name>suretool-http</name>
     <properties>
-        <jacoco.line.min>0.86</jacoco.line.min>
+        <jacoco.line.min>0.98</jacoco.line.min>
     </properties>
     <description>零依赖 HTTP 客户端（JDK HttpURLConnection）。</description>
 

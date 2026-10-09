@@ -29,6 +29,9 @@
     <artifactId>sure-pdf</artifactId>
     <packaging>jar</packaging>
     <name>sure-pdf</name>
+    <properties>
+		<jacoco.line.min>0.98</jacoco.line.min>
+	</properties>
     <description>PDF 轻量门面：PdfWriter（文本/表格/图片/自动分页）+ PdfUtil（文本提取/合并/校验），基于 Apache PDFBox 3</description>
 
     <dependencies>

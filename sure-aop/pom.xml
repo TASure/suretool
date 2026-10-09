@@ -29,6 +29,9 @@
     <artifactId>sure-aop</artifactId>
     <packaging>jar</packaging>
     <name>sure-aop</name>
+    <properties>
+		<jacoco.line.min>0.98</jacoco.line.min>
+	</properties>
     <description>零依赖 AOP 门面：Aspect 切面 + ProxyUtil 代理工厂（JDK 动态代理，方法级匹配）</description>
 
     <dependencies>

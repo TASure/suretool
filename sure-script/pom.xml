@@ -29,6 +29,9 @@
     <artifactId>sure-script</artifactId>
     <packaging>jar</packaging>
     <name>sure-script</name>
+    <properties>
+		<jacoco.line.min>0.98</jacoco.line.min>
+	</properties>
     <description>JSR-223 脚本门面：引擎探测 / 编译缓存 / 快速求值，零第三方运行期依赖</description>
 
     <dependencies>

@@ -31,7 +31,7 @@
     <packaging>jar</packaging>
     <name>suretool-dfa</name>
     <properties>
-        <jacoco.line.min>0.80</jacoco.line.min>
+        <jacoco.line.min>0.98</jacoco.line.min>
     </properties>
     <description>DFA 域：敏感词过滤（前缀树 + 停用词跳跃），纯 JDK 零依赖。</description>
 </project>

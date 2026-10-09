@@ -29,6 +29,9 @@
     <artifactId>sure-template</artifactId>
     <packaging>jar</packaging>
     <name>sure-template</name>
+    <properties>
+		<jacoco.line.min>0.98</jacoco.line.min>
+	</properties>
     <description>模板引擎门面：Template 接口 + 内置 SimpleTemplate（${} 占位符 / 转义 / Bean 渲染），零第三方运行期依赖</description>
 
     <dependencies>

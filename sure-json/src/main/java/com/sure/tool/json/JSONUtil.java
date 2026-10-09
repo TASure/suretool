@@ -112,6 +112,18 @@ public class JSONUtil {
 	}
 
 	/**
+	 * JSON 数组字符串转类型安全元素列表。
+	 *
+	 * @param json        JSON 数组字符串
+	 * @param elementType 元素类型
+	 * @param <T>         元素类型
+	 * @return 元素列表
+	 */
+	public static <T> java.util.List<T> toList(String json, Class<T> elementType) {
+		return parseArray(json).toList(elementType);
+	}
+
+	/**
 	 * 是否为 JSON 对象或数组（以 &#123; 或 &#91; 开头）。
 	 *
 	 * @param json 字符串

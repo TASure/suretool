@@ -184,5 +184,14 @@ public class P4JsonTypeTest {
 		Assert.assertFalse(obj.getBool("no", true));
 	}
 
+	@Test
+	public void testUtilToListConvenience() {
+		java.util.List<com.sure.tool.json.TestUser> users = com.sure.tool.json.JSONUtil.toList(
+				"[{\"name\":\"a\"},{\"name\":\"b\"}]", com.sure.tool.json.TestUser.class);
+		Assert.assertEquals(2, users.size());
+		Assert.assertEquals("a", users.get(0).getName());
+		Assert.assertEquals("b", users.get(1).getName());
+	}
+
 
 }

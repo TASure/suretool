@@ -8,6 +8,7 @@
 
 ### Added（v1.13.0 窗口，批29-30）
 - **批30（质量）模糊测试 + Benchmark**：sure-core 新增 2 个 jqwik 属性测试类（CodecConvertPropertyTest 6 例编解码/转换不变量、DateUtilPropertyTest 2 例格式化幂等，累计 5 类）；sure-benchmark 新增 ResultBenchmark 5 基准（Result vs Optional vs 异常流，验证显式错误门面零成本）；本地跑通验证（BenchmarkList 5 项）。
+- **批32（影响力）Awesome Java + 教程**：重新提交 akullpp/awesome-java PR #1350（vinta 版仓库已消失；Utility 分类新条目，JDK25-first/零依赖/28 模块/虚拟线程一等公民）；sure-examples 新增 LangDemo（Result/Option/NullUtil 综合示例）；新教程 lang-api-guide.md（显式错误门面 30 秒上手）。
 - **批29（质量）覆盖率巩固**：method_audit 未命中方法 9→2（补测 Multiset.elementSet/迭代器分支、Props.getObj、DateUtil 缓存初始化、DiGraph.addVertexIfAbsent、FileUtil.walkFiles 回调、ProcessInfo 字段）；提升 sure-json/sure-crypto/sure-cache 覆盖率门禁至 0.78/0.84/0.85；sure-core 行覆盖 90.5% 达标。
 
 ### Added（v1.12.0 窗口，批25-28）

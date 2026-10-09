@@ -36,6 +36,8 @@ public class SystemInfo {
 	private static final OperatingSystemMXBean OS_BEAN = ManagementFactory.getOperatingSystemMXBean();
 	private static final RuntimeMXBean RUNTIME_BEAN = ManagementFactory.getRuntimeMXBean();
 	private static final Runtime RUNTIME = Runtime.getRuntime();
+	private static final java.lang.management.MemoryMXBean MEMORY_BEAN = ManagementFactory.getMemoryMXBean();
+	private static final java.lang.management.ThreadMXBean THREAD_BEAN = ManagementFactory.getThreadMXBean();
 
 	private SystemInfo() {
 	}
@@ -207,6 +209,124 @@ public class SystemInfo {
 		return ProcessHandle.current().info().arguments()
 				.map(java.util.List::of)
 				.orElseGet(java.util.List::of);
+	}
+
+	// ---------------- 批17：CPU / JVM / 磁盘 / 进程快照 ----------------
+
+	/**
+	 * CPU 快照：核数 / 平均负载 / 进程级与系统级使用率（com.sun.management 扩展）。
+	 *
+	 * @return CPU 信息
+	 */
+	public static CpuInfo getCpuInfo() {
+		double systemLoad = OS_BEAN.getSystemLoadAverage();
+		double processCpuLoad = -1.0;
+		double systemCpuLoad = -1.0;
+		long processCpuTime = 0L;
+		if (OS_BEAN instanceof com.sun.management.OperatingSystemMXBean sun) {
+			processCpuLoad = clamp(sun.getProcessCpuLoad());
+			systemCpuLoad = clamp(sun.getSystemCpuLoad());
+			processCpuTime = sun.getProcessCpuTime();
+		}
+		return new CpuInfo.Builder()
+				.cores(RUNTIME.availableProcessors())
+				.systemLoadAverage(systemLoad)
+				.processCpuLoad(processCpuLoad)
+				.systemCpuLoad(systemCpuLoad)
+				.processCpuTime(processCpuTime)
+				.build();
+	}
+
+	/**
+	 * JVM 运行时快照：版本 / 启动 / 堆与非堆内存 / 线程数。
+	 *
+	 * @return 运行时信息
+	 */
+	public static RuntimeInfo getRuntimeInfo() {
+		java.lang.management.MemoryUsage heap = MEMORY_BEAN.getHeapMemoryUsage();
+		java.lang.management.MemoryUsage nonHeap = MEMORY_BEAN.getNonHeapMemoryUsage();
+		return new RuntimeInfo.Builder()
+				.jvmName(RUNTIME_BEAN.getVmName())
+				.jvmVersion(RUNTIME_BEAN.getVmVersion())
+				.jvmVendor(RUNTIME_BEAN.getVmVendor())
+				.startTime(RUNTIME_BEAN.getStartTime())
+				.uptime(RUNTIME_BEAN.getUptime())
+				.heapUsed(heap.getUsed())
+				.heapCommitted(heap.getCommitted())
+				.heapMax(heap.getMax())
+				.nonHeapUsed(nonHeap.getUsed())
+				.threadCount(THREAD_BEAN.getTotalStartedThreadCount())
+				.liveThreadCount(THREAD_BEAN.getThreadCount())
+				.build();
+	}
+
+	/**
+	 * 所有磁盘根卷快照。
+	 *
+	 * @return 磁盘列表
+	 */
+	public static java.util.List<DiskInfo> getDisks() {
+		java.util.List<DiskInfo> disks = new java.util.ArrayList<>();
+		for (java.io.File root : java.io.File.listRoots()) {
+			disks.add(new DiskInfo(root.getPath(), root.getTotalSpace(), root.getUsableSpace(), root.getFreeSpace()));
+		}
+		return disks;
+	}
+
+	/**
+	 * 当前 JVM 可见的全部进程快照。
+	 *
+	 * @return 进程列表
+	 */
+	public static java.util.List<ProcessInfo> getProcesses() {
+		java.util.List<ProcessInfo> result = new java.util.ArrayList<>();
+		ProcessHandle.allProcesses().forEach(handle -> result.add(toProcessInfo(handle)));
+		return result;
+	}
+
+	/**
+	 * 取进程快照（按启动时间降序）。
+	 *
+	 * @param limit 上限（&lt;=0 返回全部）
+	 * @return 进程列表
+	 */
+	public static java.util.List<ProcessInfo> getProcesses(int limit) {
+		java.util.List<ProcessInfo> all = getProcesses();
+		all.sort((a, b) -> Long.compare(
+				b.getStartTime().map(Instant::toEpochMilli).orElse(0L),
+				a.getStartTime().map(Instant::toEpochMilli).orElse(0L)));
+		if (limit > 0 && all.size() > limit) {
+			return all.subList(0, limit);
+		}
+		return all;
+	}
+
+	/**
+	 * 当前 JVM 可见进程数。
+	 *
+	 * @return 进程数
+	 */
+	public static long getProcessCount() {
+		return ProcessHandle.allProcesses().count();
+	}
+
+	private static ProcessInfo toProcessInfo(ProcessHandle handle) {
+		ProcessHandle.Info info = handle.info();
+		String args = String.join(" ", info.arguments().orElse(new String[0]));
+		return new ProcessInfo.Builder()
+				.pid(handle.pid())
+				.command(info.command().orElse(null))
+				.args(args.isBlank() ? null : args)
+				.user(info.user().orElse(null))
+				.startTime(info.startInstant().orElse(null))
+				.cpuDurationNanos(info.totalCpuDuration().map(d -> d.toNanos()).orElse(0L))
+				.status(handle.isAlive() ? "ALIVE" : "TERMINATED")
+				.parentPid(handle.parent().map(ProcessHandle::pid).orElse(-1L))
+				.build();
+	}
+
+	private static double clamp(double value) {
+		return (value >= 0.0 && value <= 1.0) ? value : -1.0;
 	}
 
 	// ---------------- OS 家族 ----------------

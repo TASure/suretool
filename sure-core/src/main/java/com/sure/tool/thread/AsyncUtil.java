@@ -42,6 +42,19 @@ import java.util.function.Supplier;
  * 支持非阻塞链式编排；需要阻塞等待时可配合 {@link #await(Duration, Future)} /
  * {@link #joinAll(Duration, Callable...)}。</p>
  *
+ * <p><b>使用示例：</b></p>
+ * <pre>{@code
+ * CompletableFuture<List<String>> cf = AsyncUtil.allOf(
+ *         () -> fetchRemote("a"),
+ *         () -> fetchRemote("b"));
+ * List<String> rows = AsyncUtil.await(Duration.ofSeconds(5), cf);
+ * // 超时抛 TimeoutException；任一任务失败取消其余并传播首个异常
+ * }</pre>
+ *
+ * <p><b>null 语义：</b>任务/供应器/执行器为 null 立即 NPE；任务的 null
+ * 返回值为合法结果（不视为失败）；{@link #withTimeout} 超时抛
+ * {@code TimeoutException} 而非返回 null。</p>
+ *
  * @since 1.12.0
  */
 public final class AsyncUtil {

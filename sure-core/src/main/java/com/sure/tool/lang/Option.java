@@ -28,6 +28,19 @@ import java.util.function.Supplier;
  * {@link #onEmpty}、{@link #orElse(Option)}），保持链式 Fluent 体验。
  * 零依赖，对标 Guava {@code Optional} 与 Vavr {@code Option}。
  *
+ * <p><b>使用示例：</b></p>
+ * <pre>{@code
+ * String name = Option.ofNullable(user)
+ *         .map(User::getName)
+ *         .filter(n -> !n.isBlank())
+ *         .onEmpty(() -> log("missing name"))
+ *         .getOrElse("anonymous");
+ * }</pre>
+ *
+ * <p><b>null 语义：</b>{@link #of} 拒绝 null（NPE）；{@link #ofNullable}/
+ * {@link #empty} 接受空；空时 {@link #get} 抛 {@code NoSuchElementException}，
+ * {@link #getOrElse}/{@link #onEmpty}/{@link #orElse} 提供空值处理。</p>
+ *
  * @param <T> 值类型
  * @since 1.12.0
  */

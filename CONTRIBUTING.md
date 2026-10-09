@@ -54,7 +54,19 @@ python3 .github/scripts/method_audit.py   # 检查是否有 public/protected 方
 5. 维护者 review：公共 API 变更会有 API 兼容性检查（见 `docs/versioning.md`）；
 6. 合并后维护者关闭对应 issue。
 
-## 7. 需要帮助？
+## 7. AI 可读 JavaDoc 规范（必读）
+
+面向 AI 编程助手（Copilot / Cursor / Claude）与人类读者的 JavaDoc 统一标准：
+
+- **类级示例**：每个 public 工具类/门面类的类级 Javadoc 必须含 `<pre>{@code ...}</pre>` 使用示例（含真实调用链，1–5 行），让 AI 无需翻源码即可理解用法；
+- **null 语义标注**：类级或关键方法必须显式说明 null 行为——「null 入参抛 NPE」或「null 安全（返回默认/空）」二者必选其一，禁止含糊；
+- **异常语义**：方法可能抛的受检/运行时异常要在 `@throws` 或描述中写明触发条件；
+- **@since 硬性**：新 API 必须带 `@since 1.x.0`（当前开发窗口版本），与版本发布一一对应；
+- **零依赖约束**：核心模块 JavaDoc 不得引入对第三方类的 {@link}（避免 javadoc 构建断链）。
+
+> 参照示范类：`com.sure.tool.lang.NullUtil` / `Result` / `Option` / `Results`、`com.sure.tool.thread.AsyncUtil`。
+
+## 8. 需要帮助？
 
 - 文档：[类索引](docs/index.md) · [构建与测试](README.md#构建与测试) · [发布指南](docs/RELEASING.md)
 - 提问：GitHub Discussions（如已启用）或 issue 标签 `question`

@@ -29,6 +29,19 @@ import java.util.function.Supplier;
  * 支持 {@link #map}/{@link #flatMap} 链式短路、{@link #recover} 恢复与
  * {@link #throwIfFailed} 终止式转换。零依赖，对标 Vavr {@code Result}。</p>
  *
+ * <p><b>使用示例：</b></p>
+ * <pre>{@code
+ * Result<Integer> r = Result.ok(1)
+ *         .map(x -> x * 2)                       // 2
+ *         .onSuccess(v -> log(v))
+ *         .recover(e -> 0);                      // 失败恢复
+ * if (r.isFailure()) { throw new BizException(r.getErrorMessage()); }
+ * }</pre>
+ *
+ * <p><b>null 语义：</b>{@link #ok} 允许 null 值；{@link #fail} 不允许 null
+ * 信息（立即 NPE）；失败时 {@link #get}/{@link #throwIfFailed} 抛异常，
+ * {@link #getOrNull}/{@link #getOrElse} 返回默认值。</p>
+ *
  * @param <T> 成功值类型
  * @since 1.12.0
  */

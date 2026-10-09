@@ -23,6 +23,16 @@ import java.util.Objects;
  * {@link Result} 的 Fluent 组合子门面：批量聚合（全部成功 / 首个成功）。
  * 零依赖，对标 Vavr {@code Validation} 与函数式组合子。
  *
+ * <p><b>使用示例：</b></p>
+ * <pre>{@code
+ * Result<List<Order>> r = Results.allOf(
+ *         validate(order1), validate(order2));
+ * // 任一校验失败 -> 携带首个错误信息的失败 Result
+ * }</pre>
+ *
+ * <p><b>null 语义：</b>入参数组/列表不允许 null（NPE）；Result 元素可为
+ * {@code ok(null)}，聚合时保留 null 值。</p>
+ *
  * @since 1.12.0
  */
 public final class Results {

@@ -4,13 +4,16 @@
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-## [1.6.0] - 2026-09-30
-
-### Changed
-- **基线升级 JDK 21 → JDK 25（LTS）**：全仓 `maven.compiler.release=25`，CI 矩阵统一 JDK 25（三平台），文档与教程基线表述同步更新
-- **Spring Boot Starter 升级至 4.1.1**（Spring Framework 7）：在 JDK25 下全量验证通过，自动配置零适配
-
 ## [Unreleased]
+
+## [1.9.0] - 2026-10-09
+
+### Added
+- **批14：Props / 表达式引擎 / 兼容门禁**：
+  - `config.Props`（对标 Hutool Props）：`java.util.Properties` 增强——classpath/文件加载（UTF-8）、`getStr/getInt/getLong/getDouble/getBool/getBigDecimal/getObj`（类型安全 + 默认值回退）、`toBean(Class)`（属性名直匹配 + 类型转换）、`toMap()` 快照
+  - `util.ExpressionUtil`（零运行期依赖）：LL(1) 递归下降算术表达式求值——`+ - * / %`、括号、一元负号、整数/小数/科学计数法、变量替换、`BigDecimal` 高精度；`eval(String)`、`eval(String, Map)`、`evalNumber`、`check`
+  - **japicmp 二进制兼容门禁**：sure-core `verify` 阶段对比上一发布版本 v1.8.0，破坏性 API 变更即失败
+  - 新增 `Batch14CoreTest`（Props 5 例 + ExpressionUtil 7 例，共 12 用例）
 
 ## [1.8.0] - 2026-10-08
 
@@ -22,14 +25,7 @@
   - `CollUtil`：新增 `rotate`（正右旋/负左旋）、`removeEmpty`、`removeAny`、`isAllEmpty`、`isAllNotNull`（`removeNull` 原已有）
   - `BeanUtil`：新增 `copyToList`（含 ignoreNullValue 重载）、`toBean(Object, Class, boolean)`、`mapToBean(Map, Class, boolean ignoreError)`；`getProperty` 支持多级路径（`a.b.c`）与 Map 取值；`setPropValue` 对基本类型属性的 null 值安全跳过
 
-## [Unreleased]
-
-### Added
-- **批14（v1.9.0）：Props / 表达式引擎 / 兼容门禁**：
-  - `config.Props`（对标 Hutool Props）：`java.util.Properties` 增强——classpath/文件加载（UTF-8）、`getStr/getInt/getLong/getDouble/getBool/getBigDecimal/getObj`（类型安全 + 默认值回退）、`toBean(Class)`（属性名直匹配 + 类型转换）、`toMap()` 快照
-  - `util.ExpressionUtil`（零运行期依赖）：LL(1) 递归下降算术表达式求值——`+ - * / %`、括号、一元负号、整数/小数/科学计数法、变量替换、`BigDecimal` 高精度；`eval(String)`、`eval(String, Map)`、`evalNumber`、`check`
-  - **japicmp 二进制兼容门禁**：sure-core `verify` 阶段对比上一发布版本 v1.8.0，破坏性 API 变更即失败
-  - 新增 `Batch14CoreTest`（Props 5 例 + ExpressionUtil 7 例，共 12 用例）
+## [1.7.0] - 2026-10-08
 
 ### Added
 - **sure-http multipart 多文件上传增强**（对标 Hutool HttpRequest.form(name, File...)）：
@@ -45,6 +41,8 @@
   - `ImgUtil`：新增 `write`（PNG/JPG 等格式写出）、`rotate`（任意角度旋转）、`gray`（灰度化）、`round`（圆角裁剪）
   - `MailAccount`：新增 `charset`（默认 UTF-8）与 `timeout`（默认 10000ms）配置；`MailUtil` 新增全参数 `send`（TO/CC/BCC + HTML + 附件）
   - `FtpUtil`：新增编码 / 连接读写超时 connect 重载、`rename`、`exist`
+
+## [1.6.0] - 2026-09-30
 
 ### Changed
 - **基线升级 JDK 21 → JDK 25（LTS）**：全仓 `maven.compiler.release=25`，CI 矩阵统一 JDK 25（三平台），文档与教程基线表述同步更新

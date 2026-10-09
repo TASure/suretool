@@ -15,8 +15,6 @@
  */
 package com.sure.tool.codec;
 
-import java.nio.charset.StandardCharsets;
-
 import net.jqwik.api.ForAll;
 import net.jqwik.api.Property;
 import org.junit.Assert;

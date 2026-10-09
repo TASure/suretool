@@ -66,6 +66,12 @@ python3 .github/scripts/method_audit.py   # 检查是否有 public/protected 方
 
 > 参照示范类：`com.sure.tool.lang.NullUtil` / `Result` / `Option` / `Results`、`com.sure.tool.thread.AsyncUtil`。
 
+## 7.5 版本与 @since 规范
+
+- 新 API 的 `@since` 标注下一个**未发布版本窗口**：批 21-24 → `1.11.0`，批 25-28 → `1.12.0`，批 29-30 → `1.13.0`，依此类推（见 CHANGELOG 顶部 `[Unreleased]` 窗口）。
+- 每个新工具类、新方法必须带 `@since`；无 `@since` 的 API 视为发布前内部 API。
+- 涉及 API 行为变更（如转换兜底规则）必须在 CHANGELOG 标注 `Breaking`，即使语义差异微小。
+
 ## 8. 需要帮助？
 
 - 文档：[类索引](docs/index.md) · [构建与测试](README.md#构建与测试) · [发布指南](docs/RELEASING.md)

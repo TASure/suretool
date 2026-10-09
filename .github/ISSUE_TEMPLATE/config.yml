@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 安全漏洞（私密上报）
+    url: https://github.com/TASure/suretool/security/advisories/new
+    about: 请勿公开披露漏洞细节，通过 GitHub Security Advisory 私密上报。
+  - name: 使用与集成问题（讨论区）
+    url: https://github.com/TASure/suretool/discussions
+    about: 使用疑问、集成咨询、功能讨论请先到 Discussions。

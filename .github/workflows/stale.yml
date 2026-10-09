@@ -1,0 +1,26 @@
+name: stale
+on:
+  schedule:
+    - cron: '30 1 * * *'
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          stale-issue-message: '此 Issue 已 90 天无活动，将标记为待关闭。若仍需跟进请回复或更新内容。'
+          stale-pr-message: '此 PR 已 90 天无活动，将标记为待关闭。若仍需跟进请推送更新或说明进度。'
+          close-issue-message: '因长期无活动已自动关闭；如问题仍存在可重新打开或新建 Issue 并引用本条目。'
+          close-pr-message: '因长期无活动已自动关闭；如需继续可重新打开或新建 PR 并引用本条目。'
+          days-before-issue-stale: 90
+          days-before-pr-stale: 90
+          days-before-issue-close: 14
+          days-before-pr-close: 14
+          exempt-issue-labels: 'security,bug,enhancement,pinned'
+          exempt-pr-labels: 'security,dependencies'

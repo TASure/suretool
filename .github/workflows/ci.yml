@@ -69,3 +69,13 @@ jobs:
             sure-jwt/target/site/jacoco/jacoco.xml
             sure-dfa/target/site/jacoco/jacoco.xml
           fail_ci_if_error: false
+
+  # 文档链接完整性校验（README + docs 相对链接与锚点，防断链）
+  docs-links:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check docs links
+        run: python3 .github/scripts/check_docs_links.py

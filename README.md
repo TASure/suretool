@@ -47,7 +47,7 @@
 * 许可：Apache License 2.0
 
 * 文档：[类索引](docs/index.md) · [Hutool 对比](docs/comparison-hutool.md) · [发布指南](docs/RELEASING.md) · [维护手册](docs/MAINTAINING.md) · [仓库设置](docs/github-setup.md) · [依赖清单](docs/dependencies.md) · [CI 工作流职责](docs/ci-workflow.md)
-* 教程：[5 分钟上手](docs/posts/quickstart.md) · [字符串/集合速查](docs/posts/string-collection-cookbook.md) · [加解密默认安全](docs/posts/security-crypto-guide.md) · [JSON+HTTP 实战](docs/posts/json-http-integration.md) · [Starter 集成](docs/posts/spring-boot-starter-guide.md) · [数学/进程/压缩速查](docs/posts/math-process-compress-guide.md) · [Socket+事件总线实战](docs/posts/socket-event-guide.md)
+* 教程：[5 分钟上手](docs/posts/quickstart.md) · [模块与 API 门户](docs/modules.md) · [字符串/集合速查](docs/posts/string-collection-cookbook.md) · [加解密默认安全](docs/posts/security-crypto-guide.md) · [JSON+HTTP 实战](docs/posts/json-http-integration.md) · [Starter 集成](docs/posts/spring-boot-starter-guide.md) · [数学/进程/压缩速查](docs/posts/math-process-compress-guide.md) · [Socket+事件总线实战](docs/posts/socket-event-guide.md)
 
 ## 快速开始
 

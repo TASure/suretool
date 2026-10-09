@@ -18,7 +18,7 @@
 
 
 
-![Java](https://img.shields.io/badge/Java-21+-blue)
+![Java](https://img.shields.io/badge/Java-25+-blue)
 
 
 
@@ -40,7 +40,7 @@ static utility methods to reduce boilerplate and lower development cost.
 
 * License: Apache License 2.0
 
-* Docs: [Class index](docs/index.md) · [Hutool comparison](docs/comparison-hutool.md) · [Releasing](docs/RELEASING.md) · [Maintaining](docs/MAINTAINING.md) · [GitHub setup](docs/github-setup.md) · [Dependencies](docs/dependencies.md)
+* Docs: [Modules & API portal (28 modules + javadoc.io)](docs/modules.md) · [Class index](docs/index.md) · [5-minute quickstart](docs/posts/quickstart.md) · [Hutool comparison](docs/comparison-hutool.md) · [Benchmark report](docs/benchmark-report.md) · [Releasing](docs/RELEASING.md) · [Maintaining](docs/MAINTAINING.md) · [GitHub setup](docs/github-setup.md) · [Dependencies](docs/dependencies.md)
 
 ## Why suretool?
 
@@ -48,11 +48,11 @@ static utility methods to reduce boilerplate and lower development cost.
 
 * **Secure by default** — AES-GCM authenticated encryption, RSA-OAEP-SHA256, minimum 2048-bit RSA keys, deprecated DES kept only for decrypting legacy data.
 
-* **Small but complete** — 11 business modules + BOM + examples + Spring Boot starter; import only what you need.
+* **Small but complete** — 28 modules + BOM + examples + Spring Boot starter; import only what you need.
 
-* **Quality-gated** — Checkstyle 0 violations, SpotBugs (Max/Medium), JaCoCo line coverage ≥ 85% on business modules, CodeQL + Dependabot enabled in CI.
+* **Quality-gated** — Checkstyle 0 violations, SpotBugs (Max), JaCoCo line coverage ≥ 90% on sure-core, CodeQL + OSV-Scanner + Dependabot enabled in CI.
 
-* **Modern Java** — built with `--release 21`; records, sealed classes, pattern matching and virtual threads are welcome in this codebase.
+* **Modern Java** — built with `--release 25`; virtual threads, records, sealed classes, pattern matching and structured concurrency are first-class.
 
 ## Quick start
 
@@ -131,9 +131,16 @@ String json = JSONUtil.toJsonStr(Map.of("name", "Alice", "age", 30));
 
 String md5 = SecureUtil.md5("hello");
 
-String token = JwtUtil.createToken(Map.of("uid", 1001), "secret", 3600);
-
 String text = StrUtil.removeSuffixIgnoreCase("Hello.txt", ".TXT"); // "Hello"
+
+EventBus bus = new EventBus();                              // DeadEvent on unconsumed events
+bus.subscribe(EventBus.DeadEvent.class, e -> log(e.getEvent()));
+
+DiGraph<String> g = new DiGraph<>();                        // graph algorithms
+g.addEdge("A", "B");
+List<String> order = GraphUtil.topologicalSort(g).orElseThrow();
+
+double std = StatUtil.stdDev(new double[] { 1, 2, 3, 4, 5 }); // statistics
 ```
 
 Run all runnable demos:
@@ -168,27 +175,40 @@ mvn -pl sure-examples exec:java
 | `sure-bom`                 | `io.github.tasure:sure-bom`                 | BOM for unified version management                         | —                      |
 | `sure-all`                 | `io.github.tasure:sure-all`                 | Aggregated module (everything)                             | all                    |
 | `sure-examples`            | `io.github.tasure:sure-examples`            | Runnable demos (14 examples)                               | sure-all               |
+| `sure-log`                | `io.github.tasure:sure-log`                | Zero-dep logging facade (SLF4J delegate / Console fallback) | core                   |
+| `sure-db`                 | `io.github.tasure:sure-db`                 | JDBC data access (Entity / SqlRunner / pool / tx / paging) | core                   |
+| `sure-script`             | `io.github.tasure:sure-script`             | JSR-223 script facade (engine probe / compile cache)       | core                   |
+| `sure-template`           | `io.github.tasure:sure-template`           | Template engine (Template / SimpleTemplate / Bean render)  | core                   |
+| `sure-aop`                | `io.github.tasure:sure-aop`                | Zero-dep AOP (Aspect / ProxyUtil / method matching)        | core                   |
+| `sure-pdf`                | `io.github.tasure:sure-pdf`                | PDF facade (PdfWriter / PdfUtil, PDFBox 3)                 | core + pdfbox          |
+| `sure-process`            | `io.github.tasure:sure-process`            | Process facade (timeout kill / virtual-thread pipe)        | core                   |
+| `sure-math`               | `io.github.tasure:sure-math`               | Math & statistics (MathUtil / BigDecimalUtil / StatUtil)   | core                   |
+| `sure-compress`           | `io.github.tasure:sure-compress`           | High-ratio compression (SevenZ/LZMA2 anti-traversal / Brotli)| core + compress       |
+| `sure-socket`             | `io.github.tasure:sure-socket`             | TCP facade (SocketUtil / virtual-thread SocketServer)      | core                   |
+| `sure-event`              | `io.github.tasure:sure-event`              | Event bus (functional/annotation, sync/virtual-thread async, DeadEvent) | core |
+| `sure-extra`              | `io.github.tasure:sure-extra`              | Mail SMTP / FTP / QR code / image processing               | core + jakarta.mail + commons-net + zxing |
+| `sure-benchmark`          | `io.github.tasure:sure-benchmark`          | JMH benchmarks (vs Hutool / Guava)                        | sure-all               |
 | `sure-spring-boot-starter` | `io.github.tasure:sure-spring-boot-starter` | Spring Boot auto-configuration entry                       | sure-all + spring-boot |
 
-Full class index: [docs/index.md](docs/index.md).
+Full module & API portal (28 modules + javadoc.io links): [docs/modules.md](docs/modules.md).
 
 ## Roadmap
 
 
 
-* [x] P0/P1: core utilities of 8 high-frequency domains
+* [x] P0/P1/P2: modularization (28 modules) + engineering gates (Checkstyle/SpotBugs/JaCoCo/License)
 
-* [x] P2: modularization (15 modules) + engineering gates (Checkstyle/SpotBugs/JaCoCo/License)
+* [x] JDK 25 baseline (v1.6.0)
 
-* [x] P3: captcha / jwt / http / dfa + sure-bom
+* [x] Released v1.0.0 → v1.10.0 on Maven Central (11 releases, CI-driven)
 
-* [x] JDK 21+ baseline
+* [x] v2.0 batch 21/22/23: concurrency (StripedLock/StructuredTaskUtil) · IO/text (FileUtil/IoUtil/StrUtil) · event+graph+math (DeadEvent/DiGraph/GraphUtil/StatUtil)
 
-* [x] Open-source excellence: coverage ≥ 85%, docs site, examples, starter, release pipeline
+* [x] Docs portal: 7 tutorials, javadoc.io links, bilingual README
 
-* [ ] 1.0.0 release on Maven Central
+* [ ] v1.11.0 release (batch 21-24)
 
-* [ ] Spring Boot starter expansion (cache/crypto auto-configuration)
+* [ ] v2.0 batch 24+ / v3.0 differentiated leadership (virtual threads first-class, Fluent API)
 
 ## Contributing
 

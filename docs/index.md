@@ -4,6 +4,8 @@ suretool 是一个**小而全**的 Java 工具类库，参考 [Hutool](https://h
 仅支持 **JDK 25+**，包前缀 `com.sure.tool`。
 
 - [项目主页（GitHub）](https://github.com/TASure/suretool)
+- [模块与 API 门户（28 模块 + javadoc.io 直链）](modules.md)
+- [快速上手教程（5 分钟）](posts/quickstart.md)
 - [贡献指南](../CONTRIBUTING.md)
 - [安全策略](../SECURITY.md)
 - [发布指南](RELEASING.md)

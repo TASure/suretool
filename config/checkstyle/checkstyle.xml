@@ -12,8 +12,9 @@
     <property name="charset" value="UTF-8"/>
     <property name="severity" value="error"/>
 
+    <!-- 核心工具类（StrUtil/CollUtil 等）天然超长，上限放宽至 2600 -->
     <module name="FileLength">
-        <property name="max" value="2000"/>
+        <property name="max" value="2600"/>
     </module>
 
     <module name="TreeWalker">

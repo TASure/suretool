@@ -209,6 +209,89 @@ public class IoUtil {
 		writer.flush();
 	}
 
+
+	/**
+	 * 将输入流内容写入文件（自动创建父目录）。
+	 *
+	 * @param in   输入流
+	 * @param file 目标文件
+	 * @return 写入字节数
+	 * @throws IOException IO 失败
+	 */
+	public static long copy(InputStream in, java.io.File file) throws IOException {
+		if (in == null || file == null) {
+			throw new IllegalArgumentException("in 与 file 不能为 null");
+		}
+		java.io.File parent = file.getParentFile();
+		if (parent != null && !parent.exists()) {
+			java.nio.file.Files.createDirectories(parent.toPath());
+		}
+		try (java.io.FileOutputStream out = new java.io.FileOutputStream(file)) {
+			return copy(in, out);
+		}
+	}
+
+	/**
+	 * 将文件内容写入输出流。
+	 *
+	 * @param file 源文件
+	 * @param out  输出流
+	 * @return 写入字节数
+	 * @throws IOException IO 失败
+	 */
+	public static long copy(java.io.File file, OutputStream out) throws IOException {
+		if (file == null || out == null) {
+			throw new IllegalArgumentException("file 与 out 不能为 null");
+		}
+		try (InputStream in = new java.io.FileInputStream(file)) {
+			return copy(in, out);
+		}
+	}
+
+	/**
+	 * 逐行写出集合内容（每行末尾追加行分隔符）。
+	 *
+	 * @param lines   行集合（元素经 {@link String#valueOf} 转换，null 元素写出空行）
+	 * @param out     输出流
+	 * @param charset 字符集
+	 * @throws IOException IO 失败
+	 */
+	public static void writeLines(java.util.Collection<?> lines, OutputStream out, java.nio.charset.Charset charset) throws IOException {
+		if (lines == null || out == null || charset == null) {
+			throw new IllegalArgumentException("lines/out/charset 不能为 null");
+		}
+		byte[] separator = System.lineSeparator().getBytes(charset);
+		for (Object line : lines) {
+			String text = line == null ? "" : String.valueOf(line);
+			out.write(text.getBytes(charset));
+			out.write(separator);
+		}
+	}
+
+	/**
+	 * 追加式读取流内容并按行写入目标集合（适合大文件分块处理，避免一次性 OOM）。
+	 *
+	 * @param in      输入流
+	 * @param charset 字符集
+	 * @param lines   目标集合（内容追加到末尾）
+	 * @return 读取行数
+	 * @throws IOException IO 失败
+	 */
+	public static int readLines(InputStream in, java.nio.charset.Charset charset, java.util.Collection<String> lines) throws IOException {
+		if (in == null || charset == null || lines == null) {
+			throw new IllegalArgumentException("in/charset/lines 不能为 null");
+		}
+		int count = 0;
+		try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(in, charset))) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				lines.add(line);
+				count++;
+			}
+		}
+		return count;
+	}
+
 	/**
 	 * 安静关闭可关闭资源，忽略关闭异常。
 	 *

@@ -796,6 +796,144 @@ public class FileUtil {
 	}
 
 	/**
+	 * 文件大小格式化：B / KB / MB / GB / TB（二进制单位，保留 1 位小数；不足 1KB 显示整数字节）。
+	 *
+	 * @param size 字节数（负数按 0 处理）
+	 * @return 格式化文本，如 {@code 1.5 MB}
+	 */
+	public static String sizeFormat(long size) {
+		if (size < 0) {
+			size = 0;
+		}
+		if (size < 1024) {
+			return size + " B";
+		}
+		double value = size;
+		String[] units = { "KB", "MB", "GB", "TB", "PB" };
+		int unit = -1;
+		while (value >= 1024 && unit < units.length - 1) {
+			value /= 1024;
+			unit++;
+		}
+		// 整除显示整数，否则保留 1 位小数（避免浮点 == 比较）
+		if (Math.abs(value - Math.round(value)) < 1e-9) {
+			return String.format("%.0f %s", value, units[unit]);
+		}
+		return String.format("%.1f %s", value, units[unit]);
+	}
+
+	/**
+	 * 文件大小（字节），路径便捷重载。
+	 *
+	 * @param path 文件路径
+	 * @return 字节数；文件不存在或为目录时返回 0
+	 */
+	public static long size(String path) {
+		return size(new File(path));
+	}
+
+	/**
+	 * 复制文件（自动创建父目录），路径便捷重载。
+	 *
+	 * @param srcPath  源路径
+	 * @param destPath 目标路径
+	 * @return 目标文件
+	 * @throws IOException 复制失败
+	 */
+	public static File copy(String srcPath, String destPath) throws IOException {
+		return copy(new File(srcPath), new File(destPath));
+	}
+
+	/**
+	 * 按行读取文件（UTF-8），路径便捷重载。
+	 *
+	 * @param path 文件路径
+	 * @return 行列表
+	 * @throws IOException 读取失败
+	 */
+	public static java.util.List<String> readLines(String path) throws IOException {
+		return readUtf8Lines(new File(path));
+	}
+
+	/**
+	 * 创建文件（含父目录），路径便捷重载。
+	 *
+	 * @param path 文件路径
+	 * @return 文件
+	 * @throws IOException 创建失败
+	 */
+	public static File touch(String path) throws IOException {
+		return touch(new File(path));
+	}
+
+	/**
+	 * 深度遍历目录返回全部文件（不含目录本身），使用 {@link java.nio.file.Files#walkFileTree}。
+	 *
+	 * @param root 根路径（目录或文件）
+	 * @return 文件列表；root 为 null 或不存在时返回空列表
+	 * @throws java.io.UncheckedIOException 遍历 IO 失败
+	 */
+	public static java.util.List<java.nio.file.Path> walkFiles(java.nio.file.Path root) {
+		java.util.List<java.nio.file.Path> result = new java.util.ArrayList<>();
+		if (root == null || !java.nio.file.Files.exists(root)) {
+			return result;
+		}
+		try {
+			java.nio.file.Files.walkFileTree(root, new java.nio.file.SimpleFileVisitor<java.nio.file.Path>() {
+				@Override
+				public java.nio.file.FileVisitResult visitFile(java.nio.file.Path file, java.nio.file.attribute.BasicFileAttributes attrs) {
+					result.add(file);
+					return java.nio.file.FileVisitResult.CONTINUE;
+				}
+			});
+		} catch (java.io.IOException e) {
+			throw new java.io.UncheckedIOException("遍历目录失败: " + root, e);
+		}
+		return result;
+	}
+
+	/**
+	 * 文件最后修改时间（毫秒）。
+	 *
+	 * @param file 文件
+	 * @return 毫秒时间戳；文件不存在时返回 0
+	 */
+	public static long lastModified(File file) {
+		if (file == null || !file.exists()) {
+			return 0L;
+		}
+		return file.lastModified();
+	}
+
+	/**
+	 * 判断文件是否比参考文件新（最后修改时间晚）。
+	 *
+	 * @param file      待判断文件
+	 * @param reference 参考文件
+	 * @return 若 file 更新返回 true；任一文件不存在返回 false
+	 */
+	public static boolean isNewer(File file, File reference) {
+		if (file == null || reference == null || !file.exists() || !reference.exists()) {
+			return false;
+		}
+		return file.lastModified() > reference.lastModified();
+	}
+
+	/**
+	 * 判断文件是否比参考文件旧（最后修改时间早）。
+	 *
+	 * @param file      待判断文件
+	 * @param reference 参考文件
+	 * @return 若 file 更旧返回 true；任一文件不存在返回 false
+	 */
+	public static boolean isOlder(File file, File reference) {
+		if (file == null || reference == null || !file.exists() || !reference.exists()) {
+			return false;
+		}
+		return file.lastModified() < reference.lastModified();
+	}
+
+	/**
 	 * 最后修改时间。
 	 *
 	 * @param file 文件

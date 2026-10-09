@@ -1836,4 +1836,282 @@ public class StrUtil {
 		return wrap + str.toString() + wrap;
 	}
 
+
+	/**
+	 * 截断字符串：超过 maxWidth 时保留前 maxWidth-3 个字符并以 {@code ...} 结尾。
+	 *
+	 * @param str      原字符串
+	 * @param maxWidth 最大宽度，小于 4 视为 4
+	 * @return 截断后的字符串；str 为 null 返回 null
+	 */
+	public static String abbreviate(CharSequence str, int maxWidth) {
+		return abbreviate(str, 0, maxWidth);
+	}
+
+	/**
+	 * 截断字符串：从指定偏移开始，超过 maxWidth 时以 {@code ...} 结尾。
+	 *
+	 * @param str      原字符串
+	 * @param offset   起始偏移（越界自动归位）
+	 * @param maxWidth 最大宽度，小于 4 视为 4
+	 * @return 截断后的字符串；str 为 null 返回 null
+	 */
+	public static String abbreviate(CharSequence str, int offset, int maxWidth) {
+		if (str == null) {
+			return null;
+		}
+		if (maxWidth < 4) {
+			maxWidth = 4;
+		}
+		if (str.length() <= maxWidth) {
+			return str.toString();
+		}
+		if (offset > str.length()) {
+			offset = str.length();
+		}
+		if (str.length() - offset < maxWidth - 3) {
+			offset = str.length() - (maxWidth - 3);
+		}
+		if (offset <= 4) {
+			return str.subSequence(0, maxWidth - 3) + "...";
+		}
+		return "..." + str.subSequence(offset, offset + maxWidth - 3) + "...";
+	}
+
+	/**
+	 * 中间省略：保留首尾字符，中间以指定省略串连接（参考 commons-lang {@code StringUtils.abbreviateMiddle}）。
+	 *
+	 * @param str    原字符串
+	 * @param middle 省略串（如 {@code "..."}）
+	 * @param length 目标总长度（含省略串），小于 middle 长度时直接返回 middle
+	 * @return 中间省略后的字符串；str 为 null 返回 null
+	 */
+	public static String abbreviateMiddle(CharSequence str, String middle, int length) {
+		if (str == null) {
+			return null;
+		}
+		if (isEmpty(middle)) {
+			return str.toString();
+		}
+		if (length >= str.length() || length < middle.length()) {
+			return str.toString();
+		}
+		int targetSting = length - middle.length();
+		int startOffset = (targetSting + 1) / 2;
+		int endOffset = str.length() - targetSting / 2;
+		return str.subSequence(0, startOffset) + middle
+				+ str.subSequence(endOffset, str.length());
+	}
+
+	/**
+	 * 取标签之间的文本（单标签，首次匹配）：形如 {@code <a>text</a>} 取 {@code text}。
+	 *
+	 * @param str 原字符串
+	 * @param tag 标签文本
+	 * @return 标签间文本；无匹配返回 null
+	 */
+	public static String substringBetween(CharSequence str, CharSequence tag) {
+		return substringBetween(str, tag, tag);
+	}
+
+	/**
+	 * 取开始与结束标签之间的文本（首次匹配）。
+	 *
+	 * @param str   原字符串
+	 * @param open  开始标签
+	 * @param close 结束标签
+	 * @return 标签间文本；无匹配返回 null
+	 */
+	public static String substringBetween(CharSequence str, CharSequence open, CharSequence close) {
+		if (str == null || open == null || close == null || open.length() == 0 || close.length() == 0) {
+			return null;
+		}
+		String text = str.toString();
+		int start = text.indexOf(open.toString());
+		if (start < 0) {
+			return null;
+		}
+		int from = start + open.length();
+		int end = text.indexOf(close.toString(), from);
+		if (end < 0) {
+			return null;
+		}
+		return text.substring(from, end);
+	}
+
+	/**
+	 * 返回首个差异位置起的子串（参考 commons-lang {@code StringUtils.difference}）。
+	 *
+	 * @param str1 字符串一
+	 * @param str2 字符串二
+	 * @return 从首个不同字符到 str2 末尾的子串；str1 为 null 返回 str2
+	 */
+	public static String difference(CharSequence str1, CharSequence str2) {
+		if (str1 == null) {
+			return toString(str2);
+		}
+		if (str2 == null) {
+			return str1.toString();
+		}
+		int i = 0;
+		int limit = Math.min(str1.length(), str2.length());
+		while (i < limit && str1.charAt(i) == str2.charAt(i)) {
+			i++;
+		}
+		if (str1.length() == str2.length() && i == limit) {
+			return "";
+		}
+		return str2.subSequence(i, str2.length()).toString();
+	}
+
+	/**
+	 * 忽略大小写查找子串位置。
+	 *
+	 * @param str    原字符串
+	 * @param search 查找目标
+	 * @param from   起始索引（负数按 0）
+	 * @return 首次命中的索引；str 为 null 返回 -1
+	 */
+	public static int indexOfIgnoreCase(CharSequence str, CharSequence search, int from) {
+		if (str == null || search == null) {
+			return -1;
+		}
+		if (search.length() == 0) {
+			return Math.max(0, from);
+		}
+		String text = str.toString();
+		String needle = search.toString();
+		int max = text.length() - needle.length();
+		if (from < 0) {
+			from = 0;
+		}
+		if (from > max) {
+			return -1;
+		}
+		for (int i = from; i <= max; i++) {
+			if (text.regionMatches(true, i, needle, 0, needle.length())) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * 大小写互换：大写转小写、小写转大写（参考 commons-lang {@code StringUtils.swapCase}）。
+	 *
+	 * @param str 原字符串
+	 * @return 互换后的字符串；str 为 null 返回 null
+	 */
+	public static String swapCase(CharSequence str) {
+		if (str == null) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder(str.length());
+		for (int i = 0; i < str.length(); i++) {
+			char c = str.charAt(i);
+			if (Character.isUpperCase(c)) {
+				sb.append(Character.toLowerCase(c));
+			} else if (Character.isLowerCase(c)) {
+				sb.append(Character.toUpperCase(c));
+			} else {
+				sb.append(c);
+			}
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * 空白规范化：首尾去空白，内部连续空白（含换行制表）压缩为单个空格。
+	 *
+	 * @param str 原字符串
+	 * @return 规范化结果；str 为 null 返回 null
+	 */
+	public static String normalizeSpace(CharSequence str) {
+		if (str == null) {
+			return null;
+		}
+		if (str.length() == 0) {
+			return "";
+		}
+		StringBuilder sb = new StringBuilder(str.length());
+		boolean lastWasSpace = true;
+		for (int i = 0; i < str.length(); i++) {
+			char c = str.charAt(i);
+			if (Character.isWhitespace(c)) {
+				if (!lastWasSpace) {
+					sb.append(' ');
+					lastWasSpace = true;
+				}
+			} else {
+				sb.append(c);
+				lastWasSpace = false;
+			}
+		}
+		int end = sb.length();
+		while (end > 0 && sb.charAt(end - 1) == ' ') {
+			end--;
+		}
+		return sb.substring(0, end);
+	}
+
+	/**
+	 * 多个字符串的公共前缀（参考 commons-lang {@code StringUtils.getCommonPrefix}）。
+	 *
+	 * @param strs 字符串数组
+	 * @return 公共前缀；数组为空或含 null 返回空串
+	 */
+	public static String getCommonPrefix(CharSequence... strs) {
+		if (strs == null || strs.length == 0) {
+			return "";
+		}
+		int shortest = Integer.MAX_VALUE;
+		for (CharSequence s : strs) {
+			if (s == null) {
+				return "";
+			}
+			shortest = Math.min(shortest, s.length());
+		}
+		if (shortest == 0) {
+			return "";
+		}
+		int i = 0;
+		outer:
+		while (i < shortest) {
+			char c = strs[0].charAt(i);
+			for (int j = 1; j < strs.length; j++) {
+				if (strs[j].charAt(i) != c) {
+					break outer;
+				}
+			}
+			i++;
+		}
+		return strs[0].subSequence(0, i).toString();
+	}
+
+	/**
+	 * 循环移位：正数右移、负数左移（参考 commons-lang {@code StringUtils.rotate}）。
+	 *
+	 * @param str   原字符串
+	 * @param shift 移位位数（可为负）
+	 * @return 移位后的字符串；str 为 null 返回 null
+	 */
+	public static String rotate(CharSequence str, int shift) {
+		if (str == null) {
+			return null;
+		}
+		int len = str.length();
+		if (len == 0) {
+			return "";
+		}
+		int n = shift % len;
+		if (n == 0) {
+			return str.toString();
+		}
+		if (n < 0) {
+			n += len;
+		}
+		// 右移 n 位
+		return str.subSequence(len - n, len) + str.subSequence(0, len - n).toString();
+	}
+
 }

@@ -4,7 +4,7 @@
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-## [Unreleased]
+## [1.13.0] - 2026-10-09
 
 ### Added（v1.13.0 窗口，批29-30）
 - **批30（质量）模糊测试 + Benchmark**：sure-core 新增 2 个 jqwik 属性测试类（CodecConvertPropertyTest 6 例编解码/转换不变量、DateUtilPropertyTest 2 例格式化幂等，累计 5 类）；sure-benchmark 新增 ResultBenchmark 5 基准（Result vs Optional vs 异常流，验证显式错误门面零成本）；本地跑通验证（BenchmarkList 5 项）。

@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Cron 定时调度器：注册表达式任务，启动后每秒扫描并在匹配时刻执行，参考 Hutool 的 {@code CronUtil} 设计。
  * <p>
- * 调度线程每秒检查一次；任务执行在独立线程池，互不阻塞。
+ * 调度线程每秒检查一次；任务执行在虚拟线程（JDK 21+ 虚拟线程池），互不阻塞。
  * 同一秒内同一任务只执行一次（秒级精度）。
  *
  * @author suretool
@@ -102,7 +102,8 @@ public class CronUtil {
 				scheduler = Executors.newSingleThreadScheduledExecutor(CronUtil::newDaemonThread);
 			}
 			if (worker == null || worker.isShutdown()) {
-				worker = Executors.newCachedThreadPool(CronUtil::newDaemonThread);
+				// JDK 21+ 虚拟线程池：任务执行互不阻塞，天然适配 IO/阻塞型任务
+				worker = Executors.newVirtualThreadPerTaskExecutor();
 			}
 			scheduler.scheduleAtFixedRate(CronUtil::tick, 0, 1, TimeUnit.SECONDS);
 		}

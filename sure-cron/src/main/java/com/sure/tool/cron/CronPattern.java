@@ -45,11 +45,13 @@ public class CronPattern {
 	private final CronField dayOfMonth;
 	private final CronField month;
 	private final CronField dayOfWeek;
+	/** 可选年第 7 段；{@code null} 表示任意年份。 */
+	private final CronField year;
 
 	/**
 	 * 解析 Cron 表达式。
 	 *
-	 * @param expression 6 段表达式
+	 * @param expression 6 段（秒 分 时 日 月 周）或 7 段（秒 分 时 日 月 周 年）表达式
 	 */
 	public CronPattern(String expression) {
 		if (expression == null || expression.trim().isEmpty()) {
@@ -57,8 +59,8 @@ public class CronPattern {
 		}
 		this.expression = expression.trim();
 		String[] fields = this.expression.split("\\s+");
-		if (fields.length != 6) {
-			throw new IllegalArgumentException("Cron 表达式必须为 6 段（秒 分 时 日 月 周）: " + this.expression);
+		if (fields.length != 6 && fields.length != 7) {
+			throw new IllegalArgumentException("Cron 表达式必须为 6 段（秒 分 时 日 月 周）或 7 段（秒 分 时 日 月 周 年）: " + this.expression);
 		}
 		second = new CronField(fields[0], 0, 59, false);
 		minute = new CronField(fields[1], 0, 59, false);
@@ -66,6 +68,7 @@ public class CronPattern {
 		dayOfMonth = new CronField(fields[3], 1, 31, true);
 		month = new CronField(fields[4], 1, 12, false);
 		dayOfWeek = new CronField(fields[5], 1, 7, true);
+		year = fields.length == 7 ? new CronField(fields[6], 1970, 2199, false) : null;
 	}
 
 	/**
@@ -118,6 +121,14 @@ public class CronPattern {
 		cal.set(Calendar.MILLISECOND, 0);
 
 		for (int step = 0; step < MAX_SEARCH_STEPS; step++) {
+			// 年（可选第 7 段）
+			if (year != null && !year.match(cal.get(Calendar.YEAR))) {
+				cal.add(Calendar.YEAR, 1);
+				cal.set(Calendar.MONTH, 0);
+				cal.set(Calendar.DAY_OF_MONTH, 1);
+				setToTimeStart(cal);
+				continue;
+			}
 			// 月
 			if (!month.match(cal.get(Calendar.MONTH) + 1)) {
 				cal.add(Calendar.MONTH, 1);
@@ -189,6 +200,9 @@ public class CronPattern {
 	}
 
 	private boolean match(Calendar cal) {
+		if (year != null && !year.match(cal.get(Calendar.YEAR))) {
+			return false;
+		}
 		if (!month.match(cal.get(Calendar.MONTH) + 1)) {
 			return false;
 		}

@@ -74,4 +74,13 @@
         <Bug pattern="EI_EXPOSE_STATIC_REP2"/>
     </Match>
 
+    <!-- Result 暴露原始异常（EI_EXPOSE_REP）：
+         Result.getCause() 有意返回调用方注入的原始异常，供日志/捕获/包装使用
+         （与 fail(Throwable) 传入的是同一对象，非内部共享状态）；异常对象在
+         工具库语义中按不可变使用，与 JWT/SocketClient 惯例一致。 -->
+    <Match>
+        <Class name="com.sure.tool.lang.Result"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+
 </FindBugsFilter>

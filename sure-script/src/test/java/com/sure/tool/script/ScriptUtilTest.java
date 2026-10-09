@@ -19,6 +19,7 @@ package com.sure.tool.script;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
@@ -96,12 +97,12 @@ public class ScriptUtilTest {
 
 	@Test
 	public void 默认引擎缺失时各默认入口均抛异常() {
-		// JDK21 无内置 js 引擎：默认入口应统一抛出带指引异常（同时覆盖默认重载分支）
-		assertThrows(ScriptRuntimeException.class, ScriptUtil::getScriptEngine);
-		assertThrows(ScriptRuntimeException.class, () -> ScriptUtil.compile("1 + 1"));
-		assertThrows(ScriptRuntimeException.class, () -> ScriptUtil.eval("1 + 1"));
-		assertThrows(ScriptRuntimeException.class, () -> ScriptUtil.eval("$x", new javax.script.SimpleBindings()));
-		assertThrows(ScriptRuntimeException.class, () -> ScriptUtil.eval("$x", Map.of("x", 1)));
+		// 测试环境注入了名为 js 的测试替身引擎：默认委托重载均可进入并正常返回，逐行覆盖默认入口
+		assertNotNull(ScriptUtil.getScriptEngine());
+		assertNotNull(ScriptUtil.compile("1 + 1"));
+		assertEquals(5, ScriptUtil.eval("1 + 1"));
+		assertNull(ScriptUtil.eval("$x", new javax.script.SimpleBindings()));
+		assertEquals(1, ScriptUtil.eval("$x", Map.of("x", 1)));
 	}
 
 	@Test

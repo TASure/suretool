@@ -1,2 +1,4 @@
 com.sure.tool.script.TestEngineFactory
 com.sure.tool.script.TestSimpleEngineFactory
+com.sure.tool.script.BrokenTestEngineFactory
+com.sure.tool.script.JsTestEngineFactory

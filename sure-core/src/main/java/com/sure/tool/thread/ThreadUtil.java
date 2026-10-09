@@ -110,6 +110,21 @@ public class ThreadUtil {
 	}
 
 	/**
+	 * 可中断睡眠：{@link InterruptedException} 直接抛出（区别于 {@link #sleep(Duration)}
+	 * 的静默恢复中断位），适合需要感知中断的取消协作场景。
+	 *
+	 * @param duration 睡眠时长（null / 非正时长直接返回）
+	 * @throws InterruptedException 线程被中断
+	 * @since 1.12.0
+	 */
+	public static void sleepInterruptibly(java.time.Duration duration) throws InterruptedException {
+		if (duration == null || duration.isZero() || duration.isNegative()) {
+			return;
+		}
+		java.util.concurrent.TimeUnit.NANOSECONDS.sleep(duration.toNanos());
+	}
+
+	/**
 	 * 创建命名线程。
 	 *
 	 * @param runnable 任务

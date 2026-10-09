@@ -129,6 +129,20 @@ public final class StructuredTaskUtil {
 	 * @param <T>   任务返回类型
 	 * @return 第一个成功任务的结果
 	 */
+	/**
+	 * 限时并发执行全部任务（varargs 便捷重载）：在指定时间内全部成功则按输入顺序返回结果；
+	 * 超时或任一任务失败均取消未完成任务并抛出 {@link RuntimeException}。
+	 *
+	 * @param timeout 整体执行时限，{@code null} 表示不限时
+	 * @param tasks   任务列表
+	 * @param <T>     任务返回类型
+	 * @return 按输入顺序排列的结果列表
+	 */
+	@SafeVarargs
+	public static <T> List<T> parallel(Duration timeout, Callable<T>... tasks) {
+		return parallel(List.of(tasks), timeout);
+	}
+
 	@SafeVarargs
 	public static <T> T anyOf(Callable<T>... tasks) {
 		return anyOf(List.of(tasks), null);
@@ -143,6 +157,20 @@ public final class StructuredTaskUtil {
 	 * @param <T>     任务返回类型
 	 * @return 第一个成功任务的结果
 	 */
+	/**
+	 * 限时并发执行全部任务，返回第一个成功的结果（varargs 便捷重载）；
+	 * 超时或全部失败均抛出 {@link RuntimeException}。
+	 *
+	 * @param timeout 整体执行时限，{@code null} 表示不限时
+	 * @param tasks   任务列表
+	 * @param <T>     任务返回类型
+	 * @return 第一个成功任务的结果
+	 */
+	@SafeVarargs
+	public static <T> T anyOf(Duration timeout, Callable<T>... tasks) {
+		return anyOf(List.of(tasks), timeout);
+	}
+
 	public static <T> T anyOf(Collection<Callable<T>> tasks, Duration timeout) {
 		if (tasks == null || tasks.isEmpty()) {
 			throw new IllegalArgumentException("anyOf 任务集合不允许为空");

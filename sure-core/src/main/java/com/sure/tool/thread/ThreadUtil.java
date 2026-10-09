@@ -85,6 +85,31 @@ public class ThreadUtil {
 	}
 
 	/**
+	 * 休眠（指定时间单位），中断时恢复中断标志并抛运行时异常。
+	 *
+	 * @param timeout 时长
+	 * @param unit    时间单位
+	 */
+	public static void sleep(long timeout, java.util.concurrent.TimeUnit unit) {
+		if (unit == null) {
+			throw new IllegalArgumentException("unit 不能为 null");
+		}
+		sleep(unit.toMillis(timeout));
+	}
+
+	/**
+	 * 休眠（指定时长），中断时恢复中断标志并抛运行时异常。
+	 *
+	 * @param duration 时长，不能为 null 且不能为负
+	 */
+	public static void sleep(java.time.Duration duration) {
+		if (duration == null) {
+			throw new IllegalArgumentException("duration 不能为 null");
+		}
+		sleep(duration.toMillis());
+	}
+
+	/**
 	 * 创建命名线程。
 	 *
 	 * @param runnable 任务
@@ -116,6 +141,66 @@ public class ThreadUtil {
 	 */
 	public static ExecutorService getExecutor() {
 		return POOL;
+	}
+
+	/**
+	 * 创建命名固定大小线程池（守护线程，前缀 {@code sure-}）。
+	 *
+	 * @param size 线程数，必须大于 0
+	 * @return 线程池
+	 */
+	public static ExecutorService newExecutor(int size) {
+		return newExecutor(size, "pool");
+	}
+
+	/**
+	 * 创建命名固定大小线程池（守护线程，前缀 {@code sure-{prefix}-}）。
+	 *
+	 * @param size   线程数，必须大于 0
+	 * @param prefix 线程名前缀
+	 * @return 线程池
+	 */
+	public static ExecutorService newExecutor(int size, String prefix) {
+		if (size <= 0) {
+			throw new IllegalArgumentException("size 必须大于 0");
+		}
+		if (prefix == null || prefix.isBlank()) {
+			throw new IllegalArgumentException("prefix 不能为空");
+		}
+		return Executors.newFixedThreadPool(size, new NamedThreadFactory("sure-" + prefix + "-", true));
+	}
+
+	/**
+	 * 创建命名调度线程池（守护线程，前缀 {@code sure-{prefix}-}）。
+	 *
+	 * @param size   核心线程数，必须大于 0
+	 * @param prefix 线程名前缀
+	 * @return 调度线程池
+	 */
+	public static java.util.concurrent.ScheduledExecutorService newScheduledExecutor(int size, String prefix) {
+		if (size <= 0) {
+			throw new IllegalArgumentException("size 必须大于 0");
+		}
+		if (prefix == null || prefix.isBlank()) {
+			throw new IllegalArgumentException("prefix 不能为空");
+		}
+		return Executors.newScheduledThreadPool(size, new NamedThreadFactory("sure-" + prefix + "-", true));
+	}
+
+	/**
+	 * 等待线程结束，忽略中断（中断标志保持原样）。
+	 *
+	 * @param thread 线程，可为 {@code null}
+	 */
+	public static void joinQuietly(Thread thread) {
+		if (thread == null) {
+			return;
+		}
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
 	}
 
 	/**

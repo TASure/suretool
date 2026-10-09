@@ -6,6 +6,18 @@
 
 ## [Unreleased]
 
+### Added（v1.12.0 窗口，批25-28）
+- **批25（sure-core thread）虚拟线程一等公民**：新增 `AsyncUtil` 异步门面（`runAsync`/`supplyAsync`/`allOf`/`anyOf`/`withTimeout`/`await`/`joinAll`，虚拟线程执行器 + 失败取消等价结构化语义）+ `ThreadUtil.sleepInterruptibly`（中断感知）。
+- **批26（sure-core lang）Fluent API + Result/Option**：新增 `Result`（ok/fail/map/flatMap/onSuccess/onFailure/recover/throwIfFailed）+ `Option`（Optional 超集：getOrElse/onEmpty/orElse）+ `Results` 组合子（allOf/anyOf/sequence），对标 Vavr/Guava。
+- **批27（sure-core lang）AI 可读 JavaDoc + null-safe**：新增 `NullUtil` 统一门面（isAnyNull/isAllNull/lastNonNull/coalesce/applyIfNotNull→Option/consumeIfNotNull/nullSafeToString 等 12 方法）；5 新类 JavaDoc 示例块与 null 语义标注；CONTRIBUTING 新增「AI 可读 JavaDoc 规范」章节。
+- **批28（JPMS）模块化治理收官**：sure-core module-info 补 `exports com.sure.tool.config`/`com.sure.tool.graph` 并新增全部 15 包 `opens`（module path 下 BeanUtil/反射可用）；sure-extra/sure-benchmark/sure-examples/sure-spring-boot-starter 声明 Automatic-Module-Name（sure.extra/sure.benchmark/sure.example/sure.boot）；新增 `.github/scripts/check_moduleinfo.py` JPMS 一致性审计；docs/modules.md 增加 JPMS 状态列。
+
+### Changed（v1.11.0 窗口，批21-24）
+- **批21（sure-core thread）并发增强**：新增 `StripedLock` 分段锁；`ThreadUtil` +6（命名线程池/定时池/sleep 重载/joinQuietly）；`StructuredTaskUtil` +2（限时 varargs）。
+- **批22（sure-core io/util）IO/流/文本补齐**：`FileUtil` +8（sizeFormat/size/copy/readLines/touch/walkFiles/lastModified/isNewer）；`IoUtil` +4（流文件互通/writeLines/readLines）；`StrUtil` +11（abbreviate/substringBetween/difference/getCommonPrefix/rotate 等）。
+- **批23（sure-event/sure-core graph/sure-math）事件+图+数学**：`EventBus` 支持 DeadEvent；新增 `DiGraph`/`GraphUtil`（拓扑排序/环检测/DFS/BFS/最短路）；`MathUtil`/`BigDecimalUtil`/`StatUtil` 数学子集。
+- **批24（docs）双语文档门户**：docs/modules.md 28 模块全表 + javadoc.io 直链；README.en.md 双语同步；`.github/scripts/check_docs_links.py` 链接校验 + ci.yml docs-links job。
+
 ## [1.10.0] - 2026-10-09
 
 ### Added

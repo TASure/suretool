@@ -31,7 +31,7 @@
     <packaging>jar</packaging>
     <name>suretool-cache</name>
     <properties>
-        <jacoco.line.min>0.75</jacoco.line.min>
+        <jacoco.line.min>0.85</jacoco.line.min>
     </properties>
     <description>缓存域：FIFO/LRU/LFU/Timed 四种策略，纯 JDK 实现。</description>
 

@@ -31,7 +31,7 @@
     <packaging>jar</packaging>
     <name>suretool-crypto</name>
     <properties>
-        <jacoco.line.min>0.78</jacoco.line.min>
+        <jacoco.line.min>0.84</jacoco.line.min>
     </properties>
     <description>加密安全域：哈希/AES/DES/RSA/HMAC，纯 JDK 实现。</description>
 

@@ -6,6 +6,31 @@
 
 ## [Unreleased]
 
+## [1.10.0] - 2026-10-09
+
+### Added
+- **批15（sure-cache）弱引用缓存**：
+  - `WeakCache<K, V>`：值用 `WeakReference` + `ReferenceQueue` 自动清理、可选 TTL、可选容量上限（`capacity(0=无上限)`）、`synchronized` 线程安全、`clean()` 用 `map.get(key)==entry` 防覆盖误删
+  - `CacheUtil`：新增 `newWeakCache()` / `newWeakCache(capacity, ttl)`
+  - 新增 `WeakCacheTest` 6 用例（GC 回收 / TTL / 容量淘汰 / 覆盖防误删 / 虚拟线程并发）
+- **批16（sure-cron）七段式表达式 + 虚拟线程调度**：
+  - `CronPattern` 支持 6/7 段（第 7 段=年，1970–2199，year 可 null）；`getNextTimeAfter` 与 `match` 增加年段判断（跨年跳转 1 月 1 日）
+  - `CronUtil` worker 换 `Executors.newVirtualThreadPerTaskExecutor()`（虚拟线程池）
+  - 新增 `P7CronTest` 6 用例（6 段兼容 / 7 段合法性 / 年匹配 / 跨年 / 年通配 / 虚拟线程执行）
+- **批17（sure-core）系统监控增强**：
+  - 新增值对象 `CpuInfo`（进程/系统 CPU 使用率，含 Builder）、`RuntimeInfo`（堆/非堆内存、线程数 long）、`DiskInfo`（磁盘根卷容量）、`ProcessInfo`（PID/命令/启动时间/CPU 时长，含 Builder）
+  - `SystemInfo` 增强：`getCpuInfo` / `getRuntimeInfo` / `getDisks` / `getProcesses(int)` / `getProcessCount` / `toProcessInfo`
+  - 新增 `SystemGapTest` 5 用例
+- **批19（sure-json）类型安全反序列化收口**：
+  - `JSONUtil.toList(String, Class<T>)`：JSON 数组字符串 → 类型安全元素列表
+  - `P4JsonTypeTest` 追加 `testUtilToListConvenience`
+- **批20（sure-core）集合黄金标准（对标 Guava / commons-collections4）**：
+  - 新增 `MultiMap<K, V>`（多值映射：put/putAll/get/removeAll/remove 单值/containsKey/containsValue/keyCount/size/values/keys/entries/asMap；LinkedHashMap 保序、缺失键返回空只读列表）
+  - 新增 `Multiset<T>`（计数集合：add(+n)/remove(实际移除数)/setCount/count/elementSet/entrySet/iterator 按计数展开/size 含重复/uniqueSize）
+  - 新增 `RangeSet<T>`（区间集合：左闭右开 `[lower, upper)`，add 自动合并重叠与首尾相接、remove 拆分子区间、contains/ranges/span）
+  - `CollUtil` 新增：`newTreeSet(Comparator, T...)` / `newConcurrentHashSet(T...)` / `flatMap` / `swap` / `toArray(Iterable, Class)` / `maxCount`（众数） / `containsAny(Collection, Collection)`
+  - 新增测试：`MultiMapTest` 11 例、`MultisetTest` 10 例、`RangeSetTest` 10 例、`CollUtilBatch20Test` 7 例
+
 ## [1.9.0] - 2026-10-09
 
 ### Added

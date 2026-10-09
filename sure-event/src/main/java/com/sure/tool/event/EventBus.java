@@ -40,6 +40,12 @@ public class EventBus {
 
 	private static final EventBus DEFAULT = new EventBus();
 
+	/**
+	 * 构造独立事件总线（彼此隔离注册表）。
+	 */
+	public EventBus() {
+	}
+
 	private final Map<Class<?>, List<Subscription>> registry = new ConcurrentHashMap<>();
 	private volatile EventExceptionHandler exceptionHandler =
 			(t, e) -> System.err.println("[sure-event] 监听器异常: " + t);
@@ -89,11 +95,19 @@ public class EventBus {
 	/**
 	 * 同步投递事件（调用线程执行全部匹配监听器）。
 	 *
+	 * <p>若事件无任何匹配监听器，自动改投 {@link DeadEvent}（仅一次，不再递归），
+	 * 与 Guava EventBus 行为一致。</p>
+	 *
 	 * @param event 事件
 	 */
 	public void post(Object event) {
 		Objects.requireNonNull(event, "event must not be null");
+		post0(event, true);
+	}
+
+	private void post0(Object event, boolean allowDeadEvent) {
 		Class<?> type = event.getClass();
+		boolean dispatched = false;
 		for (Map.Entry<Class<?>, List<Subscription>> entry : registry.entrySet()) {
 			if (!entry.getKey().isAssignableFrom(type)) {
 				continue;
@@ -103,7 +117,11 @@ public class EventBus {
 					continue;
 				}
 				dispatch(subscription.listener(), event);
+				dispatched = true;
 			}
+		}
+		if (!dispatched && allowDeadEvent) {
+			post0(new DeadEvent(this, event), false);
 		}
 	}
 
@@ -205,6 +223,46 @@ public class EventBus {
 		List<Subscription> list = registry.get(subscription.eventType());
 		if (list != null) {
 			list.remove(subscription);
+		}
+	}
+
+	/**
+	 * 死事件：投递的事件没有任何匹配监听器时包装为 {@link DeadEvent} 再次投递，
+	 * 便于全局兜底监听（{@code subscribe(DeadEvent.class, ...)}）。
+	 *
+	 * @since 1.11.0
+	 */
+	public static final class DeadEvent {
+		private final Object source;
+		private final Object event;
+
+		/**
+		 * 构造死事件。
+		 *
+		 * @param source 投递源（通常为 EventBus 实例）
+		 * @param event  原始未消费事件
+		 */
+		public DeadEvent(Object source, Object event) {
+			this.source = source;
+			this.event = event;
+		}
+
+		/**
+		 * 投递源。
+		 *
+		 * @return 源对象
+		 */
+		public Object getSource() {
+			return source;
+		}
+
+		/**
+		 * 原始未消费事件。
+		 *
+		 * @return 事件对象
+		 */
+		public Object getEvent() {
+			return event;
 		}
 	}
 }

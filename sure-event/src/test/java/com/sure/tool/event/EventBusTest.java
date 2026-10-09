@@ -197,4 +197,33 @@ public class EventBusTest {
 		assertThrows(NullPointerException.class, () -> bus.post(null));
 		assertThrows(NullPointerException.class, () -> bus.register(null));
 	}
+
+	/**
+	 * 无监听器事件自动投递 DeadEvent。
+	 */
+	@Test
+	public void testDeadEventOnUnconsumed() {
+		EventBus bus = new EventBus();
+		java.util.List<Object> dead = new java.util.ArrayList<>();
+		bus.subscribe(EventBus.DeadEvent.class, e -> dead.add(e.getEvent()));
+		bus.post("no-subscriber-event");
+		assertEquals(1, dead.size());
+		assertEquals("no-subscriber-event", dead.get(0));
+	}
+
+	/**
+	 * 有监听器时不触发 DeadEvent。
+	 */
+	@Test
+	public void testNoDeadEventWhenConsumed() {
+		EventBus bus = new EventBus();
+		java.util.List<Object> dead = new java.util.ArrayList<>();
+		java.util.List<String> received = new java.util.ArrayList<>();
+		bus.subscribe(EventBus.DeadEvent.class, e -> dead.add(e.getEvent()));
+		bus.subscribe(String.class, received::add);
+		bus.post("consumed");
+		assertEquals(java.util.List.of("consumed"), received);
+		assertTrue(dead.isEmpty());
+	}
+
 }

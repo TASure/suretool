@@ -81,7 +81,7 @@ public class StructuredTaskBatch21Test {
 					return -1;
 				});
 		Assert.assertEquals(Integer.valueOf(42), winner);
-		Assert.assertTrue(slowStarted.get());
+		// anyOf 语义：首成功即短路取消其余，慢任务可能尚未启动（不强制断言启动状态）
 	}
 
 	/**

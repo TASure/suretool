@@ -317,4 +317,158 @@ public final class MathUtil {
 		}
 		return r;
 	}
+
+	/**
+	 * 值裁剪：将 value 限制在 [min, max] 区间内（min > max 时返回 min）。
+	 *
+	 * @param value 值
+	 * @param min   下限
+	 * @param max   上限
+	 * @return 裁剪后的值
+	 */
+	public static int clamp(int value, int min, int max) {
+		return Math.max(min, Math.min(max, value));
+	}
+
+	/**
+	 * 值裁剪：将 value 限制在 [min, max] 区间内。
+	 *
+	 * @param value 值
+	 * @param min   下限
+	 * @param max   上限
+	 * @return 裁剪后的值
+	 */
+	public static long clamp(long value, long min, long max) {
+		return Math.max(min, Math.min(max, value));
+	}
+
+	/**
+	 * 值裁剪：将 value 限制在 [min, max] 区间内。
+	 *
+	 * @param value 值
+	 * @param min   下限
+	 * @param max   上限
+	 * @return 裁剪后的值
+	 */
+	public static double clamp(double value, double min, double max) {
+		return Math.max(min, Math.min(max, value));
+	}
+
+	/**
+	 * 线性插值：{@code start + (end - start) * t}，t 越界不裁剪。
+	 *
+	 * @param start 起点
+	 * @param end   终点
+	 * @param t     比例（0 返回 start，1 返回 end）
+	 * @return 插值结果
+	 */
+	public static double lerp(double start, double end, double t) {
+		return start + (end - start) * t;
+	}
+
+	/**
+	 * 是否偶数。
+	 *
+	 * @param n 整数
+	 * @return true 表示偶数
+	 */
+	public static boolean isEven(long n) {
+		return (n & 1) == 0;
+	}
+
+	/**
+	 * 是否奇数。
+	 *
+	 * @param n 整数
+	 * @return true 表示奇数
+	 */
+	public static boolean isOdd(long n) {
+		return (n & 1) == 1;
+	}
+
+	/**
+	 * 整数数组均值。
+	 *
+	 * @param values 数组（空返回 0）
+	 * @return 均值
+	 */
+	public static double average(int[] values) {
+		if (values == null || values.length == 0) {
+			return 0.0;
+		}
+		long sum = 0;
+		for (int v : values) {
+			sum += v;
+		}
+		return (double) sum / values.length;
+	}
+
+	/**
+	 * 长整型数组均值。
+	 *
+	 * @param values 数组（空返回 0）
+	 * @return 均值
+	 */
+	public static double average(long[] values) {
+		if (values == null || values.length == 0) {
+			return 0.0;
+		}
+		double sum = 0;
+		for (long v : values) {
+			sum += v;
+		}
+		return sum / values.length;
+	}
+
+	/**
+	 * 浮点数组均值。
+	 *
+	 * @param values 数组（空返回 0）
+	 * @return 均值
+	 */
+	public static double average(double[] values) {
+		if (values == null || values.length == 0) {
+			return 0.0;
+		}
+		double sum = 0;
+		for (double v : values) {
+			sum += v;
+		}
+		return sum / values.length;
+	}
+
+	/**
+	 * 最大值（可变参数，空参返回 0）。
+	 *
+	 * @param values 数值
+	 * @return 最大值
+	 */
+	public static long maxOf(long... values) {
+		if (values == null || values.length == 0) {
+			return 0L;
+		}
+		long max = values[0];
+		for (long v : values) {
+			max = Math.max(max, v);
+		}
+		return max;
+	}
+
+	/**
+	 * 最小值（可变参数，空参返回 0）。
+	 *
+	 * @param values 数值
+	 * @return 最小值
+	 */
+	public static long minOf(long... values) {
+		if (values == null || values.length == 0) {
+			return 0L;
+		}
+		long min = values[0];
+		for (long v : values) {
+			min = Math.min(min, v);
+		}
+		return min;
+	}
+
 }

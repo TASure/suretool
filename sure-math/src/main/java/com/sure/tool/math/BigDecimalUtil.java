@@ -201,4 +201,54 @@ public final class BigDecimalUtil {
 			throw new IllegalArgumentException(name + " must not be null");
 		}
 	}
+
+	/**
+	 * 百分比计算：{@code part / total * 100}，按指定精度四舍五入。
+	 *
+	 * @param part  分子
+	 * @param total 分母（0 返回 0）
+	 * @param scale 小数位
+	 * @return 百分比数值（如 50 表示 50%）
+	 */
+	public static BigDecimal percent(BigDecimal part, BigDecimal total, int scale) {
+		if (part == null || total == null || total.compareTo(BigDecimal.ZERO) == 0) {
+			return BigDecimal.ZERO.setScale(scale, RoundingMode.HALF_UP);
+		}
+		return part.multiply(BigDecimal.valueOf(100)).divide(total, scale, RoundingMode.HALF_UP);
+	}
+
+	/**
+	 * 是否为零（忽略精度）。
+	 *
+	 * @param v 数值
+	 * @return true 表示数值为零
+	 */
+	public static boolean isZero(BigDecimal v) {
+		return v == null || v.compareTo(BigDecimal.ZERO) == 0;
+	}
+
+	/**
+	 * 比较两个数值（a 大返回正、相等返回 0、a 小返回负）。
+	 *
+	 * @param a 数值一
+	 * @param b 数值二
+	 * @return 比较结果
+	 */
+	public static int compare(BigDecimal a, BigDecimal b) {
+		if (a == null || b == null) {
+			throw new IllegalArgumentException("a 与 b 不能为 null");
+		}
+		return a.compareTo(b);
+	}
+
+	/**
+	 * 转为无指数普通字符串（{@link BigDecimal#toPlainString}，null 返回 null）。
+	 *
+	 * @param v 数值
+	 * @return 普通字符串
+	 */
+	public static String toPlainString(BigDecimal v) {
+		return v == null ? null : v.toPlainString();
+	}
+
 }

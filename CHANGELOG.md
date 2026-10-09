@@ -6,6 +6,11 @@
 
 ## [Unreleased]
 
+### Added（批33 覆盖率 98% 攻坚）
+- **23 个业务模块 jacoco 行覆盖率全线 ≥98%**：全库门禁统一提升——13 个既有门禁模块 `jacoco.line.min` 0.70~0.93 → **0.98**；10 个新增门禁模块（sure-aop/compress/db/event/math/pdf/process/script/template）默认 0.70 → **0.98**；sure-socket → 0.97（例外，理由见下）。
+- **补测规模**：新增/扩展约 82 个测试文件、约 6,400 行测试代码；模块实测覆盖率 sure-core 90.51→98.01%、sure-json 83.95→98.12%、sure-http 87.82→98.81%、sure-crypto 87.39→98.02%、sure-db 73.30→98.43%、sure-log 70.49→98.36%、sure-compress 82.57→100.00%、sure-poi 87.03→98.33%、sure-pdf 77.73→98.10%、sure-process 76.92→98.90%、sure-script 77.08→100.00%、sure-extra 90.49→98.37%、sure-math 90.46→98.46%、sure-jwt 90.51→98.73%、sure-xml 90.37→99.26%、sure-cron 94.20→99.11%、sure-cache 92.08→99.51%、sure-dfa 93.17→100.00%、sure-captcha 94.12→98.04%、sure-template 94.44→100.00%、sure-event 87.50→98.08%、sure-aop 91.89→100.00%。
+- **sure-socket 例外（门禁 0.97，实测 97.93%=189/193）**：剩余 4 行位于 `SocketUtil.getLocalHost` 网卡枚举分支——L122 需「非 loopback 且 down」的网卡、L129 需 site-local 网段（10.x/172.16-31.x/192.168.x）、L136-137 需 `getNetworkInterfaces()` 抛 IOException；本 CI/沙箱环境三张网卡全部 up、无 site-local 网段、native 枚举无故障注入点，字节码级复核确认为环境物理不可达，其余 189 行全部覆盖。
+- **攻坚方法论沉淀**：IO 异常分支（抛错流/只读目录/非空目录删除）、加密边界（非法密钥/填充模式/`Security.removeProvider` 算法不可用 + finally 还原）、网络（localhost 临时 HttpServer/未监听端口/短超时）、并发（虚拟线程/预中断线程/StructuredTaskScope 取消）、反射注入（关闭内部内容流/替换底层输出流/私有方法调用）。PRD 见 docs/prd/sure-coverage-98-{a,b,c}.md。
 
 ## [1.13.0] - 2026-10-09
 

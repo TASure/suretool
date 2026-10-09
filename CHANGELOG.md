@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### Added（v1.13.0 窗口，批29）
+- **批29（质量）覆盖率巩固**：method_audit 未命中方法 9→2（补测 Multiset.elementSet/迭代器分支、Props.getObj、DateUtil 缓存初始化、DiGraph.addVertexIfAbsent、FileUtil.walkFiles 回调、ProcessInfo 字段）；提升 sure-json/sure-crypto/sure-cache 覆盖率门禁至 0.78/0.84/0.85；sure-core 行覆盖 90.5% 达标。
+
 ### Added（v1.12.0 窗口，批25-28）
 - **批25（sure-core thread）虚拟线程一等公民**：新增 `AsyncUtil` 异步门面（`runAsync`/`supplyAsync`/`allOf`/`anyOf`/`withTimeout`/`await`/`joinAll`，虚拟线程执行器 + 失败取消等价结构化语义）+ `ThreadUtil.sleepInterruptibly`（中断感知）。
 - **批26（sure-core lang）Fluent API + Result/Option**：新增 `Result`（ok/fail/map/flatMap/onSuccess/onFailure/recover/throwIfFailed）+ `Option`（Optional 超集：getOrElse/onEmpty/orElse）+ `Results` 组合子（allOf/anyOf/sequence），对标 Vavr/Guava。

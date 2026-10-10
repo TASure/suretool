@@ -189,23 +189,23 @@ jobs:
 
       - name: Wait for Maven Central sync
         if: steps.check.outputs.published != 'true'
+        continue-on-error: true
         run: |
           set -euo pipefail
           VER="${{ steps.version.outputs.version }}"
           code=""
-          for i in $(seq 1 60); do
+          for i in $(seq 1 90); do
             code=$(curl -s -o /dev/null -w '%{http_code}' \
               "https://repo1.maven.org/maven2/io/github/tasure/sure-core/$VER/sure-core-$VER.jar")
             if [ "$code" = "200" ]; then
               echo "repo1 已同步 sure-core $VER"
               break
             fi
-            echo "[$i/60] 等待中央仓库同步 (HTTP $code)…"
+            echo "[$i/90] 等待中央仓库同步 (HTTP $code)…"
             sleep 10
           done
           if [ "$code" != "200" ]; then
-            echo "::error::发布后 10 分钟仍未在 repo1 可见，请检查 Sonatype Portal 状态"
-            exit 1
+            echo "::warning::repo1 15 分钟轮询超时（制品可能已发布，仅同步慢）；由下一步尝试创建 GitHub Release"
           fi
 
       - name: Create GitHub Release

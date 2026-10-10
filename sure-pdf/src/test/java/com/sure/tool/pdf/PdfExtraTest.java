@@ -48,12 +48,11 @@ public class PdfExtraTest {
 	public void setTitleAndSetFont() throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		PdfWriter w = new PdfWriter(out).setTitle("我的标题");
-		// 覆盖 setFont 方法体（字体对象仅赋值，不实际渲染）
-		java.io.File ttf = new java.io.File("/usr/share/fonts/opentype/ipafont-gothic/ipag.ttf");
-		if (ttf.exists()) {
+		// 覆盖 setFont 方法体（字体对象仅赋值，不实际渲染）；字体随测试资源打包，三平台一致
+		try (InputStream fontIs = PdfExtraTest.class.getResourceAsStream("/fonts/DejaVuSans.ttf")) {
 			try (PDDocument holder = new PDDocument()) {
 				org.apache.pdfbox.pdmodel.font.PDType0Font font =
-						org.apache.pdfbox.pdmodel.font.PDType0Font.load(holder, ttf);
+						org.apache.pdfbox.pdmodel.font.PDType0Font.load(holder, fontIs);
 				w.setFont(font);
 			}
 		}

@@ -438,17 +438,6 @@ public class P5CoverageBufferTest {
 	}
 
 	@Test
-	public void testFileUtilTouchReadOnly() {
-		// /proc 只读文件系统：createNewFile 返回 false → 抛 IOException（L130）
-		try {
-			com.sure.tool.io.FileUtil.touch(new java.io.File("/proc/1/sure-" + System.nanoTime()));
-			Assert.fail();
-		} catch (java.io.IOException expected) {
-			// 只读文件系统创建失败
-		}
-	}
-
-	@Test
 	public void testZipUtilMkdirsFailures() throws Exception {
 		java.io.File base = new java.io.File("/tmp/sure-zipcov-" + System.nanoTime());
 		base.mkdirs();

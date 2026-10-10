@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 /**
  * Map 工具类，参考 Hutool 的 {@code MapUtil} 设计。
@@ -754,5 +755,122 @@ public class MapUtil {
 		return com.sure.tool.util.ConvertUtil.toLocalDateTime(map.get(key));
 	}
 
+	/**
+	 * 可迭代对象转 Map（Guava uniqueIndex 语义）：重复键抛 {@link IllegalArgumentException}。
+	 *
+	 * @param iterable    数据源（null 返回空 Map）
+	 * @param keyMapper   键映射（null 时抛 {@link NullPointerException}）
+	 * @param valueMapper 值映射（null 时抛 {@link NullPointerException}）
+	 * @param <T>         元素类型
+	 * @param <K>         键类型
+	 * @param <V>         值类型
+	 * @return 转换结果（LinkedHashMap 保序）
+	 * @since 1.16.0
+	 */
+	public static <T, K, V> Map<K, V> toMap(Iterable<T> iterable, Function<T, K> keyMapper, Function<T, V> valueMapper) {
+		Map<K, V> result = new LinkedHashMap<>();
+		if (iterable == null) {
+			return result;
+		}
+		for (T item : iterable) {
+			K key = keyMapper.apply(item);
+			if (result.containsKey(key)) {
+				throw new IllegalArgumentException("重复键: " + key);
+			}
+			result.put(key, valueMapper.apply(item));
+		}
+		return result;
+	}
+
+	/**
+	 * 可迭代对象转 Map（带冲突合并策略）：重复键按 merge 合并。
+	 *
+	 * @param iterable    数据源（null 返回空 Map）
+	 * @param keyMapper   键映射（null 时抛 {@link NullPointerException}）
+	 * @param valueMapper 值映射（null 时抛 {@link NullPointerException}）
+	 * @param merge       冲突合并函数（null 时重复键取后者）
+	 * @param <T>         元素类型
+	 * @param <K>         键类型
+	 * @param <V>         值类型
+	 * @return 转换结果（LinkedHashMap 保序）
+	 * @since 1.16.0
+	 */
+	public static <T, K, V> Map<K, V> toMap(Iterable<T> iterable, Function<T, K> keyMapper,
+			Function<T, V> valueMapper, java.util.function.BinaryOperator<V> merge) {
+		Map<K, V> result = new LinkedHashMap<>();
+		if (iterable == null) {
+			return result;
+		}
+		for (T item : iterable) {
+			K key = keyMapper.apply(item);
+			V value = valueMapper.apply(item);
+			if (merge != null && result.containsKey(key)) {
+				result.put(key, merge.apply(result.get(key), value));
+			} else {
+				result.put(key, value);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 两个 Map 的差异分析：只在左 / 只在右 / 共有但值不同。
+	 *
+	 * @param left  左 Map（null 按空处理）
+	 * @param right 右 Map（null 按空处理）
+	 * @param <K>   键类型
+	 * @param <V>   值类型
+	 * @return 差异结果 {@link Difference}
+	 * @since 1.16.0
+	 */
+	public static <K, V> Difference<K, V> difference(Map<K, V> left, Map<K, V> right) {
+		Map<K, V> onlyLeft = new LinkedHashMap<>();
+		Map<K, V> onlyRight = new LinkedHashMap<>();
+		Map<K, V> valueDiffers = new LinkedHashMap<>();
+		if (left != null) {
+			for (Map.Entry<K, V> e : left.entrySet()) {
+				if (right == null || !right.containsKey(e.getKey())) {
+					onlyLeft.put(e.getKey(), e.getValue());
+				} else if (!java.util.Objects.equals(e.getValue(), right.get(e.getKey()))) {
+					valueDiffers.put(e.getKey(), e.getValue());
+				}
+			}
+		}
+		if (right != null) {
+			for (Map.Entry<K, V> e : right.entrySet()) {
+				if (left == null || !left.containsKey(e.getKey())) {
+					onlyRight.put(e.getKey(), e.getValue());
+				}
+			}
+		}
+		return new Difference<>(onlyLeft, onlyRight, valueDiffers);
+	}
+
+	/**
+	 * 合并源 Map 到目标 Map（带冲突合并策略）；源与目标为同一对象时安全。
+	 *
+	 * @param target 目标 Map（null 时不操作，返回 null）
+	 * @param source 源 Map（null 时不操作）
+	 * @param merge  冲突合并函数（null 时目标值覆盖源值）
+	 * @param <K>    键类型
+	 * @param <V>    值类型
+	 * @return 操作后的目标 Map
+	 * @since 1.16.0
+	 */
+	public static <K, V> Map<K, V> mergeAll(Map<K, V> target, Map<K, V> source,
+			java.util.function.BinaryOperator<V> merge) {
+		if (target == null || source == null) {
+			return target;
+		}
+		List<Map.Entry<K, V>> entries = new ArrayList<>(source.entrySet());
+		for (Map.Entry<K, V> e : entries) {
+			if (merge != null && target.containsKey(e.getKey())) {
+				target.put(e.getKey(), merge.apply(target.get(e.getKey()), e.getValue()));
+			} else {
+				target.put(e.getKey(), e.getValue());
+			}
+		}
+		return target;
+	}
 
 }

@@ -6,6 +6,20 @@
 
 ## [Unreleased]
 
+### 批35：ListUtil 深度补齐 + MapUtil 增强（v1.16.0 候选）
+
+- **ListUtil 新增 21 方法**（对标 Guava `Lists` + Commons `CollectionUtils` 高频）：
+  - 取值/截取：`get`（越界安全 + 负数尾部定位）、`subListSafe`（越界钳制）
+  - 变换：`distinct`（去重保序）、`map`、`filter`、`flatMap`（内层 null 跳过）、`zip`（最短长度不可变配对）
+  - 随机：`shuffle`（可注入 Random 原地）、`shuffleCopy`、`sample`（不重复取样）
+  - 集合运算：`union` / `intersection` / `subtract`（均保序去重）
+  - 极值与数值：`min`/`max`（自然序 + 比较器双套）、`sum`/`average`（null 元素跳过）
+  - 其他：`chunk`（均分块）、`move`（元素移动）
+- **MapUtil 新增 4 方法**：`toMap`（唯一键 Guava uniqueIndex 语义，重复键抛 IAE）、`toMap`（带冲突合并策略）、`difference`（键差/值差）、`mergeAll`（合并带冲突策略，源目标同对象安全）
+- 新增 `Difference` record：防御性拷贝 + 不可变视图（对齐 Partition 先例，SpotBugs EI_EXPOSE_REP 全绿）
+- 新增测试 29 例（`P8ListUtilBatch35Test` 24 例 + `P8MapUtilBatch35Test` 5 例），sure-core 实测 0.9872，新增行全覆盖
+- PRD 见 docs/prd/sure-core-batch35.md
+
 ## [1.15.0] - 2026-10-10
 
 ### 批34：CollUtil 集合深度补齐（v1.15.0 候选）

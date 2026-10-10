@@ -1429,4 +1429,191 @@ public class CollUtil {
 		return false;
 	}
 
+	/**
+	 * 按谓词将集合分为「匹配」与「不匹配」两部分（均保序），等价于一次性完成 filter 与其补集。
+	 *
+	 * @param <T> 元素类型
+	 * @param collection 待分集合（null 按空集合处理）
+	 * @param predicate 匹配谓词（null 时抛 {@link NullPointerException}）
+	 * @return 二分结果 {@link Partition}
+	 * @since 1.15.0
+	 */
+	public static <T> Partition<T> partitionBy(Collection<T> collection, Predicate<T> predicate) {
+		List<T> matched = new ArrayList<>();
+		List<T> unmatched = new ArrayList<>();
+		if (collection == null || collection.isEmpty()) {
+			return new Partition<>(matched, unmatched);
+		}
+		for (T item : collection) {
+			if (predicate.test(item)) {
+				matched.add(item);
+			} else {
+				unmatched.add(item);
+			}
+		}
+		return new Partition<>(matched, unmatched);
+	}
+
+	/**
+	 * 按两级键进行嵌套分组：先按 keyMapper1 分组，组内再按 keyMapper2 分组（均保序）。
+	 *
+	 * @param <T> 元素类型
+	 * @param <K1> 一级键类型
+	 * @param <K2> 二级键类型
+	 * @param collection 待分组集合（null 按空集合处理）
+	 * @param keyMapper1 一级键映射（null 时抛 {@link NullPointerException}）
+	 * @param keyMapper2 二级键映射（null 时抛 {@link NullPointerException}）
+	 * @return 两级嵌套分组（LinkedHashMap 保序）
+	 * @since 1.15.0
+	 */
+	public static <T, K1, K2> Map<K1, Map<K2, List<T>>> groupBy2(
+			Collection<T> collection, Function<T, K1> keyMapper1, Function<T, K2> keyMapper2) {
+		Map<K1, Map<K2, List<T>>> result = new LinkedHashMap<>();
+		if (collection == null) {
+			return result;
+		}
+		for (T item : collection) {
+			K1 k1 = keyMapper1.apply(item);
+			K2 k2 = keyMapper2.apply(item);
+			Map<K2, List<T>> inner = result.computeIfAbsent(k1, k -> new LinkedHashMap<>());
+			inner.computeIfAbsent(k2, k -> new ArrayList<>()).add(item);
+		}
+		return result;
+	}
+
+	/**
+	 * 原地去重合并：将 source 中 target 尚不存在的元素追加到 target 末尾（保 source 顺序）。
+	 *
+	 * @param <T> 元素类型
+	 * @param target 目标集合（null 时不操作，返回 {@code false}）
+	 * @param source 来源可迭代对象（null 时不操作，返回 {@code false}）
+	 * @return 发生变更（有新增元素）返回 {@code true}
+	 * @since 1.15.0
+	 */
+	public static <T> boolean addAllDistinct(Collection<T> target, Iterable<T> source) {
+		if (target == null || source == null) {
+			return false;
+		}
+		Set<T> seen = new HashSet<>(target);
+		boolean changed = false;
+		for (T item : source) {
+			if (seen.add(item)) {
+				target.add(item);
+				changed = true;
+			}
+		}
+		return changed;
+	}
+
+	/**
+	 * 原地差集：从 target 中移除 source 出现的全部元素（重复元素全部移除，语义对齐 {@link #subtract}）。
+	 * source 与 target 为同一对象时同样安全（内部先复制）。
+	 *
+	 * @param <T> 元素类型
+	 * @param target 目标集合（null 时不操作，返回 {@code false}）
+	 * @param source 待移除元素来源（null 时不操作，返回 {@code false}）
+	 * @return 发生变更（有元素被移除）返回 {@code true}
+	 * @since 1.15.0
+	 */
+	public static <T> boolean removeAll(Collection<T> target, Iterable<T> source) {
+		if (target == null || source == null) {
+			return false;
+		}
+		List<T> src = new ArrayList<>();
+		for (T item : source) {
+			src.add(item);
+		}
+		boolean changed = false;
+		for (T item : src) {
+			while (target.remove(item)) {
+				changed = true;
+			}
+		}
+		return changed;
+	}
+
+	/**
+	 * 原地交集：仅保留 target 中同时存在于 source 的元素（保 target 原有顺序）。
+	 *
+	 * @param <T> 元素类型
+	 * @param target 目标集合（null 时不操作，返回 {@code false}）
+	 * @param source 保留元素来源（null 时不操作，返回 {@code false}）
+	 * @return 发生变更（有元素被移除）返回 {@code true}
+	 * @since 1.15.0
+	 */
+	public static <T> boolean retainAll(Collection<T> target, Iterable<T> source) {
+		if (target == null || source == null) {
+			return false;
+		}
+		Set<T> keep = new HashSet<>();
+		for (T item : source) {
+			keep.add(item);
+		}
+		return target.retainAll(keep);
+	}
+
+	/**
+	 * 两级扁平化：将「集合的集合」展开为单层列表，内层 null 集合跳过。
+	 *
+	 * @param <T> 元素类型
+	 * @param nested 嵌套集合（null 按空集合处理）
+	 * @return 扁平化后的列表（保外层与内层顺序）
+	 * @since 1.15.0
+	 */
+	public static <T> List<T> flatten(Collection<? extends Collection<T>> nested) {
+		List<T> result = new ArrayList<>();
+		if (nested == null) {
+			return result;
+		}
+		for (Collection<T> inner : nested) {
+			if (inner != null) {
+				result.addAll(inner);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 相邻配对：返回相邻元素的二元组列表，长度为 size-1；少于 2 个元素时返回空列表。
+	 *
+	 * @param <T> 元素类型
+	 * @param collection 待配对集合（null 按空集合处理）
+	 * @return 相邻二元组列表（每对为不可变 {@link List}）
+	 * @since 1.15.0
+	 */
+	public static <T> List<List<T>> pairwise(Collection<T> collection) {
+		List<List<T>> result = new ArrayList<>();
+		if (collection == null) {
+			return result;
+		}
+		List<T> list = collection instanceof List ? (List<T>) collection : new ArrayList<>(collection);
+		for (int i = 0; i + 1 < list.size(); i++) {
+			result.add(List.of(list.get(i), list.get(i + 1)));
+		}
+		return result;
+	}
+
+	/**
+	 * 从头取满足谓词的元素前缀，遇到第一个不满足的元素即停止（Stream.takeWhile 的集合版）。
+	 *
+	 * @param <T> 元素类型
+	 * @param collection 待取集合（null 按空集合处理）
+	 * @param predicate 满足条件（null 时抛 {@link NullPointerException}）
+	 * @return 满足谓词的前缀列表（保序）
+	 * @since 1.15.0
+	 */
+	public static <T> List<T> takeWhile(Collection<T> collection, Predicate<T> predicate) {
+		List<T> result = new ArrayList<>();
+		if (collection == null) {
+			return result;
+		}
+		for (T item : collection) {
+			if (!predicate.test(item)) {
+				break;
+			}
+			result.add(item);
+		}
+		return result;
+	}
+
 }

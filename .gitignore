@@ -44,3 +44,6 @@ dependency-reduced-pom.xml
 bundle/
 suretool-*-bundle.zip
 diag-*-bundle.zip
+
+# 测试运行期临时产物（sure-compress 单参数压缩测试）
+sure-compress/a.txt

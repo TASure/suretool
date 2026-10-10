@@ -6,6 +6,14 @@
 
 ## [Unreleased]
 
+### 批34：CollUtil 集合深度补齐（v1.15.0 候选）
+
+- 新增 `Partition` record（防御性拷贝 + 不可变视图），`CollUtil.partitionBy` 按谓词二分
+- 新增 `CollUtil.groupBy2` 两级嵌套分组（保序）
+- 新增原地操作：`addAllDistinct`（去重合并）、`removeAll`（全移除差集）、`retainAll`（交集）
+- 新增 `CollUtil.flatten` 两级扁平化、`pairwise` 相邻配对、`takeWhile` 前缀截取
+- 全部 7 方法 + record 中文 JavaDoc、null-safe；新增测试 28 例（sure-core 0.9869，新增行全覆盖）
+
 ## [1.14.0] - 2026-10-10
 
 ### Added（批33 覆盖率 98% 攻坚）

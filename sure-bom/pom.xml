@@ -36,11 +36,11 @@
         <!-- 无源码模块，不参与 JaCoCo 覆盖率门禁与 SpotBugs 静态扫描 -->
         <jacoco.skip>true</jacoco.skip>
         <spotbugs.skip>true</spotbugs.skip>
-        <jakarta.mail.version>2.1.3</jakarta.mail.version>
-        <angus.mail.version>2.0.3</angus.mail.version>
-        <angus.activation.version>2.0.2</angus.activation.version>
+        <jakarta.mail.version>2.1.5</jakarta.mail.version>
+        <angus.mail.version>2.0.5</angus.mail.version>
+        <angus.activation.version>2.0.3</angus.activation.version>
         <commons.net.version>3.11.1</commons.net.version>
-        <zxing.version>3.5.3</zxing.version>
+        <zxing.version>3.5.4</zxing.version>
     </properties>
 
     <dependencyManagement>

@@ -4,9 +4,9 @@
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-## [Unreleased]
+## [1.16.0] - 2026-10-10
 
-### 批35：ListUtil 深度补齐 + MapUtil 增强（v1.16.0 候选）
+### 批35：ListUtil 深度补齐 + MapUtil 增强
 
 - **ListUtil 新增 21 方法**（对标 Guava `Lists` + Commons `CollectionUtils` 高频）：
   - 取值/截取：`get`（越界安全 + 负数尾部定位）、`subListSafe`（越界钳制）
@@ -19,6 +19,8 @@
 - 新增 `Difference` record：防御性拷贝 + 不可变视图（对齐 Partition 先例，SpotBugs EI_EXPOSE_REP 全绿）
 - 新增测试 29 例（`P8ListUtilBatch35Test` 24 例 + `P8MapUtilBatch35Test` 5 例），sure-core 实测 0.9872，新增行全覆盖
 - PRD 见 docs/prd/sure-core-batch35.md
+
+## [Unreleased]
 
 ## [1.15.0] - 2026-10-10
 

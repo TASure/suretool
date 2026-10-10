@@ -415,16 +415,30 @@ public class P5Coverage90Test {
 
 	@Test
 	public void testSingletonGaps() {
-		StringBuilder sb = Singleton.get(StringBuilder.class);
-		Assert.assertSame(sb, Singleton.get(StringBuilder.class));
-		Assert.assertTrue(Singleton.contains(StringBuilder.class));
-		Singleton.put(StringBuilder.class, sb);
-		Assert.assertSame(sb, Singleton.get(StringBuilder.class));
-		Assert.assertSame(sb, Singleton.remove(StringBuilder.class));
-		Assert.assertFalse(Singleton.contains(StringBuilder.class));
-		Singleton.get(String.class, "arg");
-		Assert.assertEquals("arg", Singleton.get(String.class));
+		// 使用本类私有专属类作载体，避免与全局静态单例池中其他测试类抢先放入的实例冲突（CI 与本地执行顺序不同）
+		SgBean bean = Singleton.get(SgBean.class);
+		Assert.assertSame(bean, Singleton.get(SgBean.class));
+		Assert.assertTrue(Singleton.contains(SgBean.class));
+		Singleton.put(SgBean.class, bean);
+		Assert.assertSame(bean, Singleton.get(SgBean.class));
+		Assert.assertSame(bean, Singleton.remove(SgBean.class));
+		Assert.assertFalse(Singleton.contains(SgBean.class));
+		SgArgs args = Singleton.get(SgArgs.class, "arg");
+		Assert.assertEquals("arg", args.v);
+		Assert.assertSame(args, Singleton.get(SgArgs.class));
+		Assert.assertNotNull(Singleton.remove(SgArgs.class));
 		Singleton.destroy();
+	}
+
+	static class SgBean {
+	}
+
+	static class SgArgs {
+		final String v;
+
+		SgArgs(String v) {
+			this.v = v;
+		}
 	}
 
 	// ===== Snowflake =====

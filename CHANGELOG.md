@@ -4,7 +4,7 @@
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-## [Unreleased]
+## [1.14.0] - 2026-10-10
 
 ### Added（批33 覆盖率 98% 攻坚）
 - **23 个业务模块 jacoco 行覆盖率全线 ≥98%**：全库门禁统一提升——13 个既有门禁模块 `jacoco.line.min` 0.70~0.93 → **0.98**；10 个新增门禁模块（sure-aop/compress/db/event/math/pdf/process/script/template）默认 0.70 → **0.98**；sure-socket → 0.97（例外，理由见下）。

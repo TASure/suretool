@@ -4,14 +4,16 @@
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-## [Unreleased]
+## [1.17.0] - 2026-10-11
 
-### 批36：SetUtil 新建（v1.17.0 候选）
+### 批36：SetUtil 新建
 
 - 新建 `SetUtil`（对标 Guava `Sets` + Hutool `SetUtil` 高频）：`newHashSet` / `newLinkedHashSet` / `newTreeSet` / `of`（不可变）/ `union` / `intersection` / `subtract` / `symmetricDifference` / `filter` / `map` / `cartesianProduct` / `powerSet` / `isSubset` / `isSuperset` / `disjoint` / `containsAny` / `join` / `emptyIfNull` / `reverse` / `size`（共 20 个，全部 null-safe + 保序 + 中文 JavaDoc）
 - `of` 返回不可变 Set；`cartesianProduct` 返回不可变二元组列表；`powerSet` 含空集
 - 新增测试 `P9SetUtilBatch36Test` 14 例，SetUtil 129 行 **100% 覆盖**，sure-core 实测 0.9874
 - PRD 见 docs/prd/sure-core-batch36.md
+
+## [Unreleased]
 
 ## [1.16.0] - 2026-10-10
 

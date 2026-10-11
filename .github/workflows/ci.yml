@@ -39,17 +39,7 @@ jobs:
         with:
           name: jacoco-report-${{ matrix.os }}-jdk${{ matrix.java }}
           path: |
-            sure-core/target/site/jacoco
-            sure-json/target/site/jacoco
-            sure-http/target/site/jacoco
-            sure-crypto/target/site/jacoco
-            sure-cron/target/site/jacoco
-            sure-cache/target/site/jacoco
-            sure-xml/target/site/jacoco
-            sure-poi/target/site/jacoco
-            sure-captcha/target/site/jacoco
-            sure-jwt/target/site/jacoco
-            sure-dfa/target/site/jacoco
+            **/target/site/jacoco
 
       - name: Upload coverage to Codecov
         if: matrix.os == 'ubuntu-latest' && matrix.java == '25'
@@ -57,17 +47,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: |
-            sure-core/target/site/jacoco/jacoco.xml
-            sure-json/target/site/jacoco/jacoco.xml
-            sure-http/target/site/jacoco/jacoco.xml
-            sure-crypto/target/site/jacoco/jacoco.xml
-            sure-cron/target/site/jacoco/jacoco.xml
-            sure-cache/target/site/jacoco/jacoco.xml
-            sure-xml/target/site/jacoco/jacoco.xml
-            sure-poi/target/site/jacoco/jacoco.xml
-            sure-captcha/target/site/jacoco/jacoco.xml
-            sure-jwt/target/site/jacoco/jacoco.xml
-            sure-dfa/target/site/jacoco/jacoco.xml
+            **/target/site/jacoco/jacoco.xml
           fail_ci_if_error: false
 
   # 文档链接完整性校验（README + docs 相对链接与锚点，防断链）

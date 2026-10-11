@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import com.sure.tool.io.FileUtil;
 
@@ -265,13 +266,23 @@ public class SettingUtil {
 		if (value != null) {
 			return value;
 		}
-		value = System.getenv(envName(key));
+		String envVar = envName(key);
+		value = envLookup.apply(envVar);
+		if (value == null && "HOME".equals(envVar)) {
+			// Windows 通常没有 HOME 环境变量，回退 USERPROFILE 解析用户主目录
+			value = envLookup.apply("USERPROFILE");
+		}
 		if (value != null) {
 			return value;
 		}
 		value = SNAPSHOT.get(key);
 		return value != null ? value : defaultValue;
 	}
+
+	/**
+	 * 环境变量查询钩子（包级可见，供测试注入以模拟缺失 HOME 的平台）。
+	 */
+	static Function<String, String> envLookup = System::getenv;
 
 	/**
 	 * 将配置键转换为环境变量名（点转下划线并大写）。

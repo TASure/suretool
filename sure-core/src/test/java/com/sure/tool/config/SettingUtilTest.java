@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -84,6 +85,27 @@ public class SettingUtilTest {
 		Assert.assertNotNull("测试前提：用户主目录环境变量存在", home);
 		Assert.assertEquals(home, SettingUtil.getString("home"));
 		Assert.assertNotEquals("file_value", SettingUtil.getString("home"));
+	}
+
+	@Test
+	public void windows无HOME时回退USERPROFILE() {
+		SettingUtil.load(file.toFile());
+		Function<String, String> backup = SettingUtil.envLookup;
+		try {
+			// 模拟 Windows：无 HOME，只有 USERPROFILE
+			SettingUtil.envLookup = name -> {
+				if ("HOME".equals(name)) {
+					return null;
+				}
+				if ("USERPROFILE".equals(name)) {
+					return "C:\\fake\\users\\runneradmin";
+				}
+				return System.getenv(name);
+			};
+			Assert.assertEquals("C:\\fake\\users\\runneradmin", SettingUtil.getString("home"));
+		} finally {
+			SettingUtil.envLookup = backup;
+		}
 	}
 
 	@Test

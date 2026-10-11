@@ -20,6 +20,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
+import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -139,5 +141,13 @@ public class ProcessUtilExtraTest {
 	public void 单参异常构造器() {
 		ProcessRuntimeException ex = new ProcessRuntimeException("only message");
 		assertEquals("only message", ex.getMessage());
+	}
+
+	@Test
+	public void 空输入流返回空串() throws Exception {
+		// readStream(null) 为防御分支：正常 API 路径拿不到 null 流，用反射覆盖
+		Method m = ProcessUtil.class.getDeclaredMethod("readStream", InputStream.class);
+		m.setAccessible(true);
+		assertEquals("", m.invoke(null, (Object) null));
 	}
 }

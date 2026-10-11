@@ -32,12 +32,12 @@ jobs:
       - name: Build, test and verify
         run: mvn -B verify
 
-      # 覆盖率上报只在单一 JDK 上执行，避免重复上传
+      # 覆盖率报告按平台各自上传（任一平台门禁失败都能拿到证据定位缺口）
       - name: Upload JaCoCo coverage report
-        if: matrix.os == 'ubuntu-latest' && matrix.java == '25'
+        if: matrix.java == '25'
         uses: actions/upload-artifact@v4
         with:
-          name: jacoco-report-jdk${{ matrix.java }}
+          name: jacoco-report-${{ matrix.os }}-jdk${{ matrix.java }}
           path: |
             sure-core/target/site/jacoco
             sure-json/target/site/jacoco

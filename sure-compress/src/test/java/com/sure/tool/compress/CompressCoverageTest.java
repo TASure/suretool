@@ -20,7 +20,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeTrue;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,6 +39,33 @@ public class CompressCoverageTest {
 
 	@Rule
 	public TemporaryFolder tmp = new TemporaryFolder();
+
+	/**
+	 * 制造"文件存在但不可读"的跨平台确定性状态：
+	 * POSIX 用 setReadable(false)；Windows 上 setReadable 不生效，改用 icacls 拒绝 Everyone 读取
+	 * （GitHub Windows runner 以管理员运行）。用于触发 isBrotli/isSevenZ 的 IOException catch 分支。
+	 */
+	private static void makeUnreadable(Path p) throws Exception {
+		if (System.getProperty("os.name", "").toLowerCase().contains("win")) {
+			Process proc = new ProcessBuilder("icacls", p.toAbsolutePath().toString(),
+					"/deny", "Everyone:(R)").redirectErrorStream(true).start();
+			if (proc.waitFor() != 0) {
+				throw new IllegalStateException("icacls 拒绝读取失败");
+			}
+		} else if (!p.toFile().setReadable(false)) {
+			throw new IllegalStateException("setReadable(false) 失败");
+		}
+	}
+
+	private static void makeReadable(Path p) throws Exception {
+		if (System.getProperty("os.name", "").toLowerCase().contains("win")) {
+			Process proc = new ProcessBuilder("icacls", p.toAbsolutePath().toString(),
+					"/grant", "Everyone:(R)").redirectErrorStream(true).start();
+			proc.waitFor();
+		} else {
+			p.toFile().setReadable(true);
+		}
+	}
 
 	@Test
 	public void compressDir参数校验与失败分支() {
@@ -120,14 +146,15 @@ public class CompressCoverageTest {
 		Path mismatch = tmp.getRoot().toPath().resolve("mismatch");
 		Files.write(mismatch, new byte[] {1, 2, 3, 4, 5, 6, 7, 8});
 		assertFalse(SevenZUtil.isSevenZ(mismatch));
-		// 不可读文件 -> IOException catch（Windows 上 setReadable(false) 不生效，跳过；缺 2 行后 Windows 覆盖率仍 ≥98%）
-		assumeTrue("Windows setReadable(false) 不生效，跳过平台相关断言",
-				!System.getProperty("os.name", "").toLowerCase().contains("win"));
+		// 不可读文件 -> IOException catch（Windows 用 icacls，POSIX 用 setReadable，跨平台确定性触发）
 		Path locked = tmp.getRoot().toPath().resolve("locked.7z");
 		Files.write(locked, new byte[] {0x37, 0x7A});
-		locked.toFile().setReadable(false);
-		assertThrows(CompressRuntimeException.class, () -> SevenZUtil.isSevenZ(locked));
-		locked.toFile().setReadable(true);
+		makeUnreadable(locked);
+		try {
+			assertThrows(CompressRuntimeException.class, () -> SevenZUtil.isSevenZ(locked));
+		} finally {
+			makeReadable(locked);
+		}
 	}
 
 	@Test
@@ -174,14 +201,15 @@ public class CompressCoverageTest {
 		Path ok = tmp.getRoot().toPath().resolve("ok.br");
 		Files.write(ok, new byte[] {0x23, 0, 0});
 		assertTrue(BrotliUtil.isBrotli(ok));
-		// 不可读文件 -> IOException catch（Windows 上 setReadable(false) 不生效，跳过；缺 2 行后 Windows 覆盖率仍 ≥98%）
-		assumeTrue("Windows setReadable(false) 不生效，跳过平台相关断言",
-				!System.getProperty("os.name", "").toLowerCase().contains("win"));
+		// 不可读文件 -> IOException catch（Windows 用 icacls，POSIX 用 setReadable，跨平台确定性触发）
 		Path locked = tmp.getRoot().toPath().resolve("locked.br");
 		Files.write(locked, new byte[] {0x23});
-		locked.toFile().setReadable(false);
-		assertThrows(CompressRuntimeException.class, () -> BrotliUtil.isBrotli(locked));
-		locked.toFile().setReadable(true);
+		makeUnreadable(locked);
+		try {
+			assertThrows(CompressRuntimeException.class, () -> BrotliUtil.isBrotli(locked));
+		} finally {
+			makeReadable(locked);
+		}
 	}
 
 	@Test

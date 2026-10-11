@@ -20,8 +20,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -149,5 +152,28 @@ public class ProcessUtilExtraTest {
 		Method m = ProcessUtil.class.getDeclaredMethod("readStream", InputStream.class);
 		m.setAccessible(true);
 		assertEquals("", m.invoke(null, (Object) null));
+	}
+
+	@Test
+	public void 读取流抛IOException返回空串() throws Exception {
+		// 虚拟线程中 readAllBytes 抛 IOException → 内部捕获抛运行时异常（线程内吞掉）
+		// → holder 保持 null → 返回空串。确定性覆盖 catch 分支与 null 返回分支
+		Method m = ProcessUtil.class.getDeclaredMethod("readStream", InputStream.class);
+		m.setAccessible(true);
+		InputStream bad = new InputStream() {
+			@Override
+			public int read() throws IOException {
+				throw new IOException("boom");
+			}
+		};
+		assertEquals("", m.invoke(null, bad));
+	}
+
+	@Test
+	public void 正常输入流返回内容() throws Exception {
+		Method m = ProcessUtil.class.getDeclaredMethod("readStream", InputStream.class);
+		m.setAccessible(true);
+		byte[] data = "hello".getBytes(StandardCharsets.UTF_8);
+		assertEquals("hello", m.invoke(null, new ByteArrayInputStream(data)));
 	}
 }

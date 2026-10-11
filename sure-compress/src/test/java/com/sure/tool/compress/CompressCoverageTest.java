@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -119,7 +120,9 @@ public class CompressCoverageTest {
 		Path mismatch = tmp.getRoot().toPath().resolve("mismatch");
 		Files.write(mismatch, new byte[] {1, 2, 3, 4, 5, 6, 7, 8});
 		assertFalse(SevenZUtil.isSevenZ(mismatch));
-		// 不可读文件 -> IOException catch
+		// 不可读文件 -> IOException catch（Windows 上 setReadable(false) 不生效，跳过；缺 2 行后 Windows 覆盖率仍 ≥98%）
+		assumeTrue("Windows setReadable(false) 不生效，跳过平台相关断言",
+				!System.getProperty("os.name", "").toLowerCase().contains("win"));
 		Path locked = tmp.getRoot().toPath().resolve("locked.7z");
 		Files.write(locked, new byte[] {0x37, 0x7A});
 		locked.toFile().setReadable(false);
@@ -171,7 +174,9 @@ public class CompressCoverageTest {
 		Path ok = tmp.getRoot().toPath().resolve("ok.br");
 		Files.write(ok, new byte[] {0x23, 0, 0});
 		assertTrue(BrotliUtil.isBrotli(ok));
-		// 不可读文件 -> IOException catch
+		// 不可读文件 -> IOException catch（Windows 上 setReadable(false) 不生效，跳过；缺 2 行后 Windows 覆盖率仍 ≥98%）
+		assumeTrue("Windows setReadable(false) 不生效，跳过平台相关断言",
+				!System.getProperty("os.name", "").toLowerCase().contains("win"));
 		Path locked = tmp.getRoot().toPath().resolve("locked.br");
 		Files.write(locked, new byte[] {0x23});
 		locked.toFile().setReadable(false);

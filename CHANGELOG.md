@@ -1,3 +1,5 @@
+
+
 # Changelog
 
 本项目所有值得记录的变更都会收录在本文件中。
@@ -5,6 +7,17 @@
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
 ## [Unreleased]
+
+### 批37：类型系统 + 类扫描 + 流式集合（v1.18.0 候选）
+
+- 新增 `TypeReference<T>`（对标 Guava `TypeToken`）：构造器捕获泛型实参，提供 `getType` / `getRawClass`；非参数化类型或实参数≠1 抛 `IllegalArgumentException`
+- 新增 `TypeUtil`：`getClass(Type)`（ParameterizedType / GenericArrayType / WildcardType / TypeVariable 四类规约）、`getTypeArgument(Type, int)`（越界兜底 `Object`）、`getTypeArguments`（不可变 List）、`getType(TypeReference)`、`isUnknown`（TypeVariable 仅上界为 Object 判定）
+- 新增 `ClassScanner`（对标 Hutool `ClassScanner`）：`scanPackage` / 谓词过滤 / 按注解 / 按父类扫描，支持目录与 jar（file: / jar: 协议）递归遍历，跳过 `$` 嵌套类与加载失败类，null 安全
+- 新增 `CollStreamUtil`（对标 Guava `Streams` + Hutool `CollStreamUtil` 高频）：`groupBy`（保序）/ `groupByKeyValue`（同键覆盖）/ `toMap`（唯一键，重复键抛 IAE）/ `summaryStatistics` / `filter` / `distinct`（按键去重保首现）/ `join`（null 跳过）/ `map`（null 映射结果跳过），null 参数统一抛 `IllegalArgumentException`
+- 新增 4 个测试类 38 例；批 37 新增类行覆盖 TypeUtil 97.5% / TypeReference 100% / ClassScanner 97.3%（2 行为无指令行）/ CollStreamUtil 98.9%，sure-core 实测 **98.725%**
+- PRD 见 docs/prd/sure-core-batch37.md
+
+
 
 ## [1.17.0] - 2026-10-11
 
@@ -14,8 +27,6 @@
 - `of` 返回不可变 Set；`cartesianProduct` 返回不可变二元组列表；`powerSet` 含空集
 - 新增测试 `P9SetUtilBatch36Test` 14 例，SetUtil 129 行 **100% 覆盖**，sure-core 实测 0.9874
 - PRD 见 docs/prd/sure-core-batch36.md
-
-## [Unreleased]
 
 ## [1.16.0] - 2026-10-10
 
@@ -32,8 +43,6 @@
 - 新增 `Difference` record：防御性拷贝 + 不可变视图（对齐 Partition 先例，SpotBugs EI_EXPOSE_REP 全绿）
 - 新增测试 29 例（`P8ListUtilBatch35Test` 24 例 + `P8MapUtilBatch35Test` 5 例），sure-core 实测 0.9872，新增行全覆盖
 - PRD 见 docs/prd/sure-core-batch35.md
-
-## [Unreleased]
 
 ## [1.15.0] - 2026-10-10
 

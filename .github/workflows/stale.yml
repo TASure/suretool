@@ -12,7 +12,7 @@ jobs:
   stale:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/stale@v9
+      - uses: actions/stale@v11
         with:
           stale-issue-message: '此 Issue 已 90 天无活动，将标记为待关闭。若仍需跟进请回复或更新内容。'
           stale-pr-message: '此 PR 已 90 天无活动，将标记为待关闭。若仍需跟进请推送更新或说明进度。'

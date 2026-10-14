@@ -86,47 +86,45 @@ public class ProcessUtilExtraTest {
 	}
 
 	/**
-	 * 用忙等虚拟线程占满 carrier，使 readStream 内的 reader 虚拟线程排队、join 阻塞；
-	 * 此时中断主线程，确定性覆盖读取输出被中断分支。
+	 * 确定性覆盖读取输出被中断分支：传入永不返回的阻塞 InputStream，
+	 * 使 readStream 内 reader 虚拟线程必然阻塞、主线程 join 必然阻塞；
+	 * Timer 中断主线程后确定性抛"读取进程输出被中断"。
+	 * 不依赖 CPU 数与虚拟线程调度时序（此前用 carrier 抢占方案在 Windows runner 上偶发失败）。
 	 */
 	@Test
-	public void 读取输出被中断() {
-		int cpus = Runtime.getRuntime().availableProcessors();
-		java.util.List<Thread> blockers = new java.util.ArrayList<>();
-		for (int i = 0; i < cpus * 2; i++) {
-			Thread t = Thread.ofVirtual().start(() -> {
-				while (!Thread.currentThread().isInterrupted()) {
-					long s = 0;
-					for (int j = 0; j < 100000; j++) {
-						s += j;
-					}
+	public void 读取输出被中断() throws Exception {
+		InputStream blocking = new InputStream() {
+			@Override
+			public int read() throws IOException {
+				try {
+					Thread.sleep(60_000L);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
 				}
-			});
-			blockers.add(t);
-		}
+				return -1;
+			}
+		};
+		final Thread main = Thread.currentThread();
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				main.interrupt();
+			}
+		}, 200L);
 		try {
-			Thread.sleep(300L);
-			final Thread main = Thread.currentThread();
-			Timer timer = new Timer();
-			timer.schedule(new TimerTask() {
-				@Override
-				public void run() {
-					main.interrupt();
-				}
-			}, 500L);
+			Method m = ProcessUtil.class.getDeclaredMethod("readStream", InputStream.class);
+			m.setAccessible(true);
 			try {
-				ProcessUtil.exec("sh", "-c", "echo hi");
-			} catch (ProcessRuntimeException e) {
-				assertTrue(e.getMessage().contains("读取进程输出被中断"));
-			} finally {
-				timer.cancel();
+				m.invoke(null, blocking);
+				org.junit.Assert.fail("应抛出 ProcessRuntimeException");
+			} catch (java.lang.reflect.InvocationTargetException e) {
+				Throwable cause = e.getCause();
+				assertTrue("实际异常: " + cause, cause instanceof ProcessRuntimeException);
+				assertTrue(cause.getMessage().contains("读取进程输出被中断"));
 			}
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
 		} finally {
-			for (Thread b : blockers) {
-				b.interrupt();
-			}
+			timer.cancel();
 			Thread.interrupted();
 		}
 	}

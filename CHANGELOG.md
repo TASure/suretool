@@ -8,6 +8,8 @@
 
 ## [Unreleased]
 
+## [1.18.0] - 2026-10-14
+
 ### 批38：Bean 拷贝 + 文件监听 + 查找算法（v1.18.0 候选）
 
 - 新增 `BeanCopier`（对标 Guava/Commons 选项化拷贝缺口）+ `CopyOption` + `CopyException`：

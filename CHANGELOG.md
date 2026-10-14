@@ -8,6 +8,18 @@
 
 ## [Unreleased]
 
+### 批38：Bean 拷贝 + 文件监听 + 查找算法（v1.18.0 候选）
+
+- 新增 `BeanCopier`（对标 Guava/Commons 选项化拷贝缺口）+ `CopyOption` + `CopyException`：
+  - 静态门面 `copy` / `deepCopy` / `toBean` / `toMap` + 链式 `Copier`（`ignoreNull` / `ignoreReadonly` / `deep` / `include` / `exclude`，include 与 exclude 互斥抛 IAE）
+  - 目标只读默认抛 `CopyException`（`IGNORE_READONLY` 跳过）；类型转换失败带属性名；基本类型目标遇 null 保持原值（与 `BeanUtil` 一致）；Bean↔Map 委托枚举 String 转换
+  - 深拷贝嵌套 Bean / Collection / Map / 数组相互独立
+- 新增 `FileTailer` + `TailerOptions`（对标 tail -f，虚拟线程）：增量读 + LF/CRLF 行切分 + 跨行缓冲；编码自动探测 UTF-8/GBK（BOM 识别，可显式指定）；`readFromStart(N)` 从文件头跳 N 行后跟踪、N≤0 从尾部；文件轮转自动重开并回调 `onRotate`；`stopOnDelete` 控制删除后停止或等待重建；单行回调异常不影响后续
+- 新增 `WatchDir` + `DirListener` + `EventType` + `WatchOptions` + `PathFilter`（JDK WatchService 封装，虚拟线程）：递归注册、新目录动态注册；路径过滤器（后缀/前缀/正则）；事件类型可选（默认 CREATE+MODIFY+DELETE）；OVERFLOW 单独上报；单次回调异常不影响后续
+- 新增 `SearchUtil`（Guava/Hutool 均缺上下界）：`lowerBound` / `upperBound`（自然序 + 比较器双套，重复元素/空集合/逆序确定性）、`range`（[from, to) 不可变子列表）、`binarySearch`（与 Collections 语义一致 + null-safe）、`interpolationSearch` / `exponentialSearch`（long[] 有序数组，越界/空数组安全）
+- 新增 8 个测试类 142 例（BeanCopier 19+23 / FileTailer 22+4 / WatchDir 20+7 / SearchUtil 41+6）；批 38 新增类行覆盖 541/583（92.8%，余为环境不可达防御分支），sure-core 实测 **98.32%**（门禁 0.98 达标）
+- PRD 见 docs/prd/sure-core-batch38.md
+
 ### 批37：类型系统 + 类扫描 + 流式集合（v1.18.0 候选）
 
 - 新增 `TypeReference<T>`（对标 Guava `TypeToken`）：构造器捕获泛型实参，提供 `getType` / `getRawClass`；非参数化类型或实参数≠1 抛 `IllegalArgumentException`

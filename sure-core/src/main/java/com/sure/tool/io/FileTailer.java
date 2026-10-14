@@ -1,0 +1,323 @@
+/*
+ * Copyright (c) 2026 suretool contributors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.sure.tool.io;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CodingErrorAction;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+
+/**
+ * 文件 tail -f 监控：虚拟线程增量读文件追加内容，按行回调，支持日志轮转自动重开。
+ *
+ * <p>特性：
+ * <ul>
+ *   <li>从文件尾部或文件头（跳过前 N 行）开始跟踪；</li>
+ *   <li>行切分支持 LF / CRLF；</li>
+ *   <li>编码自动探测 UTF-8 / GBK（也可显式指定）；</li>
+ *   <li>文件被替换（rename + 新建）后自动重开新通道并触发 {@link TailerOptions#onRotate()}；</li>
+ *   <li>文件被删除时按 {@link TailerOptions#stopOnDelete()} 决定停止或等待重建。</li>
+ * </ul>
+ *
+ * <p>回调在虚拟线程上执行；单行回调抛异常不影响后续行。
+ */
+public final class FileTailer {
+
+	private final Path file;
+	private final Consumer<String> lineListener;
+	private final TailerOptions options;
+	private final AtomicBoolean running = new AtomicBoolean(false);
+	private volatile Thread thread;
+	private FileChannel channel;
+	private long position;
+	private Object lastKey;
+	private Charset charset;
+
+	/**
+	 * 从文件尾部开始跟踪。
+	 *
+	 * @param file         待跟踪文件
+	 * @param lineListener 行回调（虚拟线程执行）
+	 * @return FileTailer
+	 */
+	public static FileTailer start(Path file, Consumer<String> lineListener) {
+		return start(file, lineListener, new TailerOptions());
+	}
+
+	/**
+	 * 按选项跟踪文件。
+	 *
+	 * @param file         待跟踪文件
+	 * @param lineListener 行回调（虚拟线程执行）
+	 * @param options      tail 选项
+	 * @return FileTailer
+	 */
+	public static FileTailer start(Path file, Consumer<String> lineListener, TailerOptions options) {
+		if (file == null) {
+			throw new IllegalArgumentException("file must not be null");
+		}
+		if (lineListener == null) {
+			throw new IllegalArgumentException("lineListener must not be null");
+		}
+		if (options == null) {
+			throw new IllegalArgumentException("options must not be null");
+		}
+		FileTailer tailer = new FileTailer(file, lineListener, options);
+		tailer.start();
+		return tailer;
+	}
+
+	private FileTailer(Path file, Consumer<String> lineListener, TailerOptions options) {
+		this.file = file;
+		this.lineListener = lineListener;
+		this.options = options;
+	}
+
+	/**
+	 * 停止跟踪（幂等）。
+	 */
+	public void stop() {
+		running.set(false);
+		Thread t = thread;
+		if (t != null) {
+			t.interrupt();
+		}
+	}
+
+	/**
+	 * 是否正在跟踪。
+	 *
+	 * @return 是否运行
+	 */
+	public boolean isRunning() {
+		return running.get();
+	}
+
+	private void start() {
+		if (!running.compareAndSet(false, true)) {
+			throw new IllegalStateException("FileTailer 已在运行");
+		}
+		charset = detectCharset(file, options.charset());
+		try {
+			// 同步完成打开与初始定位，保证 start() 返回后追加内容可被读到
+			channel = FileChannel.open(file, StandardOpenOption.READ);
+			position = initialPosition(channel);
+			lastKey = fileKey(file);
+			thread = Thread.ofVirtual().name("sure-tailer-" + file.getFileName()).start(this::loop);
+		} catch (IOException e) {
+			// 文件暂不存在：虚线程等待文件创建后从头跟踪
+			thread = Thread.ofVirtual().name("sure-tailer-" + file.getFileName()).start(this::waitRecreate);
+		}
+	}
+
+	private void loop() {
+		try {
+			tailLoop();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		} catch (IOException e) {
+			// 读取中断（文件被删等）：按选项等待重建或退出
+			if (!options.stopOnDelete()) {
+				waitRecreate();
+			}
+		} finally {
+			closeQuietly(channel);
+			running.set(false);
+		}
+	}
+
+	private void tailLoop() throws IOException, InterruptedException {
+		ByteArrayOutputStream pending = new ByteArrayOutputStream();
+		while (running.get()) {
+			Object key = fileKey(file);
+			if (key == null) {
+				// 文件已被删除
+				if (options.stopOnDelete()) {
+					running.set(false);
+					break;
+				}
+				Thread.sleep(options.pollInterval().toMillis());
+				continue;
+			}
+			if (lastKey != null && !lastKey.equals(key)) {
+				// 文件被替换：轮转重开
+				onRotate();
+				channel.close();
+				channel = FileChannel.open(file, StandardOpenOption.READ);
+				position = 0;
+				pending.reset();
+				lastKey = key;
+				continue;
+			}
+			channel.position(position);
+			ByteBuffer buffer = ByteBuffer.allocate(8192);
+			int n = channel.read(buffer);
+			if (n < 0) {
+				Thread.sleep(options.pollInterval().toMillis());
+				continue;
+			}
+			position += n;
+			buffer.flip();
+			while (buffer.hasRemaining()) {
+				byte b = buffer.get();
+				if (b == '\n') {
+					emitLine(pending.toByteArray(), charset);
+					pending.reset();
+				} else if (b != '\r') {
+					pending.write(b);
+				}
+			}
+		}
+	}
+
+	private void waitRecreate() {
+		while (running.get()) {
+			if (Files.exists(file)) {
+				try {
+					channel = FileChannel.open(file, StandardOpenOption.READ);
+					position = 0;
+					lastKey = fileKey(file);
+					tailLoop();
+					return;
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					return;
+				} catch (IOException e) {
+					// 重建瞬时失败，继续等待
+				}
+			}
+			try {
+				Thread.sleep(options.pollInterval().toMillis());
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				return;
+			}
+		}
+	}
+
+	private static void closeQuietly(FileChannel channel) {
+		if (channel != null) {
+			try {
+				channel.close();
+			} catch (IOException e) {
+				// 忽略关闭失败
+			}
+		}
+	}
+
+	private long initialPosition(FileChannel channel) throws IOException {
+		int lines = options.readFromStart();
+		if (lines <= 0) {
+			return channel.size();
+		}
+		long position = 0;
+		int found = 0;
+		ByteBuffer buffer = ByteBuffer.allocate(8192);
+		while (found < lines) {
+			channel.position(position);
+			buffer.clear();
+			int n = channel.read(buffer);
+			if (n < 0) {
+				break;
+			}
+			buffer.flip();
+			while (buffer.hasRemaining() && found < lines) {
+				if (buffer.get() == '\n') {
+					found++;
+				}
+				position++;
+			}
+		}
+		return position;
+	}
+
+	private void emitLine(byte[] bytes, Charset charset) {
+		String line = new String(bytes, charset);
+		if (line.startsWith("\uFEFF")) {
+			// 去除 UTF-8 BOM 残留
+			line = line.substring(1);
+		}
+		try {
+			lineListener.accept(line);
+		} catch (RuntimeException e) {
+			// 单行回调异常不影响后续行
+		}
+	}
+
+	private void onRotate() {
+		Runnable callback = options.onRotate();
+		if (callback != null) {
+			try {
+				callback.run();
+			} catch (RuntimeException e) {
+				// 回调异常不影响 tail 主循环
+			}
+		}
+	}
+
+	private static Object fileKey(Path file) {
+		try {
+			return Files.readAttributes(file, BasicFileAttributes.class).fileKey();
+		} catch (NoSuchFileException e) {
+			return null;
+		} catch (IOException e) {
+			return null;
+		}
+	}
+
+	private static Charset detectCharset(Path file, Charset explicit) {
+		if (explicit != null) {
+			return explicit;
+		}
+		return probeCharset(file);
+	}
+
+	private static Charset probeCharset(Path file) {
+		try (InputStream in = Files.newInputStream(file)) {
+			byte[] head = new byte[4096];
+			int n = in.read(head);
+			if (n >= 3 && head[0] == (byte) 0xEF && head[1] == (byte) 0xBB && head[2] == (byte) 0xBF) {
+				return StandardCharsets.UTF_8;
+			}
+			byte[] sample = n < 0 ? new byte[0] : Arrays.copyOf(head, n);
+			try {
+				StandardCharsets.UTF_8.newDecoder()
+						.onMalformedInput(CodingErrorAction.REPORT)
+						.onUnmappableCharacter(CodingErrorAction.REPORT)
+						.decode(ByteBuffer.wrap(sample));
+				return StandardCharsets.UTF_8;
+			} catch (CharacterCodingException e) {
+				return Charset.forName("GBK");
+			}
+		} catch (IOException e) {
+			return StandardCharsets.UTF_8;
+		}
+	}
+}

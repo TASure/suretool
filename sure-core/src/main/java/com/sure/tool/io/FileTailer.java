@@ -56,8 +56,10 @@ public final class FileTailer {
 	private final AtomicBoolean running = new AtomicBoolean(false);
 	private volatile Thread thread;
 	private java.nio.file.attribute.FileTime lastCreation;
-	private FileChannel channel;
+	private long maxSize;
 	private long position;
+	private ByteArrayOutputStream pending = new ByteArrayOutputStream();
+	private FileChannel channel;
 	private Object lastKey;
 	private Charset charset;
 
@@ -157,8 +159,7 @@ public final class FileTailer {
 	}
 
 	private void tailLoop() throws IOException, InterruptedException {
-		ByteArrayOutputStream pending = new ByteArrayOutputStream();
-		long maxSize = position;
+		maxSize = position;
 		while (running.get()) {
 			Object key = fileKey(file);
 			boolean rotated = false;
@@ -175,8 +176,13 @@ public final class FileTailer {
 				java.nio.file.attribute.BasicFileAttributes attrs = Files.readAttributes(file,
 						java.nio.file.attribute.BasicFileAttributes.class);
 				long size = attrs.size();
+				if (System.getProperty("sure.tailer.debug") != null) {
+					System.err.println("[tail-debug] t=" + System.currentTimeMillis() + " size=" + size
+							+ " creation=" + creationOf(attrs) + " lastCreation=" + lastCreation
+							+ " chSize=" + channel.size() + " pos=" + position + " maxSize=" + maxSize);
+				}
 				// 追加写不改创建时间；轮转（rename 后新建）会生成新的创建时间，即使新文件更大也能检出
-				if (lastCreation != null && !lastCreation.equals(attrs.creationTime())) {
+				if (lastCreation != null && !lastCreation.equals(creationOf(attrs))) {
 					rotated = true;
 				} else if (size < maxSize) {
 					// 创建时间未变的兜底：size 回退 = 文件被替换成更小的新文件
@@ -186,26 +192,39 @@ public final class FileTailer {
 					rotated = true;
 				}
 				maxSize = Math.max(maxSize, size);
-				lastCreation = attrs.creationTime();
+				lastCreation = creationOf(attrs);
 			} else if (lastKey != null && !lastKey.equals(key)) {
 				rotated = true;
 			}
 			if (rotated) {
 				// 文件被替换：轮转重开，并立即建立新文件的大小/创建时间基准
-				onRotate();
-				channel.close();
-				channel = FileChannel.open(file, StandardOpenOption.READ);
-				position = 0;
-				maxSize = channel.size();
-				pending.reset();
-				lastKey = key;
-				lastCreation = readCreation(file);
+				reopen();
 				continue;
 			}
 			channel.position(position);
 			ByteBuffer buffer = ByteBuffer.allocate(8192);
 			int n = channel.read(buffer);
 			if (n < 0) {
+				// EOF：探测路径当前文件是否与 channel 底层文件不一致（轮转/重建后新文件）。
+				// 判据：路径 size 已变化且 channel 仍是旧文件（chSize==position==旧文件大小），
+				// 追加写时 chSize 随同 inode 增长（==pathSize），不会误判。
+				if (key == null) {
+					try {
+						long pathSize = Files.readAttributes(file,
+								java.nio.file.attribute.BasicFileAttributes.class).size();
+						long chSize = channel.size();
+						if (pathSize != chSize && chSize == position) {
+							if (System.getProperty("sure.tailer.debug") != null) {
+								System.err.println("[tail-debug] EOF-rotate pathSize=" + pathSize
+										+ " chSize=" + chSize + " pos=" + position);
+							}
+							reopen();
+							continue;
+						}
+					} catch (IOException e) {
+						// 探测失败（文件消失等）：常规等待下一轮
+					}
+				}
 				Thread.sleep(options.pollInterval().toMillis());
 				continue;
 			}
@@ -221,6 +240,22 @@ public final class FileTailer {
 				}
 			}
 		}
+	}
+
+	/**
+	 * 轮转重开：关闭旧 channel，打开路径当前文件并从头部读取，重建大小/创建时间基准。
+	 *
+	 * @throws IOException 打开或读取失败
+	 */
+	private void reopen() throws IOException {
+		onRotate();
+		channel.close();
+		channel = FileChannel.open(file, StandardOpenOption.READ);
+		position = 0;
+		maxSize = channel.size();
+		pending.reset();
+		lastKey = fileKey(file);
+		lastCreation = readCreation(file);
 	}
 
 	private void waitRecreate() {
@@ -256,11 +291,21 @@ public final class FileTailer {
 	 * @return 创建时间，失败为 null
 	 */
 	private static java.nio.file.attribute.FileTime readCreation(Path file) {
+		if (forceSameCreation) {
+			return java.nio.file.attribute.FileTime.fromMillis(1000L);
+		}
 		try {
 			return Files.readAttributes(file, java.nio.file.attribute.BasicFileAttributes.class).creationTime();
 		} catch (IOException e) {
 			return null;
 		}
+	}
+
+	private static java.nio.file.attribute.FileTime creationOf(java.nio.file.attribute.BasicFileAttributes attrs) {
+		if (forceSameCreation) {
+			return java.nio.file.attribute.FileTime.fromMillis(1000L);
+		}
+		return attrs.creationTime();
 	}
 
 	private static void closeQuietly(FileChannel channel) {
@@ -328,6 +373,9 @@ public final class FileTailer {
 	 * （其 BasicFileAttributes.fileKey() 恒为 null），用于本地覆盖并验证 Windows 分支逻辑。
 	 */
 	static volatile boolean forceNullFileKey;
+
+	/** 测试钩子：强制创建时间判据失效（模拟部分平台 creationTime 语义差异）。 */
+	static volatile boolean forceSameCreation;
 
 	private static Object fileKey(Path file) {
 		if (forceNullFileKey) {

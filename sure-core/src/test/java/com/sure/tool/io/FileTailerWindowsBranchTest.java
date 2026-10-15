@@ -48,11 +48,14 @@ public class FileTailerWindowsBranchTest {
 	@Before
 	public void forceWindowsKey() {
 		FileTailer.forceNullFileKey = true;
+		System.setProperty("sure.tailer.debug", "true");
 	}
 
 	@After
 	public void restoreKey() {
 		FileTailer.forceNullFileKey = false;
+		FileTailer.forceSameCreation = false;
+		System.clearProperty("sure.tailer.debug");
 	}
 
 	private static void await(Supplier<Boolean> condition, String message) {
@@ -124,6 +127,27 @@ public class FileTailerWindowsBranchTest {
 			Files.write(file, "x\n".getBytes(StandardCharsets.UTF_8));
 			await(() -> lines.size() == 1, "新文件行");
 			assertEquals("x", lines.get(0));
+		} finally {
+			tailer.stop();
+		}
+	}
+
+	@Test
+	public void 创建时间判据失效时靠EOF探测轮转() throws Exception {
+		// 模拟部分平台 creationTime 语义差异：轮转后新文件 creationTime 与旧文件相同，
+		// size 回退检测失效（新文件更大），必须靠 EOF 探测重开读到新文件。
+		FileTailer.forceSameCreation = true;
+		Path file = tmp.newFile("win-rot-eof.log").toPath();
+		append(file, "old\n");
+		List<String> lines = new CopyOnWriteArrayList<>();
+		FileTailer tailer = FileTailer.start(file, lines::add);
+		try {
+			await(tailer::isRunning, "运行中");
+			Path backup = tmp.getRoot().toPath().resolve("win-rot-eof.log.1");
+			Files.move(file, backup, StandardCopyOption.REPLACE_EXISTING);
+			Files.write(file, "new1\n".getBytes(StandardCharsets.UTF_8));
+			await(() -> lines.size() == 1, "新文件行");
+			assertEquals("new1", lines.get(0));
 		} finally {
 			tailer.stop();
 		}

@@ -55,6 +55,7 @@ public final class FileTailer {
 	private final TailerOptions options;
 	private final AtomicBoolean running = new AtomicBoolean(false);
 	private volatile Thread thread;
+	private java.nio.file.attribute.FileTime lastCreation;
 	private FileChannel channel;
 	private long position;
 	private Object lastKey;
@@ -130,6 +131,8 @@ public final class FileTailer {
 			channel = FileChannel.open(file, StandardOpenOption.READ);
 			position = initialPosition(channel);
 			lastKey = fileKey(file);
+			// 同步取样创建时间基准：tailLoop 首轮即有可比基准（start 后立即追加/替换均能正确判定）
+			lastCreation = readCreation(file);
 			thread = Thread.ofVirtual().name("sure-tailer-" + file.getFileName()).start(this::loop);
 		} catch (IOException e) {
 			// 文件暂不存在：虚线程等待文件创建后从头跟踪
@@ -156,7 +159,6 @@ public final class FileTailer {
 	private void tailLoop() throws IOException, InterruptedException {
 		ByteArrayOutputStream pending = new ByteArrayOutputStream();
 		long maxSize = position;
-		java.nio.file.attribute.FileTime lastCreation = null;
 		while (running.get()) {
 			Object key = fileKey(file);
 			boolean rotated = false;
@@ -176,9 +178,12 @@ public final class FileTailer {
 				// 追加写不改创建时间；轮转（rename 后新建）会生成新的创建时间，即使新文件更大也能检出
 				if (lastCreation != null && !lastCreation.equals(attrs.creationTime())) {
 					rotated = true;
-				} else {
+				} else if (size < maxSize) {
 					// 创建时间未变的兜底：size 回退 = 文件被替换成更小的新文件
-					rotated = size < maxSize;
+					rotated = true;
+				} else if (lastCreation == null) {
+					// 基准缺失（初始读取失败等）：重开一次重建基准
+					rotated = true;
 				}
 				maxSize = Math.max(maxSize, size);
 				lastCreation = attrs.creationTime();
@@ -186,19 +191,15 @@ public final class FileTailer {
 				rotated = true;
 			}
 			if (rotated) {
-				// 文件被替换：轮转重开
+				// 文件被替换：轮转重开，并立即建立新文件的大小/创建时间基准
 				onRotate();
 				channel.close();
 				channel = FileChannel.open(file, StandardOpenOption.READ);
 				position = 0;
-				maxSize = position;
+				maxSize = channel.size();
 				pending.reset();
 				lastKey = key;
-				if (key == null) {
-					// 同步更新创建时间基准，避免下一轮误判再次轮转
-					lastCreation = Files.readAttributes(file,
-							java.nio.file.attribute.BasicFileAttributes.class).creationTime();
-				}
+				lastCreation = readCreation(file);
 				continue;
 			}
 			channel.position(position);
@@ -229,6 +230,7 @@ public final class FileTailer {
 					channel = FileChannel.open(file, StandardOpenOption.READ);
 					position = 0;
 					lastKey = fileKey(file);
+					lastCreation = readCreation(file);
 					tailLoop();
 					return;
 				} catch (InterruptedException e) {
@@ -244,6 +246,20 @@ public final class FileTailer {
 				Thread.currentThread().interrupt();
 				return;
 			}
+		}
+	}
+
+	/**
+	 * 读取文件创建时间；失败返回 null（由调用方按基准缺失兜底重开）。
+	 *
+	 * @param file 目标文件
+	 * @return 创建时间，失败为 null
+	 */
+	private static java.nio.file.attribute.FileTime readCreation(Path file) {
+		try {
+			return Files.readAttributes(file, java.nio.file.attribute.BasicFileAttributes.class).creationTime();
+		} catch (IOException e) {
+			return null;
 		}
 	}
 
@@ -307,7 +323,16 @@ public final class FileTailer {
 		}
 	}
 
+	/**
+	 * 包私有测试钩子：置 true 时 fileKey 恒返回 null，模拟 Windows/NTFS 文件系统
+	 * （其 BasicFileAttributes.fileKey() 恒为 null），用于本地覆盖并验证 Windows 分支逻辑。
+	 */
+	static volatile boolean forceNullFileKey;
+
 	private static Object fileKey(Path file) {
+		if (forceNullFileKey) {
+			return null;
+		}
 		try {
 			return Files.readAttributes(file, BasicFileAttributes.class).fileKey();
 		} catch (NoSuchFileException e) {

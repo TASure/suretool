@@ -161,6 +161,8 @@ public final class WatchDir {
 					if (Files.isDirectory(toRegister)) {
 						try {
 							register(toRegister);
+							// 补发注册前已存在的内容（动态注册窗口内产生的事件已错过）
+							backfill(toRegister);
 						} catch (IOException e) {
 							// 仍不可用：退回队列，短暂退避后下一轮再试
 							pendingRegisters.offer(toRegister);
@@ -202,13 +204,13 @@ public final class WatchDir {
 		if (type == null || !options.acceptEvent(type)) {
 			return;
 		}
-		if (options.filter() != null && !options.filter().accept(relative)) {
-			return;
-		}
+		// 目录注册与补发不受 filter 限制：filter 只过滤最终事件，否则子目录会被过滤而漏监听
 		if (type == EventType.CREATE && options.recursive()) {
 			if (Files.isDirectory(full)) {
 				try {
 					register(full);
+					// 补发注册前已存在的内容（子目录内文件可能在动态注册完成前已被写入）
+					backfill(full);
 				} catch (IOException e) {
 					// 目录可能尚未完全就绪：入队延迟重试，不丢动态注册
 					pendingRegisters.offer(full);
@@ -218,7 +220,38 @@ public final class WatchDir {
 				pendingRegisters.offer(full);
 			}
 		}
+		if (options.filter() != null && !options.filter().accept(relative)) {
+			return;
+		}
 		safeListener(type, relative);
+	}
+
+	/**
+	 * 补发：枚举目录内已存在内容并补发 CREATE 事件（含递归子目录）。
+	 * 动态注册窗口内产生的事件 WatchService 无法感知，注册成功后以枚举补发兜底。
+	 *
+	 * @param dir 刚注册成功的目录
+	 */
+	private void backfill(Path dir) {
+		try (java.nio.file.DirectoryStream<Path> ds = Files.newDirectoryStream(dir)) {
+			for (Path child : ds) {
+				Path childRel = root.relativize(child);
+				if (options.filter() != null && !options.filter().accept(childRel)) {
+					continue;
+				}
+				safeListener(EventType.CREATE, childRel);
+				if (Files.isDirectory(child)) {
+					try {
+						register(child);
+						backfill(child);
+					} catch (IOException e) {
+						pendingRegisters.offer(child);
+					}
+				}
+			}
+		} catch (IOException e) {
+			// 目录被删除等瞬时异常：忽略，下一轮由 WatchKey 事件驱动
+		}
 	}
 
 	private void safeListener(EventType type, Path relative) {

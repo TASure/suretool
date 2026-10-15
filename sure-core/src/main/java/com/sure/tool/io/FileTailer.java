@@ -155,23 +155,34 @@ public final class FileTailer {
 
 	private void tailLoop() throws IOException, InterruptedException {
 		ByteArrayOutputStream pending = new ByteArrayOutputStream();
+		long maxSize = position;
 		while (running.get()) {
 			Object key = fileKey(file);
+			boolean rotated = false;
 			if (key == null) {
-				// 文件已被删除
-				if (options.stopOnDelete()) {
-					running.set(false);
-					break;
+				// Windows/NTFS 的 fileKey 恒为 null：以文件存在性 + 大小回退检测
+				if (!Files.exists(file)) {
+					if (options.stopOnDelete()) {
+						running.set(false);
+						break;
+					}
+					Thread.sleep(options.pollInterval().toMillis());
+					continue;
 				}
-				Thread.sleep(options.pollInterval().toMillis());
-				continue;
+				long size = Files.size(file);
+				// 追加写只会增长；size 回退 = 文件被替换成更小的新文件
+				rotated = size < maxSize;
+				maxSize = Math.max(maxSize, size);
+			} else if (lastKey != null && !lastKey.equals(key)) {
+				rotated = true;
 			}
-			if (lastKey != null && !lastKey.equals(key)) {
+			if (rotated) {
 				// 文件被替换：轮转重开
 				onRotate();
 				channel.close();
 				channel = FileChannel.open(file, StandardOpenOption.READ);
 				position = 0;
+				maxSize = position;
 				pending.reset();
 				lastKey = key;
 				continue;

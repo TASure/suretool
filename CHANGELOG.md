@@ -8,6 +8,15 @@
 
 ## [Unreleased]
 
+### 批43：URL 规范化深度 + 示例文档化收口（v1.19.0 候选，阶段 A「易用」）
+
+对标 Hutool URLUtil / RFC 3986 补齐 URL 深度处理，并完成 UrlUtil 全部方法示例文档化：
+
+- `UrlUtil` 新增 5 个方法：`removeProtocol`（剥离协议前缀）/ `normalizePath`（RFC 3986 §5.2.4 路径规范化：. / .. 解析、连续斜杠合并、绝对路径不越根、相对路径保留越界 ../）/ `isSameOrigin`（协议+主机+端口同源判断，默认端口 80/443 等价）/ `getQuery`（查询串提取）/ `getFragment`（锚点提取）
+- 存量 15 个方法（encode×2 / encodePath / decode×2 / toUri / getHost / getPort / getScheme / getPath / isHttp / getParams / getParam / appendParams / normalize）全部补齐「示例：」JavaDoc 片段，示例与实现行为一致
+- 新增测试类 `UrlUtilBatch43Test`（RFC 路径向量、默认端口等价、非法输入、null 全覆盖）；sure-core 全量测试绿
+- PRD 见 docs/prd/sure-url-normalize-batch43.md
+
 ### 批42：网络工具 IP/URL 增强（v1.19.0 候选，阶段 A「易用」）
 
 对标 Hutool NetUtil / URLUtil 补齐网络高频能力，全部方法 JavaDoc 带示例文档化：

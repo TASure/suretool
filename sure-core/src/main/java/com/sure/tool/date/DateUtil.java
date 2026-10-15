@@ -1273,5 +1273,326 @@ public class DateUtil {
 		return cal.getTime();
 	}
 
+	/**
+	 * 转换为 {@link java.time.LocalDate}（系统默认时区）。
+	 *
+	 * <p>示例：{@code DateUtil.toLocalDate(new Date())}。</p>
+	 *
+	 * @param date 日期，可为 {@code null}
+	 * @return LocalDate；{@code null} 返回 {@code null}
+	 */
+	public static java.time.LocalDate toLocalDate(Date date) {
+		if (date == null) {
+			return null;
+		}
+		return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	}
+
+	/**
+	 * 转换为 {@link java.time.LocalDateTime}（系统默认时区）。
+	 *
+	 * <p>示例：{@code DateUtil.toLocalDateTime(new Date())}。</p>
+	 *
+	 * @param date 日期，可为 {@code null}
+	 * @return LocalDateTime；{@code null} 返回 {@code null}
+	 */
+	public static java.time.LocalDateTime toLocalDateTime(Date date) {
+		if (date == null) {
+			return null;
+		}
+		return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+	}
+
+	/**
+	 * LocalDate 转 {@link java.util.Date}（系统时区当日 00:00）。
+	 *
+	 * <p>示例：{@code DateUtil.toDate(LocalDate.now())}。</p>
+	 *
+	 * @param localDate LocalDate，可为 {@code null}
+	 * @return Date；{@code null} 返回 {@code null}
+	 */
+	public static Date toDate(java.time.LocalDate localDate) {
+		if (localDate == null) {
+			return null;
+		}
+		return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	}
+
+	/**
+	 * LocalDateTime 转 {@link java.util.Date}（系统默认时区）。
+	 *
+	 * <p>示例：{@code DateUtil.toDate(LocalDateTime.now())}。</p>
+	 *
+	 * @param localDateTime LocalDateTime，可为 {@code null}
+	 * @return Date；{@code null} 返回 {@code null}
+	 */
+	public static Date toDate(java.time.LocalDateTime localDateTime) {
+		if (localDateTime == null) {
+			return null;
+		}
+		return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+	}
+
+	/**
+	 * 解析 ISO 日期字符串（{@code yyyy-MM-dd}）为 {@link java.time.LocalDate}。
+	 *
+	 * <p>示例：{@code DateUtil.parseLocalDate("2026-10-15")}。</p>
+	 *
+	 * @param dateStr 日期字符串，可为 {@code null}
+	 * @return LocalDate；{@code null} 或空串返回 {@code null}
+	 */
+	public static java.time.LocalDate parseLocalDate(String dateStr) {
+		if (StrUtil.isBlank(dateStr)) {
+			return null;
+		}
+		return java.time.LocalDate.parse(dateStr.trim());
+	}
+
+	/**
+	 * 解析常见日期时间字符串为 {@link java.time.LocalDateTime}（自动探测格式）。
+	 *
+	 * <p>支持格式：{@code yyyy-MM-dd HH:mm:ss}、{@code yyyy-MM-dd HH:mm}、{@code yyyy-MM-dd HH:mm:ss.SSS}、
+	 * ISO 日期时间等；纯日期按当日 00:00 处理。</p>
+	 *
+	 * @param dateTimeStr 日期时间字符串，可为 {@code null}
+	 * @return LocalDateTime；{@code null} 或空串返回 {@code null}
+	 */
+	public static java.time.LocalDateTime parseLocalDateTime(String dateTimeStr) {
+		if (StrUtil.isBlank(dateTimeStr)) {
+			return null;
+		}
+		String s = dateTimeStr.trim();
+		// ISO 或带 T 分隔
+		if (s.indexOf('T') >= 0 || s.matches(".*\\d{2}:\\d{2}:\\d{2}.*")) {
+			try {
+				return java.time.LocalDateTime.parse(s.replace(' ', 'T'));
+			} catch (java.time.format.DateTimeParseException ignored) {
+				// 继续按常见格式探测
+			}
+		}
+		int len = s.length();
+		if (len <= 10) {
+			return java.time.LocalDate.parse(s).atStartOfDay();
+		}
+		if (len == 16) {
+			return java.time.LocalDateTime.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		}
+		if (len == 19) {
+			return java.time.LocalDateTime.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		}
+		if (len == 23) {
+			return java.time.LocalDateTime.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+		}
+		return java.time.LocalDateTime.parse(s.replace(' ', 'T'));
+	}
+
+	/**
+	 * 按指定格式解析日期时间字符串为 {@link java.time.LocalDateTime}。
+	 *
+	 * <p>示例：{@code DateUtil.parseLocalDateTime("2026/10/15 08:30", "yyyy/MM/dd HH:mm")}。</p>
+	 *
+	 * @param dateTimeStr 日期时间字符串，可为 {@code null}
+	 * @param pattern     格式模式（{@link DateTimeFormatter} 语法）
+	 * @return LocalDateTime；{@code null} 或空串返回 {@code null}
+	 */
+	public static java.time.LocalDateTime parseLocalDateTime(String dateTimeStr, String pattern) {
+		if (StrUtil.isBlank(dateTimeStr)) {
+			return null;
+		}
+		return java.time.LocalDateTime.parse(dateTimeStr.trim(), DateTimeFormatter.ofPattern(pattern));
+	}
+
+	/**
+	 * 判断两个日期是否在同一周（ISO 周定义：周一为一周首日）。
+	 *
+	 * <p>示例：{@code DateUtil.isSameWeek(monday, friday)} 同周返回 {@code true}。</p>
+	 *
+	 * @param date1 日期 1，可为 {@code null}
+	 * @param date2 日期 2，可为 {@code null}
+	 * @return 同周返回 {@code true}；任一为 {@code null} 返回 {@code false}
+	 */
+	public static boolean isSameWeek(Date date1, Date date2) {
+		if (date1 == null || date2 == null) {
+			return false;
+		}
+		Calendar cal1 = Calendar.getInstance();
+		cal1.setTime(date1);
+		Calendar cal2 = Calendar.getInstance();
+		cal2.setTime(date2);
+		return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+				&& cal1.get(Calendar.WEEK_OF_YEAR) == cal2.get(Calendar.WEEK_OF_YEAR);
+	}
+
+	/**
+	 * 截断到指定 {@link Calendar} 字段（该字段保留，更小字段清零）。
+	 *
+	 * <p>对齐 Commons {@code DateUtils.truncate}：示例
+	 * {@code DateUtil.truncate(date, Calendar.DAY_OF_MONTH)} 等价于 {@code beginOfDay(date)}。</p>
+	 *
+	 * @param date  日期，可为 {@code null}
+	 * @param field {@link Calendar} 字段常量（如 {@link Calendar#HOUR_OF_DAY} / {@link Calendar#DAY_OF_MONTH} / {@link Calendar#MONTH}）
+	 * @return 截断后的日期；{@code null} 返回 {@code null}
+	 */
+	public static Date truncate(Date date, int field) {
+		if (date == null) {
+			return null;
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		// 将小于 field 的所有字段清零（对齐 Commons truncate 语义）
+		switch (field) {
+			case Calendar.SECOND:
+				cal.set(Calendar.MILLISECOND, 0);
+				break;
+			case Calendar.MINUTE:
+				cal.set(Calendar.SECOND, 0);
+				cal.set(Calendar.MILLISECOND, 0);
+				break;
+			case Calendar.HOUR_OF_DAY:
+			case Calendar.HOUR:
+				cal.set(Calendar.MINUTE, 0);
+				cal.set(Calendar.SECOND, 0);
+				cal.set(Calendar.MILLISECOND, 0);
+				break;
+			case Calendar.DAY_OF_MONTH:
+			case Calendar.DAY_OF_WEEK:
+			case Calendar.DAY_OF_YEAR:
+				cal.set(Calendar.HOUR_OF_DAY, 0);
+				cal.set(Calendar.MINUTE, 0);
+				cal.set(Calendar.SECOND, 0);
+				cal.set(Calendar.MILLISECOND, 0);
+				break;
+			case Calendar.WEEK_OF_YEAR:
+			case Calendar.WEEK_OF_MONTH:
+				cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+				cal.set(Calendar.HOUR_OF_DAY, 0);
+				cal.set(Calendar.MINUTE, 0);
+				cal.set(Calendar.SECOND, 0);
+				cal.set(Calendar.MILLISECOND, 0);
+				break;
+			case Calendar.MONTH:
+				cal.set(Calendar.DAY_OF_MONTH, 1);
+				cal.set(Calendar.HOUR_OF_DAY, 0);
+				cal.set(Calendar.MINUTE, 0);
+				cal.set(Calendar.SECOND, 0);
+				cal.set(Calendar.MILLISECOND, 0);
+				break;
+			case Calendar.YEAR:
+				cal.set(Calendar.MONTH, 0);
+				cal.set(Calendar.DAY_OF_MONTH, 1);
+				cal.set(Calendar.HOUR_OF_DAY, 0);
+				cal.set(Calendar.MINUTE, 0);
+				cal.set(Calendar.SECOND, 0);
+				cal.set(Calendar.MILLISECOND, 0);
+				break;
+			default:
+				break;
+		}
+		return cal.getTime();
+	}
+
+	/**
+	 * 四舍五入到指定 {@link Calendar} 字段。
+	 *
+	 * <p>对齐 Commons {@code DateUtils.round}：秒 >= 30 时进位到下一分钟，小时 >= 12 时进位到下一日等。</p>
+	 *
+	 * @param date  日期，可为 {@code null}
+	 * @param field {@link Calendar} 字段常量
+	 * @return 舍入后的日期；{@code null} 返回 {@code null}
+	 */
+	public static Date round(Date date, int field) {
+		if (date == null) {
+			return null;
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		// 依据字段进位规则：先截断到 field，再判断下一位是否过半进位
+		if (field == Calendar.SECOND) {
+			return truncate(cal.getTime(), Calendar.MINUTE);
+		}
+		if (field == Calendar.MINUTE) {
+			boolean up = cal.get(Calendar.SECOND) >= 30;
+			Date base = truncate(cal.getTime(), Calendar.MINUTE);
+			return up ? offsetSecond(base, 60) : base;
+		}
+		if (field == Calendar.HOUR_OF_DAY || field == Calendar.HOUR) {
+			boolean up = cal.get(Calendar.MINUTE) >= 30;
+			Date base = truncate(cal.getTime(), Calendar.HOUR_OF_DAY);
+			return up ? offsetMinute(base, 60) : base;
+		}
+		if (field == Calendar.DAY_OF_MONTH || field == Calendar.DAY_OF_WEEK || field == Calendar.DAY_OF_YEAR) {
+			boolean up = cal.get(Calendar.HOUR_OF_DAY) >= 12;
+			Date base = truncate(cal.getTime(), Calendar.DAY_OF_MONTH);
+			return up ? offsetHour(base, 24) : base;
+		}
+		if (field == Calendar.MONTH) {
+			boolean up = cal.get(Calendar.DAY_OF_MONTH) >= 16;
+			Date base = truncate(cal.getTime(), Calendar.MONTH);
+			return up ? offsetMonth(base, 1) : base;
+		}
+		if (field == Calendar.YEAR) {
+			boolean up = cal.get(Calendar.DAY_OF_YEAR) >= 183;
+			Date base = truncate(cal.getTime(), Calendar.YEAR);
+			return up ? offsetYear(base, 1) : base;
+		}
+		return truncate(cal.getTime(), field);
+	}
+
+	/**
+	 * 进位到指定 {@link Calendar} 字段（字段本身保留，更小字段清零并向上进位）。
+	 *
+	 * <p>对齐 Commons {@code DateUtils.ceiling}：任何小于 field 的字段非零即进位到下一字段。</p>
+	 *
+	 * @param date  日期，可为 {@code null}
+	 * @param field {@link Calendar} 字段常量
+	 * @return 进位后的日期；{@code null} 返回 {@code null}
+	 */
+	public static Date ceiling(Date date, int field) {
+		if (date == null) {
+			return null;
+		}
+		Date base = truncate(date, field);
+		boolean needUp = false;
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		if (field == Calendar.SECOND) {
+			needUp = cal.get(Calendar.MILLISECOND) > 0;
+		} else if (field == Calendar.MINUTE) {
+			needUp = cal.get(Calendar.SECOND) > 0 || cal.get(Calendar.MILLISECOND) > 0;
+		} else if (field == Calendar.HOUR_OF_DAY || field == Calendar.HOUR) {
+			needUp = cal.get(Calendar.MINUTE) > 0 || cal.get(Calendar.SECOND) > 0 || cal.get(Calendar.MILLISECOND) > 0;
+		} else if (field == Calendar.DAY_OF_MONTH || field == Calendar.DAY_OF_WEEK || field == Calendar.DAY_OF_YEAR) {
+			needUp = cal.get(Calendar.HOUR_OF_DAY) > 0 || cal.get(Calendar.MINUTE) > 0
+					|| cal.get(Calendar.SECOND) > 0 || cal.get(Calendar.MILLISECOND) > 0;
+		} else if (field == Calendar.MONTH) {
+			needUp = cal.get(Calendar.DAY_OF_MONTH) > 1 || cal.get(Calendar.HOUR_OF_DAY) > 0
+					|| cal.get(Calendar.MINUTE) > 0 || cal.get(Calendar.SECOND) > 0 || cal.get(Calendar.MILLISECOND) > 0;
+		} else if (field == Calendar.YEAR) {
+			needUp = cal.get(Calendar.DAY_OF_YEAR) > 1 || cal.get(Calendar.HOUR_OF_DAY) > 0
+					|| cal.get(Calendar.MINUTE) > 0 || cal.get(Calendar.SECOND) > 0 || cal.get(Calendar.MILLISECOND) > 0;
+		}
+		if (!needUp) {
+			return base;
+		}
+		switch (field) {
+			case Calendar.SECOND:
+				return offsetSecond(base, 1);
+			case Calendar.MINUTE:
+				return offsetMinute(base, 1);
+			case Calendar.HOUR_OF_DAY:
+			case Calendar.HOUR:
+				return offsetHour(base, 1);
+			case Calendar.DAY_OF_MONTH:
+			case Calendar.DAY_OF_WEEK:
+			case Calendar.DAY_OF_YEAR:
+				return offsetDay(base, 1);
+			case Calendar.MONTH:
+				return offsetMonth(base, 1);
+			case Calendar.YEAR:
+				return offsetYear(base, 1);
+			default:
+				return base;
+		}
+	}
 
 }

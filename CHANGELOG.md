@@ -8,6 +8,20 @@
 
 ## [Unreleased]
 
+### 批40：日期增强 + Base32/Ascii85 编解码（v1.19.0 候选，阶段 A「易用」）
+
+对标 Hutool / Apache Commons 补齐 java.time 现代体验与编解码缺口：
+
+- `DateUtil` 新增 11 个方法：
+  - java.time 互转：`toLocalDate` / `toLocalDateTime` / `toDate(LocalDate)` / `toDate(LocalDateTime)`（系统时区，null-safe）
+  - java.time 解析：`parseLocalDate` / `parseLocalDateTime`（自动探测 ISO / yyyy-MM-dd / HH:mm / HH:mm:ss / .SSS / 纯日期）/ `parseLocalDateTime(String, String)`（指定模式）
+  - `isSameWeek`（ISO 周定义，周一为一周首日）
+  - 通用截断 API（对齐 Commons `DateUtils`）：`truncate` / `round` / `ceiling`（Calendar 字段驱动，支持 SECOND / MINUTE / HOUR / DAY / WEEK / MONTH / YEAR，round 过半进位、ceiling 非零进位）
+- 新建 `Base32Util`（对齐 commons-codec `Base32`，6 个方法）：`encode(byte[])` / `encode(byte[], padding)` / `encode(String, Charset)` / `decode` / `decodeToString`（容忍缺失 padding 与空白）/ `isBase32`；RFC 4648 已知向量全部通过
+- 新建 `Ascii85Util`（对齐 commons-codec `Ascii85`，5 个方法）：`encode(byte[])` / `encode(String, Charset)` / `decode` / `decodeToString` / `isAscii85`；4 零字节 `z` 压缩、`<~`/`~>` 包裹容错
+- 新增 3 个测试类 27 例（DateUtilBatch40Test 11 / Base32UtilTest 10 / Ascii85UtilTest 6，含 RFC 向量、全长度往返、null/非法输入边界）；sure-core 测试 1185 例全绿
+- PRD 见 docs/prd/sure-date-codec-batch40.md
+
 ### 批39：文本/IO/流高频补齐（v1.19.0 候选，阶段 A「易用」）
 
 对标 Hutool / Apache Commons 高频子集补齐 sure-core 四类缺口：

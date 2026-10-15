@@ -156,11 +156,12 @@ public final class FileTailer {
 	private void tailLoop() throws IOException, InterruptedException {
 		ByteArrayOutputStream pending = new ByteArrayOutputStream();
 		long maxSize = position;
+		java.nio.file.attribute.FileTime lastCreation = null;
 		while (running.get()) {
 			Object key = fileKey(file);
 			boolean rotated = false;
 			if (key == null) {
-				// Windows/NTFS 的 fileKey 恒为 null：以文件存在性 + 大小回退检测
+				// Windows/NTFS 的 fileKey 恒为 null：以文件存在性 + 创建时间/大小联合检测轮转
 				if (!Files.exists(file)) {
 					if (options.stopOnDelete()) {
 						running.set(false);
@@ -169,10 +170,18 @@ public final class FileTailer {
 					Thread.sleep(options.pollInterval().toMillis());
 					continue;
 				}
-				long size = Files.size(file);
-				// 追加写只会增长；size 回退 = 文件被替换成更小的新文件
-				rotated = size < maxSize;
+				java.nio.file.attribute.BasicFileAttributes attrs = Files.readAttributes(file,
+						java.nio.file.attribute.BasicFileAttributes.class);
+				long size = attrs.size();
+				// 追加写不改创建时间；轮转（rename 后新建）会生成新的创建时间，即使新文件更大也能检出
+				if (lastCreation != null && !lastCreation.equals(attrs.creationTime())) {
+					rotated = true;
+				} else {
+					// 创建时间未变的兜底：size 回退 = 文件被替换成更小的新文件
+					rotated = size < maxSize;
+				}
 				maxSize = Math.max(maxSize, size);
+				lastCreation = attrs.creationTime();
 			} else if (lastKey != null && !lastKey.equals(key)) {
 				rotated = true;
 			}
@@ -185,6 +194,11 @@ public final class FileTailer {
 				maxSize = position;
 				pending.reset();
 				lastKey = key;
+				if (key == null) {
+					// 同步更新创建时间基准，避免下一轮误判再次轮转
+					lastCreation = Files.readAttributes(file,
+							java.nio.file.attribute.BasicFileAttributes.class).creationTime();
+				}
 				continue;
 			}
 			channel.position(position);

@@ -44,6 +44,7 @@ public final class WatchDir {
 	private final WatchService watchService;
 	private final AtomicBoolean running = new AtomicBoolean(false);
 	private volatile Thread thread;
+	private final java.util.Queue<Path> pendingRegisters = new java.util.concurrent.ConcurrentLinkedQueue<>();
 
 	/**
 	 * 递归监听目录。
@@ -128,7 +129,7 @@ public final class WatchDir {
 			} else {
 				register(root);
 			}
-			thread = Thread.ofVirtual().name("sure-watch-" + root.getFileName()).start(this::loop);
+			thread = Thread.ofPlatform().name("sure-watch-" + root.getFileName()).start(this::loop);
 		} catch (IOException e) {
 			closeQuietly(watchService);
 			running.set(false);
@@ -154,6 +155,20 @@ public final class WatchDir {
 	private void loop() {
 		try {
 			while (running.get()) {
+				// 先处理动态注册失败的待重试目录（目录未就绪时注册会失败，稍后重试）
+				Path toRegister;
+				while ((toRegister = pendingRegisters.poll()) != null) {
+					if (Files.isDirectory(toRegister)) {
+						try {
+							register(toRegister);
+						} catch (IOException e) {
+							// 仍不可用：退回队列，短暂退避后下一轮再试
+							pendingRegisters.offer(toRegister);
+							Thread.sleep(100);
+							break;
+						}
+					}
+				}
 				WatchKey key = watchService.take();
 				try {
 					for (WatchEvent<?> event : key.pollEvents()) {
@@ -190,11 +205,17 @@ public final class WatchDir {
 		if (options.filter() != null && !options.filter().accept(relative)) {
 			return;
 		}
-		if (type == EventType.CREATE && options.recursive() && Files.isDirectory(full)) {
-			try {
-				register(full);
-			} catch (IOException e) {
-				// 新目录注册失败不影响已注册目录
+		if (type == EventType.CREATE && options.recursive()) {
+			if (Files.isDirectory(full)) {
+				try {
+					register(full);
+				} catch (IOException e) {
+					// 目录可能尚未完全就绪：入队延迟重试，不丢动态注册
+					pendingRegisters.offer(full);
+				}
+			} else {
+				// Windows 上报 CREATE 时目录可能尚未可见：延迟确认并注册
+				pendingRegisters.offer(full);
 			}
 		}
 		safeListener(type, relative);

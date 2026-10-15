@@ -8,6 +8,17 @@
 
 ## [Unreleased]
 
+### 批39：文本/IO/流高频补齐（v1.19.0 候选，阶段 A「易用」）
+
+对标 Hutool / Apache Commons 高频子集补齐 sure-core 四类缺口：
+
+- `StrUtil` 新增 15 个方法（对齐 commons-lang3 `StringUtils`）：`isAlpha` / `isAlphanumeric` / `isNumericSpace` / `isAsciiPrintable` / `containsWhitespace` / `removeWhitespace` / `indexOfAny` / `lastIndexOfAny`（子串末字符索引语义） / `replaceOnce`（replacement 为 null 时不替换，返回原串） / `removeSurrounding` 双套 / `removeSurroundingIgnoreCase` 双套 / `truncate`（负 maxWidth 抛 IAE） / `splitPreserveAllTokens`（保留空 token） / `stripStart` / `stripEnd`（字符集合剥离，null=空白）
+- `IoUtil` 新增 10 个方法（对齐 commons-io `IOUtils`）：`toBufferedInputStream` / `toBufferedReader`（已缓冲不二次包装） / `readFully`（读不满抛 IOException） / `skipFully`（跳不足抛 IOException，skip 返回 0 时读 1 字节推进） / `toString(Reader)` / `lineIterator`（懒加载 `LineIterator`，Reader 与 InputStream 双版本，next 抛 NoSuchElementException） / `contentEqualsIgnoreEOL`（按行比较） / `copy(Reader, OutputStream, Charset)` / `copy(InputStream, Writer, Charset)`
+- `FileUtil` 新增 8 个方法（对齐 commons-io `FileUtils`）：`checksumMD5` / `checksumSHA1` / `checksumCRC32` / `isSymlink`（File 与 String 双版本） / `getCanonicalPath`（解析失败回退绝对路径） / `openInputStream` / `openOutputStream`（IOException 包装为 UncheckedIOException） / `deleteQuietly`（静默删除）
+- 新建 `StreamUtil`（对齐 Hutool `StreamUtil`，7 个方法全 null-safe）：`of`（变参 / Collection / Iterable / Optional 四版本） / `concat`（null 流跳过） / `nullToEmpty` / `empty`
+- 新增 4 个测试类 48 例（StrUtilBatch39Test 15 / IoUtilBatch39Test 11 / FileUtilBatch39Test 9 / StreamUtilTest 7，含 null / 空 / 边界 / IO 异常路径全覆盖）；sure-core 测试 1158 例全绿
+- PRD 见 docs/prd/sure-text-io-stream-batch39.md
+
 ## [1.18.0] - 2026-10-14
 
 ### 批38：Bean 拷贝 + 文件监听 + 查找算法（v1.18.0 候选）

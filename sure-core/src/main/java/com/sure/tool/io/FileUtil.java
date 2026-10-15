@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
@@ -941,5 +943,199 @@ public class FileUtil {
 	 */
 	public static Date lastModifiedTime(File file) {
 		return (file == null) ? null : new Date(file.lastModified());
+	}
+
+	/**
+	 * 计算文件 MD5 摘要（十六进制小写）。
+	 *
+	 * <p>示例：{@code FileUtil.checksumMD5(file)} 返回 32 位小写 hex。</p>
+	 *
+	 * @param file 文件
+	 * @return MD5 hex 字符串
+	 * @throws IOException 文件不存在或读取失败
+	 */
+	public static String checksumMD5(File file) throws IOException {
+		return checksum(file, "MD5");
+	}
+
+	/**
+	 * 计算文件 SHA-1 摘要（十六进制小写）。
+	 *
+	 * <p>示例：{@code FileUtil.checksumSHA1(file)} 返回 40 位小写 hex。</p>
+	 *
+	 * @param file 文件
+	 * @return SHA-1 hex 字符串
+	 * @throws IOException 文件不存在或读取失败
+	 */
+	public static String checksumSHA1(File file) throws IOException {
+		return checksum(file, "SHA-1");
+	}
+
+	/**
+	 * 计算文件 CRC32 校验和。
+	 *
+	 * <p>示例：{@code FileUtil.checksumCRC32(file)} 返回无符号 long。</p>
+	 *
+	 * @param file 文件
+	 * @return CRC32 值（无符号）
+	 * @throws IOException 文件不存在或读取失败
+	 */
+	public static long checksumCRC32(File file) throws IOException {
+		if (file == null || !file.exists()) {
+			return 0L;
+		}
+		java.util.zip.CRC32 crc = new java.util.zip.CRC32();
+		try (InputStream in = new FileInputStream(file)) {
+			byte[] buf = new byte[8192];
+			int n;
+			while ((n = in.read(buf)) >= 0) {
+				crc.update(buf, 0, n);
+			}
+		}
+		return crc.getValue();
+	}
+
+	/**
+	 * 通用摘要计算（按算法名），内部以 8192 字节缓冲读取。
+	 *
+	 * @param file  文件
+	 * @param alg   摘要算法名（MD5 / SHA-1 / SHA-256 等）
+	 * @return 十六进制小写摘要
+	 * @throws IOException 文件不存在、读取失败或算法不可用
+	 */
+	private static String checksum(File file, String alg) throws IOException {
+		if (file == null || !file.exists()) {
+			throw new IOException("File not found: " + file);
+		}
+		try {
+			java.security.MessageDigest md = java.security.MessageDigest.getInstance(alg);
+			try (InputStream in = new FileInputStream(file)) {
+				byte[] buf = new byte[8192];
+				int n;
+				while ((n = in.read(buf)) >= 0) {
+					md.update(buf, 0, n);
+				}
+			}
+			StringBuilder sb = new StringBuilder();
+			for (byte b : md.digest()) {
+				sb.append(Character.forDigit((b >> 4) & 0xF, 16)).append(Character.forDigit(b & 0xF, 16));
+			}
+			return sb.toString();
+		} catch (java.security.NoSuchAlgorithmException e) {
+			throw new IOException("Digest algorithm unavailable: " + alg, e);
+		}
+	}
+
+	/**
+	 * 判断文件是否为符号链接。
+	 *
+	 * <p>示例：{@code FileUtil.isSymlink(file)}；对不存在路径返回 {@code false}。</p>
+	 *
+	 * @param file 文件或目录
+	 * @return 是符号链接返回 {@code true}
+	 */
+	public static boolean isSymlink(File file) {
+		if (file == null) {
+			return false;
+		}
+		return Files.isSymbolicLink(file.toPath());
+	}
+
+	/**
+	 * 判断路径是否为符号链接。
+	 *
+	 * @param path 路径字符串
+	 * @return 是符号链接返回 {@code true}
+	 */
+	public static boolean isSymlink(String path) {
+		if (StrUtil.isBlank(path)) {
+			return false;
+		}
+		return Files.isSymbolicLink(Paths.get(path));
+	}
+
+	/**
+	 * 获取规范化绝对路径（解析 . 与 ..，跟随符号链接），失败返回原始绝对路径。
+	 *
+	 * <p>示例：{@code FileUtil.getCanonicalPath(file)}。</p>
+	 *
+	 * @param file 文件
+	 * @return 规范化路径；{@code null} 返回 {@code null}
+	 */
+	public static String getCanonicalPath(File file) {
+		if (file == null) {
+			return null;
+		}
+		try {
+			return file.getCanonicalPath();
+		} catch (IOException e) {
+			return file.getAbsolutePath();
+		}
+	}
+
+	/**
+	 * 获取规范化绝对路径。
+	 *
+	 * @param path 路径字符串
+	 * @return 规范化路径；{@code null} 返回 {@code null}
+	 */
+	public static String getCanonicalPath(String path) {
+		if (path == null) {
+			return null;
+		}
+		return getCanonicalPath(new File(path));
+	}
+
+	/**
+	 * 打开文件输入流（IOException 包装为 {@link java.io.UncheckedIOException}）。
+	 *
+	 * <p>示例：{@code try (InputStream in = FileUtil.openInputStream(file)) { ... }}。</p>
+	 *
+	 * @param file 文件
+	 * @return 文件输入流
+	 * @throws java.io.UncheckedIOException 文件不存在或不可读
+	 */
+	public static InputStream openInputStream(File file) {
+		try {
+			return new FileInputStream(file);
+		} catch (IOException e) {
+			throw new java.io.UncheckedIOException("Cannot open input stream for " + file, e);
+		}
+	}
+
+	/**
+	 * 打开文件输出流（覆盖写，IOException 包装为 {@link java.io.UncheckedIOException}）。
+	 *
+	 * <p>示例：{@code try (OutputStream out = FileUtil.openOutputStream(file)) { ... }}。</p>
+	 *
+	 * @param file 文件
+	 * @return 文件输出流
+	 * @throws java.io.UncheckedIOException 文件不可写
+	 */
+	public static OutputStream openOutputStream(File file) {
+		try {
+			return new FileOutputStream(file);
+		} catch (IOException e) {
+			throw new java.io.UncheckedIOException("Cannot open output stream for " + file, e);
+		}
+	}
+
+	/**
+	 * 静默删除文件或空目录：删除失败不抛异常。
+	 *
+	 * <p>示例：{@code FileUtil.deleteQuietly(file)}；目录非空时静默失败。</p>
+	 *
+	 * @param file 文件或目录，可为 {@code null}
+	 * @return 删除成功返回 {@code true}；{@code null} 或不存在的文件返回 {@code false}
+	 */
+	public static boolean deleteQuietly(File file) {
+		if (file == null) {
+			return false;
+		}
+		try {
+			return Files.deleteIfExists(file.toPath());
+		} catch (IOException e) {
+			return false;
+		}
 	}
 }

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>suretool × Hutool × Guava × Apache Commons 全面对标与超越路线</title>
+<style>
+  :root{
+    --ink:#1a1f2b; --sub:#5a6472; --line:#e4e8ee; --bg:#f7f8fa;
+    --accent:#b52b2d; --accent-soft:#fdf0ef;
+    --green:#1e7d4f; --green-soft:#eaf6f0;
+    --blue:#2b5db5; --blue-soft:#eef3fc;
+    --amber:#9a6b00; --amber-soft:#fdf6e6;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;font-size:15px;}
+  .wrap{max-width:1080px;margin:0 auto;padding:40px 28px 80px;}
+  h1{font-size:30px;margin:0 0 6px;letter-spacing:.5px;}
+  h2{font-size:22px;margin:44px 0 14px;padding-left:12px;border-left:4px solid var(--accent);}
+  h3{font-size:17px;margin:26px 0 10px;}
+  .sub{color:var(--sub);font-size:14px;margin-bottom:28px;}
+  .meta{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 30px;}
+  .tag{background:#fff;border:1px solid var(--line);border-radius:20px;padding:4px 14px;font-size:13px;color:var(--sub);}
+  .tag.hl{background:var(--accent-soft);border-color:#f0c9c6;color:var(--accent);font-weight:600;}
+  table{border-collapse:collapse;width:100%;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:12px 0 22px;font-size:14px;}
+  th,td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;}
+  th{background:#f1f3f6;font-weight:600;white-space:nowrap;}
+  tr:last-child td{border-bottom:none;}
+  .pro{color:var(--green);font-weight:600;}
+  .con{color:var(--accent);font-weight:600;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:12px 0;}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:14px 0;}
+  .grid3 .card{margin:0;}
+  .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:14px 0;}
+  .grid2 .card{margin:0;}
+  .score{display:inline-block;min-width:26px;height:26px;line-height:26px;text-align:center;border-radius:6px;font-size:13px;font-weight:700;background:var(--blue-soft);color:var(--blue);}
+  .score.hi{background:var(--green-soft);color:var(--green);}
+  .score.lo{background:var(--accent-soft);color:var(--accent);}
+  .pill{display:inline-block;padding:1px 10px;border-radius:12px;font-size:12px;background:var(--green-soft);color:var(--green);font-weight:600;}
+  .pill.warn{background:var(--amber-soft);color:var(--amber);}
+  .pill.bad{background:var(--accent-soft);color:var(--accent);}
+  ul,ol{padding-left:22px;}
+  li{margin:4px 0;}
+  .phase{border-left:4px solid var(--blue);padding-left:16px;margin:20px 0;}
+  .phase.a{border-color:var(--green);}
+  .phase.b{border-color:var(--blue);}
+  .phase.c{border-color:var(--amber);}
+  .phase .ph{font-weight:700;font-size:16px;}
+  .note{background:var(--amber-soft);border:1px solid #efd9a8;border-radius:8px;padding:12px 16px;font-size:13.5px;margin:14px 0;}
+  code{background:#eef1f5;border-radius:4px;padding:1px 6px;font-family:Consolas,monospace;font-size:13px;}
+  .foot{margin-top:50px;padding-top:16px;border-top:1px solid var(--line);color:var(--sub);font-size:12.5px;}
+  @media(max-width:760px){ .grid3,.grid2{grid-template-columns:1fr;} th,td{white-space:normal;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>suretool × Hutool × Guava × Apache Commons</h1>
+<div class="sub">全面对标 · 优劣势拆解 · 全面超越的迭代路线（以易用 / 好用 / 可靠为三重底线）</div>
+<div class="meta">
+  <span class="tag hl">面向 JDK 25+ 的现代 Java 工具库</span>
+  <span class="tag">零第三方运行期依赖（核心域）</span>
+  <span class="tag">23 业务模块覆盖率 ≥98%</span>
+  <span class="tag">基线 v1.18.0（已发布）</span>
+</div>
+
+<h2>一、三大框架的本质拆解</h2>
+
+<div class="grid3">
+  <div class="card">
+    <h3>Hutool — 广度驱动的中文事实标准</h3>
+    <p><b>优势</b></p>
+    <ul>
+      <li>中文生态第一：教程 / 社区 / star 均为中文圈事实标准</li>
+      <li>模块极细（30+），<code>hutool-all</code> 一键引入，<code>XxxUtil</code> 命名直觉</li>
+      <li>核心零依赖，静态方法封装，5 分钟上手，门槛极低</li>
+      <li>覆盖面广：字符串到二维码 / captcha / dfa 应有尽有，迭代快</li>
+    </ul>
+    <p><b>劣势</b></p>
+    <ul>
+      <li>工程深度不足：部分方法实现粗糙、边界处理不全</li>
+      <li>历史包袱重：长期 JDK 8 基线，Date 混用、API 风格不一致</li>
+      <li>性能平庸：无系统性 benchmark，部分实现性能不佳</li>
+      <li>安全默认值教训：部分旧 API 默认不满足现代安全基线</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Guava — 工程质量标杆</h3>
+    <p><b>优势</b></p>
+    <ul>
+      <li>Google 内部生产验证，测试完备，工程质量行业第一</li>
+      <li>API 设计典范：<code>Preconditions</code> / <code>Immutable*</code> / <code>FluentIterable</code> 被业界效仿</li>
+      <li>数据结构深度：Multimap / BiMap / RangeSet / Table 是 JDK 补集</li>
+      <li>并发强项：ListenableFuture / Service / RateLimiter / Striped 锁</li>
+      <li>性能优化：缓存 / 哈希 / 集合有深度优化</li>
+    </ul>
+    <p><b>劣势</b></p>
+    <ul>
+      <li>覆盖面窄：无 IO / JSON / HTTP / Office 全套，需搭配其它库</li>
+      <li>无中文生态；单包体积大，为轻量项目引入性价比不高</li>
+      <li>部分 API 过度设计，学习成本偏高</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Apache Commons — 覆盖面与稳定性的老牌</h3>
+    <p><b>优势</b></p>
+    <ul>
+      <li>20+ 年历史，生产验证充分，稳定性极高</li>
+      <li>覆盖面最广：lang3 / io / codec / collections4 / math / text / compress</li>
+      <li>API 兼容承诺严格，务实、无框架绑架</li>
+      <li>工程规范，被无数项目引用，生态信任度极高</li>
+    </ul>
+    <p><b>劣势</b></p>
+    <ul>
+      <li>API 风格老旧：历史兼容包袱（Date、无泛型流式 API）</li>
+      <li>模块割裂：需引入多个独立坐标，体验割裂</li>
+      <li>现代特性缺位：虚拟线程 / 记录类型 / 流式 API 跟进慢</li>
+      <li>文档偏工程师向：示例少、上手体验一般，部分组件维护模式</li>
+    </ul>
+  </div>
+</div>
+
+<h2>二、十维对标矩阵（1–5 分，suretool 为现状）</h2>
+<table>
+  <tr><th>维度</th><th>Hutool</th><th>Guava</th><th>Apache Commons</th><th>suretool</th><th>结论</th></tr>
+  <tr><td>易用性 / 上手门槛</td><td><span class="score hi">5</span></td><td><span class="score">4</span></td><td><span class="score">3</span></td><td><span class="score">4</span></td><td>Hutool 门槛最低；suretool 需补「每方法一示例」</td></tr>
+  <tr><td>API 现代化（time/流式/泛型）</td><td><span class="score lo">2</span></td><td><span class="score">4</span></td><td><span class="score lo">2</span></td><td><span class="score hi">5</span></td><td class="pro">suretool 独占：java.time 全量 + 虚拟线程</td></tr>
+  <tr><td>覆盖面</td><td><span class="score hi">5</span></td><td><span class="score">3</span></td><td><span class="score hi">5</span></td><td><span class="score">3.5</span></td><td>v2.0 前追平高频 90%</td></tr>
+  <tr><td>工程深度</td><td><span class="score lo">2</span></td><td><span class="score hi">5</span></td><td><span class="score">4</span></td><td><span class="score">3.5</span></td><td>集合 / 并发 / 性能向 Guava 对齐</td></tr>
+  <tr><td>性能工程</td><td><span class="score lo">2</span></td><td><span class="score hi">5</span></td><td><span class="score">4</span></td><td><span class="score">3</span></td><td>benchmark 已建，需公开对标数据</td></tr>
+  <tr><td>文档体验</td><td><span class="score">4</span></td><td><span class="score hi">5</span></td><td><span class="score">3</span></td><td><span class="score">4</span></td><td>中文 JavaDoc + Pages 文档站已具备</td></tr>
+  <tr><td>生态影响力</td><td><span class="score hi">5</span></td><td><span class="score">4</span></td><td><span class="score">4</span></td><td><span class="score lo">2</span></td><td class="con">最大短板，v3-v4 阶段主攻</td></tr>
+  <tr><td>可靠性 / 生产验证</td><td><span class="score">3</span></td><td><span class="score hi">5</span></td><td><span class="score hi">5</span></td><td><span class="score">4</span></td><td>覆盖率门禁 98% + 三平台 CI 已建立</td></tr>
+  <tr><td>零第三方运行期依赖</td><td><span class="score hi">5</span></td><td><span class="score lo">3</span></td><td><span class="score lo">3</span></td><td><span class="score hi">5</span></td><td class="pro">suretool 供应链最干净（无 CVE 传导面）</td></tr>
+  <tr><td>JDK 门槛</td><td>JDK 8+ 低</td><td>JDK 8+ 中</td><td>JDK 8+ 低</td><td>JDK 25+ 高</td><td class="con">用户群收窄，以「现代体验」换信任</td></tr>
+</table>
+
+<h2>三、suretool 优劣势（相对三大框架）</h2>
+<div class="grid2">
+  <div class="card">
+    <h3><span class="pro">优势 —— 三家都没有的长板</span></h3>
+    <ul>
+      <li><b>JDK 25+ 独占现代化</b>：虚拟线程优先（IO / 网络 / 调度 / 结构化并发），记录类型 / 模式匹配 / <code>java.time</code> 全量 —— 三家均无</li>
+      <li><b>零第三方运行期依赖核心</b>：无依赖冲突、无供应链 CVE 传导，体积可控</li>
+      <li><b>默认安全基线</b>：AES-GCM / RSA-OAEP / ML-KEM / 防路径穿越 / 防 ZIP 炸弹，安全默认值内置</li>
+      <li><b>工程质量可审计</b>：覆盖率门禁 ≥98%、japicmp 二进制兼容门禁、checkstyle / SpotBugs / license / JPMS 全绿 CI、三平台验证</li>
+      <li><b>中文 JavaDoc + 双语文档站</b>：中文圈唯一「现代工程 + 可审计」组合</li>
+      <li><b>聚合体验现代化</b>：<code>XxxUtil</code> 直觉命名 + Fluent API + Result/Option + Spring Boot Starter</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3><span class="con">劣势 / 风险 —— 必须正视的短板</span></h3>
+    <ul>
+      <li><b>生态影响力弱</b>：star / 下载量小，信任积累需要时间与内容</li>
+      <li><b>JDK 25+ 门槛收窄用户群</b>：大量企业仍驻留 JDK 8/11/17，短期转化受限</li>
+      <li><b>覆盖面未追平</b>：vs Hutool 30+ 模块、Commons 全集仍缺高频子集</li>
+      <li><b>深度未追平</b>：集合 / 并发 / 性能 vs Guava、缓存 vs Caffeine 仍有差距</li>
+      <li><b>生产验证时间短</b>：缺少长时间大规模踩坑沉淀，边界文档不足</li>
+      <li><b>性能数据未体系化</b>：benchmark 已建但公开对标数据不全</li>
+    </ul>
+  </div>
+</div>
+
+<h2>四、超越路线：三个「超越」而非复制全集</h2>
+<div class="note">
+  <b>战略一句话</b>：不做 Hutool 的全集、Guava 的复制、Commons 的翻版，而是以 <b>「JDK 25+ 现代体验 + 零依赖供应链 + 可审计质量」</b> 建立差异化，在<b>易用（门槛超越）/ 好用（体验超越）/ 可靠（信任超越）</b>三条线上全面压过三家。
+</div>
+
+<div class="phase a">
+  <div class="ph">阶段 A · v1.19 → v2.0 —— 追平高频 90%（主攻「易用」）</div>
+  <ul>
+    <li><b>覆盖面补齐</b>：对标 Hutool / Commons 高频 80%——文本处理（模板变量深度）、IO 流增强、日期时间增强、编解码（Base32 / Ascii85）、网络工具（IP / URL 解析）</li>
+    <li><b>集合深度</b>：对标 Guava——partition / zip / 多键 groupBy / Multimap 多视图 / RangeSet，返回不可变集合默认值</li>
+    <li><b>Guava 式文档规范</b>：每个公开方法中文 JavaDoc + 一个可运行示例；文档站「每类一示例」</li>
+    <li><b>低门槛验证</b>：5 分钟上手教程覆盖全部新模块，sure-all 一键引入</li>
+    <li class="pro">完成标准：高频方法覆盖对照表（vs Hutool / Commons）≥90%，全部方法有示例</li>
+  </ul>
+</div>
+
+<div class="phase b">
+  <div class="ph">阶段 B · v2.1 → v3.0 —— 差异化领先（主攻「好用」）</div>
+  <ul>
+    <li><b>结构化并发库</b>：<code>StructuredTaskScope</code> 封装（失败即取消 / 超时聚合 / 虚拟线程执行器）、Actor 模型、虚拟线程 IO 通道 —— 三家均无的独占能力</li>
+    <li><b>Fluent API 全面化</b>：链式 Builder 覆盖核心域，与 <code>XxxUtil</code> 双形态并存</li>
+    <li><b>Result / Option / 异常体系统一</b>：空安全、错误传播一致化</li>
+    <li><b>默认安全基线强化</b>：全部加密 / 哈希 / 令牌 API 默认安全值，安全指南文档化</li>
+    <li><b>性能工程</b>：高频方法 JMH 优化 + 公开对标数据（vs Hutool / Guava / Caffeine），性能成为卖点而非短板</li>
+    <li class="pro">完成标准：benchmark 报告站上线；核心高频方法性能 ≥ Guava / Caffeine；独占特性 3 项以上</li>
+  </ul>
+</div>
+
+<div class="phase c">
+  <div class="ph">阶段 C · v3.1 → v4.0 —— 生态与治理成熟（主攻「可靠 + 影响力」）</div>
+  <ul>
+    <li><b>生态</b>：Spring Boot Starter 成熟（自动配置 / 条件装配）、中文教程体系（新手 / 进阶 / 场景）、awesome-java 与社区内容运营</li>
+    <li><b>治理</b>：语义化版本 + japicmp 二进制兼容门禁（已建）、兼容性策略文档、SBOM / 供应链（cyclonedx 已集成）、发布即验证（Central + GitHub Release + 文档站同步）</li>
+    <li><b>信任</b>：覆盖率门禁持续 ≥98%（sure-socket 97.93% 环境上限例外并记录）、三平台 CI 常态全绿、每日健康治理巡检（问题闭环台账）</li>
+    <li><b>影响力</b>：下载量 / star 增长、Benchmark 报告、技术文章与示例库沉淀</li>
+    <li class="pro">完成标准：四框架「十维矩阵」中 suretool 无短板项；生态影响力进入中文工具库第一梯队</li>
+  </ul>
+</div>
+
+<h2>五、可实施批次计划（延续「批 N」推进制）</h2>
+<table>
+  <tr><th>批次</th><th>版本</th><th>内容</th><th>对标对象</th><th>底线</th></tr>
+  <tr><td>批 39</td><td rowspan="4">v1.19–v2.0</td><td>文本 / IO / 流增强高频补齐</td><td>Hutool / Commons</td><td>易用</td></tr>
+  <tr><td>批 40</td><td>日期时间增强 + 编解码（Base32 / Ascii85）</td><td>Hutool / Commons</td><td>易用</td></tr>
+  <tr><td>批 41</td><td>集合深度：partition / zip / 多键 groupBy / RangeSet</td><td>Guava</td><td>易用</td></tr>
+  <tr><td>批 42</td><td>网络工具（IP / URL）+ 每方法示例文档化</td><td>Hutool / Guava</td><td>易用</td></tr>
+  <tr><td>批 43</td><td rowspan="3">v2.1–v3.0</td><td>结构化并发：StructuredTaskScope / Actor / 虚拟线程 IO</td><td>独占（无对标）</td><td>好用</td></tr>
+  <tr><td>批 44</td><td>安全基线强化 + 高频方法性能工程</td><td>Guava / Caffeine</td><td>好用</td></tr>
+  <tr><td>批 45</td><td>Fluent API 全面化 + Result/Option 统一</td><td>Guava</td><td>好用</td></tr>
+  <tr><td>批 46</td><td rowspan="3">v3.1–v4.0</td><td>生态：Starter 成熟 / 教程体系 / 示例库</td><td>Hutool 中文生态</td><td>可靠</td></tr>
+  <tr><td>批 47</td><td>治理：兼容性策略 / SBOM / 发布即验证</td><td>Commons / Guava</td><td>可靠</td></tr>
+  <tr><td>批 48</td><td>影响力：benchmark 报告站 / 社区运营 / 每日健康治理</td><td>全生态</td><td>可靠</td></tr>
+</table>
+
+<h2>六、三重底线 —— 落地清单（贯穿每个批次）</h2>
+<div class="grid3">
+  <div class="card">
+    <h3><span class="pill">易用</span> 门槛超越</h3>
+    <ul>
+      <li>sure-all / sure-bom 一键引入，坐标稳定</li>
+      <li>每个公开方法：中文 JavaDoc + 1 个可运行示例</li>
+      <li>XxxUtil 命名统一、参数校验统一（Assert）</li>
+      <li>5 分钟上手教程覆盖每个新模块</li>
+      <li>Spring Boot Starter 零配置自动装配</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3><span class="pill">好用</span> 体验超越</h3>
+    <ul>
+      <li>java.time 全量、虚拟线程一等公民</li>
+      <li>Fluent API + XxxUtil 双形态并存</li>
+      <li>Result / Option / 空安全默认值</li>
+      <li>默认安全基线（加密 / 压缩 / 路径）</li>
+      <li>性能对标数据公开可查</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3><span class="pill warn">可靠</span> 信任超越</h3>
+    <ul>
+      <li>覆盖率门禁 ≥98%（环境上限例外记录）</li>
+      <li>checkstyle / SpotBugs / license / JPMS 全绿</li>
+      <li>japicmp 二进制兼容门禁 + 语义化版本</li>
+      <li>零第三方运行期依赖（无 CVE 传导面）</li>
+      <li>三平台 CI + 每日健康治理巡检闭环</li>
+    </ul>
+  </div>
+</div>
+
+<div class="foot">
+  suretool 战略对标文档 · 2026-10-15 生成 · 数据口径：三框架以各项目官方仓库 / 文档为准；suretool 以仓库现状（v1.18.0 发布、23 业务模块覆盖率 ≥98%、28 模块全览）为准。<br>
+  本文档为路线规划建议，批次按实际迭代节奏推进，每批仍执行「质量门禁 → 发布 → 验证 → 收尾」闭环。
+</div>
+
+</div>
+</body>
+</html>

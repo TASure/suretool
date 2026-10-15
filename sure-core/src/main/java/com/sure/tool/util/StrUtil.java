@@ -2114,4 +2114,404 @@ public class StrUtil {
 		return str.subSequence(len - n, len) + str.subSequence(0, len - n).toString();
 	}
 
+	/**
+	 * 是否为纯字母（仅含字母字符）。
+	 *
+	 * <p>示例：{@code StrUtil.isAlpha("abc") -> true}，{@code StrUtil.isAlpha("a1") -> false}。</p>
+	 *
+	 * @param str 字符串，可为 {@code null}
+	 * @return 全为字母返回 {@code true}；{@code null} 或空串返回 {@code false}
+	 */
+	public static boolean isAlpha(CharSequence str) {
+		if (isEmpty(str)) {
+			return false;
+		}
+		for (int i = 0; i < str.length(); i++) {
+			if (!Character.isLetter(str.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 是否仅含字母或数字。
+	 *
+	 * <p>示例：{@code StrUtil.isAlphanumeric("abc123") -> true}。</p>
+	 *
+	 * @param str 字符串，可为 {@code null}
+	 * @return 全为字母或数字返回 {@code true}；{@code null} 或空串返回 {@code false}
+	 */
+	public static boolean isAlphanumeric(CharSequence str) {
+		if (isEmpty(str)) {
+			return false;
+		}
+		for (int i = 0; i < str.length(); i++) {
+			if (!Character.isLetterOrDigit(str.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 是否仅含数字或空格。
+	 *
+	 * <p>示例：{@code StrUtil.isNumericSpace("12 345") -> true}。</p>
+	 *
+	 * @param str 字符串，可为 {@code null}
+	 * @return 全为数字或空格返回 {@code true}；{@code null} 或空串返回 {@code false}
+	 */
+	public static boolean isNumericSpace(CharSequence str) {
+		if (isEmpty(str)) {
+			return false;
+		}
+		for (int i = 0; i < str.length(); i++) {
+			char ch = str.charAt(i);
+			if (ch != ' ' && !Character.isDigit(ch)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 是否全为可打印 ASCII 字符（码位 32–126，含空格）。
+	 *
+	 * <p>示例：{@code StrUtil.isAsciiPrintable("Hello!") -> true}。</p>
+	 *
+	 * @param str 字符串，可为 {@code null}
+	 * @return 全为可打印 ASCII 返回 {@code true}；{@code null} 或空串返回 {@code false}
+	 */
+	public static boolean isAsciiPrintable(CharSequence str) {
+		if (isEmpty(str)) {
+			return false;
+		}
+		for (int i = 0; i < str.length(); i++) {
+			char ch = str.charAt(i);
+			if (ch < 32 || ch > 126) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 是否包含任意空白字符（{@link Character#isWhitespace(char)}）。
+	 *
+	 * <p>示例：{@code StrUtil.containsWhitespace("a b") -> true}。</p>
+	 *
+	 * @param str 字符串，可为 {@code null}
+	 * @return 含空白返回 {@code true}；{@code null} 或空串返回 {@code false}
+	 */
+	public static boolean containsWhitespace(CharSequence str) {
+		if (isEmpty(str)) {
+			return false;
+		}
+		for (int i = 0; i < str.length(); i++) {
+			if (Character.isWhitespace(str.charAt(i))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 移除字符串中的全部空白字符。
+	 *
+	 * <p>示例：{@code StrUtil.removeWhitespace(" a b ") -> "ab"}。</p>
+	 *
+	 * @param str 字符串，可为 {@code null}
+	 * @return 去空白后的字符串；{@code null} 返回 {@code null}
+	 */
+	public static String removeWhitespace(CharSequence str) {
+		if (str == null) {
+			return null;
+		}
+		if (str.length() == 0) {
+			return "";
+		}
+		StringBuilder sb = new StringBuilder(str.length());
+		for (int i = 0; i < str.length(); i++) {
+			char ch = str.charAt(i);
+			if (!Character.isWhitespace(ch)) {
+				sb.append(ch);
+			}
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * 返回任一给定子串在原字符串中最早出现的位置。
+	 *
+	 * <p>示例：{@code StrUtil.indexOfAny("hello world", "world", "lo") -> 3}。</p>
+	 *
+	 * @param str        原字符串，可为 {@code null}
+	 * @param searchStrs 待查找子串集合
+	 * @return 最早出现位置；未找到或参数为 {@code null} 返回 -1
+	 */
+	public static int indexOfAny(CharSequence str, CharSequence... searchStrs) {
+		if (isEmpty(str) || searchStrs == null || searchStrs.length == 0) {
+			return -1;
+		}
+		int best = -1;
+		for (CharSequence s : searchStrs) {
+			if (s == null || s.length() == 0) {
+				continue;
+			}
+			int idx = indexOf(str, s);
+			if (idx >= 0 && (best < 0 || idx < best)) {
+				best = idx;
+			}
+		}
+		return best;
+	}
+
+	/**
+	 * 返回任一给定子串在原字符串中最后出现的位置（以子串结尾为参照）。
+	 *
+	 * <p>示例：{@code StrUtil.lastIndexOfAny("hello lo", "lo", "ell") -> 7}。</p>
+	 *
+	 * @param str        原字符串，可为 {@code null}
+	 * @param searchStrs 待查找子串集合
+	 * @return 最后出现位置；未找到或参数为 {@code null} 返回 -1
+	 */
+	public static int lastIndexOfAny(CharSequence str, CharSequence... searchStrs) {
+		if (isEmpty(str) || searchStrs == null || searchStrs.length == 0) {
+			return -1;
+		}
+		int best = -1;
+		for (CharSequence s : searchStrs) {
+			if (s == null || s.length() == 0) {
+				continue;
+			}
+			int idx = lastIndexOf(str, s);
+			if (idx >= 0 && idx + s.length() - 1 > best) {
+				best = idx + s.length() - 1;
+			}
+		}
+		return best;
+	}
+
+	/**
+	 * 仅替换第一次出现的搜索子串。
+	 *
+	 * <p>示例：{@code StrUtil.replaceOnce("aa-bb-cc", "-", "+") -> "aa+bb-cc"}。</p>
+	 *
+	 * @param str         原字符串，可为 {@code null}
+	 * @param searchStr   搜索子串，可为 {@code null}
+	 * @param replacement 替换子串，可为 {@code null}
+	 * @return 替换结果；{@code str} 为 {@code null} 返回 {@code null}
+	 */
+	public static String replaceOnce(CharSequence str, CharSequence searchStr, CharSequence replacement) {
+		if (str == null) {
+			return null;
+		}
+		if (searchStr == null || searchStr.length() == 0) {
+			return str.toString();
+		}
+		int idx = indexOf(str, searchStr);
+		if (idx < 0) {
+			return str.toString();
+		}
+		// 对齐 Commons：replacement 为 null 时不替换，返回原串
+		if (replacement == null) {
+			return str.toString();
+		}
+		String repl = replacement.toString();
+		return str.subSequence(0, idx) + repl + str.subSequence(idx + searchStr.length(), str.length());
+	}
+
+	/**
+	 * 当字符串以给定前后缀同时包裹时，一次性剥去首尾（前后缀相同字符串）。
+	 *
+	 * <p>示例：{@code StrUtil.removeSurrounding("\"abc\"", "\"") -> "abc"}。</p>
+	 *
+	 * @param str  字符串，可为 {@code null}
+	 * @param wrap 同时作为前缀与后缀的字符串
+	 * @return 剥去包裹后的字符串；{@code null} 返回 {@code null}
+	 */
+	public static String removeSurrounding(CharSequence str, CharSequence wrap) {
+		if (str == null) {
+			return null;
+		}
+		if (wrap == null || wrap.length() == 0) {
+			return str.toString();
+		}
+		return removeSurrounding(str, wrap, wrap);
+	}
+
+	/**
+	 * 当字符串以给定前后缀同时包裹时，一次性剥去首尾。
+	 *
+	 * <p>示例：{@code StrUtil.removeSurrounding("[abc]", "[", "]") -> "abc"}。</p>
+	 *
+	 * @param str    字符串，可为 {@code null}
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @return 剥去包裹后的字符串；{@code str} 为 {@code null} 返回 {@code null}
+	 */
+	public static String removeSurrounding(CharSequence str, CharSequence prefix, CharSequence suffix) {
+		if (str == null) {
+			return null;
+		}
+		if (prefix == null || suffix == null || prefix.length() == 0 || suffix.length() == 0) {
+			return str.toString();
+		}
+		if (!startWith(str, prefix) || !endWith(str, suffix)) {
+			return str.toString();
+		}
+		return str.subSequence(prefix.length(), str.length() - suffix.length()).toString();
+	}
+
+	/**
+	 * 忽略大小写：当字符串以给定前后缀同时包裹时，一次性剥去首尾（前后缀相同字符串）。
+	 *
+	 * @param str  字符串，可为 {@code null}
+	 * @param wrap 同时作为前缀与后缀的字符串
+	 * @return 剥去包裹后的字符串；{@code null} 返回 {@code null}
+	 */
+	public static String removeSurroundingIgnoreCase(CharSequence str, CharSequence wrap) {
+		if (str == null) {
+			return null;
+		}
+		if (wrap == null || wrap.length() == 0) {
+			return str.toString();
+		}
+		return removeSurroundingIgnoreCase(str, wrap, wrap);
+	}
+
+	/**
+	 * 忽略大小写：当字符串以给定前后缀同时包裹时，一次性剥去首尾。
+	 *
+	 * <p>示例：{@code StrUtil.removeSurroundingIgnoreCase("[ABC]", "[", "]") -> "ABC"}。</p>
+	 *
+	 * @param str    字符串，可为 {@code null}
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @return 剥去包裹后的字符串；{@code str} 为 {@code null} 返回 {@code null}
+	 */
+	public static String removeSurroundingIgnoreCase(CharSequence str, CharSequence prefix, CharSequence suffix) {
+		if (str == null) {
+			return null;
+		}
+		if (prefix == null || suffix == null || prefix.length() == 0 || suffix.length() == 0) {
+			return str.toString();
+		}
+		if (!startWithIgnoreCase(str, prefix) || !endWithIgnoreCase(str, suffix)) {
+			return str.toString();
+		}
+		return str.subSequence(prefix.length(), str.length() - suffix.length()).toString();
+	}
+
+	/**
+	 * 精确截断字符串：长度超过 {@code maxWidth} 时截取前 {@code maxWidth} 个字符（不附加省略号）。
+	 *
+	 * <p>语义对齐 Commons {@code StringUtils.truncate}，与 Hutool {@code maxLength}（保留省略号）不同：
+	 * 示例：{@code StrUtil.truncate("hello world", 5) -> "hello"}。</p>
+	 *
+	 * @param str      字符串，可为 {@code null}
+	 * @param maxWidth 最大长度，负数抛 {@link IllegalArgumentException}
+	 * @return 截断后的字符串；{@code null} 返回 {@code null}
+	 */
+	public static String truncate(CharSequence str, int maxWidth) {
+		if (maxWidth < 0) {
+			throw new IllegalArgumentException("maxWidth must be zero or larger");
+		}
+		if (str == null) {
+			return null;
+		}
+		if (str.length() <= maxWidth) {
+			return str.toString();
+		}
+		return str.subSequence(0, maxWidth).toString();
+	}
+
+	/**
+	 * 按分隔字符分割并保留全部空 token（连续分隔符、首尾分隔符产生的空串均保留）。
+	 *
+	 * <p>示例：{@code StrUtil.splitPreserveAllTokens(",a,,b,", ',') -> ["", "a", "", "b", ""]}。</p>
+	 *
+	 * @param str           字符串，可为 {@code null}
+	 * @param separatorChar 分隔字符
+	 * @return 分割结果数组；{@code null} 返回 {@code null}
+	 */
+	public static String[] splitPreserveAllTokens(CharSequence str, char separatorChar) {
+		if (str == null) {
+			return null;
+		}
+		int len = str.length();
+		if (len == 0) {
+			return new String[0];
+		}
+		List<String> tokens = new ArrayList<>();
+		int start = 0;
+		for (int i = 0; i < len; i++) {
+			if (str.charAt(i) == separatorChar) {
+				tokens.add(str.subSequence(start, i).toString());
+				start = i + 1;
+			}
+		}
+		// 结尾 token（含尾部分隔符产生的空 token）
+		tokens.add(str.subSequence(start, len).toString());
+		return tokens.toArray(new String[0]);
+	}
+
+	/**
+	 * 剥离开头出现的字符集合字符（{@code stripChars} 为 {@code null} 时剥离空白）。
+	 *
+	 * <p>示例：{@code StrUtil.stripStart("__abc__", "_") -> "abc__"}。</p>
+	 *
+	 * @param str        字符串，可为 {@code null}
+	 * @param stripChars 待剥离的字符集合，{@code null} 表示剥离空白
+	 * @return 剥离后的字符串；{@code null} 返回 {@code null}
+	 */
+	public static String stripStart(String str, String stripChars) {
+		if (str == null) {
+			return null;
+		}
+		int start = 0;
+		int len = str.length();
+		if (stripChars == null) {
+			while (start < len && Character.isWhitespace(str.charAt(start))) {
+				start++;
+			}
+		} else if (stripChars.length() == 0) {
+			return str;
+		} else {
+			while (start < len && stripChars.indexOf(str.charAt(start)) >= 0) {
+				start++;
+			}
+		}
+		return str.substring(start);
+	}
+
+	/**
+	 * 剥离结尾出现的字符集合字符（{@code stripChars} 为 {@code null} 时剥离空白）。
+	 *
+	 * <p>示例：{@code StrUtil.stripEnd("__abc__", "_") -> "__abc"}。</p>
+	 *
+	 * @param str        字符串，可为 {@code null}
+	 * @param stripChars 待剥离的字符集合，{@code null} 表示剥离空白
+	 * @return 剥离后的字符串；{@code null} 返回 {@code null}
+	 */
+	public static String stripEnd(String str, String stripChars) {
+		if (str == null) {
+			return null;
+		}
+		int end = str.length();
+		if (stripChars == null) {
+			while (end > 0 && Character.isWhitespace(str.charAt(end - 1))) {
+				end--;
+			}
+		} else if (stripChars.length() == 0) {
+			return str;
+		} else {
+			while (end > 0 && stripChars.indexOf(str.charAt(end - 1)) >= 0) {
+				end--;
+			}
+		}
+		return str.substring(0, end);
+	}
+
 }

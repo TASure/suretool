@@ -16,12 +16,14 @@
 package com.sure.tool.io;
 
 import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
@@ -352,5 +354,260 @@ public class IoUtil {
 	 */
 	public static long toOutput(InputStream in, OutputStream out) throws IOException {
 		return copy(in, out);
+	}
+
+	/**
+	 * 将输入流包装为缓冲输入流（{@code null} 安全）。
+	 *
+	 * <p>示例：{@code IoUtil.toBufferedInputStream(in)} 等价于
+	 * {@code new BufferedInputStream(in)}。</p>
+	 *
+	 * @param in 输入流，可为 {@code null}
+	 * @return 缓冲输入流；{@code in} 为 {@code null} 返回 {@code null}
+	 */
+	public static BufferedInputStream toBufferedInputStream(InputStream in) {
+		if (in == null) {
+			return null;
+		}
+		return in instanceof BufferedInputStream ? (BufferedInputStream) in : new BufferedInputStream(in);
+	}
+
+	/**
+	 * 将字符流包装为缓冲字符流（{@code null} 安全）。
+	 *
+	 * <p>示例：{@code IoUtil.toBufferedReader(reader)} 等价于
+	 * {@code new BufferedReader(reader)}。</p>
+	 *
+	 * @param reader 字符流，可为 {@code null}
+	 * @return 缓冲字符流；{@code reader} 为 {@code null} 返回 {@code null}
+	 */
+	public static BufferedReader toBufferedReader(Reader reader) {
+		if (reader == null) {
+			return null;
+		}
+		return reader instanceof BufferedReader ? (BufferedReader) reader : new BufferedReader(reader);
+	}
+
+	/**
+	 * 精确读取指定长度的字节：必须读满 {@code len} 字节，否则抛 {@link IOException}。
+	 *
+	 * <p>示例：{@code IoUtil.readFully(in, buf, 0, 4)} 保证 {@code buf} 前 4 字节有效。</p>
+	 *
+	 * @param in   输入流
+	 * @param buf  目标数组
+	 * @param off  起始偏移
+	 * @param len  读取长度
+	 * @throws IOException 读不满 {@code len} 字节或 IO 异常
+	 */
+	public static void readFully(InputStream in, byte[] buf, int off, int len) throws IOException {
+		int read = 0;
+		while (read < len) {
+			int n = in.read(buf, off + read, len - read);
+			if (n < 0) {
+				throw new IOException("Reached EOF before reading " + len + " bytes (read " + read + ")");
+			}
+			read += n;
+		}
+	}
+
+	/**
+	 * 精确跳过指定字节数：不足则抛 {@link IOException}。
+	 *
+	 * <p>示例：{@code IoUtil.skipFully(in, 4)} 保证恰好跳过 4 字节。</p>
+	 *
+	 * @param in   输入流
+	 * @param skip 待跳过字节数，非负
+	 * @throws IOException 跳不足 {@code skip} 字节或 IO 异常
+	 */
+	public static void skipFully(InputStream in, long skip) throws IOException {
+		if (skip < 0) {
+			throw new IllegalArgumentException("skip must be non-negative");
+		}
+		long skipped = 0;
+		while (skipped < skip) {
+			long n = in.skip(skip - skipped);
+			if (n <= 0) {
+				// skip 可能返回 0 但仍可读，尝试读取 1 字节推进
+				if (in.read() < 0) {
+					throw new IOException("Reached EOF before skipping " + skip + " bytes (skipped " + skipped + ")");
+				}
+				skipped++;
+			} else {
+				skipped += n;
+			}
+		}
+	}
+
+	/**
+	 * 字符流全量读取为字符串（使用平台默认字符集解码）。
+	 *
+	 * <p>示例：{@code IoUtil.toString(reader)} 读取全部剩余字符。</p>
+	 *
+	 * @param reader 字符流
+	 * @return 全部内容字符串
+	 * @throws IOException IO 异常
+	 */
+	public static String toString(Reader reader) throws IOException {
+		if (reader == null) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder(256);
+		char[] buf = new char[DEFAULT_BUFFER_SIZE];
+		int n;
+		while ((n = reader.read(buf)) >= 0) {
+			sb.append(buf, 0, n);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * 按行读取的懒加载迭代器（字符流版），使用后应关闭返回的 {@link LineIterator}。
+	 *
+	 * <p>示例：{@code try (var it = IoUtil.lineIterator(reader)) { ... }} 逐行消费。</p>
+	 *
+	 * @param reader 字符流
+	 * @return 行迭代器
+	 * @throws IOException 包装行读取异常
+	 */
+	public static LineIterator lineIterator(Reader reader) throws IOException {
+		return new LineIterator(toBufferedReader(reader));
+	}
+
+	/**
+	 * 按行读取的懒加载迭代器（字节流版），使用后应关闭返回的 {@link LineIterator}。
+	 *
+	 * <p>示例：{@code try (var it = IoUtil.lineIterator(in, StandardCharsets.UTF_8)) { ... }} 逐行消费。</p>
+	 *
+	 * @param in      输入流
+	 * @param charset 字符集
+	 * @return 行迭代器
+	 * @throws IOException 包装行读取异常
+	 */
+	public static LineIterator lineIterator(InputStream in, Charset charset) throws IOException {
+		return new LineIterator(toBufferedReader(new InputStreamReader(in, charset)));
+	}
+
+	/**
+	 * 忽略行结束符（\r、\n、\r\n）比较两个字符流内容是否一致。
+	 *
+	 * <p>示例：{@code IoUtil.contentEqualsIgnoreEOL(r1, r2)} 对
+	 * {@code "a\r\nb"} 与 {@code "a\nb"} 返回 {@code true}。</p>
+	 *
+	 * @param reader1 字符流 1
+	 * @param reader2 字符流 2
+	 * @return 忽略行结束符后内容是否一致
+	 * @throws IOException IO 异常
+	 */
+	public static boolean contentEqualsIgnoreEOL(Reader reader1, Reader reader2) throws IOException {
+		if (reader1 == null || reader2 == null) {
+			return reader1 == reader2;
+		}
+		BufferedReader br1 = toBufferedReader(reader1);
+		BufferedReader br2 = toBufferedReader(reader2);
+		String line1;
+		String line2;
+		while (true) {
+			line1 = br1.readLine();
+			line2 = br2.readLine();
+			if (line1 == null || line2 == null) {
+				return line1 == null && line2 == null;
+			}
+			if (!line1.equals(line2)) {
+				return false;
+			}
+		}
+	}
+
+	/**
+	 * 字符流复制到输出流（按指定字符集编码写出），不关闭流。
+	 *
+	 * <p>示例：{@code IoUtil.copy(reader, out, StandardCharsets.UTF_8)}。</p>
+	 *
+	 * @param reader  字符流
+	 * @param out     输出流
+	 * @param charset 写出字符集
+	 * @return 复制的字符数
+	 * @throws IOException IO 异常
+	 */
+	public static long copy(Reader reader, OutputStream out, Charset charset) throws IOException {
+		if (reader == null || out == null) {
+			return 0;
+		}
+		Writer writer = new OutputStreamWriter(out, charset);
+		long copied = copy(reader, writer);
+		writer.flush();
+		return copied;
+	}
+
+	/**
+	 * 输入流复制到字符流（按指定字符集解码），不关闭流。
+	 *
+	 * <p>示例：{@code IoUtil.copy(in, writer, StandardCharsets.UTF_8)}。</p>
+	 *
+	 * @param in      输入流
+	 * @param writer  字符流
+	 * @param charset 解码字符集
+	 * @return 写出的字符数
+	 * @throws IOException IO 异常
+	 */
+	public static long copy(InputStream in, Writer writer, Charset charset) throws IOException {
+		if (in == null || writer == null) {
+			return 0;
+		}
+		Reader reader = new InputStreamReader(in, charset);
+		return copy(reader, writer);
+	}
+
+	/**
+	 * 懒加载行迭代器：{@link #next()} 时才读取下一行，可关闭底层流。
+	 *
+	 * <p>用法与 Commons IO {@code LineIterator} 一致；使用完毕务必 {@link #close()}。</p>
+	 */
+	public static final class LineIterator implements java.util.Iterator<String>, AutoCloseable {
+
+		private final BufferedReader reader;
+		private String nextLine;
+		private boolean finished;
+
+		LineIterator(BufferedReader reader) {
+			this.reader = reader;
+		}
+
+		@Override
+		public boolean hasNext() {
+			if (finished) {
+				return false;
+			}
+			if (nextLine == null) {
+				try {
+					nextLine = reader.readLine();
+				} catch (IOException e) {
+					finished = true;
+					nextLine = null;
+					throw new java.util.NoSuchElementException("读取下一行失败: " + e.getMessage(), e);
+				}
+				if (nextLine == null) {
+					finished = true;
+				}
+			}
+			return nextLine != null;
+		}
+
+		@Override
+		public String next() {
+			if (!hasNext()) {
+				throw new java.util.NoSuchElementException("没有更多行");
+			}
+			String line = nextLine;
+			nextLine = null;
+			return line;
+		}
+
+		@Override
+		public void close() throws IOException {
+			finished = true;
+			nextLine = null;
+			reader.close();
+		}
 	}
 }

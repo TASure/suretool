@@ -562,4 +562,156 @@ public class ListUtil {
 		list.add(to, list.remove(from));
 		return list;
 	}
+
+	/**
+	 * 任意维度笛卡尔积（对齐 Guava {@code Lists.cartesianProduct}）。
+	 *
+	 * <p>返回所有维度组合：{@code [[1,2],[a,b]] -> [[1,a],[1,b],[2,a],[2,b]]}；
+	 * 任一维度为空集合时结果为空；输入列表本身为空时结果含一个空组合。</p>
+	 *
+	 * @param lists 维度集合列表（外层为维度，内层为该维度取值），可为 {@code null}
+	 * @param <T>   元素类型
+	 * @return 笛卡尔积列表；{@code null} 返回 {@code null}
+	 * @since 1.19.0
+	 */
+	public static <T> List<List<T>> cartesianProduct(List<? extends List<? extends T>> lists) {
+		if (lists == null) {
+			return null;
+		}
+		List<List<T>> result = new java.util.ArrayList<>();
+		result.add(new java.util.ArrayList<>());
+		for (List<? extends T> dim : lists) {
+			if (dim == null || dim.isEmpty()) {
+				return new java.util.ArrayList<>();
+			}
+			List<List<T>> next = new java.util.ArrayList<>(result.size() * dim.size());
+			for (List<T> prefix : result) {
+				for (T item : dim) {
+					List<T> copy = new java.util.ArrayList<>(prefix);
+					copy.add(item);
+					next.add(copy);
+				}
+			}
+			result = next;
+		}
+		return result;
+	}
+
+	/**
+	 * 全排列（对齐 Guava {@code Collections2.permutations}）。
+	 *
+	 * <p>返回包含原列表在内的所有排列（n! 个，Set 去重同排列）。</p>
+	 *
+	 * @param list 列表，可为 {@code null}
+	 * @param <T>  元素类型
+	 * @return 排列集合；{@code null} 返回 {@code null}
+	 * @since 1.19.0
+	 */
+	public static <T> java.util.Set<List<T>> permutations(List<T> list) {
+		if (list == null) {
+			return null;
+		}
+		java.util.Set<List<T>> result = new java.util.LinkedHashSet<>();
+		permute(list, 0, result);
+		return result;
+	}
+
+	private static <T> void permute(List<T> list, int start, java.util.Set<List<T>> result) {
+		if (list.isEmpty() || start == list.size() - 1) {
+			result.add(new java.util.ArrayList<>(list));
+			return;
+		}
+		for (int i = start; i < list.size(); i++) {
+			java.util.Collections.swap(list, start, i);
+			permute(list, start + 1, result);
+			java.util.Collections.swap(list, start, i);
+		}
+	}
+
+	/**
+	 * k 元素组合（对齐 Guava {@code Sets.combinations} 的列表版）。
+	 *
+	 * <p>{@code combinations([1,2,3], 2) -> [[1,2],[1,3],[2,3]]}；k=0 返回含空组合；
+	 * k=n 返回原列表。k 越界（&lt;0 或 &gt;n）抛 {@link IllegalArgumentException}。</p>
+	 *
+	 * @param list 列表，可为 {@code null}
+	 * @param k    组合大小
+	 * @param <T>  元素类型
+	 * @return 组合列表集合；{@code null} 返回 {@code null}
+	 * @since 1.19.0
+	 */
+	public static <T> java.util.Set<List<T>> combinations(List<T> list, int k) {
+		if (list == null) {
+			return null;
+		}
+		if (k < 0 || k > list.size()) {
+			throw new IllegalArgumentException("k must be between 0 and list size, got " + k);
+		}
+		java.util.Set<List<T>> result = new java.util.LinkedHashSet<>();
+		combine(list, k, 0, new java.util.ArrayList<>(), result);
+		return result;
+	}
+
+	private static <T> void combine(List<T> list, int k, int start, List<T> current, java.util.Set<List<T>> result) {
+		if (current.size() == k) {
+			result.add(new java.util.ArrayList<>(current));
+			return;
+		}
+		for (int i = start; i < list.size(); i++) {
+			current.add(list.get(i));
+			combine(list, k, i + 1, current, result);
+			current.remove(current.size() - 1);
+		}
+	}
+
+	/**
+	 * 拼接两个列表（对齐 Guava {@code Lists.concat}）。
+	 *
+	 * <p>返回不可变视图，任一参数为 {@code null} 时按空列表处理。</p>
+	 *
+	 * @param left  左列表，可为 {@code null}
+	 * @param right 右列表，可为 {@code null}
+	 * @param <T>   元素类型
+	 * @return 拼接后的不可变列表
+	 * @since 1.19.0
+	 */
+	public static <T> List<T> concat(List<? extends T> left, List<? extends T> right) {
+		List<T> result = new java.util.ArrayList<>(
+				(left == null ? 0 : left.size()) + (right == null ? 0 : right.size()));
+		if (left != null) {
+			result.addAll(left);
+		}
+		if (right != null) {
+			result.addAll(right);
+		}
+		return java.util.Collections.unmodifiableList(result);
+	}
+
+	/**
+	 * 拼接多个列表（对齐 Guava {@code Iterables.concat}，null 列表跳过）。
+	 *
+	 * @param lists 列表数组，可为 {@code null}
+	 * @param <T>   元素类型
+	 * @return 拼接后的不可变列表；{@code null} 返回空列表
+	 * @since 1.19.0
+	 */
+	@SafeVarargs
+	public static <T> List<T> concat(List<? extends T>... lists) {
+		if (lists == null) {
+			return java.util.Collections.emptyList();
+		}
+		int size = 0;
+		for (List<? extends T> list : lists) {
+			if (list != null) {
+				size += list.size();
+			}
+		}
+		List<T> result = new java.util.ArrayList<>(size);
+		for (List<? extends T> list : lists) {
+			if (list != null) {
+				result.addAll(list);
+			}
+		}
+		return java.util.Collections.unmodifiableList(result);
+	}
 }

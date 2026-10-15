@@ -1616,4 +1616,113 @@ public class CollUtil {
 		return result;
 	}
 
+	/**
+	 * 双键嵌套分组（对齐 Guava {@code Multimaps.index} 多层语义）。
+	 *
+	 * <p>按两个键依次分组为 {@code Map<K1, Map<K2, List<T>>>}，内层保序
+	 * （LinkedHashMap / ArrayList）。</p>
+	 *
+	 * @param collection 待分组集合，可为 {@code null}
+	 * @param key1Mapper 第一级键提取
+	 * @param key2Mapper 第二级键提取
+	 * @param <T>        元素类型
+	 * @param <K1>       第一级键类型
+	 * @param <K2>       第二级键类型
+	 * @return 嵌套分组 Map；{@code null} 输入返回空 Map
+	 * @since 1.19.0
+	 */
+	public static <T, K1, K2> Map<K1, Map<K2, List<T>>> groupBy(
+			Collection<T> collection, Function<T, K1> key1Mapper, Function<T, K2> key2Mapper) {
+		Map<K1, Map<K2, List<T>>> result = new LinkedHashMap<>();
+		if (collection == null) {
+			return result;
+		}
+		for (T item : collection) {
+			K1 k1 = key1Mapper.apply(item);
+			Map<K2, List<T>> inner = result.computeIfAbsent(k1, k -> new LinkedHashMap<>());
+			inner.computeIfAbsent(key2Mapper.apply(item), k -> new ArrayList<>()).add(item);
+		}
+		return result;
+	}
+
+	/**
+	 * 多键链式分组（对齐 Guava {@code Multimaps.index}）。
+	 *
+	 * <p>按 N 个键依次嵌套分组，最内层为 {@code List<T>}；键提取器数组为空或
+	 * {@code null} 时按单键分组。</p>
+	 *
+	 * @param collection 待分组集合，可为 {@code null}
+	 * @param keyMappers 键提取器（可多个，变参）
+	 * @param <T>        元素类型
+	 * @return 嵌套分组 Map；{@code null} 输入返回空 Map
+	 * @since 1.19.0
+	 */
+	@SafeVarargs
+	public static <T> Map<Object, Object> groupBy(Collection<T> collection, Function<T, ?>... keyMappers) {
+		Map<Object, Object> root = new LinkedHashMap<>();
+		if (collection == null || keyMappers == null || keyMappers.length == 0) {
+			return root;
+		}
+		for (Function<T, ?> mapper : keyMappers) {
+			if (mapper == null) {
+				return root;
+			}
+		}
+		for (T item : collection) {
+			Map<Object, Object> current = root;
+			for (int i = 0; i < keyMappers.length - 1; i++) {
+				Object key = keyMappers[i].apply(item);
+				Object next = current.get(key);
+				if (!(next instanceof Map)) {
+					Map<Object, Object> child = new LinkedHashMap<>();
+					current.put(key, child);
+					current = child;
+				} else {
+					current = (Map<Object, Object>) next;
+				}
+			}
+			Object lastKey = keyMappers[keyMappers.length - 1].apply(item);
+			List<Object> bucket = (List<Object>) current.get(lastKey);
+			if (bucket == null) {
+				bucket = new ArrayList<>();
+				current.put(lastKey, bucket);
+			}
+			bucket.add(item);
+		}
+		return root;
+	}
+
+	/**
+	 * 任意维度笛卡尔积（对齐 Guava {@code Sets.cartesianProduct}）。
+	 *
+	 * <p>输入为集合的集合，每个内层集合为一个维度；任一维度为空时结果为空。</p>
+	 *
+	 * @param collections 维度集合（外层为维度，内层为取值），可为 {@code null}
+	 * @param <T>         元素类型
+	 * @return 笛卡尔积列表；{@code null} 返回空列表
+	 * @since 1.19.0
+	 */
+	public static <T> List<List<T>> cartesianProduct(Collection<? extends Collection<? extends T>> collections) {
+		List<List<T>> result = new ArrayList<>();
+		if (collections == null) {
+			return result;
+		}
+		result.add(new ArrayList<>());
+		for (Collection<? extends T> dim : collections) {
+			if (dim == null || dim.isEmpty()) {
+				return new ArrayList<>();
+			}
+			List<List<T>> next = new ArrayList<>(result.size() * dim.size());
+			for (List<T> prefix : result) {
+				for (T item : dim) {
+					List<T> copy = new ArrayList<>(prefix);
+					copy.add(item);
+					next.add(copy);
+				}
+			}
+			result = next;
+		}
+		return result;
+	}
+
 }

@@ -429,4 +429,41 @@ public class SetUtil {
 	public static int size(Set<?> set) {
 		return set == null ? 0 : set.size();
 	}
+
+	/**
+	 * k 元素组合（对齐 Guava {@code Sets.combinations}）。
+	 *
+	 * <p>{@code combinations({1,2,3}, 2) -> {{1,2},{1,3},{2,3}}}；k=0 返回含空集合；
+	 * k=n 返回原集合。k 越界（&lt;0 或 &gt;n）抛 {@link IllegalArgumentException}。</p>
+	 *
+	 * @param set 集合，可为 {@code null}
+	 * @param k   组合大小
+	 * @param <T> 元素类型
+	 * @return 组合集合；{@code null} 返回 {@code null}
+	 * @since 1.19.0
+	 */
+	public static <T> Set<Set<T>> combinations(Set<T> set, int k) {
+		if (set == null) {
+			return null;
+		}
+		if (k < 0 || k > set.size()) {
+			throw new IllegalArgumentException("k must be between 0 and set size, got " + k);
+		}
+		Set<Set<T>> result = new java.util.LinkedHashSet<>();
+		combine(new java.util.ArrayList<>(set), k, 0, new java.util.LinkedHashSet<>(), result);
+		return result;
+	}
+
+	private static <T> void combine(java.util.List<T> list, int k, int start,
+			java.util.LinkedHashSet<T> current, Set<Set<T>> result) {
+		if (current.size() == k) {
+			result.add(new java.util.LinkedHashSet<>(current));
+			return;
+		}
+		for (int i = start; i < list.size(); i++) {
+			current.add(list.get(i));
+			combine(list, k, i + 1, current, result);
+			current.remove(list.get(i));
+		}
+	}
 }

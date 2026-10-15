@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -871,6 +872,105 @@ public class MapUtil {
 			}
 		}
 		return target;
+	}
+
+	/**
+	 * 值变换（对齐 Guava {@code Maps.transformValues}）。
+	 *
+	 * <p>保留键集合，仅变换值；返回新 HashMap（可变）。</p>
+	 *
+	 * @param map    原映射，可为 {@code null}
+	 * @param mapper 值变换函数
+	 * @param <K>    键类型
+	 * @param <V>    原值类型
+	 * @param <R>    新值类型
+	 * @return 变换后的 Map；{@code null} 输入返回空 Map
+	 * @since 1.19.0
+	 */
+	public static <K, V, R> Map<K, R> transformValues(Map<K, V> map, java.util.function.Function<V, R> mapper) {
+		Map<K, R> result = new HashMap<>();
+		if (map == null) {
+			return result;
+		}
+		for (Map.Entry<K, V> e : map.entrySet()) {
+			result.put(e.getKey(), mapper.apply(e.getValue()));
+		}
+		return result;
+	}
+
+	/**
+	 * 键值联合变换（对齐 Guava {@code Maps.transformEntries}）。
+	 *
+	 * @param map     原映射，可为 {@code null}
+	 * @param mapper  键值变换函数（(K, V) -&gt; R）
+	 * @param <K>     键类型
+	 * @param <V>     原值类型
+	 * @param <R>     新值类型
+	 * @return 变换后的 Map；{@code null} 输入返回空 Map
+	 * @since 1.19.0
+	 */
+	public static <K, V, R> Map<K, R> transformEntries(Map<K, V> map,
+			java.util.function.BiFunction<K, V, R> mapper) {
+		Map<K, R> result = new HashMap<>();
+		if (map == null) {
+			return result;
+		}
+		for (Map.Entry<K, V> e : map.entrySet()) {
+			result.put(e.getKey(), mapper.apply(e.getKey(), e.getValue()));
+		}
+		return result;
+	}
+
+	/**
+	 * 唯一索引（对齐 Guava {@code Maps.uniqueIndex}）。
+	 *
+	 * <p>将可迭代对象按键提取器建立映射；出现重复键抛 {@link IllegalArgumentException}。
+	 * 原顺序保留（LinkedHashMap）。</p>
+	 *
+	 * @param values     待索引对象，可为 {@code null}
+	 * @param keyMapper  键提取器
+	 * @param <K>        键类型
+	 * @param <V>        值类型
+	 * @return 唯一索引 Map；{@code null} 输入返回空 Map
+	 * @throws IllegalArgumentException 存在重复键
+	 * @since 1.19.0
+	 */
+	public static <K, V> Map<K, V> uniqueIndex(Iterable<V> values, java.util.function.Function<V, K> keyMapper) {
+		Map<K, V> result = new LinkedHashMap<>();
+		if (values == null) {
+			return result;
+		}
+		for (V value : values) {
+			K key = keyMapper.apply(value);
+			if (result.containsKey(key)) {
+				throw new IllegalArgumentException("Duplicate key: " + key);
+			}
+			result.put(key, value);
+		}
+		return result;
+	}
+
+	/**
+	 * 集合→映射视图（对齐 Guava {@code Maps.asMap}）。
+	 *
+	 * <p>对集合中每个元素应用函数生成值；返回新 HashMap（可变）。</p>
+	 *
+	 * @param set     键集合，可为 {@code null}
+	 * @param mapper  值生成函数
+	 * @param <K>     键类型
+	 * @param <V>     值类型
+	 * @return 映射 Map；{@code null} 输入返回空 Map
+	 * @since 1.19.0
+	 */
+	public static <K, V> Map<K, V> asMap(Set<K> set, java.util.function.Function<K, V> mapper) {
+		Map<K, V> result = new HashMap<>();
+		if (set == null) {
+			return result;
+		}
+		for (K key : set) {
+			result.put(key, mapper.apply(key));
+		}
+		return result;
 	}
 
 }

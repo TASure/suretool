@@ -8,6 +8,17 @@
 
 ## [Unreleased]
 
+### 批41：集合深度对标 Guava（v1.19.0 候选，阶段 A「易用」）
+
+对标 Guava 高频集合 API（Lists / Maps / Sets / Collections2 / Multimaps / Iterables）补齐：
+
+- `ListUtil` 新增 5 个方法：`cartesianProduct`（任意维度笛卡尔积，空维度→空结果）/ `permutations`（全排列 n!，含原列表）/ `combinations`（C(n,k)，k 越界抛 IAE）/ `concat` 双版本（不可变视图，null 按空处理）
+- `CollUtil` 新增 3 个方法：`groupBy(Collection, K1, K2)` 双键嵌套分组（保序 LinkedHashMap）/ `groupBy(Collection, Function...)` 多键链式分组（任意层嵌套，null 键映射防护）/ `cartesianProduct`（Collection 版）
+- `MapUtil` 新增 4 个方法（对齐 Guava Maps）：`transformValues` / `transformEntries`（键值联合变换）/ `uniqueIndex`（重复键抛 IAE，保序）/ `asMap`（集合→映射）
+- `SetUtil` 新增 `combinations(Set, int)`（k 元素组合，C(n,k) 个，k 越界抛 IAE）
+- 新增 4 个测试类 13 个测试方法（排列 3!=6 / 组合 C(4,2)=6、C(5,3)=10 数学断言，null/空/越界/不可变全覆盖）；sure-core 全量测试绿
+- PRD 见 docs/prd/sure-coll-guava-batch41.md
+
 ### 批40：日期增强 + Base32/Ascii85 编解码（v1.19.0 候选，阶段 A「易用」）
 
 对标 Hutool / Apache Commons 补齐 java.time 现代体验与编解码缺口：

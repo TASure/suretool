@@ -232,5 +232,124 @@ public class NetUtil {
 		return true;
 	}
 
+	/**
+	 * 校验是否为合法 IPv6 地址。
+	 *
+	 * <p>示例：{@code NetUtil.isIpv6("2001:db8::1") -> true}；
+	 * {@code NetUtil.isIpv6("fe80::1%eth0") -> true}（含区域索引）。</p>
+	 *
+	 * @param ip 地址，可为 {@code null}
+	 * @return 是否合法
+	 * @since 1.19.0
+	 */
+	public static boolean isIpv6(String ip) {
+		if (ip == null || ip.isEmpty()) {
+			return false;
+		}
+		try {
+			return InetAddress.getByName(ip) instanceof java.net.Inet6Address;
+		} catch (IOException e) {
+			return false;
+		}
+	}
+
+	/**
+	 * 校验是否为合法 IP 地址（IPv4 或 IPv6）。
+	 *
+	 * <p>示例：{@code NetUtil.isIp("192.168.1.1") -> true}；
+	 * {@code NetUtil.isIp("::1") -> true}。</p>
+	 *
+	 * @param ip 地址，可为 {@code null}
+	 * @return 是否合法
+	 * @since 1.19.0
+	 */
+	public static boolean isIp(String ip) {
+		return isIpv4(ip) || isIpv6(ip);
+	}
+
+	/**
+	 * 判断 IPv4 是否位于 CIDR 网段内（对齐标准 CIDR 语义）。
+	 *
+	 * <p>示例：{@code NetUtil.isInCidr("192.168.1.5", "192.168.1.0/24") -> true}；
+	 * {@code NetUtil.isInCidr("10.1.2.3", "192.168.0.0/16") -> false}。</p>
+	 *
+	 * @param ip    IPv4 地址，可为 {@code null}
+	 * @param cidr  CIDR 网段（如 {@code 192.168.1.0/24}），可为 {@code null}
+	 * @return 是否在网段内；任一参数非法返回 {@code false}
+	 * @since 1.19.0
+	 */
+	public static boolean isInCidr(String ip, String cidr) {
+		if (ip == null || cidr == null || !isIpv4(ip)) {
+			return false;
+		}
+		int slash = cidr.indexOf('/');
+		if (slash < 0) {
+			return false;
+		}
+		String net = cidr.substring(0, slash);
+		if (!isIpv4(net)) {
+			return false;
+		}
+		int prefix;
+		try {
+			prefix = Integer.parseInt(cidr.substring(slash + 1));
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		if (prefix < 0 || prefix > 32) {
+			return false;
+		}
+		long ipVal = ipv4ToLong(ip);
+		long netVal = ipv4ToLong(net);
+		long mask = prefix == 0 ? 0 : (0xFFFFFFFFL << (32 - prefix)) & 0xFFFFFFFFL;
+		return (ipVal & mask) == (netVal & mask);
+	}
+
+	/**
+	 * 获取本机全部 IPv4 地址（含回环，按枚举顺序）。
+	 *
+	 * <p>示例：{@code NetUtil.localIpv4s()} 返回形如 {@code [127.0.0.1, 192.168.x.x]}。</p>
+	 *
+	 * @return IPv4 地址列表（至少含回环地址）
+	 * @since 1.19.0
+	 */
+	public static java.util.List<String> localIpv4s() {
+		java.util.List<String> result = new java.util.ArrayList<>();
+		try {
+			Enumeration<NetworkInterface> nis = NetworkInterface.getNetworkInterfaces();
+			while (nis != null && nis.hasMoreElements()) {
+				NetworkInterface ni = nis.nextElement();
+				Enumeration<InetAddress> addresses = ni.getInetAddresses();
+				while (addresses.hasMoreElements()) {
+					InetAddress addr = addresses.nextElement();
+					if (addr instanceof Inet4Address) {
+						result.add(addr.getHostAddress());
+					}
+				}
+			}
+		} catch (IOException ignored) {
+			// 网络接口枚举失败时至少返回回环地址
+		}
+		if (result.isEmpty()) {
+			result.add("127.0.0.1");
+		}
+		return result;
+	}
+
+	/**
+	 * 随机分配一个本机当前可用端口（0-65535）。
+	 *
+	 * <p>示例：{@code NetUtil.getUsableLocalPort()} 返回一个未被占用的端口号。</p>
+	 *
+	 * @return 可用端口（1-65535）；分配失败返回 0
+	 * @since 1.19.0
+	 */
+	public static int getUsableLocalPort() {
+		try (ServerSocket socket = new ServerSocket(0)) {
+			return socket.getLocalPort();
+		} catch (IOException e) {
+			return 0;
+		}
+	}
 
 }

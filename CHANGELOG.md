@@ -8,6 +8,15 @@
 
 ## [Unreleased]
 
+### 批42：网络工具 IP/URL 增强（v1.19.0 候选，阶段 A「易用」）
+
+对标 Hutool NetUtil / URLUtil 补齐网络高频能力，全部方法 JavaDoc 带示例文档化：
+
+- `NetUtil` 新增 5 个方法：`isIpv6`（IPv6 校验，含 ::1 / 压缩段）/ `isIp`（IPv4 或 IPv6）/ `isInCidr`（IPv4 CIDR 网段判断，/8 /16 /24 /32 及 /0 全覆盖）/ `localIpv4s`（本机全部 IPv4，含回环）/ `getUsableLocalPort`（随机可用端口）
+- `UrlUtil` 新增 5 个方法：`isHttps` / `isValidUrl`（http/https 格式校验，拒绝 ftp 等）/ `toUrl`（URL 对象，非法抛 RuntimeException）/ `getDomain`（去协议端口路径提取域名）/ `toHttpUrl`（无协议补全 http://）
+- 新增 2 测试类 10 测试方法（IPv6/CIDR 向量、非法输入、null、协议补全全覆盖）；sure-core 全量测试绿
+- PRD 见 docs/prd/sure-net-url-batch42.md
+
 ### 批41：集合深度对标 Guava（v1.19.0 候选，阶段 A「易用」）
 
 对标 Guava 高频集合 API（Lists / Maps / Sets / Collections2 / Multimaps / Iterables）补齐：

@@ -259,4 +259,102 @@ public class UrlUtil {
 		}
 		return s;
 	}
+
+	/**
+	 * 判断是否为 https 协议。
+	 *
+	 * <p>示例：{@code UrlUtil.isHttps("https://example.com") -> true}；
+	 * {@code UrlUtil.isHttps("http://example.com") -> false}。</p>
+	 *
+	 * @param url URL，可为 {@code null}
+	 * @return 是否 https；{@code null} 或无法解析返回 {@code false}
+	 * @since 1.19.0
+	 */
+	public static boolean isHttps(String url) {
+		return "https".equalsIgnoreCase(getScheme(url));
+	}
+
+	/**
+	 * 校验是否为合法 http/https URL。
+	 *
+	 * <p>示例：{@code UrlUtil.isValidUrl("https://example.com/a?b=1") -> true}；
+	 * {@code UrlUtil.isValidUrl("not a url") -> false}。</p>
+	 *
+	 * @param url URL，可为 {@code null}
+	 * @return 是否合法；{@code null} 返回 {@code false}
+	 * @since 1.19.0
+	 */
+	public static boolean isValidUrl(String url) {
+		if (url == null || url.trim().isEmpty()) {
+			return false;
+		}
+		try {
+			java.net.URL u = new java.net.URL(url);
+			String scheme = u.getProtocol();
+			return "http".equalsIgnoreCase(scheme) || "https".equalsIgnoreCase(scheme);
+		} catch (java.net.MalformedURLException e) {
+			return false;
+		}
+	}
+
+	/**
+	 * 转为 {@link java.net.URL} 对象；非法 URL 抛 {@link RuntimeException}（包装
+	 * {@link java.net.MalformedURLException}）。
+	 *
+	 * <p>示例：{@code UrlUtil.toUrl("https://example.com")} 返回 {@code URL} 对象。</p>
+	 *
+	 * @param url URL 字符串，可为 {@code null}
+	 * @return URL 对象；{@code null} 返回 {@code null}
+	 * @throws RuntimeException 非法 URL
+	 * @since 1.19.0
+	 */
+	public static java.net.URL toUrl(String url) {
+		if (url == null) {
+			return null;
+		}
+		try {
+			return new java.net.URL(url);
+		} catch (java.net.MalformedURLException e) {
+			throw new RuntimeException("Invalid URL: " + url, e);
+		}
+	}
+
+	/**
+	 * 提取主机域名（去协议、端口、路径与查询参数）。
+	 *
+	 * <p>示例：{@code UrlUtil.getDomain("https://www.example.com:8080/path?a=1") -> "www.example.com"}。</p>
+	 *
+	 * @param url URL，可为 {@code null}
+	 * @return 域名；{@code null} 或无法解析返回 {@code null}
+	 * @since 1.19.0
+	 */
+	public static String getDomain(String url) {
+		String host = getHost(url);
+		if (host == null) {
+			return null;
+		}
+		// 去除端口
+		int colon = host.indexOf(':');
+		return colon >= 0 ? host.substring(0, colon) : host;
+	}
+
+	/**
+	 * 无协议时补全 {@code http://}（有协议或不可识别时原样返回）。
+	 *
+	 * <p>示例：{@code UrlUtil.toHttpUrl("example.com/a") -> "http://example.com/a"}。</p>
+	 *
+	 * @param url URL，可为 {@code null}
+	 * @return 补全后的 URL；{@code null} 返回 {@code null}
+	 * @since 1.19.0
+	 */
+	public static String toHttpUrl(String url) {
+		if (url == null) {
+			return null;
+		}
+		String s = url.trim();
+		if (s.isEmpty() || s.matches("^[a-zA-Z][a-zA-Z0-9+.-]*://.*")) {
+			return s;
+		}
+		return "http://" + s;
+	}
 }

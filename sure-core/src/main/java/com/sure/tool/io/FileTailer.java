@@ -62,6 +62,10 @@ public final class FileTailer {
 	private FileChannel channel;
 	private Object lastKey;
 	private Charset charset;
+	/** 路径文件曾消失（轮转间隙被轮询到），消失后重现视为轮转。 */
+	private boolean vanished;
+	/** 运行中重建（IOException 触发 waitRecreate）是否属于轮转语义，重建后需触发 onRotate。 */
+	private boolean recreateIsRotation;
 
 	/**
 	 * 从文件尾部开始跟踪。
@@ -150,6 +154,7 @@ public final class FileTailer {
 		} catch (IOException e) {
 			// 读取中断（文件被删等）：按选项等待重建或退出
 			if (!options.stopOnDelete()) {
+				recreateIsRotation = true;
 				waitRecreate();
 			}
 		} finally {
@@ -170,6 +175,8 @@ public final class FileTailer {
 						running.set(false);
 						break;
 					}
+					// 记录消失：move/替换间隙被轮询到（轮转语义），重现后必触发轮转
+					vanished = true;
 					Thread.sleep(options.pollInterval().toMillis());
 					continue;
 				}
@@ -181,8 +188,11 @@ public final class FileTailer {
 							+ " creation=" + creationOf(attrs) + " lastCreation=" + lastCreation
 							+ " chSize=" + channel.size() + " pos=" + position + " maxSize=" + maxSize);
 				}
-				// 追加写不改创建时间；轮转（rename 后新建）会生成新的创建时间，即使新文件更大也能检出
-				if (lastCreation != null && !lastCreation.equals(creationOf(attrs))) {
+				// 消失后重现：无论创建时间/大小判据如何，一律视为轮转
+				if (vanished) {
+					rotated = true;
+				} else if (lastCreation != null && !lastCreation.equals(creationOf(attrs))) {
+					// 追加写不改创建时间；轮转（rename 后新建）会生成新的创建时间，即使新文件更大也能检出
 					rotated = true;
 				} else if (size < maxSize) {
 					// 创建时间未变的兜底：size 回退 = 文件被替换成更小的新文件
@@ -249,6 +259,7 @@ public final class FileTailer {
 	 */
 	private void reopen() throws IOException {
 		onRotate();
+		vanished = false;
 		channel.close();
 		channel = FileChannel.open(file, StandardOpenOption.READ);
 		position = 0;
@@ -266,6 +277,11 @@ public final class FileTailer {
 					position = 0;
 					lastKey = fileKey(file);
 					lastCreation = readCreation(file);
+					// 运行中 IOException 触发的重建属轮转语义（文件被移走/替换），需通知 onRotate
+					if (recreateIsRotation) {
+						recreateIsRotation = false;
+						onRotate();
+					}
 					tailLoop();
 					return;
 				} catch (InterruptedException e) {

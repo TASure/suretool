@@ -41,7 +41,7 @@ public class WatchDirBatch38Test {
 	@Rule
 	public TemporaryFolder tmp = new TemporaryFolder();
 
-	private static final long TIMEOUT_MS = 5000L;
+	private static final long TIMEOUT_MS = 15000L;
 
 	/** 事件记录。 */
 	static class Event {
@@ -111,6 +111,88 @@ public class WatchDirBatch38Test {
 		try {
 			Files.delete(f);
 			await(() -> has(events, EventType.DELETE, "c.txt"), "DELETE c.txt");
+		} finally {
+			watcher.stop();
+		}
+	}
+
+	@Test
+	public void 溢出后快照对齐补发() throws Exception {
+		Path dir = tmp.newFolder("watch3b").toPath();
+		Path sub = Files.createDirectory(dir.resolve("sub"));
+		Files.write(sub.resolve("a.txt"), "x".getBytes(StandardCharsets.UTF_8));
+		List<Event> events = new CopyOnWriteArrayList<>();
+		WatchDir watcher = WatchDir.watch(dir, (type, path) -> events.add(new Event(type, path)));
+		try {
+			// 模拟 OVERFLOW 恢复：幂等补注册 + 全量补发（含递归子目录已存在内容）
+			watcher.snapshotSync();
+			await(() -> has(events, EventType.CREATE, "sub/a.txt"), "快照补发递归子目录");
+			// 幂等注册不破坏后续监听：新写入仍由 WatchService 事件驱动
+			Files.write(dir.resolve("new.txt"), "y".getBytes(StandardCharsets.UTF_8));
+			await(() -> has(events, EventType.CREATE, "new.txt"), "溢出后仍正常监听");
+		} finally {
+			watcher.stop();
+		}
+	}
+
+	@Test
+	public void 非递归溢出快照只补发直接子项() throws Exception {
+		Path dir = tmp.newFolder("watch3c").toPath();
+		Path sub = Files.createDirectory(dir.resolve("sub"));
+		Files.write(sub.resolve("a.txt"), "x".getBytes(StandardCharsets.UTF_8));
+		Files.write(dir.resolve("top.txt"), "y".getBytes(StandardCharsets.UTF_8));
+		List<Event> events = new CopyOnWriteArrayList<>();
+		WatchDir watcher = WatchDir.watch(dir, (type, path) -> events.add(new Event(type, path)),
+				new WatchOptions().recursive(false));
+		try {
+			watcher.snapshotSync();
+			await(() -> has(events, EventType.CREATE, "top.txt"), "非递归补发直接子项");
+			assertFalse(has(events, EventType.CREATE, "sub/a.txt"));
+		} finally {
+			watcher.stop();
+		}
+	}
+
+	@Test
+	public void 溢出快照根目录消失容错() throws Exception {
+		Path dir = tmp.newFolder("watch3e").toPath();
+		WatchDir watcher = WatchDir.watch(dir, (type, path) -> {
+		});
+		watcher.stop();
+		Files.delete(dir);
+		// root 已不存在：walkFileTree 抛 NoSuchFileException，snapshotSync 内部忽略不抛
+		watcher.snapshotSync();
+	}
+
+	@Test
+	public void 溢出处理对齐并上报() throws Exception {
+		Path dir = tmp.newFolder("watch3f").toPath();
+		Path sub = Files.createDirectory(dir.resolve("sub"));
+		Files.write(sub.resolve("a.txt"), "x".getBytes(StandardCharsets.UTF_8));
+		List<Event> events = new CopyOnWriteArrayList<>();
+		WatchDir watcher = WatchDir.watch(dir, (type, path) -> events.add(new Event(type, path)),
+				new WatchOptions().eventTypes(EventType.CREATE, EventType.OVERFLOW));
+		try {
+			// OVERFLOW 处理：快照对齐补发 + OVERFLOW 事件上报
+			watcher.handleOverflow();
+			await(() -> has(events, EventType.OVERFLOW, dir.toString()), "OVERFLOW 上报");
+			assertTrue(has(events, EventType.CREATE, "sub/a.txt"));
+		} finally {
+			watcher.stop();
+		}
+	}
+
+	@Test
+	public void 溢出处理默认不过滤补发但不上报() throws Exception {
+		Path dir = tmp.newFolder("watch3g").toPath();
+		Files.write(dir.resolve("top.txt"), "y".getBytes(StandardCharsets.UTF_8));
+		List<Event> events = new CopyOnWriteArrayList<>();
+		WatchDir watcher = WatchDir.watch(dir, (type, path) -> events.add(new Event(type, path)));
+		try {
+			// 默认 eventTypes 不含 OVERFLOW：只做快照对齐补发，不上报 OVERFLOW
+			watcher.handleOverflow();
+			await(() -> has(events, EventType.CREATE, "top.txt"), "快照补发");
+			assertFalse(has(events, EventType.OVERFLOW, dir.toString()));
 		} finally {
 			watcher.stop();
 		}

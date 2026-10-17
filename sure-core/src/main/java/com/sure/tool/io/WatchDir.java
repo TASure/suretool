@@ -45,6 +45,8 @@ public final class WatchDir {
 	private final AtomicBoolean running = new AtomicBoolean(false);
 	private volatile Thread thread;
 	private final java.util.Queue<Path> pendingRegisters = new java.util.concurrent.ConcurrentLinkedQueue<>();
+	/** 已注册目录（幂等注册集合）：重复注册在同一 WatchService 上会抛异常或产生重复事件，按集合去重。 */
+	private final java.util.Set<Path> registered = java.util.concurrent.ConcurrentHashMap.newKeySet();
 
 	/**
 	 * 递归监听目录。
@@ -149,7 +151,15 @@ public final class WatchDir {
 	}
 
 	private void register(Path dir) throws IOException {
-		dir.register(watchService, options.kinds());
+		// 幂等：已注册目录直接返回，避免重复注册异常/重复事件
+		if (registered.add(dir)) {
+			try {
+				dir.register(watchService, options.kinds());
+			} catch (IOException e) {
+				registered.remove(dir);
+				throw e;
+			}
+		}
 	}
 
 	private void loop() {
@@ -191,9 +201,7 @@ public final class WatchDir {
 
 	private void dispatch(WatchKey key, WatchEvent<?> event) {
 		if (event.kind() == java.nio.file.StandardWatchEventKinds.OVERFLOW) {
-			if (options.acceptEvent(EventType.OVERFLOW)) {
-				safeListener(EventType.OVERFLOW, root);
-			}
+			handleOverflow();
 			return;
 		}
 		Path dir = (Path) key.watchable();
@@ -227,7 +235,7 @@ public final class WatchDir {
 	}
 
 	/**
-	 * 补发：枚举目录内已存在内容并补发 CREATE 事件（含递归子目录）。
+	 * 补发：枚举目录内已存在内容并补发 CREATE 事件（递归模式下含子目录）。
 	 * 动态注册窗口内产生的事件 WatchService 无法感知，注册成功后以枚举补发兜底。
 	 *
 	 * @param dir 刚注册成功的目录
@@ -240,7 +248,7 @@ public final class WatchDir {
 					continue;
 				}
 				safeListener(EventType.CREATE, childRel);
-				if (Files.isDirectory(child)) {
+				if (Files.isDirectory(child) && options.recursive()) {
 					try {
 						register(child);
 						backfill(child);
@@ -251,6 +259,46 @@ public final class WatchDir {
 			}
 		} catch (IOException e) {
 			// 目录被删除等瞬时异常：忽略，下一轮由 WatchKey 事件驱动
+		}
+	}
+
+	/**
+	 * OVERFLOW 事件处理：事件队列溢出后 WatchService 已丢失部分事件，
+	 * 以当前目录树快照对齐补发，保证 CREATE/删除等状态变化不因溢出而永久丢失
+	 * （Windows 高负载下常见）；随后按选项上报 OVERFLOW。
+	 *
+	 * <p>包私有：测试可直接调用以模拟溢出处理，验证快照对齐与上报语义。
+	 */
+	void handleOverflow() {
+		snapshotSync();
+		if (options.acceptEvent(EventType.OVERFLOW)) {
+			safeListener(EventType.OVERFLOW, root);
+		}
+	}
+
+	/**
+	 * OVERFLOW 快照对齐：事件队列溢出后以当前目录树为准补注册并补发已存在内容，
+	 * 使丢失的事件以状态快照形式恢复（CREATE 不丢、动态注册不漏）。
+	 *
+	 * <p>包私有：测试可直接调用以模拟溢出恢复场景，验证幂等注册与补发语义。
+	 */
+	void snapshotSync() {
+		try {
+			if (options.recursive()) {
+				Files.walkFileTree(root, new java.nio.file.SimpleFileVisitor<Path>() {
+					@Override
+					public java.nio.file.FileVisitResult preVisitDirectory(Path dir2,
+							java.nio.file.attribute.BasicFileAttributes attrs) throws IOException {
+						register(dir2);
+						return java.nio.file.FileVisitResult.CONTINUE;
+					}
+				});
+			} else {
+				register(root);
+			}
+			backfill(root);
+		} catch (IOException e) {
+			// 快照对齐失败（目录消失等）：下一轮由 WatchKey 事件驱动继续
 		}
 	}
 

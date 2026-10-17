@@ -47,7 +47,7 @@ public class FileTailerBatch38Test {
 	@Rule
 	public TemporaryFolder tmp = new TemporaryFolder();
 
-	private static final long TIMEOUT_MS = 5000L;
+	private static final long TIMEOUT_MS = 15000L;
 
 	private static void await(Supplier<Boolean> condition, String message) {
 		long deadline = System.currentTimeMillis() + TIMEOUT_MS;

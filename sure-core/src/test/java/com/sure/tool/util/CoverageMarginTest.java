@@ -61,7 +61,7 @@ public class CoverageMarginTest {
 	public TemporaryFolder tmp = new TemporaryFolder();
 
 	private static void await(Supplier<Boolean> condition, String message) {
-		long deadline = System.currentTimeMillis() + 8000;
+		long deadline = System.currentTimeMillis() + 15000;
 		while (System.currentTimeMillis() < deadline) {
 			if (condition.get()) {
 				return;
@@ -109,9 +109,9 @@ public class CoverageMarginTest {
 			await(watcher::isRunning, "运行中");
 			Files.createDirectories(dir.resolve("sub"));
 			Files.writeString(dir.resolve("sub").resolve("a.txt"), "x", StandardCharsets.UTF_8);
-			Thread.sleep(300);
+			// 事件到达存在平台延迟（macOS/Windows 上 300ms 固定等待不可靠），改为轮询等待 CREATE:sub
+			await(() -> events.contains("CREATE:sub"), "CREATE:sub");
 			// 非递归只监听 root 直接子项：sub 目录本身的 CREATE 可见，sub/a.txt 不可见
-			assertTrue(events.contains("CREATE:sub"));
 			assertFalse(events.stream().anyMatch(e -> e.endsWith("sub/a.txt")));
 		} finally {
 			watcher.stop();
@@ -391,7 +391,9 @@ public class CoverageMarginTest {
 	@Test
 	public void fileUtil边界分支() throws Exception {
 		File missing = tmp.getRoot().toPath().resolve("nope").toFile();
-		assertEquals(missing.getAbsolutePath(), FileUtil.getCanonicalPath(missing));
+		// canonical 双端比较：getAbsolutePath 不解析符号链接/8.3 短名（macOS /private、Windows RUNNER~1），
+		// 与 getCanonicalPath 语义不一致，跨平台断言必须两边都走 canonical
+		assertEquals(missing.getCanonicalPath(), FileUtil.getCanonicalPath(missing));
 		Path dir = Files.createDirectory(tmp.getRoot().toPath().resolve("walk"));
 		Files.writeString(dir.resolve("a.txt"), "x", StandardCharsets.UTF_8);
 		assertEquals(1, FileUtil.walkFiles(dir).size());

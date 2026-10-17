@@ -144,7 +144,17 @@ public final class WatchDir {
 			@Override
 			public java.nio.file.FileVisitResult preVisitDirectory(Path dir2, java.nio.file.attribute.BasicFileAttributes attrs)
 					throws IOException {
-				register(dir2);
+				try {
+					register(dir2);
+				} catch (IOException e) {
+					// 单个目录注册失败不中断整体注册：目录可用时由动态注册/快照补发兜底
+				}
+				return java.nio.file.FileVisitResult.CONTINUE;
+			}
+
+			@Override
+			public java.nio.file.FileVisitResult visitFileFailed(Path file, IOException exc) {
+				// 单个目录访问失败（Windows 权限/瞬时占用）不中断整体注册
 				return java.nio.file.FileVisitResult.CONTINUE;
 			}
 		});
@@ -181,7 +191,11 @@ public final class WatchDir {
 						}
 					}
 				}
-				WatchKey key = watchService.take();
+				WatchKey key = watchService.poll(500, java.util.concurrent.TimeUnit.MILLISECONDS);
+				if (key == null) {
+					// 等待超时：回到循环顶部，确保待重试注册不被 take 无限阻塞饿死
+					continue;
+				}
 				try {
 					for (WatchEvent<?> event : key.pollEvents()) {
 						dispatch(key, event);
@@ -289,7 +303,17 @@ public final class WatchDir {
 					@Override
 					public java.nio.file.FileVisitResult preVisitDirectory(Path dir2,
 							java.nio.file.attribute.BasicFileAttributes attrs) throws IOException {
-						register(dir2);
+						try {
+							register(dir2);
+						} catch (IOException e) {
+							// 单个目录注册失败不中断快照遍历
+						}
+						return java.nio.file.FileVisitResult.CONTINUE;
+					}
+
+					@Override
+					public java.nio.file.FileVisitResult visitFileFailed(Path file, IOException exc) {
+						// 单个目录访问失败不中断快照对齐
 						return java.nio.file.FileVisitResult.CONTINUE;
 					}
 				});

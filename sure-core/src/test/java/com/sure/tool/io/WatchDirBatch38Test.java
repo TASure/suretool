@@ -493,6 +493,33 @@ public class WatchDirBatch38Test {
 		}
 	}
 
+	@Test
+	public void 快照遍历无权限子目录不中断() throws Exception {
+		Path dir = tmp.newFolder("watch22").toPath();
+		Files.write(dir.resolve("top.txt"), "x".getBytes(StandardCharsets.UTF_8));
+		// 无权限目录在 Linux/macOS 上注册与枚举均失败：walkFileTree 触发
+		// preVisitDirectory 容错与 visitFileFailed 容错，快照对齐不中断
+		Path blocked = Files.createDirectory(dir.resolve("blocked"));
+		try {
+			blocked.toFile().setReadable(false, false);
+			blocked.toFile().setWritable(false, false);
+			blocked.toFile().setExecutable(false, false);
+		} catch (Exception ignored) {
+			// Windows 权限位语义不同，设置失败不影响断言
+		}
+		List<Event> events = new CopyOnWriteArrayList<>();
+		WatchDir watcher = WatchDir.watch(dir, (type, path) -> events.add(new Event(type, path)));
+		try {
+			watcher.snapshotSync();
+			await(() -> has(events, EventType.CREATE, "top.txt"), "快照补发不受无权限子目录影响");
+		} finally {
+			watcher.stop();
+			blocked.toFile().setReadable(true, false);
+			blocked.toFile().setWritable(true, false);
+			blocked.toFile().setExecutable(true, false);
+		}
+	}
+
 	private static void invokeQuietly(Method m, Object target, Object... args) throws Exception {
 		try {
 			m.invoke(target, args);

@@ -39,9 +39,14 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**
- * {@link WatchDir} 批38补测：创建/修改/删除事件、递归注册、过滤、事件类型选择。
+ * WatchDir 批38 测试：递归/动态注册/溢出快照对齐/过滤/事件类型/线程生命周期。
+ * 开启 sure.watch.diag 以便 CI 平台差异（Windows 子目录事件）诊断输出到日志。
  */
 public class WatchDirBatch38Test {
+
+	static {
+		System.setProperty("sure.watch.diag", "1");
+	}
 
 	@Rule
 	public TemporaryFolder tmp = new TemporaryFolder();

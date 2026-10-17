@@ -47,6 +47,8 @@ public final class WatchDir {
 	private final java.util.Queue<Path> pendingRegisters = new java.util.concurrent.ConcurrentLinkedQueue<>();
 	/** 已注册目录（幂等注册集合）：重复注册在同一 WatchService 上会抛异常或产生重复事件，按集合去重。 */
 	private final java.util.Set<Path> registered = java.util.concurrent.ConcurrentHashMap.newKeySet();
+	/** 已补发 CREATE 的路径（绝对路径）：快照对齐/backfill 只补发首次出现，避免周期快照重复上报。 */
+	private final java.util.Set<Path> seen = java.util.concurrent.ConcurrentHashMap.newKeySet();
 
 	/**
 	 * 递归监听目录。
@@ -173,6 +175,7 @@ public final class WatchDir {
 	}
 
 	private void loop() {
+		long lastSync = System.currentTimeMillis();
 		try {
 			while (running.get()) {
 				// 先处理动态注册失败的待重试目录（目录未就绪时注册会失败，稍后重试）
@@ -194,6 +197,12 @@ public final class WatchDir {
 				WatchKey key = watchService.poll(500, java.util.concurrent.TimeUnit.MILLISECONDS);
 				if (key == null) {
 					// 等待超时：回到循环顶部，确保待重试注册不被 take 无限阻塞饿死
+					// 周期快照对齐兜底：部分平台（Windows）子目录 WatchKey 事件可能不报告，
+					// 定期以目录树快照补注册并补发新增 CREATE，保证子目录事件不永久丢失。
+					if (System.currentTimeMillis() - lastSync >= 1000) {
+						snapshotSync();
+						lastSync = System.currentTimeMillis();
+					}
 					continue;
 				}
 				try {
@@ -245,6 +254,8 @@ public final class WatchDir {
 		if (options.filter() != null && !options.filter().accept(relative)) {
 			return;
 		}
+		// 事件驱动到达的 CREATE 也记录到已见集合，防止周期快照重复补发同一路径
+		seen.add(full);
 		safeListener(type, relative);
 	}
 
@@ -261,7 +272,10 @@ public final class WatchDir {
 				if (options.filter() != null && !options.filter().accept(childRel)) {
 					continue;
 				}
-				safeListener(EventType.CREATE, childRel);
+				// 已见路径不重复补发（周期快照下保证 CREATE 只上报一次）
+				if (seen.add(child)) {
+					safeListener(EventType.CREATE, childRel);
+				}
 				if (Files.isDirectory(child) && options.recursive()) {
 					try {
 						register(child);
@@ -298,6 +312,7 @@ public final class WatchDir {
 	 */
 	void snapshotSync() {
 		try {
+			java.util.Set<Path> current = new java.util.HashSet<>();
 			if (options.recursive()) {
 				Files.walkFileTree(root, new java.nio.file.SimpleFileVisitor<Path>() {
 					@Override
@@ -308,6 +323,14 @@ public final class WatchDir {
 						} catch (IOException e) {
 							// 单个目录注册失败不中断快照遍历
 						}
+						current.add(dir2);
+						return java.nio.file.FileVisitResult.CONTINUE;
+					}
+
+					@Override
+					public java.nio.file.FileVisitResult visitFile(Path file,
+							java.nio.file.attribute.BasicFileAttributes attrs) {
+						current.add(file);
 						return java.nio.file.FileVisitResult.CONTINUE;
 					}
 
@@ -319,7 +342,10 @@ public final class WatchDir {
 				});
 			} else {
 				register(root);
+				current.add(root);
 			}
+			// 清理已消失项：删除/轮转后重建的文件需能重新补发 CREATE
+			seen.removeIf(p -> !current.contains(p));
 			backfill(root);
 		} catch (IOException e) {
 			// 快照对齐失败（目录消失等）：下一轮由 WatchKey 事件驱动继续

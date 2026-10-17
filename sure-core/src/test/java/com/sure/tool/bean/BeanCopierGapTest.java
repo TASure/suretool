@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 TASure contributors
+ * Copyright (c) 2026 suretool contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,22 +45,6 @@ public class BeanCopierGapTest {
 		HIGH,
 		/** 低。 */
 		LOW
-	}
-
-	/** 类型不可转换目标。 */
-	public static class BadType {
-		/** int 属性。 */
-		private int age;
-
-		/** getter。 */
-		public int getAge() {
-			return age;
-		}
-
-		/** setter。 */
-		public void setAge(int age) {
-			this.age = age;
-		}
 	}
 
 	/** 只读属性目标（仅 getter 返回常量，无 setter 无字段）。 */

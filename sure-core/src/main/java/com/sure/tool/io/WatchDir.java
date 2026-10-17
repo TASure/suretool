@@ -272,8 +272,9 @@ public final class WatchDir {
 				if (options.filter() != null && !options.filter().accept(childRel)) {
 					continue;
 				}
+				// 补发语义尊重事件类型过滤：仅接受 CREATE 时才补发，避免越过 eventTypes 误报
 				// 已见路径不重复补发（周期快照下保证 CREATE 只上报一次）
-				if (seen.add(child)) {
+				if (options.acceptEvent(EventType.CREATE) && seen.add(child)) {
 					safeListener(EventType.CREATE, childRel);
 				}
 				if (Files.isDirectory(child) && options.recursive()) {
@@ -287,6 +288,9 @@ public final class WatchDir {
 			}
 		} catch (IOException e) {
 			// 目录被删除等瞬时异常：忽略，下一轮由 WatchKey 事件驱动
+			if (System.getProperty("sure.watch.diag") != null) {
+				System.err.println("[watch-diag] backfill fail dir=" + dir + " e=" + e);
+			}
 		}
 	}
 
@@ -349,6 +353,9 @@ public final class WatchDir {
 			backfill(root);
 		} catch (IOException e) {
 			// 快照对齐失败（目录消失等）：下一轮由 WatchKey 事件驱动继续
+			if (System.getProperty("sure.watch.diag") != null) {
+				System.err.println("[watch-diag] snapshotSync fail e=" + e);
+			}
 		}
 	}
 

@@ -12,13 +12,13 @@
 
 Actor 是「好用」维度的差异化卖点：消息驱动的并发单元天然规避共享状态竞争，配合 JDK 虚拟线程实现低成本高并发邮箱。
 
-## 二、API 设计（新建 `com.sure.tool.thread.Actor&lt;T&gt;`，零第三方依赖）
+## 二、API 设计（新建 `com.sure.tool.thread.Actor<T>`，零第三方依赖）
 
 | 方法 | 说明 | 边界 |
 |---|---|---|
-| `static &lt;T&gt; Actor&lt;T&gt; start(Consumer&lt;T&gt; handler)` | 无界邮箱启动；handler 为 null 抛 IAE | 无界 `LinkedBlockingQueue` |
-| `static &lt;T&gt; Actor&lt;T&gt; start(Consumer&lt;T&gt; handler, int capacity)` | 有界邮箱；capacity ≤ 0 视为无界 | `ArrayBlockingQueue` |
-| `static &lt;T&gt; Actor&lt;T&gt; start(Consumer&lt;T&gt; handler, int capacity, Consumer&lt;Throwable&gt; errorHandler)` | 带消息异常回调；errorHandler 为 null 忽略异常 | 单条消息异常不中断 actor |
+| `static <T> Actor<T> start(Consumer<T> handler)` | 无界邮箱启动；handler 为 null 抛 IAE | 无界 `LinkedBlockingQueue` |
+| `static <T> Actor<T> start(Consumer<T> handler, int capacity)` | 有界邮箱；capacity ≤ 0 视为无界 | `ArrayBlockingQueue` |
+| `static <T> Actor<T> start(Consumer<T> handler, int capacity, Consumer<Throwable> errorHandler)` | 带消息异常回调；errorHandler 为 null 忽略异常 | 单条消息异常不中断 actor |
 | `void send(T message)` | 异步投递；message 为 null 抛 NPE；已关闭抛 IllegalStateException；有界邮箱满抛 IllegalStateException | 非阻塞 |
 | `boolean trySend(T message, Duration timeout)` | 带等待投递；超时未入队返回 false；null 校验同上 | timeout 为 null 视作 0 |
 | `void close()` | 优雅关闭：拒绝新消息、处理完已入队消息后退出消息循环；幂等 | close 后 send/trySend 抛 IllegalStateException |

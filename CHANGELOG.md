@@ -8,6 +8,22 @@
 
 ## [Unreleased]
 
+### 批44：StrSubstitutor 模板变量深度（v1.19.0 候选，阶段 A「易用」）
+
+对标 Apache Commons Text `StrSubstitutor` 高频子集补齐 sure-core 模板变量深度能力（路线图阶段 A「文本处理（模板变量深度）」收尾）：
+
+- 新建 `StrSubstitutor`（零依赖，6 个公开 API）：
+  - 三个构造器：默认（`${` / `}` / 转义符 `$`）/ 自定义定界符 / 自定义定界符+转义符（`0` 禁用转义）
+  - 实例 `replace(String, Map)` 与静态一行式 `substitute(String, Map)` / `replace(String, Map, prefix, suffix)`
+  - 替换语义：缺失变量保留占位符原样、值为 null 渲染空串、空 key 渲染为空、未闭合占位符保留、嵌套不解析（对齐 Commons 默认）
+  - 默认值语法 `${key:-default}`（Commons 兼容，`:-` 后可为空、变量存在或值为 null 时忽略默认值）
+  - 转义 `$${` → 字面 `${`（转义符可配，escapeChar=0 禁用）
+  - 实现用 regionMatches + indexOf 字符串扫描，**不使用正则**（定界符可含正则特殊字符）
+- `StrUtil` 新增 2 个委托方法：`substitute(String, Map)` / `substitute(String, Map, prefix, suffix)`
+- 新增 `StrSubstitutorBatch44Test`（37 例：基本/多变量/相邻/首尾、缺失保留、null 值空串、默认值含冒号/空默认/空名、转义默认/自定义/禁用/连续、自定义定界符含正则字符/prefix==suffix、构造器非法输入、null 模板/map、嵌套保留、长文本、StrUtil 委托）；StrSubstitutor 行覆盖 60/60（100%）
+- sure-core 全量 verify BUILD SUCCESS（1357 例全绿），行覆盖率 **98.05%** ≥ 98% 门禁，checkstyle/spotbugs 全绿
+- PRD 见 docs/prd/sure-str-substitutor-batch44.md
+
 ### 批43：URL 规范化深度 + 示例文档化收口（v1.19.0 候选，阶段 A「易用」）
 
 对标 Hutool URLUtil / RFC 3986 补齐 URL 深度处理，并完成 UrlUtil 全部方法示例文档化：
@@ -269,7 +285,7 @@
   - 双 CI 一致性文档（P2-3）：docs/ci-workflow.md 明确本地 release.ps1 与 6 个 Actions workflow 的职责边界与防漂移规则
   - 社区可见性（P2-4）：README 新增 Maven Central Downloads 徽章（中英双语）；新增 CONTRIBUTING.md（Good First Issue 指引、提交规范、测试/覆盖率要求、PR 流程）
 - 一期工程治理（P0）：sure-core 覆盖率 91.73% 且门禁 0.90；OSV-Scanner + CodeQL；11 模块 JPMS module-info；可复现构建 outputTimestamp
-- 二期（P1 全部）：方法-用例映射审计 99.89% 命中 + P6 补测 16 例；三平台 CI 矩阵；javadoc 发布到文档站；benchmark CI 门禁；第三方依赖版本集中到 sure-bom；版本策略文档；starter 冒烟测试；checkstyle 排除 module-info
+- 二期（P1 全部）：方法-用例映射审计 99.89% 命中 + P6 补测 16 例；三平台 CI 矩阵；javadoc 发布到文档站；benchmark CI 门禁；第三方依赖版本集中到 sure-bom；starter 冒烟测试；checkstyle 排除 module-info
 - 二期（P1 全部，P5 目标 v1.1.0）：
   - 方法-用例映射审计（T6）：952 个 public/protected 方法名 951 命中（99.89%），新增 P6MethodAuditTest 16 例补测，审计报告 docs/method-audit-2026-09.md，审计脚本 .github/scripts/method_audit.py 可复跑
   - CI 平台矩阵（T7）：ci.yml 扩展为 ubuntu/macos/windows × JDK21（ubuntu 双跑 JDK25），覆盖率上报仅 ubuntu
@@ -583,7 +599,7 @@
 - **可运行示例**：`sure-examples` 模块 14 个 Demo + `ExamplesRunner` 聚合入口（实测可运行）。
 - **Spring Boot Starter**：`sure-spring-boot-starter` 自动装配骨架（`suretool.*` 配置前缀）。
 - **文档站**：`docs/index.md` 类索引 + GitHub Pages 发布工作流（`pages.yml`）；
-  Hutool 对比文档、维护手册、技术文章与 awesome-java 提交材料。
+  Hutool 对比文档、维修手册、技术文章与 awesome-java 提交材料。
 - **社区规范**：`CODE_OF_CONDUCT.md`（Contributor Covenant 2.1）、中英文双语主页（`README.en.md`）、
   issue / PR 模板、`SECURITY.md` 漏洞应急响应 SOP。
 - **第三十二批（P4 v0.2.0 继续）**：

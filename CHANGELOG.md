@@ -6,6 +6,22 @@
 
 ## [Unreleased]
 
+### 批46：默认安全基线强化（v1.19.0 候选，阶段 B「好用」第二主轴）
+
+补齐「密码哈希」缺口（Hutool 有、Guava / Apache Commons 无）并立「默认即安全」基线，`sure-crypto` 模块：
+
+- 新建零依赖 `BCryptUtil`（OpenBSD bcrypt / EksBlowfish，基于 jBCrypt 0.4 语义自研实现，6 个公开 API）：
+  - `hash(String)` 默认 cost=10、`$2a$` 前缀、60 字符；`hash(String, int cost)` 支持 4–30
+  - `check(String, String)` 恒定时间异或比较（不短路），兼容 `$2a$/$2b$/$2y$` 前缀（含无 minor 的 `$2$`）
+  - `gensalt()` / `gensalt(int)`：16 字节 SecureRandom 盐、`./A-Za-z0-9` 自定义 base64
+  - `isValid(String)` 格式校验（长度/前缀/cost/分隔符/盐字符）
+  - **安全语义对齐 Spring Security 5+、优于 Hutool**：密码 >72 UTF-8 字节显式抛 `IllegalArgumentException`（Hutool 静默截断）；null 防御；UTF-8 字节边界 24 汉字=72B 通过 / 30 汉字=90B 拒绝
+- 新增 `docs/security-guide.md` 默认安全承诺矩阵（AesUtil/RsaUtil/BCryptUtil/HmacUtil/KDF），含 BCrypt 与 Hutool/Spring 语义差异表与 cost 建议
+- 新增审计测试 `SecurityBaselineTest`（8 例）：AES-GCM 认证加密+随机 IV、RSA OAEP+最小 2048 强制、BCrypt 默认 cost=10、拒绝截断、安全指南存在、弱参数全路径拒绝（无静默降级）
+- `BCryptUtilTest` 19 例：含 **10 组 Python bcrypt 5.0 确定性向量交叉验证**（空串/多 cost/中文/72 字节/特殊字符），证明与主流实现逐字互操作
+- 门禁：sure-crypto 134 例全绿，模块行覆盖 **98.07%**（864/881）≥ 98%，checkstyle/spotbugs 全绿
+- 配套：`docs/prd/sure-security-baseline-batch46.md` 规格文档
+
 ### 批45：Actor 轻量模型（v1.19.0 候选，阶段 B「好用」）
 
 新建 `Actor` 轻量 Actor 模型（虚拟线程邮箱消息循环），作为路线图阶段 B「结构化并发」首项落地——Hutool / Guava / Apache Commons 三家均无的独占能力（零第三方依赖，7 个公开 API）：

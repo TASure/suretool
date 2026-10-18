@@ -6,6 +6,19 @@
 
 ## [Unreleased]
 
+### 批47：Fluent API 全面化（v1.19.0 候选，阶段 B「好用」第三主轴）
+
+补齐「链式 Fluent 形态」全缺口——Hutool / Guava / Apache Commons 三家均无的「可校验不断流管道 + 不可变终端」组合（零第三方依赖，`sure-core` 新增 `com.sure.tool.fluent` 包）：
+
+- 新建统一入口 `Fluent`：`string(String)` / `of(String)` / `list()` / `listOf(E...)` / `of(Collection)` / `map()` / `mapOf(K,V)`（`listOf`/`mapOf` 命名规避 varargs 与二元组重载歧义）
+- 新建 `FluentString` 链式文本管道（15 个中间/终端方法）：`trim/upperCase/lowerCase/reverse/replace/replaceAll/substring×2/padLeft/padRight/repeat/stripPrefix/stripSuffix/notBlank` + 终端 `get/length/isEmpty/isBlank/startsWith/endsWith/contains/equalsIgnoreCase/toString`；`notBlank()` 链中校验点（空/纯空白抛 IAE）
+- 新建 `FluentList` 链式集合管道（13 个方法）：`add/addAll/map/filter/distinct/sorted×2/limit/skip/reverse` + 终端 `toList`（不可变）/`toArray`（Object[] 对齐 JDK Stream）/`count/isEmpty/contains/get/join/toString`；中间操作不断流、原集合不受影响
+- 新建 `FluentMap` 链式 Map 管道（12 个方法）：`put/putIfAbsent/remove/mapValues/filterKeys/filterValues` + 终端 `toMap/get/size/isEmpty/containsKey/keys/values/toString`；保插入顺序、终端不可变
+- 语义基线 7 条：不可变默认（终端返回 `List.copyOf`/`Map.copyOf` 级不可变，修改抛 `UnsupportedOperationException`）、防御拷贝、null 防御（集合元素/键值 null → IAE，非法参数 null → NPE）、校验内建、`XxxUtil` 双形态并存、零第三方依赖、中文 JavaDoc 每方法带可运行示例
+- `FluentTest` 23 例：链式不断流、不可变断言、防御拷贝、泛型映射、null 边界全覆盖
+- 门禁：sure-core **1351 例全绿**，模块行覆盖 **98.06%**（9743/9936）≥ 98%，checkstyle/spotbugs 全绿
+- 配套：`docs/prd/sure-fluent-api-batch47.md` 规格文档（四框架对标表 / API 设计 / 测试清单 / 验收 4 条）
+
 ### 批46：默认安全基线强化（v1.19.0 候选，阶段 B「好用」第二主轴）
 
 补齐「密码哈希」缺口（Hutool 有、Guava / Apache Commons 无）并立「默认即安全」基线，`sure-crypto` 模块：

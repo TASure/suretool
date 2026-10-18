@@ -267,6 +267,10 @@ public final class FileTailer {
 		pending.reset();
 		lastKey = fileKey(file);
 		lastCreation = readCreation(file);
+		if (System.getProperty("sure.tailer.debug") != null) {
+			System.err.println("[tail-debug] reopen pos=" + position + " maxSize=" + maxSize
+					+ " lastCreation=" + lastCreation);
+		}
 	}
 
 	private void waitRecreate() {

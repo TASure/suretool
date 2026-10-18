@@ -175,8 +175,11 @@ public final class WatchDir {
 	}
 
 	private void loop() {
-		long lastSync = System.currentTimeMillis();
+		long lastSync = 0;
 		try {
+			if (System.getProperty("sure.watch.diag") != null) {
+				System.err.println("[watch-diag] loop start root=" + root + " recursive=" + options.recursive());
+			}
 			while (running.get()) {
 				// 先处理动态注册失败的待重试目录（目录未就绪时注册会失败，稍后重试）
 				Path toRegister;
@@ -202,6 +205,9 @@ public final class WatchDir {
 					if (System.currentTimeMillis() - lastSync >= 1000) {
 						snapshotSync();
 						lastSync = System.currentTimeMillis();
+						if (System.getProperty("sure.watch.diag") != null) {
+							System.err.println("[watch-diag] sync tick root=" + root + " t=" + System.currentTimeMillis());
+						}
 					}
 					continue;
 				}
@@ -217,12 +223,23 @@ public final class WatchDir {
 			// stop() 关闭服务，正常退出
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
+		} catch (Throwable t) {
+			// 兜底：未预期异常不允许静默退出（Windows 平台差异定位）
+			if (System.getProperty("sure.watch.diag") != null) {
+				System.err.println("[watch-diag] loop fatal root=" + root + " t=" + t);
+			}
 		} finally {
+			if (System.getProperty("sure.watch.diag") != null) {
+				System.err.println("[watch-diag] loop end root=" + root + " running=" + running.get());
+			}
 			running.set(false);
 		}
 	}
 
 	private void dispatch(WatchKey key, WatchEvent<?> event) {
+		if (System.getProperty("sure.watch.diag") != null) {
+			System.err.println("[watch-diag] evt root=" + root + " kind=" + event.kind() + " ctx=" + event.context());
+		}
 		if (event.kind() == java.nio.file.StandardWatchEventKinds.OVERFLOW) {
 			handleOverflow();
 			return;
@@ -276,6 +293,9 @@ public final class WatchDir {
 				// 已见路径不重复补发（周期快照下保证 CREATE 只上报一次）
 				if (options.acceptEvent(EventType.CREATE) && seen.add(child)) {
 					safeListener(EventType.CREATE, childRel);
+					if (System.getProperty("sure.watch.diag") != null) {
+						System.err.println("[watch-diag] backfill evt root=" + root + " path=" + childRel);
+					}
 				}
 				if (Files.isDirectory(child) && options.recursive()) {
 					try {

@@ -1,5 +1,3 @@
-
-
 # Changelog
 
 本项目所有值得记录的变更都会收录在本文件中。
@@ -7,6 +5,19 @@
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
 ## [Unreleased]
+
+### 批45：Actor 轻量模型（v1.19.0 候选，阶段 B「好用」）
+
+新建 `Actor` 轻量 Actor 模型（虚拟线程邮箱消息循环），作为路线图阶段 B「结构化并发」首项落地——Hutool / Guava / Apache Commons 三家均无的独占能力（零第三方依赖，7 个公开 API）：
+
+- 虚拟线程消息循环：每条消息按投递顺序串行消费（顺序保序），单条 handler 异常不中断循环（错误隔离），errorHandler 可缺省
+- 三种启动方式：`start(handler)` 默认无界邮箱 / `start(handler, capacity)` 有界邮箱（容量 ≤ 0 视为无界）/ `start(handler, capacity, errorHandler)`
+- 投递 API：`send`（无界永不移交、有界满抛 IllegalStateException）/ `trySend(message, timeout)`（限时等待，超时或被中断返回 false）
+- 优雅关闭：`close()` 置关闭标记并 drain 剩余消息后循环退出，幂等；关闭后 `send`/`trySend` 抛 IllegalStateException
+- 附带 `pendingCount()`（待处理消息数）与 `isClosed()` 状态查询
+- 有界邮箱基于 `ArrayBlockingQueue`、无界基于 `LinkedBlockingQueue`；JDK 21+ 虚拟线程一等公民（`Thread.ofVirtual()`）
+- 门禁：1328 例全绿、全库行覆盖 **98.1219%**（9561/9744）、Actor 类 **100%**（48/48）
+- 配套：`docs/prd/sure-actor-batch45.md` 规格文档；`config/spotbugs/exclude-filter.xml` 增补 Actor.loopThread 测试钩子排除项（含理由注释）
 
 ### 批44：StrSubstitutor 模板变量深度（v1.19.0 候选，阶段 A「易用」）
 
@@ -274,7 +285,7 @@
 ## [1.0.1] - 2026-09-26
 
 ### Fixed
-- 修复 sure-extra javadoc 裸 `<` 未转义（ImgUtil `@param <=` → `&lt;=`）导致的 javadoc 构建失败
+- 修复 sure-extra javadoc 裸 `<` 未转义（ImgUtil `@param <= → &lt;=`）导致的 javadoc 构建失败
 - OSV-Scanner 改用官方 v2 reusable workflow（漏洞即失败 + SARIF 上报 Code scanning）
 - CI 流水线修复：pages `_site` 权限 + apidocs 动态定位；CodeQL 切换 advanced（停用 default setup）
 
@@ -684,7 +695,3 @@
 - 依赖治理：Dependabot 自动监控，安全版本统一收口至根 `pom.xml` 的 `dependencyManagement`；
   测试日志后端使用已修复 log4j 2.25.4+；
 - 零运行时依赖：核心域（`sure-core`）零第三方运行期依赖，攻击面最小化。
-
-## [0.1.0-SNAPSHOT] - 未发布
-
-首个可运行快照，包含上述全部模块与工具类。

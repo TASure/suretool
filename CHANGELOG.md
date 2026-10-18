@@ -6,6 +6,17 @@
 
 ## [Unreleased]
 
+### 批48：影响力 · Benchmark 报告站 + 社区内容（阶段 C「可靠+影响力」）
+
+阶段 C「生态与治理成熟」首项落地——性能数据公开体系化 + 中文教程体系补齐（纯文档/资产交付，无代码变更，门禁基线不变）：
+
+- 新增 **Benchmark 报告站** `docs/benchmark-report-site.html`：v1.19.0 全量 JMH 实测（47 基准点 / 8 基准类），六类工具（字符串/集合/日期/JSON/数学/事件）sure vs Hutool vs Guava 三列对比 + 纯 CSS 可视化条形图 + 16 项 CI 门禁核对表 + 复现章节；**自包含无 CDN 依赖，浏览器直接打开可用**
+- 刷新 `docs/benchmark/REPORT.md`（门禁配对 16 项全部 PASS，最大 ratio 1.12）与 `docs/benchmark-report.md`（详报）至 v1.19.0 实测值
+- 关键结论：可配对 40 项中 21 项显著领先（≥1.3×）、17 项持平、2 项小幅落后（randomString 1.12× 属安全随机取舍）；join 3.3–3.5×、JSON 4.4×、日期解析 4.6×、事件发布 4.4× vs Guava；**dateFormat 由 v1.1.0 慢 5.6% 反转为快 2.1×**（线程安全 + 性能兼得）；Result 热路径与 JDK Optional 持平（0.555 vs 0.556 ns/op）
+- 新增 2 篇中文教程（`docs/posts/`）：`fluent-api-guide.md`（Fluent API 实战：统一入口/三类管道/语义铁律/双形态对照/完整示例）、`actor-concurrency-guide.md`（Actor 并发模型：邮箱/错误隔离/虚拟线程/背压/3 个完整示例）
+- 社区运营核对：awesome-java PR #1342 / #1350 均 open（待外部维护者合并，不可由本仓库推进）
+- 配套：`docs/prd/sure-influence-batch48.md` 规格文档（现状盘点/4 项交付/验收标准/范围边界）
+
 ## [1.19.0] - 2026-10-18
 
 ### 批47：Fluent API 全面化（v1.19.0 候选，阶段 B「好用」第三主轴）

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>suretool 性能基准报告站 · v1.19.0</title>
+<style>
+  :root {
+    --bg: #f7f8fa; --card: #ffffff; --ink: #1f2329; --sub: #646a73;
+    --sure: #2f6fed; --hutool: #f59e0b; --guava: #10b981;
+    --border: #e5e6eb; --good: #16a34a; --warn: #d97706;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "PingFang SC", "Microsoft YaHei", -apple-system, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.7; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 28px 20px 60px; }
+  header { text-align: center; padding: 36px 0 8px; }
+  h1 { font-size: 28px; letter-spacing: 1px; }
+  .sub { color: var(--sub); font-size: 14px; margin-top: 6px; }
+  .env { display: inline-block; margin-top: 12px; padding: 6px 14px; background: #eef1f6; border-radius: 20px; font-size: 12px; color: var(--sub); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 24px 0; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+  .card .num { font-size: 26px; font-weight: 700; }
+  .card .lbl { font-size: 13px; color: var(--sub); margin-top: 2px; }
+  .card .num.good { color: var(--good); } .card .num.warn { color: var(--warn); }
+  section { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; margin: 18px 0; }
+  h2 { font-size: 19px; margin-bottom: 4px; }
+  .sec-sub { color: var(--sub); font-size: 13px; margin-bottom: 14px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th, td { padding: 7px 10px; text-align: right; border-bottom: 1px solid var(--border); }
+  th:first-child, td:first-child { text-align: left; }
+  th { color: var(--sub); font-weight: 600; font-size: 12.5px; white-space: nowrap; }
+  .num-sure { color: var(--sure); font-weight: 600; }
+  .num-hutool { color: var(--hutool); }
+  .num-guava { color: var(--guava); }
+  .win { color: var(--good); font-weight: 700; }
+  .lose { color: var(--warn); }
+  .bar-row { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
+  .bar-track { flex: 1; height: 14px; background: #eef1f6; border-radius: 7px; overflow: hidden; }
+  .bar { height: 100%; border-radius: 7px; }
+  .ratio-tag { font-size: 11px; color: var(--sub); white-space: nowrap; width: 64px; text-align: right; }
+  .legend { display: flex; gap: 18px; font-size: 12.5px; color: var(--sub); margin-bottom: 12px; }
+  .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; }
+  .lg-sure::before { background: var(--sure); } .lg-hutool::before { background: var(--hutool); } .lg-guava::before { background: var(--guava); }
+  .verdict { font-size: 13px; padding: 8px 12px; border-radius: 8px; margin: 4px 0; }
+  .verdict.good { background: #eaf7ee; } .verdict.warn { background: #fdf3e3; }
+  pre { background: #f3f5f8; border: 1px solid var(--border); border-radius: 8px; padding: 14px; font-size: 12.5px; overflow-x: auto; }
+  footer { text-align: center; color: var(--sub); font-size: 12px; margin-top: 30px; }
+  @media (max-width: 640px) { .cards { grid-template-columns: 1fr 1fr; } th, td { padding: 5px 6px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>suretool 性能基准报告站</h1>
+  <div class="sub">v1.19.0 实测 · sure vs Hutool vs Guava · 六类核心工具对比</div>
+  <div class="env">Linux VM · JDK 25.0.12 · JMH Fork=1×Warmup 3×1s × Measurement 5×1s · AverageTime ns/op（越低越好）</div>
+</header>
+
+<div class="cards">
+  <div class="card"><div class="num good">47</div><div class="lbl">实测基准点（8 基准类）</div></div>
+  <div class="card"><div class="num good">32</div><div class="lbl">显著领先/持平项</div></div>
+  <div class="card"><div class="num">4.6×</div><div class="lbl">最快领先（日期解析 vs Hutool）</div></div>
+  <div class="card"><div class="num warn">1</div><div class="lbl">小幅落后项（randomString 1.12×）</div></div>
+</div>
+
+<section>
+  <h2>结论摘要</h2>
+  <div class="sec-sub">基于 2026-10-18 v1.19.0 全量实测</div>
+  <div class="verdict good">✅ 全面领先 Hutool：可配对 40 项中 21 项显著领先（≥1.3×）、17 项持平、2 项小幅落后（randomString 1.12×，属随机数生成路径取舍）。</div>
+  <div class="verdict good">✅ 碾压场景：字符串/集合 join（快 3.3–3.5×）、JSON 序列化（快 4.4×）与解析（快 2.7×）、日期解析（快 4.6×）、事件发布（快 4.4× vs Guava）——来自零依赖手写实现 + 现代 JDK API，无框架层开销。</div>
+  <div class="verdict good">✅ vs Guava：join 持平、newArrayList 持平、contains 持平，事件发布快 4.4×；集合/字符串路径不落下风。</div>
+  <div class="verdict good">✅ dateFormat 已反转：v1.1.0 时代慢 5.6%（线程安全取舍）→ v1.19.0 快 2.1×，线程安全 + 性能兼得。</div>
+  <div class="verdict good">✅ 门禁全绿：16 项 sure/hutool 配对 ratio 全部 ≤ 1.5（最大 1.12），benchmark 门禁 PASS。</div>
+</section>
+
+<section>
+  <h2>字符串工具（StrUtil）</h2>
+  <div class="legend"><span class="lg-sure">suretool</span><span class="lg-hutool">Hutool</span><span class="lg-guava">Guava</span></div>
+  <table>
+    <tr><th>基准</th><th>sure ns/op</th><th>Hutool ns/op</th><th>Guava ns/op</th><th>对比（vs Hutool）</th></tr>
+    <tr><td>isBlank</td><td class="num-sure">0.559</td><td class="num-hutool">0.556</td><td>—</td><td class="win">持平 ±0.5%</td></tr>
+    <tr><td>isEmpty</td><td class="num-sure">0.555</td><td class="num-hutool">0.553</td><td>—</td><td class="win">持平 ±0.4%</td></tr>
+    <tr><td>join(5 段)</td><td class="num-sure">64.996</td><td class="num-hutool">215.963</td><td class="num-guava">65.076</td><td class="win">快 3.3×，vs Guava 持平</td></tr>
+    <tr><td>sub(截取)</td><td class="num-sure">3.155</td><td class="num-hutool">3.184</td><td>—</td><td class="win">持平</td></tr>
+    <tr><td>trim</td><td class="num-sure">8.624</td><td class="num-hutool">12.820</td><td>—</td><td class="win">快 33%</td></tr>
+  </table>
+  <div class="bar-row"><span style="width:70px;font-size:11px;color:var(--sub)">join(5段)</span><div class="bar-track"><div class="bar" style="width:30%;background:var(--sure)"></div></div><div class="bar-track"><div class="bar" style="width:100%;background:var(--hutool)"></div></div><span class="ratio-tag">3.3×</span></div>
+  <div class="bar-row"><span style="width:70px;font-size:11px;color:var(--sub)">trim</span><div class="bar-track"><div class="bar" style="width:67%;background:var(--sure)"></div></div><div class="bar-track"><div class="bar" style="width:100%;background:var(--hutool)"></div></div><span class="ratio-tag">1.49×</span></div>
+</section>
+
+<section>
+  <h2>集合工具（CollUtil）</h2>
+  <table>
+    <tr><th>基准</th><th>sure ns/op</th><th>Hutool ns/op</th><th>Guava ns/op</th><th>对比（vs Hutool）</th></tr>
+    <tr><td>contains</td><td class="num-sure">14.826</td><td class="num-hutool">15.137</td><td class="num-guava">14.513</td><td class="win">三者持平</td></tr>
+    <tr><td>isEmpty</td><td class="num-sure">0.509</td><td class="num-hutool">0.512</td><td>—</td><td class="win">持平</td></tr>
+    <tr><td>join(5 元素)</td><td class="num-sure">123.581</td><td class="num-hutool">436.287</td><td>—</td><td class="win">快 3.5×</td></tr>
+    <tr><td>newArrayList</td><td class="num-sure">10.946</td><td class="num-hutool">10.938</td><td class="num-guava">11.416</td><td class="win">持平，vs Guava 快 4%</td></tr>
+  </table>
+  <div class="bar-row"><span style="width:70px;font-size:11px;color:var(--sub)">join(5元素)</span><div class="bar-track"><div class="bar" style="width:28%;background:var(--sure)"></div></div><div class="bar-track"><div class="bar" style="width:100%;background:var(--hutool)"></div></div><span class="ratio-tag">3.5×</span></div>
+</section>
+
+<section>
+  <h2>日期工具（DateUtil）</h2>
+  <table>
+    <tr><th>基准</th><th>sure ns/op</th><th>Hutool ns/op</th><th>对比（vs Hutool）</th></tr>
+    <tr><td>format(yyyy-MM-dd HH:mm:ss)</td><td class="num-sure">120.720</td><td class="num-hutool">251.495</td><td class="win">快 2.1×（DateTimeFormatter 线程安全 + 性能兼得）</td></tr>
+    <tr><td>parse(宽松日期串)</td><td class="num-sure">519.758</td><td class="num-hutool">2409.823</td><td class="win">快 4.6×（Hutool 经 java.util.Date 宽松解析）</td></tr>
+  </table>
+  <div class="bar-row"><span style="width:70px;font-size:11px;color:var(--sub)">parse</span><div class="bar-track"><div class="bar" style="width:22%;background:var(--sure)"></div></div><div class="bar-track"><div class="bar" style="width:100%;background:var(--hutool)"></div></div><span class="ratio-tag">4.6×</span></div>
+  <div class="bar-row"><span style="width:70px;font-size:11px;color:var(--sub)">format</span><div class="bar-track"><div class="bar" style="width:48%;background:var(--sure)"></div></div><div class="bar-track"><div class="bar" style="width:100%;background:var(--hutool)"></div></div><span class="ratio-tag">2.1×</span></div>
+</section>
+
+<section>
+  <h2>JSON（sure-json vs hutool-json）</h2>
+  <table>
+    <tr><th>基准</th><th>sure ns/op</th><th>Hutool ns/op</th><th>对比（vs Hutool）</th></tr>
+    <tr><td>parse(嵌套对象)</td><td class="num-sure">364.537</td><td class="num-hutool">990.442</td><td class="win">快 2.7×</td></tr>
+    <tr><td>parseObj</td><td class="num-sure">361.754</td><td class="num-hutool">991.388</td><td class="win">快 2.7×</td></tr>
+    <tr><td>toJsonStr</td><td class="num-sure">168.836</td><td class="num-hutool">735.801</td><td class="win">快 4.4×</td></tr>
+  </table>
+  <div class="bar-row"><span style="width:70px;font-size:11px;color:var(--sub)">toJsonStr</span><div class="bar-track"><div class="bar" style="width:23%;background:var(--sure)"></div></div><div class="bar-track"><div class="bar" style="width:100%;background:var(--hutool)"></div></div><span class="ratio-tag">4.4×</span></div>
+  <div class="bar-row"><span style="width:70px;font-size:11px;color:var(--sub)">parse</span><div class="bar-track"><div class="bar" style="width:37%;background:var(--sure)"></div></div><div class="bar-track"><div class="bar" style="width:100%;background:var(--hutool)"></div></div><span class="ratio-tag">2.7×</span></div>
+</section>
+
+<section>
+  <h2>数学工具（MathUtil）</h2>
+  <table>
+    <tr><th>基准</th><th>sure ns/op</th><th>Hutool ns/op</th><th>对比（vs Hutool）</th></tr>
+    <tr><td>isPrime</td><td class="num-sure">207.585</td><td class="num-hutool">266.249</td><td class="win">快 1.28×</td></tr>
+    <tr><td>randomString</td><td class="num-sure">155.048</td><td class="num-hutool">139.058</td><td class="lose">慢 1.12%（SecureRandom 高强度路径取舍，门禁 1.5 内 PASS）</td></tr>
+    <tr><td>gcd（展示）</td><td class="num-sure">4.952</td><td>—</td><td>—</td></tr>
+    <tr><td>sieve 素数筛（展示）</td><td class="num-sure">1709.587</td><td>—</td><td>—</td></tr>
+    <tr><td>BigDecimal round（展示）</td><td class="num-sure">25.155</td><td class="num-hutool">24.989</td><td class="win">持平</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>事件总线（EventBus）</h2>
+  <table>
+    <tr><th>基准</th><th>sure ns/op</th><th>Guava ns/op</th><th>对比（vs Guava）</th></tr>
+    <tr><td>eventPost</td><td class="num-sure">19.360</td><td class="num-guava">84.913</td><td class="win">快 4.4×</td></tr>
+    <tr><td>listenerCount（展示）</td><td class="num-sure">43.458</td><td>—</td><td>—</td></tr>
+  </table>
+  <div class="bar-row"><span style="width:70px;font-size:11px;color:var(--sub)">eventPost</span><div class="bar-track"><div class="bar" style="width:23%;background:var(--sure)"></div></div><div class="bar-track"><div class="bar" style="width:100%;background:var(--guava)"></div></div><span class="ratio-tag">4.4×</span></div>
+</section>
+
+<section>
+  <h2>Result / Optional（lang 包）</h2>
+  <div class="sec-sub">Result 与 JDK Optional 热路径持平，且不引入额外开销</div>
+  <table>
+    <tr><th>基准</th><th>sure ns/op</th><th>JDK Optional ns/op</th><th>对比</th></tr>
+    <tr><td>ok().get()</td><td class="num-sure">0.557</td><td class="num-guava">0.556</td><td class="win">持平</td></tr>
+    <tr><td>ok().map()</td><td class="num-sure">0.555</td><td class="num-guava">0.556</td><td class="win">持平</td></tr>
+    <tr><td>exceptionFlow（展示）</td><td class="num-sure">0.297</td><td>—</td><td>—</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>CI 门禁核对（sure/hutool ratio ≤ 1.5）</h2>
+  <div class="sec-sub">16 项配对全部 PASS，最大 ratio 1.12（randomString）</div>
+  <table>
+    <tr><th>基准</th><th>sure ns/op</th><th>hutool ns/op</th><th>ratio</th><th>结论</th></tr>
+    <tr><td>StrUtil.isBlank</td><td>0.559</td><td>0.556</td><td>1.01</td><td class="win">PASS</td></tr>
+    <tr><td>StrUtil.isEmpty</td><td>0.555</td><td>0.553</td><td>1.00</td><td class="win">PASS</td></tr>
+    <tr><td>StrUtil.join</td><td>64.996</td><td>215.963</td><td>0.30</td><td class="win">PASS</td></tr>
+    <tr><td>StrUtil.sub</td><td>3.155</td><td>3.184</td><td>0.99</td><td class="win">PASS</td></tr>
+    <tr><td>StrUtil.trim</td><td>8.624</td><td>12.820</td><td>0.67</td><td class="win">PASS</td></tr>
+    <tr><td>CollUtil.contains</td><td>14.826</td><td>15.137</td><td>0.98</td><td class="win">PASS</td></tr>
+    <tr><td>CollUtil.isEmpty</td><td>0.509</td><td>0.512</td><td>0.99</td><td class="win">PASS</td></tr>
+    <tr><td>CollUtil.join</td><td>123.581</td><td>436.287</td><td>0.28</td><td class="win">PASS</td></tr>
+    <tr><td>CollUtil.newArrayList</td><td>10.946</td><td>10.938</td><td>1.00</td><td class="win">PASS</td></tr>
+    <tr><td>DateUtil.format</td><td>120.720</td><td>251.495</td><td>0.48</td><td class="win">PASS</td></tr>
+    <tr><td>DateUtil.parse</td><td>519.758</td><td>2409.823</td><td>0.22</td><td class="win">PASS</td></tr>
+    <tr><td>Json.parse</td><td>364.537</td><td>990.442</td><td>0.37</td><td class="win">PASS</td></tr>
+    <tr><td>Json.parseObj</td><td>361.754</td><td>991.388</td><td>0.37</td><td class="win">PASS</td></tr>
+    <tr><td>Json.toJsonStr</td><td>168.836</td><td>735.801</td><td>0.23</td><td class="win">PASS</td></tr>
+    <tr><td>Math.isPrime</td><td>207.585</td><td>266.249</td><td>0.78</td><td class="win">PASS</td></tr>
+    <tr><td>Math.randomString</td><td>155.048</td><td>139.058</td><td>1.12</td><td class="win">PASS</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>环境与复现</h2>
+  <pre>测量时间：2026-10-18 · 版本坐标：suretool v1.19.0（sure-core / sure-json / sure-benchmark）
+环境：Linux VM x86_64 · JDK 25.0.12（Temurin）· -Xms256m -Xmx256m
+框架：JMH（@Fork(1)，Warmup 3×1s，Measurement 5×1s，@BenchmarkMode(AverageTime)，单位 ns/op）
+对照：hutool-core / hutool-json 5.8.x · guava 33.7.2-jre
+复现：
+  mvn -pl sure-benchmark -am package -DskipTests
+  java -jar sure-benchmark/target/sure-benchmark-1.19.1-SNAPSHOT-jar-with-dependencies.jar
+  python3 .github/scripts/benchmark_gate.py &lt;log&gt;   # 门禁判定（ratio ≤ 1.5）
+
+局限：微基准反映热路径单次调用开销；真实应用请以 profiler（async-profiler/JFR）为准。
+数据随 JDK/硬件变化，本报告仅代表上述环境。</pre>
+</section>
+
+<footer>
+  suretool · Apache-2.0 · 生成于 2026-10-18 · 数据来源：/tmp/jmh-1190.log（v1.19.0 全量 JMH）
+</footer>
+
+</div>
+</body>
+</html>

@@ -83,4 +83,13 @@
         <Bug pattern="EI_EXPOSE_REP"/>
     </Match>
 
+    <!-- Actor.loopThread 未读字段（URF_UNREAD_FIELD）：
+         该字段为「消息循环虚拟线程」的包内可见测试/诊断钩子（同包 ActorBatch45Test
+         用于覆盖 take 中断退出分支，属并发库必要验证路径）；非公开 API，不扩大
+         对外契约，字段读写仅发生在包内部与测试代码。 -->
+    <Match>
+        <Class name="com.sure.tool.thread.Actor"/>
+        <Bug pattern="URF_UNREAD_FIELD"/>
+    </Match>
+
 </FindBugsFilter>

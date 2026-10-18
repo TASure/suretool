@@ -20,6 +20,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -545,6 +546,48 @@ public class StrUtil {
 		return sb.toString();
 	}
 
+	/**
+	 * 模板变量替换（默认前缀 {@code ${}、后缀 {@code }}、转义符 {@code $}），委托 {@link StrSubstitutor}。
+	 *
+	 * <p>支持默认值语法 {@code ${key:-default}}；变量缺失保留占位符原样；
+	 * 值为 {@code null} 渲染为空串；{@code $$&#123;} 输出字面 {@code $&#123;}。</p>
+	 *
+	 * <p>示例：</p>
+	 * <pre>{@code
+	 * String text = StrUtil.substitute("hi ${name}, env=${env:-dev}", Map.of("name", "sure"));
+	 * // => "hi sure, env=dev"
+	 * }</pre>
+	 *
+	 * @param template 模板文本；为 null 时返回 null
+	 * @param vars     变量映射；为 null 时视为空映射
+	 * @return 替换结果
+	 * @since 1.19.0
+	 */
+	public static String substitute(String template, Map<String, ?> vars) {
+		return StrSubstitutor.substitute(template, vars);
+	}
+
+	/**
+	 * 模板变量替换（自定义定界符，默认转义符 {@code $}），委托 {@link StrSubstitutor}。
+	 *
+	 * <p>示例：</p>
+	 * <pre>{@code
+	 * String text = StrUtil.substitute("&lt;%name%&gt; 你好", Map.of("name", "sure"), "&lt;%", "%&gt;");
+	 * // => "sure 你好"
+	 * }</pre>
+	 *
+	 * @param template 模板文本；为 null 时返回 null
+	 * @param vars     变量映射；为 null 时视为空映射
+	 * @param prefix   占位符前缀
+	 * @param suffix   占位符后缀
+	 * @return 替换结果
+	 * @throws IllegalArgumentException 前缀或后缀为 null 或空串时抛出
+	 * @since 1.19.0
+	 */
+	public static String substitute(String template, Map<String, ?> vars, String prefix, String suffix) {
+		return StrSubstitutor.replace(template, vars, prefix, suffix);
+	}
+
 	// ---------------- 重复与补齐 ----------------
 
 	/**
@@ -965,8 +1008,6 @@ public class StrUtil {
 		return result;
 	}
 
-
-
 	/**
 	 * 查找子串首次出现位置。
 	 *
@@ -994,8 +1035,6 @@ public class StrUtil {
 		}
 		return str.toString().lastIndexOf(search.toString());
 	}
-
-
 
 	/**
 	 * 是否以任一前缀开头。
@@ -1034,8 +1073,6 @@ public class StrUtil {
 		}
 		return false;
 	}
-
-
 
 	/**
 	 * 分隔为 int 数组（空白分隔），非法元素按 0 处理。
@@ -1081,8 +1118,6 @@ public class StrUtil {
 		return result;
 	}
 
-
-
 	/**
 	 * 提取所有两两之间的内容。
 	 *
@@ -1112,8 +1147,6 @@ public class StrUtil {
 		return result;
 	}
 
-
-
 	/**
 	 * 分隔为 double 数组（空白分隔），非法元素按 0 处理。
 	 *
@@ -1135,8 +1168,6 @@ public class StrUtil {
 		}
 		return result;
 	}
-
-
 
 	/**
 	 * 去除指定前缀（无前缀则原样返回）。
@@ -1194,8 +1225,6 @@ public class StrUtil {
 		return len <= 0 ? "" : str.substring(0, Math.min(str.length(), len));
 	}
 
-
-
 	/**
 	 * 按分隔符拆分并去除每个元素首尾空白（保留空元素）。
 	 *
@@ -1228,8 +1257,6 @@ public class StrUtil {
 	public static String blankToDefault(String str, String defaultValue) {
 		return isBlank(str) ? defaultValue : str;
 	}
-
-
 
 	/**
 	 * 判断是否全部为大写字母（忽略非字母字符）。
@@ -1277,8 +1304,6 @@ public class StrUtil {
 		return hasLetter;
 	}
 
-
-
 	/**
 	 * 前补位：字符串不足指定长度时在前面填充字符。
 	 *
@@ -1324,8 +1349,6 @@ public class StrUtil {
 		return sb.toString();
 	}
 
-
-
 	/**
 	 * 转 Unicode 字符串（中文转 \u005cuXXXX，ASCII 保留）。
 	 *
@@ -1347,8 +1370,6 @@ public class StrUtil {
 		}
 		return sb.toString();
 	}
-
-
 
 	/**
 	 * 限制字符串最大长度，超出截断并追加省略号。
@@ -1372,8 +1393,6 @@ public class StrUtil {
 		}
 		return str.substring(0, maxLength - 3) + "...";
 	}
-
-
 
 	/**
 	 * 去除字符串首尾的指定字符。
@@ -1407,8 +1426,6 @@ public class StrUtil {
 		return strip(str, ' ');
 	}
 
-
-
 	/**
 	 * 将字符串居中对齐，两侧以指定字符填充。
 	 *
@@ -1441,8 +1458,6 @@ public class StrUtil {
 		int right = total - left;
 		return repeat(fill, left) + str + repeat(fill, right);
 	}
-
-
 
 	/**
 	 * 返回第一个非空白字符串。
@@ -1479,8 +1494,6 @@ public class StrUtil {
 		return sb.toString();
 	}
 
-
-
 	/**
 	 * 交换字符串中字母的大小写。
 	 *
@@ -1502,8 +1515,6 @@ public class StrUtil {
 		}
 		return new String(chars);
 	}
-
-
 
 	/**
 	 * 判断字符串数组中是否全部非空白。
@@ -1541,8 +1552,6 @@ public class StrUtil {
 		return true;
 	}
 
-
-
 	/**
 	 * 替换字符串中指定区间（含 begin，不含 end）的内容。
 	 *
@@ -1566,8 +1575,6 @@ public class StrUtil {
 		return s.substring(0, begin) + rep + s.substring(end);
 	}
 
-
-
 	/**
 	 * 忽略大小写判断字符串是否包含任意给定子串。
 	 *
@@ -1587,8 +1594,6 @@ public class StrUtil {
 		}
 		return false;
 	}
-
-
 
 	/**
 	 * 忽略大小写替换所有匹配子串。
@@ -1835,7 +1840,6 @@ public class StrUtil {
 		}
 		return wrap + str.toString() + wrap;
 	}
-
 
 	/**
 	 * 截断字符串：超过 maxWidth 时保留前 maxWidth-3 个字符并以 {@code ...} 结尾。

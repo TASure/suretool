@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+## [1.19.0] - 2026-10-18
+
 ### 批47：Fluent API 全面化（v1.19.0 候选，阶段 B「好用」第三主轴）
 
 补齐「链式 Fluent 形态」全缺口——Hutool / Guava / Apache Commons 三家均无的「可校验不断流管道 + 不可变终端」组合（零第三方依赖，`sure-core` 新增 `com.sure.tool.fluent` 包）：

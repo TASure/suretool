@@ -6,6 +6,19 @@
 
 ## [Unreleased]
 
+### 批49：Spring Boot Starter 成熟化（阶段 C「生态与治理成熟」）
+
+生态核心项落地——starter 从「单 Bean 骨架」升级为四域自动装配，对标 hutool-spring-boot-starter 成熟度：
+
+- `SureToolProperties` 新增三配置组：`suretool.event.*`（enabled 默认 true）、`suretool.cron.*`（enabled 默认 false）、`suretool.cache.*`（enabled 默认 false / type=lru|fifo|timed|weak / capacity=1024 / timeout=60000），均带中文 JavaDoc 与示例
+- `SureToolAutoConfiguration` 新增 3 个自动装配 Bean（全部 `@ConditionalOnClass` + `@ConditionalOnMissingBean` + `@ConditionalOnProperty` 三重条件，用户 Bean 优先、缺类自动跳过、每域独立开关）：
+  - `sureEventBus`：容器管理 EventBus 实例（默认开启，`suretool.event.enabled=false` 关闭）
+  - `sureCronLifecycle`：CronUtil 调度生命周期（默认关闭避免隐式启动后台线程；开启后由 Spring 管理 start/stop，`SmartLifecycle` phase=Integer.MAX_VALUE 最后启动最先停止，幂等）
+  - `sureCache`：按 type 分发 lru/fifo/timed/weak 缓存工厂（默认关闭避免隐式占用内存；容量与过期毫秒可配）
+- 测试 3 → 13 例：默认装配/开关禁用/用户 Bean 优先（@ConditionalOnMissingBean）/生命周期幂等/cache 分支全覆盖
+- 范围边界：零 sure-core/event/cron/cache 源码改动（纯 starter 层装配，无 API 变更、无 japicmp 风险）；sure-core 覆盖率铁律 98% 不受影响（verify 1351 例全绿）
+- 配套：`docs/prd/sure-spring-starter-batch49.md` 规格文档（现状盘点/4 项交付/验收标准/范围边界）
+
 ### 批48：影响力 · Benchmark 报告站 + 社区内容（阶段 C「可靠+影响力」）
 
 阶段 C「生态与治理成熟」首项落地——性能数据公开体系化 + 中文教程体系补齐（纯文档/资产交付，无代码变更，门禁基线不变）：

@@ -19,6 +19,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
+import com.sure.tool.cache.Cache;
+import com.sure.tool.event.EventBus;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -55,5 +58,93 @@ public class SureToolAutoConfigurationTest {
 		runner.withPropertyValues("suretool.captcha.enabled=false").run(context -> {
 			assertThat(context).doesNotHaveBean(CaptchaGenerator.class);
 		});
+	}
+
+	@Test
+	public void eventBusRegisteredByDefault() {
+		runner.run(context -> {
+			assertThat(context).hasNotFailed();
+			assertThat(context).hasSingleBean(EventBus.class);
+			// 容器管理实例：可发布与订阅
+			EventBus bus = context.getBean(EventBus.class);
+			bus.post("ping");
+		});
+	}
+
+	@Test
+	public void eventBusDisabledWhenPropertyFalse() {
+		runner.withPropertyValues("suretool.event.enabled=false").run(context -> {
+			assertThat(context).doesNotHaveBean(EventBus.class);
+		});
+	}
+
+	@Test
+	public void userDefinedEventBusTakesPrecedence() {
+		runner.withBean(EventBus.class, () -> new EventBus()).run(context -> {
+			assertThat(context).hasSingleBean(EventBus.class);
+			// @ConditionalOnMissingBean：用户 Bean 优先，自动装配不重复注册
+		});
+	}
+
+	@Test
+	public void cronLifecycleNotRegisteredByDefault() {
+		runner.run(context -> {
+			assertThat(context).doesNotHaveBean(SureToolAutoConfiguration.CronLifecycle.class);
+		});
+	}
+
+	@Test
+	public void cronLifecycleRegisteredAndLifecycleIdempotent() {
+		runner.withPropertyValues("suretool.cron.enabled=true").run(context -> {
+			assertThat(context).hasSingleBean(SureToolAutoConfiguration.CronLifecycle.class);
+			SureToolAutoConfiguration.CronLifecycle lifecycle =
+					context.getBean(SureToolAutoConfiguration.CronLifecycle.class);
+			lifecycle.start();
+			assertThat(lifecycle.isRunning()).isTrue();
+			lifecycle.start();   // 幂等：重复 start 不抛异常
+			lifecycle.stop();
+			lifecycle.stop();    // 幂等：重复 stop 不抛异常
+			assertThat(lifecycle.isRunning()).isFalse();
+		});
+	}
+
+	@Test
+	public void cacheNotRegisteredByDefault() {
+		runner.run(context -> {
+			assertThat(context).doesNotHaveBean(Cache.class);
+		});
+	}
+
+	@Test
+	public void lruCacheRegisteredWithCapacity() {
+		runner.withPropertyValues("suretool.cache.enabled=true", "suretool.cache.type=lru",
+				"suretool.cache.capacity=2048").run(context -> {
+			assertThat(context).hasSingleBean(Cache.class);
+		});
+	}
+
+	@Test
+	public void timedCacheRegisteredWithTimeout() {
+		runner.withPropertyValues("suretool.cache.enabled=true", "suretool.cache.type=timed",
+				"suretool.cache.timeout=30000").run(context -> {
+			assertThat(context).hasSingleBean(Cache.class);
+		});
+	}
+
+	@Test
+	public void weakCacheRegistered() {
+		runner.withPropertyValues("suretool.cache.enabled=true", "suretool.cache.type=weak",
+				"suretool.cache.capacity=256", "suretool.cache.timeout=5000").run(context -> {
+			assertThat(context).hasSingleBean(Cache.class);
+		});
+	}
+
+	@Test
+	public void userDefinedCacheTakesPrecedence() {
+		runner.withPropertyValues("suretool.cache.enabled=true")
+				.withBean(Cache.class, () -> com.sure.tool.cache.CacheUtil.<Object, Object>newLruCache(64))
+				.run(context -> {
+					assertThat(context).hasSingleBean(Cache.class);
+				});
 	}
 }

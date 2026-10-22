@@ -170,7 +170,13 @@ public final class FileTailer {
 			boolean rotated = false;
 			if (key == null) {
 				// Windows/NTFS 的 fileKey 恒为 null：以文件存在性 + 创建时间/大小联合检测轮转
-				if (!Files.exists(file)) {
+				// exists 与 readAttributes 合并为一次原子读：exists 通过后文件被 move/替换
+				// （Windows 轮转测试 rename+新建）会抛 NoSuchFileException，按 vanished 处理，
+				// 避免 TOCTOU 竞态中断轮转检测路径。
+				java.nio.file.attribute.BasicFileAttributes attrs;
+				try {
+					attrs = Files.readAttributes(file, java.nio.file.attribute.BasicFileAttributes.class);
+				} catch (java.nio.file.NoSuchFileException e) {
 					if (options.stopOnDelete()) {
 						running.set(false);
 						break;
@@ -180,8 +186,6 @@ public final class FileTailer {
 					Thread.sleep(options.pollInterval().toMillis());
 					continue;
 				}
-				java.nio.file.attribute.BasicFileAttributes attrs = Files.readAttributes(file,
-						java.nio.file.attribute.BasicFileAttributes.class);
 				long size = attrs.size();
 				if (System.getProperty("sure.tailer.debug") != null) {
 					System.err.println("[tail-debug] t=" + System.currentTimeMillis() + " size=" + size

@@ -6,6 +6,16 @@
 
 ## [Unreleased]
 
+### 批50：CI Windows 诊断闭环（阶段 C「治理」，台账 HL-2026-10-15/16/18-01）
+
+main 分支 CI 持续红的平台缺陷根治——Windows 事件驱动类测试 6 例失败（FileTailer 1 + WatchDir 5）根因确认并修复（纯实现加固，测试断言/超时零改动）：
+
+- **WatchDir 周期快照无条件化**：快照对齐兜底从 `poll==null` 超时分支移出，每 1s 无条件执行——修复 Windows 事件密集时 poll 持续非 null 饿死快照、子目录/动态注册事件永久等待（4×15s 超时根因）
+- **WatchDir backfill 单条目容错**：DirectoryStream 迭代内逐项 try-catch，单条目句柄短暂占用（Windows 刚写入文件）不中断整体枚举——修复溢出补发 CREATE 缺失（0.006s 断言失败根因）
+- **FileTailer TOCTOU 修复**：`exists`+`readAttributes` 合并为原子读，`NoSuchFileException` 按 vanished 处理——修复 Windows rename+新建间隙轮转检测中断、新文件行永不读取（1×15s 超时根因）
+- 门禁：`mvn -pl sure-core verify` BUILD SUCCESS（1351 例全绿、jacoco ≥98%、checkstyle/spotbugs 全过）；Linux 本地 WatchDir 30 例 + FileTailer 25 例全绿（实现逻辑正确性复证）
+- 配套：`docs/prd/sure-ci-windows-batch50.md` 规格文档（证据快照/根因分析/修复方案/验收标准/范围边界）；治理台账 3 🟡 更新待 windows CI 复验闭环
+
 ### 批49：Spring Boot Starter 成熟化（阶段 C「生态与治理成熟」）
 
 生态核心项落地——starter 从「单 Bean 骨架」升级为四域自动装配，对标 hutool-spring-boot-starter 成熟度：

@@ -198,17 +198,17 @@ public final class WatchDir {
 					}
 				}
 				WatchKey key = watchService.poll(500, java.util.concurrent.TimeUnit.MILLISECONDS);
-				if (key == null) {
-					// 等待超时：回到循环顶部，确保待重试注册不被 take 无限阻塞饿死
-					// 周期快照对齐兜底：部分平台（Windows）子目录 WatchKey 事件可能不报告，
-					// 定期以目录树快照补注册并补发新增 CREATE，保证子目录事件不永久丢失。
-					if (System.currentTimeMillis() - lastSync >= 1000) {
-						snapshotSync();
-						lastSync = System.currentTimeMillis();
-						if (System.getProperty("sure.watch.diag") != null) {
-							System.err.println("[watch-diag] sync tick root=" + root + " t=" + System.currentTimeMillis());
-						}
+				// 周期快照对齐兜底不依赖 poll 超时：事件密集平台（Windows）poll 可能持续命中，
+				// 若仅在超时分支快照会被饿死，子目录/动态注册事件（原生不报告）将永久等待。
+				// 每 1s 无条件执行一次，保证丢失事件以状态快照形式恢复。
+				if (System.currentTimeMillis() - lastSync >= 1000) {
+					snapshotSync();
+					lastSync = System.currentTimeMillis();
+					if (System.getProperty("sure.watch.diag") != null) {
+						System.err.println("[watch-diag] sync tick root=" + root + " t=" + System.currentTimeMillis());
 					}
+				}
+				if (key == null) {
 					continue;
 				}
 				try {
@@ -285,24 +285,33 @@ public final class WatchDir {
 	private void backfill(Path dir) {
 		try (java.nio.file.DirectoryStream<Path> ds = Files.newDirectoryStream(dir)) {
 			for (Path child : ds) {
-				Path childRel = root.relativize(child);
-				if (options.filter() != null && !options.filter().accept(childRel)) {
-					continue;
-				}
-				// 补发语义尊重事件类型过滤：仅接受 CREATE 时才补发，避免越过 eventTypes 误报
-				// 已见路径不重复补发（周期快照下保证 CREATE 只上报一次）
-				if (options.acceptEvent(EventType.CREATE) && seen.add(child)) {
-					safeListener(EventType.CREATE, childRel);
-					if (System.getProperty("sure.watch.diag") != null) {
-						System.err.println("[watch-diag] backfill evt root=" + root + " path=" + childRel);
+				try {
+					Path childRel = root.relativize(child);
+					if (options.filter() != null && !options.filter().accept(childRel)) {
+						continue;
 					}
-				}
-				if (Files.isDirectory(child) && options.recursive()) {
-					try {
-						register(child);
-						backfill(child);
-					} catch (IOException e) {
-						pendingRegisters.offer(child);
+					// 补发语义尊重事件类型过滤：仅接受 CREATE 时才补发，避免越过 eventTypes 误报
+					// 已见路径不重复补发（周期快照下保证 CREATE 只上报一次）
+					if (options.acceptEvent(EventType.CREATE) && seen.add(child)) {
+						safeListener(EventType.CREATE, childRel);
+						if (System.getProperty("sure.watch.diag") != null) {
+							System.err.println("[watch-diag] backfill evt root=" + root + " path=" + childRel);
+						}
+					}
+					if (Files.isDirectory(child) && options.recursive()) {
+						try {
+							register(child);
+							backfill(child);
+						} catch (IOException e) {
+							pendingRegisters.offer(child);
+						}
+					}
+				} catch (RuntimeException e) {
+					// 单条目瞬时失败（Windows 目录项句柄短暂占用等，DirectoryStream 迭代可能抛
+					// 未检查异常）不中断整体枚举：下一轮周期快照会再次尝试，
+					// 避免单点异常导致整个目录补发丢失。
+					if (System.getProperty("sure.watch.diag") != null) {
+						System.err.println("[watch-diag] backfill item fail dir=" + dir + " child=" + child + " e=" + e);
 					}
 				}
 			}

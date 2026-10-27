@@ -61,6 +61,8 @@ public final class FileTailer {
 	private ByteArrayOutputStream pending = new ByteArrayOutputStream();
 	private FileChannel channel;
 	private Object lastKey;
+	/** 上次 EOF 探测时路径文件的最后修改时间：同一文件追加写暂停时不前进，替换/重建后必前进，作为同大小/同创建时间轮转的兜底判据。 */
+	private java.nio.file.attribute.FileTime lastEofMod;
 	private Charset charset;
 	/** 路径文件曾消失（轮转间隙被轮询到），消失后重现视为轮转。 */
 	private boolean vanished;
@@ -245,15 +247,23 @@ public final class FileTailer {
 						boolean sizeRotated = pathSize != chSize && chSize == position;
 						boolean creationRotated = chSize == position && lastCreation != null
 								&& !lastCreation.equals(creationOf(eofAttrs));
-						if (sizeRotated || creationRotated) {
+						// macOS/Windows 上创建时间可能只有秒级精度：同秒内轮转替换时
+						// creation 判据与 size 判据同时失效，改用最后修改时间（写入必前进、
+						// 追加写暂停不变）作兜底：EOF 持续期间路径文件被改写即视为轮转
+						java.nio.file.attribute.FileTime eofMod = eofAttrs.lastModifiedTime();
+						boolean modRotated = chSize == position && lastEofMod != null
+								&& !lastEofMod.equals(eofMod);
+						if (sizeRotated || modRotated || creationRotated) {
 							if (System.getProperty("sure.tailer.debug") != null) {
 								System.err.println("[tail-debug] EOF-rotate pathSize=" + pathSize
 										+ " chSize=" + chSize + " pos=" + position
-										+ " creationRotated=" + creationRotated);
+										+ " creationRotated=" + creationRotated
+										+ " modRotated=" + modRotated);
 							}
 							reopen();
 							continue;
 						}
+						// EOF 未触发轮转：不更新 lastEofMod 基准（替换由 reopen 重置）
 					} catch (IOException e) {
 						// 探测失败（文件消失等）：常规等待下一轮
 					}
@@ -272,6 +282,9 @@ public final class FileTailer {
 					pending.write(b);
 				}
 			}
+			// 追加写（同一 inode）后路径 lastModified 前进：基准随成功读取前移，
+			// 保证 EOF 探测只对「替换」（channel 未读到新内容）触发，追加写暂停不误伤
+			lastEofMod = readLastModified(file);
 		}
 	}
 
@@ -290,6 +303,7 @@ public final class FileTailer {
 		pending.reset();
 		lastKey = fileKey(file);
 		lastCreation = readCreation(file);
+		lastEofMod = readLastModified(file);
 		if (System.getProperty("sure.tailer.debug") != null) {
 			System.err.println("[tail-debug] reopen pos=" + position + " maxSize=" + maxSize
 					+ " lastCreation=" + lastCreation);
@@ -304,6 +318,7 @@ public final class FileTailer {
 					position = 0;
 					lastKey = fileKey(file);
 					lastCreation = readCreation(file);
+					lastEofMod = readLastModified(file);
 					// 运行中 IOException 触发的重建属轮转语义（文件被移走/替换），需通知 onRotate
 					if (recreateIsRotation) {
 						recreateIsRotation = false;
@@ -339,6 +354,14 @@ public final class FileTailer {
 		}
 		try {
 			return Files.readAttributes(file, java.nio.file.attribute.BasicFileAttributes.class).creationTime();
+		} catch (IOException e) {
+			return null;
+		}
+	}
+
+	private static java.nio.file.attribute.FileTime readLastModified(Path file) {
+		try {
+			return Files.readAttributes(file, java.nio.file.attribute.BasicFileAttributes.class).lastModifiedTime();
 		} catch (IOException e) {
 			return null;
 		}

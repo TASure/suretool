@@ -271,11 +271,38 @@ public class FileTailerWindowsBranchTest {
 			await(tailer::isRunning, "运行中");
 			Path backup = tmp.getRoot().toPath().resolve("win-rot-equal.log.1");
 			Files.move(file, backup, StandardCopyOption.REPLACE_EXISTING);
+			// 跨秒等待：秒级时间戳文件系统（tmpfs/macOS）上同秒写入 lastModified 相同，
+			// 真实日志轮转与上次写入必相隔更久，跨秒后 lastModified 判据可检出
+			Thread.sleep(1100);
 			Files.write(file, "b\n".getBytes(StandardCharsets.UTF_8));
 			await(() -> lines.size() == 1, "同大小新文件行");
 			assertEquals("b", lines.get(0));
 		} finally {
 			tailer.stop();
+		}
+	}
+
+	@Test
+	public void 同大小同创建时间轮转靠最后修改时间检出() throws Exception {
+		// macOS/Windows 创建时间秒级精度：同秒内同大小替换时 creation/size 判据全失效，
+		// 覆盖 EOF 探测的最后修改时间兜底判据（modRotated）：写入必前进、追加写暂停不变
+		FileTailer.forceSameCreation = true;
+		Path file = tmp.newFile("win-rot-mod.log").toPath();
+		append(file, "a\n");
+		List<String> lines = new CopyOnWriteArrayList<>();
+		FileTailer tailer = FileTailer.start(file, lines::add);
+		try {
+			await(tailer::isRunning, "运行中");
+			Path backup = tmp.getRoot().toPath().resolve("win-rot-mod.log.1");
+			Files.move(file, backup, StandardCopyOption.REPLACE_EXISTING);
+			// 跨秒等待：秒级时间戳文件系统上同秒写入 lastModified 相同，跨秒后兜底判据可检出
+			Thread.sleep(1100);
+			Files.write(file, "b\n".getBytes(StandardCharsets.UTF_8));
+			await(() -> lines.size() == 1, "同大小同创建时间新文件行");
+			assertEquals("b", lines.get(0));
+		} finally {
+			tailer.stop();
+			FileTailer.forceSameCreation = false;
 		}
 	}
 

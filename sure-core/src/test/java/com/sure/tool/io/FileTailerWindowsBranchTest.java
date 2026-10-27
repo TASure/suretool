@@ -258,4 +258,98 @@ public class FileTailerWindowsBranchTest {
 			tailer.stop();
 		}
 	}
+
+	@Test
+	public void 同大小轮转仍能读到新文件() throws Exception {
+		// 批51 场景：old\n 与 new\n 同 2B，仅 size 判据无法检出轮转；
+		// 覆盖 EOF 探测的创建时间交叉判据（creationRotated），保证同大小替换后仍读到新行
+		Path file = tmp.newFile("win-rot-equal.log").toPath();
+		append(file, "a\n");
+		List<String> lines = new CopyOnWriteArrayList<>();
+		FileTailer tailer = FileTailer.start(file, lines::add);
+		try {
+			await(tailer::isRunning, "运行中");
+			Path backup = tmp.getRoot().toPath().resolve("win-rot-equal.log.1");
+			Files.move(file, backup, StandardCopyOption.REPLACE_EXISTING);
+			Files.write(file, "b\n".getBytes(StandardCharsets.UTF_8));
+			await(() -> lines.size() == 1, "同大小新文件行");
+			assertEquals("b", lines.get(0));
+		} finally {
+			tailer.stop();
+		}
+	}
+
+	@Test
+	public void stopOnDelete真时替换文件仍继续读() throws Exception {
+		// 批51 修复语义：stopOnDelete=true 只对「文件删除」停止；
+		// 文件被替换（rename+新建）属轮转，即使读取中断也必须等待重建继续读新行
+		Path file = tmp.newFile("win-stop-replace.log").toPath();
+		append(file, "old\n");
+		List<String> lines = new CopyOnWriteArrayList<>();
+		FileTailer tailer = FileTailer.start(file, lines::add, new TailerOptions().stopOnDelete(true));
+		try {
+			await(tailer::isRunning, "运行中");
+			Path backup = tmp.getRoot().toPath().resolve("win-stop-replace.log.1");
+			Files.move(file, backup, StandardCopyOption.REPLACE_EXISTING);
+			Files.write(file, "new\n".getBytes(StandardCharsets.UTF_8));
+			await(() -> lines.contains("new"), "替换后新行仍读");
+			assertTrue(tailer.isRunning());
+		} finally {
+			tailer.stop();
+		}
+	}
+
+	@Test
+	public void 轮转重开目标为目录时等待后恢复() throws Exception {
+		// 覆盖 rotated 分支 reopen() 的 try-catch 重试：attrs 判据（创建时间变化）触发轮转，
+		// 但目标被替换为目录（FileChannel.open 跨平台抛 IOException）→ 捕获后等待下一轮重试，
+		// 不停止 tailer；恢复文件后继续读到新行。
+		Path file = tmp.newFile("win-rot-dir.log").toPath();
+		append(file, "old\n");
+		List<String> lines = new CopyOnWriteArrayList<>();
+		FileTailer tailer = FileTailer.start(file, lines::add);
+		try {
+			await(tailer::isRunning, "运行中");
+			Path backup = tmp.getRoot().toPath().resolve("win-rot-dir.log.1");
+			Files.move(file, backup, StandardCopyOption.REPLACE_EXISTING);
+			Files.createDirectory(file);
+			Thread.sleep(600);
+			assertTrue("reopen 失败重试中 tailer 仍运行", tailer.isRunning());
+			Files.delete(file);
+			Files.write(file, "new1\n".getBytes(StandardCharsets.UTF_8));
+			await(() -> lines.size() == 1, "恢复后新文件行");
+			assertEquals("new1", lines.get(0));
+		} finally {
+			tailer.stop();
+		}
+	}
+
+	@Test
+	public void EOF轮转重开失败后等待重建继续读() throws Exception {
+		// 覆盖批51 两处防御分支：①EOF 探测触发 reopen 但打开失败（目标被替换为目录，
+		// FileChannel.open 跨平台抛 IOException）时不允许停止 tailer；
+		// ②loop catch IOException 先探测 stillExists——路径文件仍在（替换场景）
+		// 无论 stopOnDelete 都进入 waitRecreate，恢复文件后继续读到新行。
+		FileTailer.forceSameCreation = true;
+		Path file = tmp.newFile("win-rot-eof-fail.log").toPath();
+		append(file, "old\n");
+		List<String> lines = new CopyOnWriteArrayList<>();
+		FileTailer tailer = FileTailer.start(file, lines::add);
+		try {
+			await(tailer::isRunning, "运行中");
+			Path backup = tmp.getRoot().toPath().resolve("win-rot-eof-fail.log.1");
+			Files.move(file, backup, StandardCopyOption.REPLACE_EXISTING);
+			// 同名目录替换：EOF 探测判定轮转后 reopen 打开目录必抛 IOException（Linux EISDIR / Windows AccessDenied）
+			Files.createDirectory(file);
+			Thread.sleep(600);
+			// 打开失败不允许停止 tailer：路径仍在 → waitRecreate 等待重建
+			assertTrue("reopen 失败后 tailer 仍运行", tailer.isRunning());
+			Files.delete(file);
+			Files.write(file, "new1\n".getBytes(StandardCharsets.UTF_8));
+			await(() -> lines.size() == 1, "恢复后新文件行");
+			assertEquals("new1", lines.get(0));
+		} finally {
+			tailer.stop();
+		}
+	}
 }

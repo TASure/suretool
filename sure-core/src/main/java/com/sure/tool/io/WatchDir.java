@@ -302,8 +302,16 @@ public final class WatchDir {
 			for (Path child : ds) {
 				try {
 					Path childRel = root.relativize(child);
-					if (options.filter() != null && !options.filter().accept(childRel)) {
-						continue;
+					try {
+						if (options.filter() != null && !options.filter().accept(childRel)) {
+							continue;
+						}
+					} catch (RuntimeException fe) {
+						// 过滤器异常不允许杀死快照遍历/loop（与 dispatch 单事件隔离同语义）：
+						// 视为不过滤继续补发，保证用户过滤器缺陷不会让 watcher 静默死亡。
+						if (System.getProperty("sure.watch.diag") != null) {
+							System.err.println("[watch-diag] filter fail path=" + childRel + " e=" + fe);
+						}
 					}
 					// 补发语义尊重事件类型过滤：仅接受 CREATE 时才补发，避免越过 eventTypes 误报
 					// 已见路径不重复补发（周期快照下保证 CREATE 只上报一次）

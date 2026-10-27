@@ -528,6 +528,54 @@ public class WatchDirBatch38Test {
 		}
 	}
 
+	@Test
+	public void 单事件处理异常不杀loop后续事件仍到达() throws Exception {
+		// 覆盖 dispatch0 外层 try-catch：注册已被删除的目录会抛 IOException，
+		// 单事件异常必须被吞掉，watcher 继续运行并处理后续事件（Windows 竞态场景）
+		Path dir = tmp.newFolder("watch-exception").toPath();
+		List<Event> events = new CopyOnWriteArrayList<>();
+		WatchDir watcher = WatchDir.watch(dir, (type, path) -> events.add(new Event(type, path)));
+		try {
+			await(() -> watcher.isRunning(), "运行中");
+			// 创建后立即删除：dispatch 处理 CREATE 时目录已消失 → register 抛 NoSuchFileException
+			Path sub = Files.createDirectory(dir.resolve("sub"));
+			Files.delete(sub);
+			Thread.sleep(300);
+			// watcher 必须存活，且后续普通文件事件仍正常回调
+			assertTrue("单事件异常后 watcher 仍运行", watcher.isRunning());
+			Files.writeString(dir.resolve("after.txt"), "x", StandardCharsets.UTF_8);
+			await(() -> has(events, EventType.CREATE, "after.txt"), "后续事件仍回调");
+		} finally {
+			watcher.stop();
+		}
+	}
+
+	@Test
+	public void 过滤器异常不杀loop后续事件仍到达() throws Exception {
+		// 覆盖两层 filter 异常隔离：①dispatch0 外层 try-catch（原生事件路径，RuntimeException）；
+		// ②backfill 快照遍历的内层 catch（快照枚举路径）——过滤器抛异常都不允许杀死 watcher。
+		Path dir = tmp.newFolder("watch-filter-ex").toPath();
+		List<Event> events = new CopyOnWriteArrayList<>();
+		WatchOptions opts = new WatchOptions().filter(rel -> {
+			if (rel.toString().endsWith("boom.txt")) {
+				throw new IllegalStateException("filter boom");
+			}
+			return true;
+		});
+		WatchDir watcher = WatchDir.watch(dir, (type, path) -> events.add(new Event(type, path)), opts);
+		try {
+			await(() -> watcher.isRunning(), "运行中");
+			Files.writeString(dir.resolve("boom.txt"), "x", StandardCharsets.UTF_8);
+			Thread.sleep(300);
+			// 过滤器抛异常（原生事件与快照两条路径）后 watcher 必须存活
+			assertTrue("过滤器异常后 watcher 仍运行", watcher.isRunning());
+			Files.writeString(dir.resolve("ok.txt"), "x", StandardCharsets.UTF_8);
+			await(() -> has(events, EventType.CREATE, "ok.txt"), "后续事件仍回调");
+		} finally {
+			watcher.stop();
+		}
+	}
+
 	private static void invokeQuietly(Method m, Object target, Object... args) throws Exception {
 		try {
 			m.invoke(target, args);

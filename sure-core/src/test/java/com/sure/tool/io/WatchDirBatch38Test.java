@@ -188,7 +188,7 @@ public class WatchDirBatch38Test {
 		try {
 			// OVERFLOW 处理：快照对齐补发 + OVERFLOW 事件上报
 			watcher.handleOverflow();
-			await(() -> has(events, EventType.OVERFLOW, dir.toString()), "OVERFLOW 上报");
+			await(() -> has(events, EventType.OVERFLOW, dir.toString().replace('\\', '/')), "OVERFLOW 上报");
 			assertTrue(has(events, EventType.CREATE, "sub/a.txt"));
 		} finally {
 			watcher.stop();
@@ -205,7 +205,7 @@ public class WatchDirBatch38Test {
 			// 默认 eventTypes 不含 OVERFLOW：只做快照对齐补发，不上报 OVERFLOW
 			watcher.handleOverflow();
 			await(() -> has(events, EventType.CREATE, "top.txt"), "快照补发");
-			assertFalse(has(events, EventType.OVERFLOW, dir.toString()));
+			assertFalse(has(events, EventType.OVERFLOW, dir.toString().replace('\\', '/')));
 		} finally {
 			watcher.stop();
 		}

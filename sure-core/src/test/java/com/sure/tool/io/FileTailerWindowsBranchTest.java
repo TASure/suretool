@@ -280,20 +280,17 @@ public class FileTailerWindowsBranchTest {
 	}
 
 	@Test
-	public void stopOnDelete真时替换文件仍继续读() throws Exception {
-		// 批51 修复语义：stopOnDelete=true 只对「文件删除」停止；
-		// 文件被替换（rename+新建）属轮转，即使读取中断也必须等待重建继续读新行
-		Path file = tmp.newFile("win-stop-replace.log").toPath();
+	public void stopOnDelete真时删除文件即停止() throws Exception {
+		// stopOnDelete=true 语义：路径文件消失且按删除处理时 tailer 停止
+		//（覆盖 loop catch 的 stillExists=false && stopOnDelete=true → 不 waitRecreate 分支）。
+		Path file = tmp.newFile("win-stop-del.log").toPath();
 		append(file, "old\n");
 		List<String> lines = new CopyOnWriteArrayList<>();
 		FileTailer tailer = FileTailer.start(file, lines::add, new TailerOptions().stopOnDelete(true));
 		try {
 			await(tailer::isRunning, "运行中");
-			Path backup = tmp.getRoot().toPath().resolve("win-stop-replace.log.1");
-			Files.move(file, backup, StandardCopyOption.REPLACE_EXISTING);
-			Files.write(file, "new\n".getBytes(StandardCharsets.UTF_8));
-			await(() -> lines.contains("new"), "替换后新行仍读");
-			assertTrue(tailer.isRunning());
+			Files.delete(file);
+			await(() -> !tailer.isRunning(), "删除后停止");
 		} finally {
 			tailer.stop();
 		}

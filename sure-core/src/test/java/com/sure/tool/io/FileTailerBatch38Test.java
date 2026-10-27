@@ -37,6 +37,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -45,6 +47,17 @@ import org.junit.rules.TemporaryFolder;
  * {@link FileTailer} 批38补测：追加监控、行切分、编码探测、轮转重开、删除策略。
  */
 public class FileTailerBatch38Test {
+
+	@BeforeClass
+	public static void enableTailerDebug() {
+		// Windows CI 轮转场景（L246 15s 超时）需要 tail-debug 实机证据定位
+		System.setProperty("sure.tailer.debug", "1");
+	}
+
+	@AfterClass
+	public static void disableTailerDebug() {
+		System.clearProperty("sure.tailer.debug");
+	}
 
 	@Rule
 	public TemporaryFolder tmp = new TemporaryFolder();

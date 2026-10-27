@@ -40,3 +40,20 @@
 - 不改发布制品；不创建定时任务
 - dependabot PR#19/#20 待 CI 修复生效后由 dependabot 自动 rebase 重跑；若 Windows 仍红需复核
 - repo1 1.19.0 已发布（用户手动 Portal publish）：台账 v1.19.0 发布项标记已闭环，另需验证 `sure-core-1.19.0.pom` 200（已确认）并核对 CHANGELOG/tag/Release 一致性
+
+---
+
+## 6. 批51 根因反转结论（2026-10-27 复验证据）
+
+批50 推送（fa3e935）后 Windows 真机复验**未起效**：CI run 39701052523 windows job 119570100291 仍 7 例失败
+（FileTailerBatch38Test 1×15s + WatchDirBatch38Test 4×15s+1×0.004s + CoverageMarginTest watchDir 1×15s）。
+以 job 日志（`sure.watch.diag`/`sure.tailer.debug`）逐例定位，批50「事件丢失」假设被证伪，真根因三分：
+
+| # | 失败例数 | 根因 | 证据 | 修复 |
+|---|---|---|---|---|
+| 1 | 5 | 测试断言硬编码正斜杠，Windows `Path.toString()` 反斜杠不匹配（多段路径永不匹配） | `watch-diag` evt/backfill/sync tick 全量到达，仅断言 toString 失败 | 断言/回调 `replace('\\','/')` 分隔符归一化（语义不变） |
+| 2 | 1 | dispatch 未捕获异常逃逸至 loop `catch (Throwable)` → 虚线程死亡、watcher 停止、事件丢失 | `创建新目录自身触发Create`：evt 到达后 15ms `running=false` | dispatch 外层 try-catch（单事件异常不杀 loop） |
+| 3 | 1 | FileTailer reopen 瞬时失败逃逸 + 同大小轮转（`old1\n`→`new1\n` 均 5B）size 判据失效 | 轮转测试无 debug（Batch38 未开），WindowsBranchTest 模拟全过、真机失败 | reopen try-catch 重试 + loop catch 探测 stillExists + EOF 创建时间交叉判据 |
+
+批50 保留：周期快照无条件化、backfill 单条目容错、TOCTOU 原子读（逻辑正确，非根因）。
+验收（批51）：windows CI 全绿（3 工作流矩阵含 FileTailer/WatchDir/CoverageMargin 相关测试）。

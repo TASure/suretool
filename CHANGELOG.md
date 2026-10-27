@@ -6,6 +6,16 @@
 
 ## [Unreleased]
 
+### 批51：Windows 7 例失败根因反转修复（阶段 C「治理」，台账 HL-2026-10-15/16/18-01）
+
+批50 修复推送后 Windows 真机复验**未起效**（run 39701052523 / job 119570100291 仍 7 例失败），本轮以 Windows job 日志（`sure.watch.diag`/`sure.tailer.debug` 全量证据）反转根因，三类修复一次到位：
+
+- **测试断言平台缺陷（5 例，日志实证事件全部到达）**：`WatchDirBatch38Test.has()` 与 `CoverageMarginTest` 硬编码正斜杠相对路径（`sub/a.txt`、`child/pre.txt`），Windows 上 `Path.toString()` 输出反斜杠（`sub\a.txt`）永不匹配 → 4×15s 超时 + 1 例断言失败；`watch-diag` 显示 evt/backfill/sync tick 全部正常。修复：断言与回调统一分隔符归一化（`replace('\\','/')`），语义不变
+- **WatchDir.dispatch 未捕获异常杀死 loop（1 例）**：日志实证 `创建新目录自身触发Create` 场景事件到达后 15ms `running=false`——dispatch 内异常逃逸至 loop 顶层 `catch (Throwable)` → 虚线程死亡、watcher 整体停止、事件永久丢失。修复：dispatch 拆分为 `dispatch0` + 外层 try-catch（单事件异常不杀 loop），`Files.isDirectory` 免受检异常路径顺带简化
+- **FileTailer reopen 瞬时失败 + 同大小轮转（1 例）**：Windows 上替换后新文件打开可能瞬时失败（占用/未就绪），异常逃逸导致 tailer 进入重建等待或误停止；且 `old1\n`→`new1\n` 同 5B 大小轮转在 EOF 探测的 size 判据（`pathSize != chSize`）下失效。修复：rotated 分支 `reopen()` 包 try-catch 失败下一轮重试；`loop()` catch IOException 先探测 `Files.exists(file)`——存在即替换场景，无论 `stopOnDelete` 都 `waitRecreate`；EOF 探测新增创建时间交叉判据（同大小轮转检出）
+- 门禁：`mvn -pl sure-core verify` BUILD SUCCESS（1351 例全绿、jacoco ≥98%、checkstyle/spotbugs 全过）；Linux 本地 WatchDir/FileTailer/CoverageMargin 全部相关测试绿（含 WindowsBranchTest 模拟分支）
+- 配套：`docs/prd/sure-ci-windows-batch50.md` 追加批51 根因反转结论与修复方案；治理台账 3 🟡 更新
+
 ### 批50：CI Windows 诊断闭环（阶段 C「治理」，台账 HL-2026-10-15/16/18-01）
 
 main 分支 CI 持续红的平台缺陷根治——Windows 事件驱动类测试 6 例失败（FileTailer 1 + WatchDir 5）根因确认并修复（纯实现加固，测试断言/超时零改动）：

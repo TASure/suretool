@@ -240,6 +240,19 @@ public final class WatchDir {
 		if (System.getProperty("sure.watch.diag") != null) {
 			System.err.println("[watch-diag] evt root=" + root + " kind=" + event.kind() + " ctx=" + event.context());
 		}
+		try {
+			dispatch0(key, event);
+		} catch (RuntimeException | IOException e) {
+			// 单事件处理异常不允许杀死 loop：Windows 上目录属性/注册瞬时失败常见，
+			// 未捕获会逃逸至 loop 顶层 catch Throwable 导致 watcher 整体停止（事件永久丢失）。
+			// 已入待注册队列的目录由下一轮周期快照兜底，无需重放当前事件。
+			if (System.getProperty("sure.watch.diag") != null) {
+				System.err.println("[watch-diag] evt fail root=" + root + " kind=" + event.kind() + " e=" + e);
+			}
+		}
+	}
+
+	private void dispatch0(WatchKey key, WatchEvent<?> event) throws IOException {
 		if (event.kind() == java.nio.file.StandardWatchEventKinds.OVERFLOW) {
 			handleOverflow();
 			return;
@@ -254,7 +267,9 @@ public final class WatchDir {
 		}
 		// 目录注册与补发不受 filter 限制：filter 只过滤最终事件，否则子目录会被过滤而漏监听
 		if (type == EventType.CREATE && options.recursive()) {
-			if (Files.isDirectory(full)) {
+			// Files.isDirectory 不抛受检异常（失败返回 false），无需额外容错
+			boolean isDir = Files.isDirectory(full);
+			if (isDir) {
 				try {
 					register(full);
 					// 补发注册前已存在的内容（子目录内文件可能在动态注册完成前已被写入）

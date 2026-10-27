@@ -152,8 +152,12 @@ public final class FileTailer {
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		} catch (IOException e) {
-			// 读取中断（文件被删等）：按选项等待重建或退出
-			if (!options.stopOnDelete()) {
+			// 读取中断（文件被替换/删除等）：先探测路径文件是否仍存在。
+			// 存在 = 轮转/替换场景（Windows 上 reopen 或读取瞬时失败常见），
+			// 无论 stopOnDelete 与否都应等待重建重试，否则替换场景会误停止 tailer；
+			// 仅当文件确实消失且 stopOnDelete=true 才按删除语义停止。
+			boolean stillExists = Files.exists(file);
+			if (stillExists || !options.stopOnDelete()) {
 				recreateIsRotation = true;
 				waitRecreate();
 			}
@@ -211,8 +215,17 @@ public final class FileTailer {
 				rotated = true;
 			}
 			if (rotated) {
-				// 文件被替换：轮转重开，并立即建立新文件的大小/创建时间基准
-				reopen();
+				// 文件被替换：轮转重开，并立即建立新文件的大小/创建时间基准。
+				// Windows 上替换后新文件打开可能瞬时失败（占用/未就绪）：
+				// 等待下一轮重试，不允许异常逃逸导致 tailer 进入重建等待或停止。
+				try {
+					reopen();
+				} catch (IOException e) {
+					if (System.getProperty("sure.tailer.debug") != null) {
+						System.err.println("[tail-debug] reopen retry e=" + e);
+					}
+					Thread.sleep(options.pollInterval().toMillis());
+				}
 				continue;
 			}
 			channel.position(position);
@@ -222,15 +235,21 @@ public final class FileTailer {
 				// EOF：探测路径当前文件是否与 channel 底层文件不一致（轮转/重建后新文件）。
 				// 判据：路径 size 已变化且 channel 仍是旧文件（chSize==position==旧文件大小），
 				// 追加写时 chSize 随同 inode 增长（==pathSize），不会误判。
+				// 交叉判据：同大小轮转（新文件字节数相同）时 size 不变，靠创建时间变化检出。
 				if (key == null) {
 					try {
-						long pathSize = Files.readAttributes(file,
-								java.nio.file.attribute.BasicFileAttributes.class).size();
+						BasicFileAttributes eofAttrs = Files.readAttributes(file,
+								java.nio.file.attribute.BasicFileAttributes.class);
+						long pathSize = eofAttrs.size();
 						long chSize = channel.size();
-						if (pathSize != chSize && chSize == position) {
+						boolean sizeRotated = pathSize != chSize && chSize == position;
+						boolean creationRotated = chSize == position && lastCreation != null
+								&& !lastCreation.equals(creationOf(eofAttrs));
+						if (sizeRotated || creationRotated) {
 							if (System.getProperty("sure.tailer.debug") != null) {
 								System.err.println("[tail-debug] EOF-rotate pathSize=" + pathSize
-										+ " chSize=" + chSize + " pos=" + position);
+										+ " chSize=" + chSize + " pos=" + position
+										+ " creationRotated=" + creationRotated);
 							}
 							reopen();
 							continue;

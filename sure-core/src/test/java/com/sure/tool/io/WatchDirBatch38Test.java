@@ -81,7 +81,10 @@ public class WatchDirBatch38Test {
 	}
 
 	private static boolean has(List<Event> events, EventType type, String name) {
-		return events.stream().anyMatch(e -> e.type == type && e.path.toString().equals(name));
+		// 跨平台归一：Windows 上 Path.toString() 使用反斜杠分隔符（sub\a.txt），
+		// 测试期望统一为正斜杠相对路径，归一后再比较（语义不变，仅分隔符中立化）。
+		return events.stream().anyMatch(e -> e.type == type
+				&& e.path.toString().replace('\\', '/').equals(name));
 	}
 
 	@Test

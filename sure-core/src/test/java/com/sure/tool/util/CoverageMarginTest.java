@@ -141,7 +141,8 @@ public class CoverageMarginTest {
 		List<String> events = new CopyOnWriteArrayList<>();
 		WatchDir watcher = WatchDir.watch(dir, (type, rel) -> {
 			if (type == EventType.CREATE) {
-				events.add(rel.toString());
+				// 跨平台归一：Windows Path.toString() 用反斜杠，统一正斜杠后再断言
+				events.add(rel.toString().replace('\\', '/'));
 			}
 		});
 		try {

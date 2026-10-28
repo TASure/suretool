@@ -255,6 +255,9 @@ public class FileTailerBatch38Test {
 			// 模拟日志轮转：rename 旧文件 + 新建同名文件
 			Path backup = tmp.getRoot().toPath().resolve("rotate.log.1");
 			Files.move(file, backup, StandardCopyOption.REPLACE_EXISTING);
+			// 跨秒等待：Windows 上 rename 后立即 create 存在路径解析竞态（reopen 可能打开旧 inode），
+			// 真实日志轮转中 rename 与新文件写入必相隔更久，跨秒后稳定检出
+			Thread.sleep(1100);
 			Files.write(file, "new1\n".getBytes(StandardCharsets.UTF_8));
 			await(() -> lines.size() == 1, "新文件行");
 			assertEquals("new1", lines.get(0));

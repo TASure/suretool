@@ -78,4 +78,21 @@ public class SnowflakeGapTest {
 		long id2 = s.nextId();
 		Assert.assertTrue(id2 != 0L);
 	}
+
+	/**
+	 * 毫秒内序号溢出路径：连续生成 4200 个 ID（超过 4096 的 sequence mask），
+	 * 强制触发 sequence 归零后的 tilNextMillis 等待分支，确定性覆盖 CI 侧未执行行。
+	 *
+	 * @throws Exception 反射异常
+	 */
+	@Test
+	public void testSameMillisSequenceOverflow() throws Exception {
+		Snowflake s = newSnowflake();
+		long prev = 0L;
+		for (int i = 0; i < 4200; i++) {
+			long id = s.nextId();
+			Assert.assertTrue("ID 应单调递增", id > prev);
+			prev = id;
+		}
+	}
 }

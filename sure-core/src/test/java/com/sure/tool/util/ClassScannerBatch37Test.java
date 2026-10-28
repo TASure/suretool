@@ -245,4 +245,19 @@ public class ClassScannerBatch37Test {
 				(Predicate<Class<?>>) c -> true, result, ClassScanner.class.getClassLoader());
 		assertTrue(result.isEmpty());
 	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	public void 不存在目录返回空集() throws Exception {
+		// listFiles null 分支：目录不存在时 File.listFiles() 无条件返回 null（全平台可执行，
+		// 覆盖 Windows 上 setReadable(false) 无效而不可达的不可读目录分支）
+		File dir = new File(tmp.getRoot(), "not-exist-dir-" + System.nanoTime());
+		Method collect = ClassScanner.class.getDeclaredMethod("collect", URL.class, String.class,
+				String.class, Predicate.class, Set.class, ClassLoader.class);
+		collect.setAccessible(true);
+		Set<Class<?>> result = new HashSet<>();
+		collect.invoke(null, dir.toURI().toURL(), "com/sure/tool/util/notexist", "com.sure.tool.util.notexist",
+				(Predicate<Class<?>>) c -> true, result, ClassScanner.class.getClassLoader());
+		assertTrue(result.isEmpty());
+	}
 }

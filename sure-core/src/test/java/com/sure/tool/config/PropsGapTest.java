@@ -159,4 +159,18 @@ public class PropsGapTest {
 			// expected
 		}
 	}
+
+	/**
+	 * 指定字符集加载输入流（覆盖 load(InputStream, Charset) 重载分支）。
+	 *
+	 * @throws Exception IO 异常
+	 */
+	@Test
+	public void testLoadWithCharset() throws Exception {
+		com.sure.tool.util.Props p = new com.sure.tool.util.Props();
+		try (java.io.ByteArrayInputStream in = new java.io.ByteArrayInputStream("k=中文\n".getBytes(java.nio.charset.StandardCharsets.UTF_8))) {
+			p.load(in, java.nio.charset.StandardCharsets.UTF_8);
+			Assert.assertEquals("中文", p.getStr("k"));
+		}
+	}
 }

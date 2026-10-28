@@ -306,6 +306,28 @@ public class FileTailerWindowsBranchTest {
 		}
 	}
 
+
+	@Test
+	public void 无间隙不同大小替换触发size判据() throws Exception {
+		// 覆盖 macOS/Windows 秒级时间戳下可触发的 size 判据分支（216/217）：
+		// 替换间隙无 sleep（无 vanished 分支优先），attrs 直接读新文件，size 变化（4B→5B）
+		// 触发 size<maxSize / sizeRotated，不依赖创建时间精度
+		Path file = tmp.newFile("win-rot-sz.log").toPath();
+		append(file, "old\n");
+		List<String> lines = new CopyOnWriteArrayList<>();
+		FileTailer tailer = FileTailer.start(file, lines::add);
+		try {
+			await(tailer::isRunning, "运行中");
+			Path backup = tmp.getRoot().toPath().resolve("win-rot-sz.log.1");
+			Files.move(file, backup, StandardCopyOption.REPLACE_EXISTING);
+			Files.write(file, "new1\n".getBytes(StandardCharsets.UTF_8));
+			await(() -> lines.size() == 1, "size 判据新文件行");
+			assertEquals("new1", lines.get(0));
+		} finally {
+			tailer.stop();
+		}
+	}
+
 	@Test
 	public void stopOnDelete真时删除文件即停止() throws Exception {
 		// stopOnDelete=true 语义：路径文件消失且按删除处理时 tailer 停止

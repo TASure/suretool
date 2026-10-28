@@ -81,7 +81,7 @@ public class Snowflake {
 	 * @return 雪花 ID
 	 */
 	public synchronized long nextId() {
-		long timestamp = System.currentTimeMillis();
+		long timestamp = forceFixedClock ? fixedClockMillis : System.currentTimeMillis();
 		if (timestamp < lastTimestamp) {
 			long offset = lastTimestamp - timestamp;
 			if (offset > 5000) {
@@ -147,4 +147,9 @@ public class Snowflake {
 	public long getDatacenterId() {
 		return datacenterId;
 	}
+
+	/** 测试钩子：固定时钟返回，确定性触发同毫秒序号溢出与时钟等待分支（低精度平台 currentTimeMillis 下不可达）。 */
+	static volatile boolean forceFixedClock;
+	/** 测试钩子：固定时钟的毫秒值。 */
+	static volatile long fixedClockMillis;
 }

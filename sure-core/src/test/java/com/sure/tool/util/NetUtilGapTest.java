@@ -91,4 +91,18 @@ public class NetUtilGapTest {
 		Assert.assertFalse(NetUtil.isIpv4("256.2.3.4"));
 		Assert.assertFalse(NetUtil.isIpv4(".2.3.4"));
 	}
+
+	/**
+	 * 端口占用分支：占用端口后 isUsableLocalPort 应返回 false（ServerSocket 绑定 IOException 分支）。
+	 *
+	 * @throws Exception IO 异常
+	 */
+	@Test
+	public void testPortOccupied() throws Exception {
+		try (java.net.ServerSocket socket = new java.net.ServerSocket(0)) {
+			int port = socket.getLocalPort();
+			Assert.assertTrue("端口有效", NetUtil.isValidPort(port));
+			Assert.assertFalse("被占用端口不可用", NetUtil.isUsableLocalPort(port));
+		}
+	}
 }

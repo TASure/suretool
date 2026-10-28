@@ -87,12 +87,20 @@ public class SnowflakeGapTest {
 	 */
 	@Test
 	public void testSameMillisSequenceOverflow() throws Exception {
-		Snowflake s = newSnowflake();
-		long prev = 0L;
-		for (int i = 0; i < 4200; i++) {
-			long id = s.nextId();
-			Assert.assertTrue("ID 应单调递增", id > prev);
-			prev = id;
+		// 固定时钟：低精度平台（Windows currentTimeMillis 毫秒内变化）下真实时钟无法保证同毫秒，
+		// 钩子强制 4200 次生成均落在同一毫秒，确定性触发 sequence 归零后的 tilNextMillis 等待分支
+		Snowflake.forceFixedClock = true;
+		Snowflake.fixedClockMillis = System.currentTimeMillis();
+		try {
+			Snowflake s = newSnowflake();
+			long prev = 0L;
+			for (int i = 0; i < 4200; i++) {
+				long id = s.nextId();
+				Assert.assertTrue("ID 应单调递增", id > prev);
+				prev = id;
+			}
+		} finally {
+			Snowflake.forceFixedClock = false;
 		}
 	}
 }

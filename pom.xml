@@ -92,10 +92,10 @@
         <project.build.outputTimestamp>2026-10-18T09:25:28Z</project.build.outputTimestamp>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <junit.version>4.13.2</junit.version>
-        <jqwik.version>1.10.1</jqwik.version>
+        <jqwik.version>1.10.2</jqwik.version>
         <poi.version>5.5.1</poi.version>
         <jmh.version>1.37</jmh.version>
-        <hutool.version>5.8.47</hutool.version>
+        <hutool.version>5.8.48</hutool.version>
         <jakarta.mail.version>2.1.5</jakarta.mail.version>
         <angus.mail.version>2.0.5</angus.mail.version>
         <angus.activation.version>2.0.3</angus.activation.version>
@@ -431,7 +431,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.10.4.1</version>
+                <version>4.10.5.0</version>
                 <configuration>
                     <effort>Max</effort>
                     <threshold>Medium</threshold>

@@ -32,6 +32,9 @@ public class SocketClientTest {
 	@Test
 	public void sendAndReceiveAll() throws Exception {
 		SocketServer server = new SocketServer(0, socket -> {
+			// 先消费客户端已发送的字节再写响应：避免 close 时存在未读数据触发 TCP RST
+			// （macOS CI 偶发 Connection reset：handler 立即关闭而客户端 sendString 尚未被服务端读取）
+			socket.getInputStream().readNBytes(2); // 客户端固定发送 "x\n"
 			SocketUtil.writeString(socket, "welcome \u4e2d\u6587\n", null);
 		});
 		server.start();

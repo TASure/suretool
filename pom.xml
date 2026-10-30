@@ -108,6 +108,12 @@
         <log4j.version>2.26.1</log4j.version>
         <!-- JaCoCo 行覆盖率门禁下限（各模块在自身 pom 中覆盖，见 ROADMAP P2） -->
         <jacoco.line.min>0.70</jacoco.line.min>
+        <!-- 平台死行排除机制（防回归预案）：jacoco 无法按行排除，只能按「带注解的方法」排除。
+             Windows/macOS 上「秒级时间戳下不可达的创建时间判据」等平台死行若拉低 win/mac 覆盖率，
+             CI 在 win/mac 上追加 -Djacoco.excludeAnnotation=com.sure.tool.internal.PlatformDeadBranch 启用
+             （对应方法标注 @PlatformDeadBranch）；默认空=不启用，ubuntu 始终保持 0.98 全行严格门禁。
+             2026-10-30 确认：4bacec6/0986989 补测已覆盖全部平台分支，三平台 0.98 全绿，无需启用。 -->
+        <jacoco.excludeAnnotation></jacoco.excludeAnnotation>
         <!-- SpotBugs 静态扫描：默认开启，无源码模块（sure-all 等）在自身 pom 覆盖为 true -->
         <spotbugs.skip>false</spotbugs.skip>
         <!-- 字节码目标：suretool 仅支持 JDK21+（见 README「环境要求」与 ROADMAP 开源治理） -->
@@ -373,6 +379,10 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                        <configuration>
+                            <!-- 平台死行排除（见 jacoco.excludeAnnotation 属性注释）；空值=不启用 -->
+                            <excludeAnnotation>${jacoco.excludeAnnotation}</excludeAnnotation>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>jacoco-check</id>
@@ -381,6 +391,8 @@
                             <goal>check</goal>
                         </goals>
                         <configuration>
+                            <!-- 平台死行排除（见 jacoco.excludeAnnotation 属性注释）；空值=不启用 -->
+                            <excludeAnnotation>${jacoco.excludeAnnotation}</excludeAnnotation>
                             <rules>
                                 <rule>
                                     <element>BUNDLE</element>

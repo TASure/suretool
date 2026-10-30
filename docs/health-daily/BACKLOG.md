@@ -29,7 +29,10 @@
 |---|---|
 | 本周新增 | 5（4bacec6 平台分支覆盖 / 0986989 Props+ClassScanner / #21 合并 / #19 合并 / 978b2f7 socket 竞态修复） |
 | 本周已闭环 | 5（HL-2026-10-15-01 / HL-2026-10-16-01 / HL-2026-10-18-01 三平台全绿验证 2026-10-29 + 依赖 PR #21 / #19） |
-| 当前积压 | 0（红色项全部 🟢；978b2f7 macos 偶发 socket 修复推送，CI 复验中） |
+| 当前积压 | 0（红色项全部 🟢；978b2f7 socket 竞态修复 + 584bdd7 两轮 CI 全绿验证 2026-10-30） |
 | 本周闭环率 | 100%（5/5） |
 
 > 注：2672602 声明三平台全绿闭环后，合并依赖 PR #21/#19 触发的新 run（2672602 同名 commit，run 40821382882）macos 偶发 SocketClientTest 失败（TCP RST 竞态），根因=服务端 handler 未读客户端 sendString 即关闭。978b2f7 已修复（handler 先 readNBytes(2) 再 writeString），本地 sure-socket 28 例全绿，CI 复验中。
+> 10-30 验证：978b2f7（socket 竞态修复）与 584bdd7（台账/日报）两轮 CI run（40986491503/40986541701）ubuntu/macos/windows/docs-links 全部 ✅。
+> **平台死行排除机制已落地（预案，未启用）**：pom 新增 jacoco.excludeAnnotation 属性 + report/check 配置位 + ci.yml 说明注释；
+> 当前 4bacec6/0986989 补测已覆盖全部平台分支，三平台 0.98 全绿，无需启用；未来 win/mac 出现新平台死行时按预案启用。

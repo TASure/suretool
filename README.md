@@ -197,6 +197,9 @@ mvn clean install
 | `com.sure.tool.codec`      | `Base64Util`       | Base64 / URL 安全 Base64 编解码                      |
 |                            | `Base58Util`       | Base58 编解码（Bitcoin 字母表，去易混淆字符，适合短链/邀请码）       |
 |                            | `Base62Util`       | Base62 编解码（0-9A-Za-z，紧凑且 URL 安全，适合短链/订单号）      |
+|                            | `CaesarUtil`       | 凯撒密码字母轮转编解码，支持任意位移量；位移 13 即 ROT-13         |
+|                            | `RotUtil`          | ROT-13 / ROT-47 轮转密码（自身互逆），ROT-47 覆盖 ASCII 33–126 |
+|                            | `MorseUtil`        | 摩斯电码双向编解码，字母间单空格/单词间三空格，支持 Unicode 变体     |
 |                            | `HexUtil`          | 十六进制编解码                                         |
 |                            | `HashUtil`         | MD5 / SHA-1 / SHA-256 / SHA-512 / CRC32         |
 |                            | `EncodeUtil`       | URL 百分号编解码                                      |

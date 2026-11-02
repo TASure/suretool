@@ -6,6 +6,16 @@
 
 ## [Unreleased]
 
+### 批53a：codec 扩展——凯撒/ROT/摩斯（v1.20.0 候选，sure-core 新增 3 个编解码工具类）
+
+Hutool codec 高频缺口：经典字符密码与摩斯电码编解码。全部零第三方依赖，API 风格对齐批52：
+
+- **`com.sure.tool.codec.CaesarUtil`**：凯撒密码字母轮转，支持任意位移量（负数/超模自动归一）；`encode/decode`；非英文字母原样保留；位移量 13 即是 ROT-13、位移量 3 即是经典军事凯撒
+- **`com.sure.tool.codec.RotUtil`**：ROT 轮转密码工具（Caesar 特例便捷入口）；`rot13`（26 字母，自身即逆）、`rot47`（ASCII 33–126 共 94 可打印字符，覆盖数字/标点/大小写）
+- **`com.sure.tool.codec.MorseUtil`**：摩斯电码双向编解码；字母间单空格、单词间三空格；支持 `●/—` Unicode 变体归一；含 47 字符字典（字母/数字/标点）；null 安全
+- 配套：22 例单测（Caesar 7 + Rot 7 + Morse 8），全部全绿；新类 Checkstyle/SpotBugs 合规
+- 门禁：`mvn -pl sure-core verify` BUILD SUCCESS（1425 例全绿、行覆盖 98.02%、method_audit 仅 6 个预存在未命中）
+
 ### 批52：通用能力补强（v1.20.0 候选，sure-core 新增 6 个工具类）
 
 补齐 Hutool core 中高频但 suretool 缺失的通用工具（全部零第三方依赖，包前缀 `com.sure.tool`）：

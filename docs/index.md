@@ -19,12 +19,12 @@ suretool 是一个**小而全**的 Java 工具类库，参考 [Hutool](https://h
 
 ## 模块与类索引
 
-### sure-core（基础核心，58 个工具类）
+### sure-core（基础核心，61 个工具类）
 
 | 分类 | 类 |
 | --- | --- |
 | Bean / 反射 | BeanDesc、BeanUtil、FieldUtil、PropDesc、ReflectUtil、ClassUtil |
-| 编码 / 哈希 | Base58Util、Base62Util、Base64Util、EncodeUtil、HashUtil、HexUtil、EscapeUtil |
+| 编码 / 哈希 | Base58Util、Base62Util、Base64Util、CaesarUtil、EncodeUtil、HashUtil、HexUtil、MorseUtil、RotUtil、EscapeUtil |
 | 集合 | BiMap、CaseInsensitiveMap、CollUtil、CsvUtil、IterUtil、ListUtil、MapUtil、OrderedMap、StrJoiner、TreeNode、TreeUtil |
 | 日期 / 时间 | DateUnit、DateUtil、StopWatch |
 | IO / 文件 | FileUtil、IoUtil、ResourceUtil、ZipUtil |

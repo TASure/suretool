@@ -93,7 +93,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <junit.version>4.13.2</junit.version>
         <jqwik.version>1.10.2</jqwik.version>
-        <poi.version>5.5.1</poi.version>
+        <poi.version>6.0.0</poi.version>
         <jmh.version>1.37</jmh.version>
         <hutool.version>5.8.48</hutool.version>
         <jakarta.mail.version>2.1.5</jakarta.mail.version>

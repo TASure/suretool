@@ -19,19 +19,19 @@ suretool 是一个**小而全**的 Java 工具类库，参考 [Hutool](https://h
 
 ## 模块与类索引
 
-### sure-core（基础核心，52 个工具类）
+### sure-core（基础核心，61 个工具类）
 
 | 分类 | 类 |
 | --- | --- |
 | Bean / 反射 | BeanDesc、BeanUtil、FieldUtil、PropDesc、ReflectUtil、ClassUtil |
-| 编码 / 哈希 | Base64Util、EncodeUtil、HashUtil、HexUtil、EscapeUtil |
-| 集合 | BiMap、CaseInsensitiveMap、CollUtil、CsvUtil、ListUtil、MapUtil、OrderedMap、StrJoiner、TreeNode、TreeUtil |
+| 编码 / 哈希 | Base58Util、Base62Util、Base64Util、CaesarUtil、EncodeUtil、HashUtil、HexUtil、MorseUtil、RotUtil、EscapeUtil |
+| 集合 | BiMap、CaseInsensitiveMap、CollUtil、CsvUtil、IterUtil、ListUtil、MapUtil、OrderedMap、StrJoiner、TreeNode、TreeUtil |
 | 日期 / 时间 | DateUnit、DateUtil、StopWatch |
-| IO / 文件 | FileUtil、IoUtil、ZipUtil |
+| IO / 文件 | FileUtil、IoUtil、ResourceUtil、ZipUtil |
 | 断言 / 控制台 | Assert、Console、Dict |
 | 正则 / ID | PatternPool、ReUtil、IdcardUtil、IdUtil |
 | 并发 / 线程 | ExecutorBuilder、LockUtil、SyncFinisher、ThreadUtil |
-| 类型转换 / 基础 | ArrayUtil、BooleanUtil、CharsetUtil、CharUtil、ConvertUtil、NumberUtil、ObjectUtil、StrSplitter、StrUtil、SystemUtil |
+| 类型转换 / 基础 | ArrayUtil、BooleanUtil、CharsetUtil、CharUtil、ConvertUtil、NumberUtil、ObjectUtil、StrSplitter、StrUtil、SystemUtil、VersionComparator、VersionUtil |
 | 脱敏 / 校验 / 其他 | DesensitizedUtil、NetUtil、RandomUtil、RuntimeUtil、Snowflake、ValidatorUtil |
 
 ### sure-json（JSON 解析与序列化）

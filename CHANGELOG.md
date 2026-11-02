@@ -6,6 +6,29 @@
 
 ## [Unreleased]
 
+### 批53a：codec 扩展——凯撒/ROT/摩斯（v1.20.0 候选，sure-core 新增 3 个编解码工具类）
+
+Hutool codec 高频缺口：经典字符密码与摩斯电码编解码。全部零第三方依赖，API 风格对齐批52：
+
+- **`com.sure.tool.codec.CaesarUtil`**：凯撒密码字母轮转，支持任意位移量（负数/超模自动归一）；`encode/decode`；非英文字母原样保留；位移量 13 即是 ROT-13、位移量 3 即是经典军事凯撒
+- **`com.sure.tool.codec.RotUtil`**：ROT 轮转密码工具（Caesar 特例便捷入口）；`rot13`（26 字母，自身即逆）、`rot47`（ASCII 33–126 共 94 可打印字符，覆盖数字/标点/大小写）
+- **`com.sure.tool.codec.MorseUtil`**：摩斯电码双向编解码；字母间单空格、单词间三空格；支持 `●/—` Unicode 变体归一；含 47 字符字典（字母/数字/标点）；null 安全
+- 配套：22 例单测（Caesar 7 + Rot 7 + Morse 8），全部全绿；新类 Checkstyle/SpotBugs 合规
+- 门禁：`mvn -pl sure-core verify` BUILD SUCCESS（1425 例全绿、行覆盖 98.02%、method_audit 仅 6 个预存在未命中）
+
+### 批52：通用能力补强（v1.20.0 候选，sure-core 新增 6 个工具类）
+
+补齐 Hutool core 中高频但 suretool 缺失的通用工具（全部零第三方依赖，包前缀 `com.sure.tool`）：
+
+- **`com.sure.tool.codec.Base58Util`**：Bitcoin 字母表 Base58 编解码，去除 `0/O/I/l/+//` 易混淆字符，保留前导零字节（`1` 前缀），适合短链/钱包地址/邀请码；`encode`（字节/字符串）/`decode`/`decodeToString`/`isBase58`
+- **`com.sure.tool.codec.Base62Util`**：`0-9A-Za-z` 字母表 Base62 编解码，API 与 Base58Util 对称，适合紧凑 URL 安全短码/订单号
+- **`com.sure.tool.collection.IterUtil`**：迭代器工具——`getIter`/`empty`/`isEmpty`/`hasNull`/`isAllNull`/`size`/`toList`/`getFirst`/`getFirstNoneNull`/`filter`/`trans`/`join`/`forEach`/`clear`/`asIterator(Enumeration)`，全部 null 空安全
+- **`com.sure.tool.io.ResourceUtil`**：classpath / `file:` / `http(s):` 与无前缀（先类路径后文件系统）统一定位与读取；`getResource`/`exists`/`getStream`/`readBytes`/`readUtf8String`/`readString`
+- **`com.sure.tool.util.VersionComparator` + `VersionUtil`**：SemVer 风格版本比较——数字段按数值（`1.10 > 1.9`）、缺失段按 0、`-` 预发布段小于正式版、`+` 构建元数据忽略、字母忽略大小写；提供 `compare`/`isGreaterThan`/`isGreaterThanOrEqual`/`isLessThan`/`isLessThanOrEqual`/`isEqual`
+- 测试 43 例新增（Base58 7 / Base62 7 / IterUtil 13 / ResourceUtil 7 / VersionComparator 6 / VersionUtil 3），新增类行覆盖率 100%
+- 门禁：`mvn -pl sure-core verify` BUILD SUCCESS（1390 例全绿、jacoco 行覆盖 98.15%、checkstyle/spotbugs 全过）
+- 配套：README 与 `docs/index.md` 类索引同步登记（sure-core 工具类 52 → 58）
+
 ### 批51：Windows 7 例失败根因反转修复（阶段 C「治理」，台账 HL-2026-10-15/16/18-01）
 
 批50 修复推送后 Windows 真机复验**未起效**（run 39701052523 / job 119570100291 仍 7 例失败），本轮以 Windows job 日志（`sure.watch.diag`/`sure.tailer.debug` 全量证据）反转根因，三类修复一次到位：

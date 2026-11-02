@@ -359,7 +359,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.15</version>
+                <version>0.8.16</version>
                 <executions>
                     <execution>
                         <id>jacoco-prepare-agent</id>
@@ -368,7 +368,7 @@
                         </goals>
                         <configuration>
                             <!-- 排除测试专用坏字节类：ClassScannerBatch37Test 在 jar 中写入 {1,2,3,4,5}
-                                构造损坏类以覆盖 ClassFormatError 跳过分支；JaCoCo 0.8.15 插桩该
+                                构造损坏类以覆盖 ClassFormatError 跳过分支；JaCoCo 0.8.16 插桩该
                                 字节流时自身 AIOOBE，导致类定义被非法插桩异常阻断而非预期 ClassFormatError -->
                             <excludes>com/sure/tool/util/Bad</excludes>
                         </configuration>

@@ -192,11 +192,16 @@ mvn clean install
 |                            | `SystemUtil`       | 系统属性与 JVM 内存信息                                  |
 |                            | `RuntimeUtil`      | 执行系统命令并读取输出                                     |
 |                            | `NetUtil`          | 本机 IP / 主机名、内网地址判断、端口检查                         |
+|                            | `VersionUtil`      | 版本号比较 / 大小判断（SemVer 风格，构建元数据忽略）                 |
+|                            | `VersionComparator`| 版本号比较器（数字段优先 / 预发布段 / null 视为最小）                |
 | `com.sure.tool.codec`      | `Base64Util`       | Base64 / URL 安全 Base64 编解码                      |
+|                            | `Base58Util`       | Base58 编解码（Bitcoin 字母表，去易混淆字符，适合短链/邀请码）       |
+|                            | `Base62Util`       | Base62 编解码（0-9A-Za-z，紧凑且 URL 安全，适合短链/订单号）      |
 |                            | `HexUtil`          | 十六进制编解码                                         |
 |                            | `HashUtil`         | MD5 / SHA-1 / SHA-256 / SHA-512 / CRC32         |
 |                            | `EncodeUtil`       | URL 百分号编解码                                      |
 | `com.sure.tool.collection` | `CollUtil`         | 集合判空 / 交并差 / 分组 / 过滤 / 映射 / 分片 / 随机取样 / 不可变 |
+|                            | `IterUtil`         | 迭代器空安全 / 判空 / 过滤 / 转换 / 拼接 / 首元素                |
 |                            | `ListUtil`         | 列表切分 / 分页 / 反转                                  |
 |                            | `MapUtil`          | Map 创建 / 取值 / 链式构建 / 键值互换 / 排序 / 过滤             |
 |                            | `TreeUtil`         | 树结构构建 / 遍历 / 深度计算                               |
@@ -210,6 +215,7 @@ mvn clean install
 | `com.sure.tool.io`         | `FileUtil`         | 文件读写 / 复制 / 移动 / 删除 / 大小 / 路径规范化                |
 |                            | `IoUtil`           | 流复制 / 读取 / 写入 / 安静关闭                            |
 |                            | `ZipUtil`          | ZIP 压缩 / 解压（含 zip-slip 防护）                      |
+|                            | `ResourceUtil`     | classpath / 文件 / HTTP(S) 资源统一定位与读取            |
 | `com.sure.tool.cache`      | `Cache`            | 缓存接口                                            |
 |                            | `FifoCache`        | 先进先出缓存                                          |
 |                            | `LruCache`         | 最近最少使用缓存                                        |

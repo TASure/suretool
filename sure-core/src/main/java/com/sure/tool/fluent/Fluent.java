@@ -23,7 +23,7 @@ import java.util.Objects;
  *
  * <p>按目标类型分发：字符串走 {@link FluentString}，集合走 {@link FluentList}，
  * Map 走 {@link FluentMap}。命名采用无歧义策略：列表构建用 {@link #listOf(Object...)}
- * （避免与 {@link #of(String)} / {@link #of(Object, Object)} 的泛型重载冲突），
+ * （避免与 {@link #of(String)} / {@link #of(Collection)} 的泛型重载冲突），
  * 单键值 Map 用 {@link #mapOf(Object, Object)}。</p>
  *
  * <p>示例：</p>

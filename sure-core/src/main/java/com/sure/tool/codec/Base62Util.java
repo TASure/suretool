@@ -37,7 +37,7 @@ import java.util.Arrays;
  * 解码遇到非 Base62 字母表字符抛 {@link IllegalArgumentException}。</p>
  *
  * @author suretool
- * @since 1.20.0
+ * @since 1.19.1
  */
 public final class Base62Util {
 

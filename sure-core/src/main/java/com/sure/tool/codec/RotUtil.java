@@ -32,7 +32,7 @@ package com.sure.tool.codec;
  * <p>null 语义：入参为 {@code null} 时返回 {@code null}（空安全）。</p>
  *
  * @author suretool
- * @since 1.21.0
+ * @since 1.19.1
  */
 public final class RotUtil {
 

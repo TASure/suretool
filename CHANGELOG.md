@@ -4,9 +4,17 @@
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-## [Unreleased]
+## [1.19.1] - 2026-11-03
 
-### 批53a：codec 扩展——凯撒/ROT/摩斯（v1.20.0 候选，sure-core 新增 3 个编解码工具类）
+### 发布修复：JPMS `fluent` 导出
+
+- `sure-core` 的 `module-info.java` 补 `exports com.sure.tool.fluent`，JPMS 使用方现可访问 Fluent API（无行为变更）
+- 版本对齐：根 pom 与各子模块 parent 版本统一为 `1.19.1`；批52/53a 的 `@since` 由 1.20.0/1.21.0 归一到 1.19.1
+- `DateUtil.isSameWeek` 固定按 ISO 周（周一为首日、首周至少 4 天）比较，不再随 JVM 默认 Locale 变化
+- `FileTailer` 在文件消失/Windows delete-pending 时释放旧 channel，避免同名文件无法重建、tailer 空等
+- 加固平台相关测试：FileTailer 重建重试、ProcessUtil 长命令跨平台、P5 临时目录改用 `createTempDirectory`
+
+### 批53a：codec 扩展——凯撒/ROT/摩斯（v1.19.1 候选，sure-core 新增 3 个编解码工具类）
 
 Hutool codec 高频缺口：经典字符密码与摩斯电码编解码。全部零第三方依赖，API 风格对齐批52：
 
@@ -16,7 +24,7 @@ Hutool codec 高频缺口：经典字符密码与摩斯电码编解码。全部�
 - 配套：22 例单测（Caesar 7 + Rot 7 + Morse 8），全部全绿；新类 Checkstyle/SpotBugs 合规
 - 门禁：`mvn -pl sure-core verify` BUILD SUCCESS（1425 例全绿、行覆盖 98.02%、method_audit 仅 6 个预存在未命中）
 
-### 批52：通用能力补强（v1.20.0 候选，sure-core 新增 6 个工具类）
+### 批52：通用能力补强（v1.19.1 候选，sure-core 新增 6 个工具类）
 
 补齐 Hutool core 中高频但 suretool 缺失的通用工具（全部零第三方依赖，包前缀 `com.sure.tool`）：
 

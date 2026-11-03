@@ -21,8 +21,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.AclEntry;
+import java.nio.file.attribute.AclEntryPermission;
+import java.nio.file.attribute.AclEntryType;
+import java.nio.file.attribute.AclFileAttributeView;
+import java.nio.file.attribute.UserPrincipal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
@@ -42,16 +50,13 @@ public class CompressCoverageTest {
 
 	/**
 	 * 制造"文件存在但不可读"的跨平台确定性状态：
-	 * POSIX 用 setReadable(false)；Windows 上 setReadable 不生效，改用 icacls 拒绝 Everyone 读取
-	 * （GitHub Windows runner 以管理员运行）。用于触发 isBrotli/isSevenZ 的 IOException catch 分支。
+	 * POSIX 用 setReadable(false)；Windows 上 setReadable 不生效，改用 NIO ACL 直接写入
+	 * Everyone 的 DENY 读取 ACE（不依赖外部 icacls 进程，避免其被安全软件挂起导致测试死等）。
+	 * 用于触发 isBrotli/isSevenZ 的 IOException catch 分支。
 	 */
 	private static void makeUnreadable(Path p) throws Exception {
 		if (System.getProperty("os.name", "").toLowerCase().contains("win")) {
-			Process proc = new ProcessBuilder("icacls", p.toAbsolutePath().toString(),
-					"/deny", "Everyone:(R)").redirectErrorStream(true).start();
-			if (proc.waitFor() != 0) {
-				throw new IllegalStateException("icacls 拒绝读取失败");
-			}
+			setDenyRead(p, true);
 		} else if (!p.toFile().setReadable(false)) {
 			throw new IllegalStateException("setReadable(false) 失败");
 		}
@@ -59,12 +64,26 @@ public class CompressCoverageTest {
 
 	private static void makeReadable(Path p) throws Exception {
 		if (System.getProperty("os.name", "").toLowerCase().contains("win")) {
-			Process proc = new ProcessBuilder("icacls", p.toAbsolutePath().toString(),
-					"/grant", "Everyone:(R)").redirectErrorStream(true).start();
-			proc.waitFor();
+			setDenyRead(p, false);
 		} else {
 			p.toFile().setReadable(true);
 		}
+	}
+
+	private static void setDenyRead(Path p, boolean deny) throws IOException {
+		AclFileAttributeView view = Files.getFileAttributeView(p, AclFileAttributeView.class);
+		UserPrincipal everyone = p.getFileSystem().getUserPrincipalLookupService()
+				.lookupPrincipalByName("Everyone");
+		List<AclEntry> acl = new ArrayList<>(view.getAcl());
+		acl.removeIf(e -> e.type() == AclEntryType.DENY && e.principal().getName().equals(everyone.getName()));
+		if (deny) {
+			acl.add(0, AclEntry.newBuilder()
+					.setType(AclEntryType.DENY)
+					.setPrincipal(everyone)
+					.setPermissions(AclEntryPermission.READ_DATA)
+					.build());
+		}
+		view.setAcl(acl);
 	}
 
 	@Test

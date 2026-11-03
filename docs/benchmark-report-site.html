@@ -189,7 +189,7 @@
 对照：hutool-core / hutool-json 5.8.x · guava 33.7.2-jre
 复现：
   mvn -pl sure-benchmark -am package -DskipTests
-  java -jar sure-benchmark/target/sure-benchmark-1.19.1-SNAPSHOT-jar-with-dependencies.jar
+  java -jar sure-benchmark/target/sure-benchmark-1.19.1-jar-with-dependencies.jar
   python3 .github/scripts/benchmark_gate.py &lt;log&gt;   # 门禁判定（ratio ≤ 1.5）
 
 局限：微基准反映热路径单次调用开销；真实应用请以 profiler（async-profiler/JFR）为准。

@@ -41,7 +41,7 @@ import java.util.Comparator;
  * <p>null 语义：{@code null} 视为最小版本（空安全）；两个 {@code null} 视为相等。</p>
  *
  * @author suretool
- * @since 1.20.0
+ * @since 1.19.1
  */
 public class VersionComparator implements Comparator<String>, Serializable {
 

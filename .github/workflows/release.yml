@@ -1,8 +1,9 @@
 name: Release to Maven Central
 
-# 自动化发布流水线：全量门禁 -> 构建发布制品（含源码/JavaDoc/SBOM）-> GPG 签名 ->
-# OSSRH Staging 上传并发布（io.github.tasure 命名空间绑定 OSSRH Staging API，Portal /upload 端点对其返回 500，
-# 故使用 mvn deploy + nexus-staging:release 通道，2026-10-08 修复）-> 校验 repo1 可访问 -> 创建 GitHub Release。
+# 发布流水线：全量门禁 -> 构建发布制品（含源码/JavaDoc/SBOM）-> GPG 签名 ->
+# OSSRH Staging 上传（io.github.tasure 命名空间绑定 OSSRH Staging API，Portal /upload 端点对其返回 500，
+# 故使用 mvn deploy 通道，2026-10-08 修复）。默认只到 staging 并输出 deploymentId，
+# 最终 Publish 由维护者在 Central Portal 人工执行；仓库变量 RELEASE_AUTO_PUBLISH=true 时才自动 Publish/建 Release。
 #
 # 触发方式：
 #   1) 推送 v* 标签（如 v1.1.0）：git tag v1.1.0 && git push origin v1.1.0
@@ -160,15 +161,16 @@ jobs:
         if: steps.check.outputs.published != 'true'
         run: mvn -B -Prelease deploy
 
-      - name: Publish staging deployment to Maven Central (Portal API)
+      - name: Resolve staging deployment id
+        id: staging
         if: steps.check.outputs.published != 'true'
         env:
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
         run: |
           set -euo pipefail
-          # deploy 产生的部署进入 VALIDATED 后，调用 Portal publish API 发布到 Central。
-          # （nexus-staging:release 在 JDK25 因 XStream 模块访问报错，改用官方 Portal publish 端点，v1.7.0 已验证 HTTP 204）
+          # deploy 产生的部署进入 VALIDATED 后记录 deploymentId；默认不自动 Publish，
+          # 最终 Publish 由维护者在 Central Portal 人工执行（仓库变量 RELEASE_AUTO_PUBLISH=true 时才自动发布）。
           ID=""
           for i in $(seq 1 30); do
             ID=$(curl -s -u "$SONATYPE_USERNAME:$SONATYPE_PASSWORD" \
@@ -182,13 +184,28 @@ jobs:
             echo "::error::未找到 VALIDATED 部署，请检查 deploy 结果"
             exit 1
           fi
+          echo "deployment_id=$ID" >> "$GITHUB_OUTPUT"
+          echo "### Maven Central staging 已就绪" >> "$GITHUB_STEP_SUMMARY"
+          echo "- deploymentId: \`$ID\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- 人工发布入口: https://central.sonatype.com/publishing/deployments" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish staging deployment to Maven Central (Portal API)
+        if: steps.check.outputs.published != 'true' && vars.RELEASE_AUTO_PUBLISH == 'true'
+        env:
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+        run: |
+          set -euo pipefail
+          # 人工确认后，将仓库变量 RELEASE_AUTO_PUBLISH 设为 true 再触发本流程；
+          # （nexus-staging:release 在 JDK25 因 XStream 模块访问报错，改用官方 Portal publish 端点，v1.7.0 已验证 HTTP 204）
+          ID="${{ steps.staging.outputs.deployment_id }}"
           echo "发布部署: $ID"
           curl -sS -X POST -u "$SONATYPE_USERNAME:$SONATYPE_PASSWORD" \
             -o /dev/null -w 'publish HTTP %{http_code}\n' \
             "https://central.sonatype.com/api/v1/publisher/deployment/$ID"
 
       - name: Wait for Maven Central sync
-        if: steps.check.outputs.published != 'true'
+        if: steps.check.outputs.published != 'true' && vars.RELEASE_AUTO_PUBLISH == 'true'
         continue-on-error: true
         run: |
           set -euo pipefail
@@ -209,7 +226,7 @@ jobs:
           fi
 
       - name: Create GitHub Release
-        if: steps.check.outputs.published != 'true'
+        if: steps.check.outputs.published != 'true' && vars.RELEASE_AUTO_PUBLISH == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

@@ -76,7 +76,12 @@ public class ProcessUtilExtraTest {
 			}
 		}, 150L);
 		try {
-			ProcessUtil.exec("sleep", "60");
+			boolean windows = System.getProperty("os.name", "").toLowerCase().contains("win");
+			if (windows) {
+				ProcessUtil.exec("cmd", "/c", "ping", "-n", "60", "127.0.0.1");
+			} else {
+				ProcessUtil.exec("sleep", "60");
+			}
 			org.junit.Assert.fail("应抛出 ProcessRuntimeException");
 		} catch (ProcessRuntimeException e) {
 			assertTrue(e.getMessage().contains("中断"));

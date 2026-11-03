@@ -76,6 +76,21 @@ public class CoverageMarginTest {
 		throw new AssertionError("等待超时: " + message);
 	}
 
+	private static void writeWithRetry(Path file, String text) throws Exception {
+		long deadline = System.currentTimeMillis() + 15000;
+		while (true) {
+			try {
+				Files.writeString(file, text, StandardCharsets.UTF_8);
+				return;
+			} catch (java.nio.file.AccessDeniedException e) {
+				if (System.currentTimeMillis() >= deadline) {
+					throw e;
+				}
+				Thread.sleep(50);
+			}
+		}
+	}
+
 	@FunctionalInterface
 	private interface Supplier<T> {
 		T get();
@@ -321,7 +336,7 @@ public class CoverageMarginTest {
 			Files.delete(file);
 			// 留出轮询间隙，确保 tailLoop 感知到文件消失（vanished 分支）
 			Thread.sleep(400);
-			Files.writeString(file, "new1\n", StandardCharsets.UTF_8);
+			writeWithRetry(file, "new1\n");
 			await(() -> lines.contains("new1") && rotated.get() >= 1, "删除重建后读取并触发回调");
 		} finally {
 			tailer.stop();

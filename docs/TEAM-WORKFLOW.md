@@ -59,7 +59,7 @@ suretool 的迭代由「软件研发小组」负责，按 **研发小组长统�
 | 编译与测试 | `Tests run` 全部通过 |
 | Checkstyle | 0 违规（含测试源码） |
 | SpotBugs | 0 个 bug（1 个即失败） |
-| JaCoCo 覆盖率 | 不低于各模块 `jacoco.line.min`（sure-core ≥ 0.70，sure-http ≥ 0.86，sure-poi ≥ 0.85） |
+| JaCoCo 覆盖率 | 不低于各模块 `jacoco.line.min`（默认 0.98，sure-socket 0.97；根 pom 默认 0.70 仅作兜底，benchmark/examples/bom/all/starter 5 模块 skip） |
 | 安全扫描 | CodeQL（push/PR/每周）+ Dependabot 依赖升级 |
 
 - **问题分级**：P0（安全/正确性/数据风险，必须关闭）、P1（功能缺陷/性能隐患，合入前修复）、P2（改进建议，可后续处理）。

@@ -19,7 +19,7 @@ suretool 是一个**小而全**的 Java 工具类库，参考 [Hutool](https://h
 
 ## 模块与类索引
 
-### sure-core（基础核心，61 个工具类）
+### sure-core（基础核心，140 个公开类型；下表为高频 API 索引，完整清单见 javadoc.io）
 
 | 分类 | 类 |
 | --- | --- |

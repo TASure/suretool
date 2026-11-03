@@ -2,6 +2,7 @@
 
 > 目标：让 suretool 在**功能覆盖**上追平 Hutool 高频子集，在**工程质量、API 现代化程度、文档与社区活跃度**上实现超越。
 > 现状基线（2026-09-09）：38 个工具类、496 个 public static 方法、112 个测试用例、本地仓库可用、GitHub 仓库已建（推送待网络）。
+> 现状基线（2026-11-03）：28 个模块、275 个主类（`src/main/java` 下非 `module-info` 计数）、1934 处 `public static` 声明、302 个测试类 / 2402 个 `@Test`、`maven.compiler.release=25`、CI 矩阵 3 平台（ubuntu/macos/windows）× JDK 25、JaCoCo 行覆盖门禁 0.98（sure-socket 0.97，根默认 0.70）、v1.19.1 已发布 Maven Central（repo1 latest/release=1.19.1）。
 
 ---
 
@@ -9,11 +10,11 @@
 
 | 维度 | Hutool（参照） | suretool（现状） | 差距 |
 | --- | --- | --- | --- |
-| 规模 | 12+ 模块（core/cache/cron/db/dfa/extra/http/log/script/poi/jwt/aop），core 数百个工具类 | 单模块 38 类 / 496 方法 | 缺高频功能域 6-8 个 |
-| 分布 | Maven Central 中央仓库 | 仅本地仓库 | 未发布 |
-| 质量 | 测试覆盖中上、迭代 10+ 年 | 112 测试、无 CI、无覆盖率门禁 | 需工程化 |
-| 文档 | 官方文档站 + 大量中文教程 | README 单页 | 需文档站 + 示例体系 |
-| 影响力 | Gitee 24,353 star、行业标准工具库 | 0 star、无社区 | 需长期运营 |
+| 规模 | 12+ 模块（core/cache/cron/db/dfa/extra/http/log/script/poi/jwt/aop），core 数百个工具类 | 28 个模块，275 个主类 / 1934 处 public static 声明 | 缺 3-5 个长尾能力域 |
+| 分布 | Maven Central 中央仓库 | Maven Central 已发布（v1.0.0 → v1.19.1，20 个版本） | 已对齐 |
+| 质量 | 测试覆盖中上、迭代 10+ 年 | 2402 个 @Test、三平台 CI、JaCoCo 门禁 0.98 | 已工程化 |
+| 文档 | 官方文档站 + 大量中文教程 | README + GitHub Pages 文档站 + 20 个示例类（19 个 Demo 可运行） | 文档站已上线，待补教程矩阵 |
+| 影响力 | Gitee 24,353 star、行业标准工具库 | GitHub 2 star、0 fork（2026-11-03） | 需长期运营 |
 | 差异化 | 迭代慢、部分 API 基于旧 java.util.Date、历史包袱 | 全新代码、可用 java.time 重构、无包袱 | **超越机会点** |
 
 **结论**：不追求复制 Hutool 全部 45 个能力域。聚焦"**高频 80% 场景全覆盖 + 3 个杀手锏体验**"——功能上"够用且更优"，体验上"明显更现代"，影响力上"文档/社区/持续交付三管齐下"。
@@ -25,7 +26,7 @@
 1. **零依赖原则（坚持）**：核心 90% 功能只靠 JDK，这是对比 Guava/Commons 的卖点，也是对比 Hutool 的传承。
 2. **模块化拆分**：按 `suretool-core / -http / -json / -cron / -cache / -crypto / -poi / -extra` 演进，按需引入。
 3. **现代 API 优先**：`java.time` 全面替代 `java.util.Date`（Hutool 的 Date 系列是历史包袱）；集合 API 返回不可变视图默认值；所有命名遵循 `XxxUtil` + 静态方法。
-4. **质量即影响力**：覆盖率 ≥ 85%、JMH 基准公开、每次提交全绿，用工程质量建立信任。
+4. **质量即影响力**：覆盖率 ≥ 98%（sure-core 0.98、sure-socket 0.97）、JMH 基准公开、每次提交全绿，用工程质量建立信任。
 5. **文档即增长**：每个工具类都有"一个例子讲清楚"的中文示例，文档站随 v1.0 上线。
 
 ---
@@ -36,18 +37,18 @@
 
 - [x] 提交当前全部工作（工具类扩展批次已提交 `671de31`）
 - [x] 补齐仓库门面：README 徽章（CI/覆盖率/Release/License/Java/Stars）、`CONTRIBUTING.md`、issue/PR 模板
-- [x] 接入 CI（GitHub Actions）：JDK 17/21 矩阵 `mvn verify` + JaCoCo 覆盖率上报（artifact + Codecov）
+- [x] 接入 CI（GitHub Actions）：历史矩阵 JDK 17/21 → 现状 3 平台（ubuntu/macos/windows）× JDK 25 全量 `mvn verify` + JaCoCo 覆盖率上报（artifact + Codecov）
 - [x] 建立编码规范质量门禁：Checkstyle（`config/checkstyle/checkstyle.xml`，`verify` 阶段强制，0 违规）
 - [x] 定义版本策略：`0.1.x` 内部迭代 → `0.x` 功能补齐 → `1.0` 中央仓库首发（见本文件「里程碑 KPI」）
 - [x] 推送至 GitHub（经 GitHub API 完成，仓库 TASure/suretool）
 - [x] SpotBugs 静态扫描（已随 P2 模块化接入，`verify` 强制，Max 力度 / Medium 阈值）
 - [x] License 头自动校验（已随 P2 接入，缺失即构建失败）
 
-**P0 验收结果**：`mvn verify` 全绿（112 测试 / 0 Checkstyle 违规），JaCoCo 基线：指令 70.7% / 行 67.9% / 方法 74.5%。
+**P0 验收结果（2026-09-09 基线）**：`mvn verify` 全绿（112 测试 / 0 Checkstyle 违规），JaCoCo 基线：指令 70.7% / 行 67.9% / 方法 74.5%。
 
 ### P1 高频核心补强（1-2 个月，对标 hutool-core 常用子集）
 
-按优先级分 8 个能力域，每个域完成标准：**类齐全 + 测试覆盖 ≥ 85% + 文档示例**。
+按优先级分 8 个能力域，每个域完成标准：**类齐全 + 测试覆盖 ≥ 0.98（sure-socket 0.97）+ 文档示例**。
 
 #### 1. Bean 域（最高优先级，使用率第一）✅
 - [x] `BeanUtil`：属性拷贝（支持类型转换/忽略空值/忽略指定属性）、Bean↔Map、属性读写
@@ -104,14 +105,14 @@
 
 ### P2 模块化与工程化（与 P1 并行推进）
 
-- [x] 拆分多模块：`sure-core` + `sure-json/-http/-crypto/-cron/-cache/-xml/-poi` + `sure-all` 聚合（包名不变，用户代码无感）
+- [x] 拆分多模块：`sure-core` + `sure-log/-db/-script/-template/-aop/-pdf/-process/-math/-compress/-socket/-event/-json/-http/-crypto/-cron/-cache/-xml/-poi/-extra/-captcha/-jwt/-dfa` + `sure-all` 聚合（共 28 模块，包名不变，用户代码无感）
 - [x] 模块间禁止反向依赖（全部单向依赖 core）；core 保持零第三方运行期依赖
 - [x] 聚合构建验证：根目录 `mvn verify` 全绿（238 测试 × 10 模块）、Checkstyle 门禁沿用
 - [x] CI 多模块化：JaCoCo 报告与 Codecov 上传按模块路径聚合
-- [x] JaCoCo 覆盖率门禁：各模块行覆盖率下限按当前基线设保护线（core 71% / json 63% / http 86% / crypto 78% / cron 93% / cache 75% / xml 80% / poi 88%），目标 85% 随测试补强逐步收紧
+- [x] JaCoCo 覆盖率门禁：各模块行覆盖率下限按当前基线设保护线（2026-11-03 现状：0.98，sure-socket 0.97；根 pom 默认 0.70，benchmark/examples/bom/all/starter 5 个模块 skip）
 - [x] JMH 基准套件：StrUtil/集合/日期/JSON 对比 Hutool 与 JDK 基线（`sure-benchmark` 模块，见「JMH 基准报告」）
-- [x] 基线决策（2026-09-10）：仅支持 JDK21+，`maven.compiler.release=21`，CI 矩阵 JDK 21/25 双跑；写法自由使用 JDK21 特性（record/密封类/虚拟线程等），不考虑低版本兼容
-- [x] API 稳定性：全部 76 个主类 `@since 0.1.0` 标注、破坏性变更进 minor 版本、`@deprecated` 流程（见 CONTRIBUTING「API 稳定性约定」）
+- [x] 基线决策（2026-09-10，2026-11-03 更新）：仅支持 JDK25+，`maven.compiler.release=25`，CI 矩阵 ubuntu/macos/windows × JDK 25；写法自由使用 JDK25 特性（record/密封类/虚拟线程等），不考虑低版本兼容
+- [x] API 稳定性：P2 时点 76 个主类全部 `@since 0.1.0` 标注（现状 275 个主类按实际版本标注 `@since`）、破坏性变更进 minor 版本、`@deprecated` 流程（见 CONTRIBUTING「API 稳定性约定」）
 
 ### P3 发布与生态（3-6 个月）
 
@@ -121,10 +122,10 @@
 - [x] `sure-http` 链式封装：`HttpRequest`/`HttpResponse`（补齐 P1 遗留）
 - [x] `sure-dfa`：敏感词过滤（前缀树 + 停用词跳跃 + FoundWord 命中定位，纯 JDK，对齐 Hutool dfa）
 
-- [ ] Maven Central 发布：OSSRH 账号 + GPG 签名 + `maven-central` 插件流水线
+- [x] Maven Central 发布：OSSRH 账号 + GPG 签名 + `-Prelease` 流水线（2026-11-03 完成 v1.19.1 发布，repo1 latest/release=1.19.1；累计 20 个版本）
 - [x] 文档站上线（GitHub Pages）：类索引 + 每类示例 + 快速上手（docs/index.md + pages.yml）
-- [x] `suretool-all` 聚合包 + BOM（`suretool-bom`）统一版本管理（import 后免写版本，含 POI/JUnit/JMH 配套版本）
-- [x] 示例仓库：14 个真实场景 Demo（sure-examples + ExamplesRunner，实测可运行）
+- [x] `sure-all` 聚合包（jar，传递全部模块依赖）+ BOM（`sure-bom`，pom 打包 `dependencyManagement`）统一版本管理（import 后免写版本，含 POI/JUnit/JMH 配套版本）
+- [x] 示例仓库：19 个真实场景 Demo（sure-examples 中 20 个 Demo 类，ExamplesRunner 注册 19 个，实测可运行）
 - [x] Spring Boot starter（sure-spring-boot-starter 自动装配骨架）
 
 ### P4 影响力运营（持续，自 v0.5 起启动）
@@ -148,24 +149,24 @@
 - [x] SBOM（CycloneDX 聚合 bom.json/bom.xml，随 -Prelease 生成）
 
 **B 工程质量（可复现、可验证）**
-- [x] CI 双矩阵：JDK 21（LTS）/ 25 全量 `mvn verify`
+- [x] CI 矩阵：ubuntu / macos / windows × JDK 25 全量 `mvn verify`（另含 docs-links、benchmark-gate、CodeQL、OSV 等独立 workflow）
 - [x] 三重门禁：Checkstyle（0 违规）/ SpotBugs（Max 力度 / Medium 阈值）/ License 头校验
-- [x] 326 个单元测试全绿（31 个测试类）
+- [x] 2402 个单元测试全绿（302 个测试类，2026-11-03 验收：Failures 0 / Errors 0 / Skipped 0）
 - [x] JMH 基准：14 项对比 13 项不慢于 Hutool（见「JMH 基准报告」）
-- [x] 覆盖率收紧：全模块行覆盖率 ≥ 85%（core 85.3 / json 89.8 / cache 94.5 / crypto 87.4 / xml 93.6 / captcha 93.9 / cron 93.3 / dfa 91.4 / http 88.2 / jwt 92.8 / poi 88.5）
+- [x] 覆盖率收紧：全模块行覆盖率门禁 ≥ 0.98（sure-socket 0.97；5 个非工具模块 skip），sure-core 实测 98.27%（2026-11-03 本地 `mvn -B verify`）
 - [x] JSON 解析 fuzz 测试（JsonFuzzTest 63 例：畸形输入 / 1000 层嵌套 / 10 万字符 / 全 unicode / 循环引用）
 
 **C 发布与分发（可被一键引入）**
 - [x] 多模块 + sure-all 聚合 + sure-bom 统一版本管理
-- [ ] Maven Central 发布（OSSRH + GPG + maven-central 插件流水线）
+- [x] Maven Central 发布（OSSRH + GPG + `-Prelease` 流水线；2026-11-03 v1.19.1 上线，repo1 latest/release=1.19.1）
 - [x] CHANGELOG.md（Keep a Changelog 规范，0.1.0 全量条目已整理）
 - [x] 发布前自动化清单（scripts/release.ps1 + RELEASING.md + github-setup.md + ossrh-application.md）
 
 **D 文档与上手（降低试用门槛）**
 - [x] README 完整门面（徽章 / 快速开始 / 模块表 / 工具类表）
-- [x] CONTRIBUTING.md 贡献指南（含 JDK21+ 环境要求）
+- [x] CONTRIBUTING.md 贡献指南（含 JDK25+ 环境要求）
 - [x] 文档站（GitHub Pages）：类索引 + Hutool 对比 + 维护/发布手册 + 技术文章
-- [x] 示例仓库：14 个真实场景 Demo（sure-examples）
+- [x] 示例仓库：19 个真实场景 Demo（sure-examples）
 - [x] Spring Boot starter（sure-spring-boot-starter 自动装配骨架）
 
 **E 社区与影响力（长期运营）**
@@ -180,9 +181,9 @@
 
 | 里程碑 | 时间 | 功能 | 质量 | 影响力 |
 | --- | --- | --- | --- | --- |
-| M1 | 2 周 | 60+ 类 / 700+ 方法（**当前进度：76 类 / 649 方法**） | CI 全绿、覆盖率 70%（**已达成：core 指令 73.5%、全模块 line 63%-93%**） | 仓库开源、README 门面完整 |
+| M1 | 2 周 | 60+ 类 / 700+ 方法（**当前进度（2026-11-03）：275 主类 / 1934 public static 声明**） | CI 全绿、覆盖率 70%（**已达成：sure-core 行覆盖 98.27%，全模块门禁 0.98 / socket 0.97**） | 仓库开源、README 门面完整 |
 | M2 | 6 周 | JSON/HTTP/并发/加密/定时/缓存落地，模块化拆分（**全部落地，P2 四工程项完成**） | 覆盖率 75%、JMH 报告发布（**覆盖率门禁+JMH 套件已落地**） | 首篇技术文章、10+ star |
-| M3（v1.0） | 3 个月 | 100+ 类 / 1000+ 方法 | 覆盖率 85%、Maven Central 发布 | 文档站上线、100+ star |
+| M3（v1.0） | 3 个月 | 100+ 类 / 1000+ 方法（**已达成：28 模块 / 275 主类**） | 覆盖率 85%、Maven Central 发布（**已达成：v1.19.1 于 2026-11-03 上线**） | 文档站上线、100+ star |
 | M4（v1.x） | 6-12 个月 | 生态组件（starter/BOM/插件） | 双 JDK 兼容、长期 API 稳定 | 500+ star、10+ 外部贡献者、月下载量 10k+ |
 
 ---

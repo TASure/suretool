@@ -68,6 +68,8 @@ public final class FileTailer {
 	private boolean vanished;
 	/** 运行中重建（IOException 触发 waitRecreate）是否属于轮转语义，重建后需触发 onRotate。 */
 	private boolean recreateIsRotation;
+	/** 本次轮转是否已通知：同一物理轮转可能被重开重试 / IOException 重建多条路径各通知一次，读到新文件内容前去重。 */
+	private boolean rotateNotified;
 
 	/**
 	 * 从文件尾部开始跟踪。
@@ -278,6 +280,10 @@ public final class FileTailer {
 				continue;
 			}
 			position += n;
+			if (n > 0) {
+				// 已读到新文件内容：本次轮转通知结束，后续真正的新轮转应再次通知
+				rotateNotified = false;
+			}
 			buffer.flip();
 			while (buffer.hasRemaining()) {
 				byte b = buffer.get();
@@ -430,6 +436,12 @@ public final class FileTailer {
 	}
 
 	private void onRotate() {
+		if (rotateNotified) {
+			// 同一次物理轮转会被不同检测路径各通知一次（重开失败重试 / IOException 重建），
+			// 在读到新文件内容前统一去重，保证一次轮转只回调一次
+			return;
+		}
+		rotateNotified = true;
 		Runnable callback = options.onRotate();
 		if (callback != null) {
 			try {

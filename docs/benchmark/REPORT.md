@@ -44,7 +44,7 @@
 
 ```bash
 mvn -pl sure-benchmark -am package -DskipTests
-java -jar sure-benchmark/target/sure-benchmark-1.19.1-SNAPSHOT-jar-with-dependencies.jar
+java -jar sure-benchmark/target/sure-benchmark-1.19.1-jar-with-dependencies.jar
 python3 .github/scripts/benchmark_gate.py <log>
 ```
 

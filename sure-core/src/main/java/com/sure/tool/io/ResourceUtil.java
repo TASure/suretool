@@ -48,7 +48,7 @@ import java.nio.charset.StandardCharsets;
  * 需要数据但资源不存在时抛 {@link IllegalArgumentException}。</p>
  *
  * @author suretool
- * @since 1.20.0
+ * @since 1.19.1
  */
 public final class ResourceUtil {
 

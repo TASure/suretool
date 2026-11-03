@@ -439,8 +439,7 @@ public class P5CoverageBufferTest {
 
 	@Test
 	public void testZipUtilMkdirsFailures() throws Exception {
-		java.io.File base = new java.io.File("/tmp/sure-zipcov-" + System.nanoTime());
-		base.mkdirs();
+		java.io.File base = java.nio.file.Files.createTempDirectory("sure-zipcov-").toFile();
 		java.io.File srcDir = new java.io.File(base, "src");
 		srcDir.mkdirs();
 		com.sure.tool.io.FileUtil.writeString("x", new java.io.File(srcDir, "sub.txt"),

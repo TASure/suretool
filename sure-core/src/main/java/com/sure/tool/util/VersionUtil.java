@@ -26,7 +26,7 @@ package com.sure.tool.util;
  * }</pre>
  *
  * @author suretool
- * @since 1.20.0
+ * @since 1.19.1
  */
 public final class VersionUtil {
 

@@ -19,8 +19,11 @@ import com.sure.tool.util.StrUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.WeekFields;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -1415,12 +1418,11 @@ public class DateUtil {
 		if (date1 == null || date2 == null) {
 			return false;
 		}
-		Calendar cal1 = Calendar.getInstance();
-		cal1.setTime(date1);
-		Calendar cal2 = Calendar.getInstance();
-		cal2.setTime(date2);
-		return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
-				&& cal1.get(Calendar.WEEK_OF_YEAR) == cal2.get(Calendar.WEEK_OF_YEAR);
+		ZoneId zone = ZoneId.systemDefault();
+		LocalDate local1 = Instant.ofEpochMilli(date1.getTime()).atZone(zone).toLocalDate();
+		LocalDate local2 = Instant.ofEpochMilli(date2.getTime()).atZone(zone).toLocalDate();
+		return local1.get(WeekFields.ISO.weekBasedYear()) == local2.get(WeekFields.ISO.weekBasedYear())
+				&& local1.get(WeekFields.ISO.weekOfWeekBasedYear()) == local2.get(WeekFields.ISO.weekOfWeekBasedYear());
 	}
 
 	/**

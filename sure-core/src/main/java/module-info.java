@@ -23,6 +23,7 @@ module sure.core {
 	exports com.sure.tool.collection;
 	exports com.sure.tool.config;
 	exports com.sure.tool.date;
+	exports com.sure.tool.fluent;
 	exports com.sure.tool.graph;
 	exports com.sure.tool.id;
 	exports com.sure.tool.image;

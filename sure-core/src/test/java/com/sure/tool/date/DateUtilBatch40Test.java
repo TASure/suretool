@@ -94,8 +94,10 @@ public class DateUtilBatch40Test {
 		Date monday = DateUtil.parse("2026-10-12", "yyyy-MM-dd");
 		Date friday = DateUtil.parse("2026-10-16", "yyyy-MM-dd");
 		Date sunday = DateUtil.parse("2026-10-18", "yyyy-MM-dd");
+		Date nextMonday = DateUtil.parse("2026-10-19", "yyyy-MM-dd");
 		Assert.assertTrue(DateUtil.isSameWeek(monday, friday));
-		Assert.assertFalse(DateUtil.isSameWeek(friday, sunday));
+		Assert.assertTrue(DateUtil.isSameWeek(friday, sunday));
+		Assert.assertFalse(DateUtil.isSameWeek(sunday, nextMonday));
 		Assert.assertFalse(DateUtil.isSameWeek(monday, null));
 		Assert.assertFalse(DateUtil.isSameWeek(null, monday));
 	}

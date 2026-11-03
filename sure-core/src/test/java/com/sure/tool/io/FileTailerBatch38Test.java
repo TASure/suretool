@@ -85,6 +85,21 @@ public class FileTailerBatch38Test {
 				java.nio.file.StandardOpenOption.CREATE);
 	}
 
+	private static void writeWithRetry(Path file, String text) throws Exception {
+		long deadline = System.currentTimeMillis() + TIMEOUT_MS;
+		while (true) {
+			try {
+				Files.write(file, text.getBytes(StandardCharsets.UTF_8));
+				return;
+			} catch (java.nio.file.AccessDeniedException e) {
+				if (System.currentTimeMillis() >= deadline) {
+					throw e;
+				}
+				Thread.sleep(50);
+			}
+		}
+	}
+
 	@Test
 	public void 从尾部开始不读历史行() throws Exception {
 		Path file = tmp.newFile("tail.log").toPath();
@@ -352,7 +367,7 @@ public class FileTailerBatch38Test {
 			await(() -> tailer.isRunning(), "运行中");
 			Files.delete(file);
 			Thread.sleep(200);
-			Files.write(file, "重建行\n".getBytes(StandardCharsets.UTF_8));
+			writeWithRetry(file, "重建行\n");
 			await(() -> lines.contains("重建行"), "重建后继续读");
 			assertEquals(1, rotateCount.get());
 		} finally {

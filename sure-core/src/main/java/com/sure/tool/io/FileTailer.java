@@ -161,6 +161,9 @@ public final class FileTailer {
 			boolean stillExists = Files.exists(file);
 			if (stillExists || !options.stopOnDelete()) {
 				recreateIsRotation = true;
+				// Windows delete-pending 下 readAttributes 抛 AccessDenied；不释放旧句柄
+				// 会导致同名文件永远无法重建，因此进入等待重建前必须先关闭 channel。
+				closeQuietly(channel);
 				waitRecreate();
 			}
 		} finally {
@@ -187,8 +190,11 @@ public final class FileTailer {
 						running.set(false);
 						break;
 					}
-					// 记录消失：move/替换间隙被轮询到（轮转语义），重现后必触发轮转
+					// 记录消失：move/替换间隙被轮询到（轮转语义），重现后必触发轮转。
+					// Windows 删除打开中的文件会进入 delete-pending：必须先释放旧 channel，
+					// 否则同名文件无法重建，tailer 会一直持有句柄等待。
 					vanished = true;
+					closeQuietly(channel);
 					Thread.sleep(options.pollInterval().toMillis());
 					continue;
 				}

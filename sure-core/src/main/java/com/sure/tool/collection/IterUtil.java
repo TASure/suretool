@@ -45,7 +45,7 @@ import java.util.function.Predicate;
  * {@code getFirst} 返回 {@code null}，其余集合类方法返回空集合/空串。</p>
  *
  * @author suretool
- * @since 1.20.0
+ * @since 1.19.1
  */
 public final class IterUtil {
 

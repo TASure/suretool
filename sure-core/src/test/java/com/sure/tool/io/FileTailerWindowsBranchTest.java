@@ -74,6 +74,21 @@ public class FileTailerWindowsBranchTest {
 		throw new AssertionError("等待超时: " + message);
 	}
 
+	private static void writeWithRetry(Path file, String text) throws Exception {
+		long deadline = System.currentTimeMillis() + 8000;
+		while (true) {
+			try {
+				Files.write(file, text.getBytes(StandardCharsets.UTF_8));
+				return;
+			} catch (java.nio.file.AccessDeniedException e) {
+				if (System.currentTimeMillis() >= deadline) {
+					throw e;
+				}
+				Thread.sleep(50);
+			}
+		}
+	}
+
 	private static void append(Path file, String s) throws Exception {
 		Files.writeString(file, s, StandardCharsets.UTF_8, java.nio.file.StandardOpenOption.APPEND);
 	}
@@ -218,7 +233,7 @@ public class FileTailerWindowsBranchTest {
 		try {
 			await(tailer::isRunning, "运行中");
 			Files.delete(file);
-			Files.write(file, "重建行\n".getBytes(StandardCharsets.UTF_8));
+			writeWithRetry(file, "重建行\n");
 			await(() -> lines.contains("重建行"), "重建后继续读");
 		} finally {
 			tailer.stop();

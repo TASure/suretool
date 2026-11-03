@@ -35,7 +35,7 @@ import java.util.Map;
  * 编码遇到字典不含字符时原样输出并在前后保留分隔。</p>
  *
  * @author suretool
- * @since 1.21.0
+ * @since 1.19.1
  */
 public final class MorseUtil {
 

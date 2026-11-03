@@ -36,7 +36,7 @@ static utility methods to reduce boilerplate and lower development cost.
 
 * Package prefix: `com.sure.tool`
 
-* Language level: **Java 21+** (zero third-party runtime dependencies in the core domain; Office domain is built on Apache POI 5.5.1)
+* Language level: **Java 25+** (zero third-party runtime dependencies in the core domain; Office domain is built on Apache POI 5.5.1)
 
 * License: Apache License 2.0
 
@@ -50,7 +50,7 @@ static utility methods to reduce boilerplate and lower development cost.
 
 * **Small but complete** — 28 modules + BOM + examples + Spring Boot starter; import only what you need.
 
-* **Quality-gated** — Checkstyle 0 violations, SpotBugs (Max), JaCoCo line coverage ≥ 90% on sure-core, CodeQL + OSV-Scanner + Dependabot enabled in CI.
+* **Quality-gated** — Checkstyle 0 violations, SpotBugs (Max), JaCoCo line coverage gate ≥ 0.98 (sure-socket 0.97; sure-core 98.27% measured), CodeQL + OSV-Scanner + Dependabot enabled in CI.
 
 * **Modern Java** — built with `--release 25`; virtual threads, records, sealed classes, pattern matching and structured concurrency are first-class.
 
@@ -200,7 +200,7 @@ Full module & API portal (28 modules + javadoc.io links): [docs/modules.md](docs
 
 * [x] JDK 25 baseline (v1.6.0)
 
-* [x] Released v1.0.0 → v1.10.0 on Maven Central (11 releases, CI-driven)
+* [x] Released v1.0.0 → v1.19.1 on Maven Central (20 releases, CI-driven)
 
 * [x] v2.0 batch 21/22/23: concurrency (StripedLock/StructuredTaskUtil) · IO/text (FileUtil/IoUtil/StrUtil) · event+graph+math (DeadEvent/DiGraph/GraphUtil/StatUtil)
 
@@ -212,7 +212,7 @@ Full module & API portal (28 modules + javadoc.io links): [docs/modules.md](docs
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). All PRs must pass: Checkstyle 0 violations, SpotBugs, JaCoCo ≥ 90% (sure-core), license headers.
+See [CONTRIBUTING.md](CONTRIBUTING.md). All PRs must pass: Checkstyle 0 violations, SpotBugs, JaCoCo line coverage gate ≥ 0.98 (sure-socket 0.97), license headers.
 
 
 

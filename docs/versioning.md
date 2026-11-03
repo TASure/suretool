@@ -38,16 +38,16 @@
 
 | 类型 | 频率 | 内容 | 验收 |
 | --- | --- | --- | --- |
-| PATCH | 按需（安全补丁即时） | 缺陷/安全修复 | 全量 `mvn verify` 绿；覆盖率门禁 ≥0.90 |
+| PATCH | 按需（安全补丁即时） | 缺陷/安全修复 | 全量 `mvn verify` 绿；覆盖率门禁 ≥0.98（sure-socket 0.97） |
 | MINOR | 约 1-2 月 | 新工具类/增强 | 方法-用例审计通过；benchmark 门禁通过 |
 | MAJOR | 有计划（≤1 年） | 破坏性演进 | 迁移指南 + 双版本并存说明 |
 
-每次发布执行 `scripts/release.sh`（或 Actions `release.yml`）流水线：`mvn verify` → 版本 bump → 打 tag → 发布 Central → 更新文档站。
+每次发布执行 `scripts/release.ps1`（或 Actions `release.yml`）流水线：`mvn verify` → 版本定版 → 打 tag → GPG 签名并上传 OSSRH staging → Central Portal 人工 Publish → 更新文档站。
 
 ## 5. 版本号管理
 
 - 单一事实来源：根 `pom.xml` 的 `<version>`；`sure-bom` 与各模块版本由 `${project.version}` 驱动，**禁止手工改子模块版本**。
-- 发布后立即将主版本 bump 为下一 `-SNAPSHOT`（如 1.1.0 发布后 → 1.1.1-SNAPSHOT）。
+- 发布后仓库保持在发布版本号（当前 `1.19.1`），下一开发周期开始时再切 `x.y.z-SNAPSHOT`（如 1.19.1 → 1.20.0-SNAPSHOT）。
 - git tag 与 Maven 版本严格一一对应：tag `v1.1.0` ↔ 坐标 `io.github.tasure:sure-core:1.1.0`。
 
 ## 6. 变更记录纪律

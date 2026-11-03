@@ -29,10 +29,10 @@
 | sure-captcha | `io.github.tasure:sure-captcha` | `com.sure.tool.captcha` | 图形验证码（线段 / 圆圈 / 扭曲） | hutool-captcha 对齐 | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-captcha/latest/index.html) | ✅ module-info |
 | sure-jwt | `io.github.tasure:sure-jwt` | `com.sure.tool.jwt` | JWT 签发 / 校验（HS / RS） | jjwt 轻量替代 | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-jwt/latest/index.html) | ✅ module-info |
 | sure-dfa | `io.github.tasure:sure-dfa` | `com.sure.tool.dfa` | 敏感词过滤（前缀树 / 停用词） | hutool-dfa 对齐 | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-dfa/latest/index.html) | ✅ module-info |
-| sure-bom | `io.github.tasure:sure-bom` | — | BOM 统一版本管理 | Spring Boot BOM 模式 | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-bom/latest/index.html) | pom-only 管理 |
-| sure-all | `io.github.tasure:sure-all` | — | 聚合模块（全部依赖） | hutool-all | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-all/latest/index.html) | pom-only 聚合 |
+| sure-bom | `io.github.tasure:sure-bom` | — | BOM 统一版本管理 | Spring Boot BOM 模式 | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-bom/latest/index.html) | pom 打包（`dependencyManagement`） |
+| sure-all | `io.github.tasure:sure-all` | — | 聚合模块（全部依赖） | hutool-all | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-all/latest/index.html) | jar 聚合（传递依赖，无主类） |
 | sure-benchmark | `io.github.tasure:sure-benchmark` | `com.sure.tool.benchmark` | JMH 基准测试（性能指标 vs Hutool/Guava） | JMH | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-benchmark/latest/index.html) | 自动模块 sure.benchmark |
-| sure-examples | `io.github.tasure:sure-examples` | `com.sure.tool.examples` | 可运行示例（19+ Demo） | — | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-examples/latest/index.html) | 自动模块 sure.example |
+| sure-examples | `io.github.tasure:sure-examples` | `com.sure.tool.examples` | 可运行示例（19 个 Demo） | — | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-examples/latest/index.html) | 自动模块 sure.example |
 | sure-spring-boot-starter | `io.github.tasure:sure-spring-boot-starter` | `com.sure.tool.spring.boot` | Spring Boot 自动装配入口 | spring-boot-starter 模式 | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-spring-boot-starter/latest/index.html) | 自动模块 sure.boot |
 
 ## 链接速查（Links）

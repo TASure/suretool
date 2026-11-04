@@ -71,7 +71,7 @@ static utility methods to reduce boilerplate and lower development cost.
 
 &#x20;           \<artifactId>sure-bom\</artifactId>
 
-&#x20;           \<version>1.0.0\</version>
+&#x20;           \<version>1.19.1\</version>
 
 &#x20;           \<type>pom\</type>
 

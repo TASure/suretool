@@ -85,7 +85,7 @@ suretool 是一个**小而全**的 Java 工具类库，参考 [Hutool](https://h
 <dependency>
     <groupId>io.github.tasure</groupId>
     <artifactId>sure-all</artifactId>
-    <version>1.0.0</version>
+    <version>1.19.1</version>
 </dependency>
 ```
 

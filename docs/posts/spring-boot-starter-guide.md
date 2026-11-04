@@ -8,7 +8,7 @@
 <dependency>
     <groupId>io.github.tasure</groupId>
     <artifactId>sure-spring-boot-starter</artifactId>
-    <version>1.0.0</version>
+    <version>1.19.1</version>
 </dependency>
 ```
 

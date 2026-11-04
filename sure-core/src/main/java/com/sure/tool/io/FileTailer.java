@@ -70,6 +70,8 @@ public final class FileTailer {
 	private boolean recreateIsRotation;
 	/** 本次轮转是否已通知：同一物理轮转可能被重开重试 / IOException 重建多条路径各通知一次，读到新文件内容前去重。 */
 	private boolean rotateNotified;
+	/** 上次已通知轮转对应的文件身份（fileKey 优先，Windows 无 fileKey 时退回创建时间+最后修改时间）：仅用于区分「同一物理轮转的多条检测路径」与「两次独立轮转」。 */
+	private Object lastNotifiedIdentity;
 
 	/**
 	 * 从文件尾部开始跟踪。
@@ -283,6 +285,7 @@ public final class FileTailer {
 			if (n > 0) {
 				// 已读到新文件内容：本次轮转通知结束，后续真正的新轮转应再次通知
 				rotateNotified = false;
+				lastNotifiedIdentity = null;
 			}
 			buffer.flip();
 			while (buffer.hasRemaining()) {
@@ -306,7 +309,6 @@ public final class FileTailer {
 	 * @throws IOException 打开或读取失败
 	 */
 	private void reopen() throws IOException {
-		onRotate();
 		vanished = false;
 		channel.close();
 		channel = FileChannel.open(file, StandardOpenOption.READ);
@@ -316,6 +318,8 @@ public final class FileTailer {
 		lastKey = fileKey(file);
 		lastCreation = readCreation(file);
 		lastEofMod = readLastModified(file);
+		// 打开成功后再通知：打开失败的重试不算一次轮转，避免同一物理轮转被重试路径重复通知
+		onRotate();
 		if (System.getProperty("sure.tailer.debug") != null) {
 			System.err.println("[tail-debug] reopen pos=" + position + " maxSize=" + maxSize
 					+ " lastCreation=" + lastCreation);
@@ -436,12 +440,15 @@ public final class FileTailer {
 	}
 
 	private void onRotate() {
-		if (rotateNotified) {
+		Object identity = rotateIdentity();
+		if (rotateNotified && (identity == null || identity.equals(lastNotifiedIdentity))) {
 			// 同一次物理轮转会被不同检测路径各通知一次（重开失败重试 / IOException 重建），
-			// 在读到新文件内容前统一去重，保证一次轮转只回调一次
+			// 仅当路径文件身份仍是上次通知的同一文件时去重；两次独立轮转（即使新文件都为空）
+			// 身份不同，应各通知一次，故不能只凭 rotateNotified 一个布尔量判断。
 			return;
 		}
 		rotateNotified = true;
+		lastNotifiedIdentity = identity;
 		Runnable callback = options.onRotate();
 		if (callback != null) {
 			try {
@@ -449,6 +456,28 @@ public final class FileTailer {
 			} catch (RuntimeException e) {
 				// 回调异常不影响 tail 主循环
 			}
+		}
+	}
+
+	/**
+	 * 当前路径文件身份：fileKey 优先（Unix/macOS 可区分每次新建文件）。
+	 *
+	 * <p>Windows/NTFS 的 fileKey 恒为 null，且启用文件隧道（tunneling）：同名文件在
+	 * 15 秒内重建会继承旧文件的创建时间，仅凭创建时间无法区分两次独立轮转
+	 * （两次轮转都无内容时尤其明显）。最后修改时间不参与隧道，作为第二判据。
+	 *
+	 * @return 文件身份，读取失败为 null
+	 */
+	private Object rotateIdentity() {
+		try {
+			BasicFileAttributes attrs = Files.readAttributes(file, BasicFileAttributes.class);
+			Object key = forceNullFileKey ? null : attrs.fileKey();
+			if (key != null) {
+				return key;
+			}
+			return java.util.List.of(creationOf(attrs), attrs.lastModifiedTime());
+		} catch (IOException e) {
+			return null;
 		}
 	}
 

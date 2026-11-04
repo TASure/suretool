@@ -151,6 +151,28 @@
                     </archive>
                 </configuration>
             </plugin>
+            <!-- 依赖契约白名单：基准套件直接对比 core/json/math/event 域（单向依赖） -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <configuration>
+                    <rules combine.self="override">
+                        <bannedDependencies>
+                            <searchTransitive>false</searchTransitive>
+                            <message>sure-benchmark 只允许依赖 sure-core / sure-json / sure-math / sure-event。</message>
+                            <excludes>
+                                <exclude>io.github.tasure:*</exclude>
+                            </excludes>
+                            <includes>
+                                <include>io.github.tasure:sure-core</include>
+                                <include>io.github.tasure:sure-json</include>
+                                <include>io.github.tasure:sure-math</include>
+                                <include>io.github.tasure:sure-event</include>
+                            </includes>
+                        </bannedDependencies>
+                    </rules>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

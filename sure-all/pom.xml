@@ -132,4 +132,31 @@
             <artifactId>sure-extra</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <!-- 依赖契约白名单：聚合模块按定义依赖全部工具模块；
+                 禁止依赖 BOM / 示例 / 基准 / starter / 自身，防止聚合层反向依赖。 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <configuration>
+                    <rules combine.self="override">
+                        <bannedDependencies>
+                            <searchTransitive>false</searchTransitive>
+                            <message>sure-all 只允许依赖各工具模块，禁止依赖 BOM/示例/基准/starter/自身。</message>
+                            <excludes>
+                                <exclude>io.github.tasure:suretool</exclude>
+                                <exclude>io.github.tasure:sure-bom</exclude>
+                                <exclude>io.github.tasure:sure-all</exclude>
+                                <exclude>io.github.tasure:sure-examples</exclude>
+                                <exclude>io.github.tasure:sure-benchmark</exclude>
+                                <exclude>io.github.tasure:sure-spring-boot-starter</exclude>
+                            </excludes>
+                        </bannedDependencies>
+                    </rules>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

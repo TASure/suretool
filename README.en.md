@@ -187,8 +187,8 @@ mvn -pl sure-examples exec:java
 | `sure-socket`             | `io.github.tasure:sure-socket`             | TCP facade (SocketUtil / virtual-thread SocketServer)      | core                   |
 | `sure-event`              | `io.github.tasure:sure-event`              | Event bus (functional/annotation, sync/virtual-thread async, DeadEvent) | core |
 | `sure-extra`              | `io.github.tasure:sure-extra`              | Mail SMTP / FTP / QR code / image processing               | core + jakarta.mail + commons-net + zxing |
-| `sure-benchmark`          | `io.github.tasure:sure-benchmark`          | JMH benchmarks (vs Hutool / Guava)                        | sure-all               |
-| `sure-spring-boot-starter` | `io.github.tasure:sure-spring-boot-starter` | Spring Boot auto-configuration entry                       | sure-all + spring-boot |
+| `sure-benchmark`          | `io.github.tasure:sure-benchmark`          | JMH benchmarks (vs Hutool / Guava)                        | core + json + math + event |
+| `sure-spring-boot-starter` | `io.github.tasure:sure-spring-boot-starter` | Spring Boot auto-configuration entry                       | core + captcha + spring-boot (event/cron/cache optional) |
 
 Full module & API portal (28 modules + javadoc.io links): [docs/modules.md](docs/modules.md).
 

@@ -45,4 +45,30 @@
             <artifactId>sure-json</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <!-- 依赖契约白名单：JWT 需要 sure-crypto 的签名/摘要与 sure-json 的载荷序列化（单向依赖） -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <configuration>
+                    <rules combine.self="override">
+                        <bannedDependencies>
+                            <searchTransitive>false</searchTransitive>
+                            <message>sure-jwt 只允许依赖 sure-core / sure-crypto / sure-json。</message>
+                            <excludes>
+                                <exclude>io.github.tasure:*</exclude>
+                            </excludes>
+                            <includes>
+                                <include>io.github.tasure:sure-core</include>
+                                <include>io.github.tasure:sure-crypto</include>
+                                <include>io.github.tasure:sure-json</include>
+                            </includes>
+                        </bannedDependencies>
+                    </rules>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

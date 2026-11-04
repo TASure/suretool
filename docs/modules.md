@@ -33,7 +33,7 @@
 | sure-all | `io.github.tasure:sure-all` | — | 聚合模块（全部依赖） | hutool-all | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-all/latest/index.html) | jar 聚合（传递依赖，无主类） |
 | sure-benchmark | `io.github.tasure:sure-benchmark` | `com.sure.tool.benchmark` | JMH 基准测试（性能指标 vs Hutool/Guava） | JMH | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-benchmark/latest/index.html) | 自动模块 sure.benchmark |
 | sure-examples | `io.github.tasure:sure-examples` | `com.sure.tool.examples` | 可运行示例（19 个 Demo） | — | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-examples/latest/index.html) | 自动模块 sure.example |
-| sure-spring-boot-starter | `io.github.tasure:sure-spring-boot-starter` | `com.sure.tool.spring.boot` | Spring Boot 自动装配入口 | spring-boot-starter 模式 | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-spring-boot-starter/latest/index.html) | 自动模块 sure.boot |
+| sure-spring-boot-starter | `io.github.tasure:sure-spring-boot-starter` | `com.sure.tool.spring.boot` | Spring Boot 自动装配入口（依赖 core + captcha；event/cron/cache 可选，引入后才装配） | spring-boot-starter 模式 | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-spring-boot-starter/latest/index.html) | 自动模块 sure.boot |
 
 ## 链接速查（Links）
 

@@ -52,9 +52,32 @@
     </dependencyManagement>
 
     <dependencies>
+        <!-- 基础依赖：只引入 core，不再传递 POI / PDFBox / Zxing / commons-compress -->
         <dependency>
             <groupId>io.github.tasure</groupId>
-            <artifactId>sure-all</artifactId>
+            <artifactId>sure-core</artifactId>
+        </dependency>
+        <!-- 默认装配的验证码域（默认开启），因此是必选依赖；仅依赖 core，零第三方 -->
+        <dependency>
+            <groupId>io.github.tasure</groupId>
+            <artifactId>sure-captcha</artifactId>
+        </dependency>
+        <!-- 可选域：optional 依赖不传递给使用方；使用方显式引入对应模块后，
+             自动装配类通过 @ConditionalOnClass 生效（未引入时整段配置跳过） -->
+        <dependency>
+            <groupId>io.github.tasure</groupId>
+            <artifactId>sure-event</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>io.github.tasure</groupId>
+            <artifactId>sure-cron</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>io.github.tasure</groupId>
+            <artifactId>sure-cache</artifactId>
+            <optional>true</optional>
         </dependency>
         <!-- 自动装配（编译期即可，运行时由应用自身引入 starter） -->
         <dependency>
@@ -84,6 +107,29 @@
 							<Automatic-Module-Name>sure.boot</Automatic-Module-Name>
 						</manifestEntries>
 					</archive>
+				</configuration>
+			</plugin>
+			<!-- 依赖契约白名单：core + captcha 为必选，event/cron/cache 为 optional 可选域 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<configuration>
+					<rules combine.self="override">
+						<bannedDependencies>
+							<searchTransitive>false</searchTransitive>
+							<message>sure-spring-boot-starter 只允许依赖 core/captcha 及可选 event/cron/cache，禁止 sure-all。</message>
+							<excludes>
+								<exclude>io.github.tasure:*</exclude>
+							</excludes>
+							<includes>
+								<include>io.github.tasure:sure-core</include>
+								<include>io.github.tasure:sure-captcha</include>
+								<include>io.github.tasure:sure-event</include>
+								<include>io.github.tasure:sure-cron</include>
+								<include>io.github.tasure:sure-cache</include>
+							</includes>
+						</bannedDependencies>
+					</rules>
 				</configuration>
 			</plugin>
 		</plugins>

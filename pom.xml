@@ -345,6 +345,39 @@
 
     <build>
         <plugins>
+            <!-- 模块依赖契约门禁（validate 阶段）：模块间只允许单向依赖 sure-core。
+                 例外白名单在对应模块 pom 中通过 combine.self="override" 覆盖，理由就近注释。
+                 searchTransitive=false：只检查各模块的直接依赖（POI 等第三方传递依赖不参与）。
+                 默认禁止所有 io.github.tasure 模块依赖，仅放行 sure-core。 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.6.2</version>
+                <configuration>
+                    <rules>
+                        <bannedDependencies>
+                            <searchTransitive>false</searchTransitive>
+                            <message>模块内部依赖只允许 sure-core（白名单例外：sure-jwt→crypto/json、sure-benchmark→core/json/math/event、sure-spring-boot-starter→core/captcha 及可选 event/cron/cache、sure-examples→sure-all、sure-all→各工具模块）。禁止反向依赖与环。</message>
+                            <excludes>
+                                <exclude>io.github.tasure:*</exclude>
+                            </excludes>
+                            <includes>
+                                <include>io.github.tasure:sure-core</include>
+                            </includes>
+                        </bannedDependencies>
+                    </rules>
+                    <fail>true</fail>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>enforce-module-dependency-contract</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

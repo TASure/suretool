@@ -162,9 +162,9 @@ mvn clean install
 | `sure-dfa`                 | `io.github.tasure:sure-dfa`                 | 敏感词过滤（前缀树 / 停用词）                                   | 零依赖                    |
 | `sure-bom`                 | `io.github.tasure:sure-bom`                 | BOM 统一版本管理                                         | —                      |
 | `sure-all`                 | `io.github.tasure:sure-all`                 | 聚合模块（全部）                                           | 全部                     |
-| `sure-benchmark`           | `io.github.tasure:sure-benchmark`           | JMH 基准测试（性能指标）                                    | sure-all               |
+| `sure-benchmark`           | `io.github.tasure:sure-benchmark`           | JMH 基准测试（性能指标）                                    | core + json + math + event |
 | `sure-examples`            | `io.github.tasure:sure-examples`            | 可运行示例（19 个 Demo）                                   | sure-all               |
-| `sure-spring-boot-starter` | `io.github.tasure:sure-spring-boot-starter` | Spring Boot 自动装配入口                                 | sure-all + spring-boot |
+| `sure-spring-boot-starter` | `io.github.tasure:sure-spring-boot-starter` | Spring Boot 自动装配入口                                 | core + captcha + spring-boot（event/cron/cache 可选） |
 
 ### 模块与工具类
 

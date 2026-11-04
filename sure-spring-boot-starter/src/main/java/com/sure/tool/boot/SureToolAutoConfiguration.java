@@ -21,6 +21,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.SmartLifecycle;
 
 import com.sure.tool.cache.Cache;
@@ -32,7 +33,9 @@ import com.sure.tool.event.EventBus;
  * suretool Spring Boot 自动装配入口。
  *
  * <p>通过 {@code META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports}
- * 被 Spring Boot 自动发现。当前提供验证码 / 事件总线 / 定时调度 / 缓存四域 Bean 装配，
+ * 被 Spring Boot 自动发现。验证码域随 starter 的必选依赖（sure-core + sure-captcha）默认装配；
+ * 事件总线 / 定时调度 / 缓存三域为可选依赖，仅当使用方显式引入对应模块时按
+ * {@link ConditionalOnClass} 生效，避免 starter 被动拉入全量模块。
  * 每域独立开关（{@code suretool.*.enabled}）、默认安全（cron/cache 默认关闭）。
  */
 @AutoConfiguration
@@ -53,84 +56,84 @@ public class SureToolAutoConfiguration {
 	}
 
 	/**
-	 * 装配全局事件总线（默认开启，可通过 {@code suretool.event.enabled=false} 关闭）。
+	 * 事件总线装配（可选域）：仅当使用方引入 sure-event 时生效。
 	 *
-	 * <p>返回容器管理的事件总线实例（非 {@link EventBus#getDefault()} 静态单例），
-	 * 上下文销毁时自动清理订阅者，多个 Spring 上下文互不干扰。
-	 *
-	 * <p>示例：<pre>{@code
-	 * suretool:
-	 *   event:
-	 *     enabled: true
-	 * }</pre>
-	 *
-	 * @return 事件总线
+	 * <p>独立配置类 + 类级 {@link ConditionalOnClass}，缺少模块时整类跳过，
+	 * 不会触发 NoClassDefFoundError。
 	 */
-	@Bean
+	@Configuration(proxyBeanMethods = false)
 	@ConditionalOnClass(EventBus.class)
-	@ConditionalOnMissingBean
-	@ConditionalOnProperty(prefix = "suretool.event", name = "enabled", havingValue = "true", matchIfMissing = true)
-	public EventBus sureEventBus() {
-		return new EventBus();
+	static class EventConfiguration {
+
+		/**
+		 * 装配全局事件总线（默认开启，可通过 {@code suretool.event.enabled=false} 关闭）。
+		 *
+		 * <p>返回容器管理的事件总线实例（非 {@link EventBus#getDefault()} 静态单例），
+		 * 上下文销毁时自动清理订阅者，多个 Spring 上下文互不干扰。
+		 *
+		 * @return 事件总线
+		 */
+		@Bean
+		@ConditionalOnMissingBean
+		@ConditionalOnProperty(prefix = "suretool.event", name = "enabled", havingValue = "true", matchIfMissing = true)
+		public EventBus sureEventBus() {
+			return new EventBus();
+		}
 	}
 
 	/**
-	 * 装配 CronUtil 调度生命周期（默认关闭，可通过 {@code suretool.cron.enabled=true} 开启）。
-	 *
-	 * <p>默认关闭：避免隐式启动后台调度线程。开启后由 Spring 管理
-	 * {@code CronUtil.start()/stop()} 生命周期（虚拟线程调度器，每秒扫描）。
-	 *
-	 * <p>示例：<pre>{@code
-	 * suretool:
-	 *   cron:
-	 *     enabled: true
-	 * }</pre>
-	 *
-	 * @return 调度生命周期控制器
+	 * 定时调度装配（可选域）：仅当使用方引入 sure-cron 时生效。
 	 */
-	@Bean
+	@Configuration(proxyBeanMethods = false)
 	@ConditionalOnClass(CronUtil.class)
-	@ConditionalOnMissingBean
-	@ConditionalOnProperty(prefix = "suretool.cron", name = "enabled", havingValue = "true")
-	public CronLifecycle sureCronLifecycle() {
-		return new CronLifecycle();
+	static class CronConfiguration {
+
+		/**
+		 * 装配 CronUtil 调度生命周期（默认关闭，可通过 {@code suretool.cron.enabled=true} 开启）。
+		 *
+		 * @return 调度生命周期控制器
+		 */
+		@Bean
+		@ConditionalOnMissingBean
+		@ConditionalOnProperty(prefix = "suretool.cron", name = "enabled", havingValue = "true")
+		public CronLifecycle sureCronLifecycle() {
+			return new CronLifecycle();
+		}
 	}
 
 	/**
-	 * 装配默认缓存 Bean（默认关闭，可通过 {@code suretool.cache.enabled=true} 开启）。
-	 *
-	 * <p>策略由 {@code suretool.cache.type} 指定：lru（默认）/ fifo / timed / weak，
-	 * 容量与过期时间可配。上下文销毁时自动清空。
-	 *
-	 * <p>示例：<pre>{@code
-	 * suretool:
-	 *   cache:
-	 *     enabled: true
-	 *     type: lru
-	 *     capacity: 2048
-	 * }</pre>
-	 *
-	 * @param properties 配置
-	 * @return 缓存实例
+	 * 缓存装配（可选域）：仅当使用方引入 sure-cache 时生效。
 	 */
-	@Bean
-	@ConditionalOnClass(Cache.class)
-	@ConditionalOnMissingBean
-	@ConditionalOnProperty(prefix = "suretool.cache", name = "enabled", havingValue = "true")
-	public Cache<?, ?> sureCache(SureToolProperties properties) {
-		String type = properties.getCache().getType();
-		int capacity = properties.getCache().getCapacity();
-		long timeout = properties.getCache().getTimeout();
-		switch (type) {
-			case "fifo":
-				return CacheUtil.<Object, Object>newFifoCache(capacity);
-			case "timed":
-				return CacheUtil.<Object, Object>newTimedCache(timeout);
-			case "weak":
-				return CacheUtil.<Object, Object>newWeakCache(capacity, timeout);
-			case "lru":
-			default:
-				return CacheUtil.<Object, Object>newLruCache(capacity);
+	@Configuration(proxyBeanMethods = false)
+	@ConditionalOnClass({Cache.class, CacheUtil.class})
+	static class CacheConfiguration {
+
+		/**
+		 * 装配默认缓存 Bean（默认关闭，可通过 {@code suretool.cache.enabled=true} 开启）。
+		 *
+		 * <p>策略由 {@code suretool.cache.type} 指定：lru（默认）/ fifo / timed / weak。
+		 *
+		 * @param properties 配置
+		 * @return 缓存实例
+		 */
+		@Bean
+		@ConditionalOnMissingBean
+		@ConditionalOnProperty(prefix = "suretool.cache", name = "enabled", havingValue = "true")
+		public Cache<?, ?> sureCache(SureToolProperties properties) {
+			String type = properties.getCache().getType();
+			int capacity = properties.getCache().getCapacity();
+			long timeout = properties.getCache().getTimeout();
+			switch (type) {
+				case "fifo":
+					return CacheUtil.<Object, Object>newFifoCache(capacity);
+				case "timed":
+					return CacheUtil.<Object, Object>newTimedCache(timeout);
+				case "weak":
+					return CacheUtil.<Object, Object>newWeakCache(capacity, timeout);
+				case "lru":
+				default:
+					return CacheUtil.<Object, Object>newLruCache(capacity);
+			}
 		}
 	}
 

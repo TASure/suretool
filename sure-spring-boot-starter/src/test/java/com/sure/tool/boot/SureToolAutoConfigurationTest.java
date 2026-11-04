@@ -17,9 +17,12 @@ package com.sure.tool.boot;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
+import org.springframework.boot.test.context.FilteredClassLoader;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
 import com.sure.tool.cache.Cache;
+import com.sure.tool.cache.CacheUtil;
+import com.sure.tool.cron.CronUtil;
 import com.sure.tool.event.EventBus;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -145,6 +148,22 @@ public class SureToolAutoConfigurationTest {
 				.withBean(Cache.class, () -> com.sure.tool.cache.CacheUtil.<Object, Object>newLruCache(64))
 				.run(context -> {
 					assertThat(context).hasSingleBean(Cache.class);
+				});
+	}
+
+	/**
+	 * 可选模块缺席（sure-event / sure-cron / sure-cache 不在类路径）时，
+	 * 自动装配不应失败，验证码默认功能仍可用；三域 Bean 全部跳过。
+	 */
+	@Test
+	public void contextLoadsWhenOptionalModulesAbsent() {
+		runner.withClassLoader(new FilteredClassLoader(EventBus.class, Cache.class, CacheUtil.class, CronUtil.class))
+				.run(context -> {
+					assertThat(context).hasNotFailed();
+					assertThat(context).hasSingleBean(CaptchaGenerator.class);
+					assertThat(context).doesNotHaveBean(EventBus.class);
+					assertThat(context).doesNotHaveBean(Cache.class);
+					assertThat(context).doesNotHaveBean(SureToolAutoConfiguration.CronLifecycle.class);
 				});
 	}
 }

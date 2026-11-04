@@ -67,6 +67,25 @@
                     </archive>
                 </configuration>
             </plugin>
+            <!-- 依赖契约白名单：示例需要全部模块，只通过 sure-all 聚合入口引入 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <configuration>
+                    <rules combine.self="override">
+                        <bannedDependencies>
+                            <searchTransitive>false</searchTransitive>
+                            <message>sure-examples 只允许依赖 sure-all 聚合入口。</message>
+                            <excludes>
+                                <exclude>io.github.tasure:*</exclude>
+                            </excludes>
+                            <includes>
+                                <include>io.github.tasure:sure-all</include>
+                            </includes>
+                        </bannedDependencies>
+                    </rules>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

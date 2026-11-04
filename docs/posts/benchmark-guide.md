@@ -55,7 +55,7 @@ java -jar sure-benchmark/target/sure-benchmark-<version>-jar-with-dependencies.j
 <dependency>
     <groupId>io.github.tasure</groupId>
     <artifactId>sure-all</artifactId>
-    <version>1.0.0</version>
+    <version>1.19.1</version>
 </dependency>
 ```
 
@@ -67,7 +67,7 @@ java -jar sure-benchmark/target/sure-benchmark-<version>-jar-with-dependencies.j
         <dependency>
             <groupId>io.github.tasure</groupId>
             <artifactId>sure-bom</artifactId>
-            <version>1.0.0</version>
+            <version>1.19.1</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>

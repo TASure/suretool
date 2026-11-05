@@ -34,7 +34,19 @@ public class ProcessDemo {
 		ProcessResult r = ProcessUtil.exec("java", "-version");
 		System.out.println("exitCode = " + r.getExitCode());
 		System.out.println("stdout head = " + r.getStdout().lines().findFirst().orElse(""));
-		ProcessResult t = ProcessUtil.execWithTimeout(List.of("sleep", "5"), 1, TimeUnit.SECONDS);
-		System.out.println("timeout(1s on sleep 5) timedOut = " + t.isTimedOut());
+		ProcessResult t = ProcessUtil.execWithTimeout(sleepCommand(), 1, TimeUnit.SECONDS);
+		System.out.println("timeout(1s on 5s sleep) timedOut = " + t.isTimedOut());
+	}
+
+	/**
+	 * 跨平台睡眠命令：Windows 用 PowerShell，其余平台用 sleep。
+	 *
+	 * @return 命令列表
+	 */
+	private static List<String> sleepCommand() {
+		if (System.getProperty("os.name").toLowerCase().contains("win")) {
+			return List.of("powershell", "-NoProfile", "-Command", "Start-Sleep -Seconds 5");
+		}
+		return List.of("sleep", "5");
 	}
 }

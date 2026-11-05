@@ -99,7 +99,7 @@ ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
 | `sure-dfa` | Sensitive-word filtering (prefix tree / stop words) | JDK only |
 | `sure-bom` | BOM for unified module versions | — |
 | `sure-all` | Aggregator: every module in one dependency | all modules |
-| `sure-examples` | Runnable demos (19 examples) | sure-all |
+| `sure-examples` | Runnable demos (20 examples) | sure-all |
 | `sure-benchmark` | JMH benchmarks | core + json + math + event |
 | `sure-spring-boot-starter` | Spring Boot auto-configuration | core + captcha (event / cron / cache optional) |
 
@@ -158,7 +158,7 @@ Heavy third-party libraries do not travel with `sure-all`: when you use PDF, Exc
 | Coverage | `sure-core` line coverage 98.23% (10,227/10,411), gate 0.98; every code module gated at 0.98 (0.97 for `sure-socket`) | `sure-core/pom.xml` · JaCoCo |
 | CI matrix | Ubuntu / macOS / Windows × JDK 25, all running `mvn -B verify` | `.github/workflows/ci.yml` |
 | Static analysis | Checkstyle fails on violations; SpotBugs at effort=Max with failOnError; CodeQL; OSV Scanner | `pom.xml` · workflows |
-| Binary compatibility | All 27 published jar modules run japicmp against 1.19.1 at verify, with `breakBuildOnBinaryIncompatibleModifications=true` | root `pom.xml` |
+| Binary compatibility | 27 of the 28 jar modules run japicmp against 1.19.1 at verify (`sure-concurrent` ships for the first time and joins the baseline next release), with `breakBuildOnBinaryIncompatibleModifications=true` | root `pom.xml` |
 | License headers | license-maven-plugin `check` bound to the verify phase | `pom.xml` |
 | SBOM | CycloneDX `makeAggregateBom` generated during `verify` under `-Prelease` | `pom.xml` |
 | Docs links | The `docs-links` job validates relative links and anchors in README and docs | `.github/scripts/check_docs_links.py` |
@@ -173,7 +173,7 @@ Heavy third-party libraries do not travel with `sure-all`: when you use PDF, Exc
 ## Docs / examples / contributing
 
 - Docs: [Class index](docs/index.md) · [Modules & API](docs/modules.md) · [5-minute quickstart](docs/posts/quickstart.md) · [Comparison with Hutool](docs/comparison-hutool.md)
-- Examples: [sure-examples](sure-examples). Run with `mvn -pl sure-examples -am install -DskipTests`, then `mvn -pl sure-examples exec:java`
+- Examples: [sure-examples](sure-examples) — 20 runnable demos, including `FileTailer` log rotation and `WatchDir` directory events. Run with `mvn -pl sure-examples -am install -DskipTests`, then `mvn -pl sure-examples exec:java`. For Spring Boot wiring, see [sure-spring-boot-demo](sure-spring-boot-demo)
 - Contributing: [CONTRIBUTING.md](CONTRIBUTING.md) · [Bug template](.github/ISSUE_TEMPLATE/bug_report.md) · [Feature request template](.github/ISSUE_TEMPLATE/feature_request.md) · [PR template](.github/PULL_REQUEST_TEMPLATE.md)
 - Security: [SECURITY.md](SECURITY.md) — report vulnerabilities through GitHub Security Advisories
 - License: [Apache License 2.0](LICENSE)

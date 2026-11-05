@@ -47,6 +47,7 @@ public class ExamplesRunner {
 		CompressDemo.run();
 		SocketDemo.run();
 		EventBusDemo.run();
+		FileWatchDemo.run();
 		System.out.println("=== 全部示例执行完成 ===");
 	}
 }

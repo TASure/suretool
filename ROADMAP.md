@@ -2,7 +2,7 @@
 
 > 目标：让 suretool 在**功能覆盖**上追平 Hutool 高频子集，在**工程质量、API 现代化程度、文档与社区活跃度**上实现超越。
 > 现状基线（2026-09-09）：38 个工具类、496 个 public static 方法、112 个测试用例、本地仓库可用、GitHub 仓库已建（推送待网络）。
-> 现状基线（2026-11-03）：28 个模块、275 个主类（`src/main/java` 下非 `module-info` 计数）、1934 处 `public static` 声明、302 个测试类 / 2402 个 `@Test`（2026-11-03 基线；当前 HEAD 为 2404）、`maven.compiler.release=25`、CI 矩阵 3 平台（ubuntu/macos/windows）× JDK 25、JaCoCo 行覆盖门禁 0.98（sure-socket 0.97，根默认 0.70）、v1.19.1 已发布 Maven Central（repo1 latest/release=1.19.1）。
+> 现状基线（2026-11-03）：29 个模块、275 个主类（`src/main/java` 下非 `module-info` 计数）、1934 处 `public static` 声明、302 个测试类 / 2402 个 `@Test`（2026-11-03 基线；当前 HEAD 为 2404）、`maven.compiler.release=25`、CI 矩阵 3 平台（ubuntu/macos/windows）× JDK 25、JaCoCo 行覆盖门禁 0.98（sure-socket 0.97，根默认 0.70）、v1.19.1 已发布 Maven Central（repo1 latest/release=1.19.1）。
 
 ---
 
@@ -10,10 +10,10 @@
 
 | 维度 | Hutool（参照） | suretool（现状） | 差距 |
 | --- | --- | --- | --- |
-| 规模 | 12+ 模块（core/cache/cron/db/dfa/extra/http/log/script/poi/jwt/aop），core 数百个工具类 | 28 个模块，275 个主类 / 1934 处 public static 声明 | 缺 3-5 个长尾能力域 |
+| 规模 | 12+ 模块（core/cache/cron/db/dfa/extra/http/log/script/poi/jwt/aop），core 数百个工具类 | 29 个模块，275 个主类 / 1934 处 public static 声明 | 缺 3-5 个长尾能力域 |
 | 分布 | Maven Central 中央仓库 | Maven Central 已发布（v1.0.0 → v1.19.1，20 个版本） | 已对齐 |
 | 质量 | 测试覆盖中上、迭代 10+ 年 | 2404 个 @Test（302 个测试类）、三平台 CI、JaCoCo 门禁 0.98 | 已工程化 |
-| 文档 | 官方文档站 + 大量中文教程 | README + GitHub Pages 文档站 + 20 个示例类（19 个 Demo 可运行） | 文档站已上线，待补教程矩阵 |
+| 文档 | 官方文档站 + 大量中文教程 | README + GitHub Pages 文档站 + 21 个示例类（20 个 Demo 可运行） | 文档站已上线，待补教程矩阵 |
 | 影响力 | Gitee 24,353 star、行业标准工具库 | GitHub 2 star、0 fork（2026-11-03） | 需长期运营 |
 | 差异化 | 迭代慢、部分 API 基于旧 java.util.Date、历史包袱 | 全新代码、可用 java.time 重构、无包袱 | **超越机会点** |
 
@@ -125,7 +125,7 @@
 - [x] Maven Central 发布：OSSRH 账号 + GPG 签名 + `-Prelease` 流水线（2026-11-03 完成 v1.19.1 发布，repo1 latest/release=1.19.1；累计 20 个版本）
 - [x] 文档站上线（GitHub Pages）：类索引 + 每类示例 + 快速上手（docs/index.md + pages.yml）
 - [x] `sure-all` 聚合包（jar，传递全部模块依赖）+ BOM（`sure-bom`，pom 打包 `dependencyManagement`）统一版本管理（import 后免写版本，含 POI/JUnit/JMH 配套版本）
-- [x] 示例仓库：19 个真实场景 Demo（sure-examples 中 20 个 Demo 类，ExamplesRunner 注册 19 个，实测可运行）
+- [x] 示例仓库：20 个真实场景 Demo（sure-examples 中 21 个 Demo 类，ExamplesRunner 注册 20 个，实测可运行）
 - [x] Spring Boot starter（sure-spring-boot-starter 自动装配骨架）
 
 ### P4 影响力运营（持续，自 v0.5 起启动）
@@ -166,7 +166,7 @@
 - [x] README 完整门面（徽章 / 快速开始 / 模块表 / 工具类表）
 - [x] CONTRIBUTING.md 贡献指南（含 JDK25+ 环境要求）
 - [x] 文档站（GitHub Pages）：类索引 + Hutool 对比 + 维护/发布手册 + 技术文章
-- [x] 示例仓库：19 个真实场景 Demo（sure-examples）
+- [x] 示例仓库：20 个真实场景 Demo（sure-examples；另含 Spring Boot 装配示例 sure-spring-boot-demo）
 - [x] Spring Boot starter（sure-spring-boot-starter 自动装配骨架）
 
 **E 社区与影响力（长期运营）**

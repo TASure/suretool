@@ -39,8 +39,14 @@ public class CompressDemo {
 		SevenZUtil.compressDir(dir, out);
 		System.out.println("7z size = " + Files.size(out));
 
-		byte[] raw = "hello brotli".getBytes(StandardCharsets.UTF_8);
-		byte[] dec = BrotliUtil.decompress(raw);
+		// Brotli 官方 Java 只提供解码器：这里使用预置的合法 Brotli 流（原文：suretool brotli test 中文内容）
+		byte[] compressed = {(byte) 0x1B, (byte) 0x20, (byte) 0x00, (byte) 0x00, (byte) 0x04, (byte) 0x9C,
+				(byte) 0x63, (byte) 0xA9, (byte) 0x9A, (byte) 0xB3, (byte) 0xF0, (byte) 0x70, (byte) 0x10,
+				(byte) 0x84, (byte) 0x7F, (byte) 0x29, (byte) 0x08, (byte) 0x21, (byte) 0x0C, (byte) 0x15,
+				(byte) 0xE7, (byte) 0x71, (byte) 0x78, (byte) 0xDA, (byte) 0xC8, (byte) 0x57, (byte) 0xB2,
+				(byte) 0x62, (byte) 0x1E, (byte) 0x6D, (byte) 0xEC, (byte) 0x2F};
+		byte[] dec = BrotliUtil.decompress(compressed);
 		System.out.println("brotli roundtrip = " + new String(dec, StandardCharsets.UTF_8));
+		System.out.println("isBrotli = " + BrotliUtil.isBrotli(compressed));
 	}
 }

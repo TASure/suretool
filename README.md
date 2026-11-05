@@ -8,7 +8,7 @@
 
 面向 **JDK 25+** 的零依赖 Java 工具包。28 个模块把字符串、集合、日期、IO、并发、JSON、HTTP、加解密等高频操作收敛为静态方法；核心域只依赖 JDK，按需引入一个模块即可。
 
-**如果你的项目在 JDK 17/21，本项目不适用。** 所有模块以 `--release 25` 编译，不提供低版本构建——不为兼容旧 JDK 而放弃 record、sealed、虚拟线程和结构化并发。
+**如果你的项目在 JDK 17/21，本项目不适用**——请继续用 [Hutool](https://hutool.cn/) 或 [Apache Commons](https://commons.apache.org/)。本项目所有模块以 `--release 25` 编译，不提供低版本构建——不为兼容旧 JDK 而放弃 record、sealed、虚拟线程和结构化并发。
 
 [English](README.en.md) · [文档](docs/index.md) · [模块与 API](docs/modules.md) · [示例](sure-examples) · [贡献](CONTRIBUTING.md)
 

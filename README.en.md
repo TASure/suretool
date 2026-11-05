@@ -8,7 +8,7 @@
 
 A zero-dependency Java toolkit for **JDK 25+**. Its 28 modules turn everyday work — strings, collections, dates, IO, concurrency, JSON, HTTP, crypto — into static methods. The core domain needs nothing but the JDK, and you can pull in one module at a time.
 
-**If your project still runs on JDK 17 or 21, this project is not for you.** Every module is compiled with `--release 25`, and there is no lower-version build. That is deliberate: we would rather use records, sealed types, virtual threads and structured concurrency than stay compatible with older runtimes.
+**If your project still runs on JDK 17 or 21, this project is not for you** — stay on [Hutool](https://hutool.cn/) or [Apache Commons](https://commons.apache.org/). Every module here is compiled with `--release 25`, and there is no lower-version build. That is deliberate: we would rather use records, sealed types, virtual threads and structured concurrency than stay compatible with older runtimes.
 
 [中文](README.md) · [Docs](docs/index.md) · [Modules & API](docs/modules.md) · [Examples](sure-examples) · [Contributing](CONTRIBUTING.md)
 

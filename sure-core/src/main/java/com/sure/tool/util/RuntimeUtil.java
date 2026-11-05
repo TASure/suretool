@@ -25,6 +25,8 @@ import java.util.List;
 /**
  * 运行时命令执行工具类，参考 Hutool 的 {@code RuntimeUtil} 设计。
  *
+ * <p>English: Process execution helpers that capture output as a string or lines.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

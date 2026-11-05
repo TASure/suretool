@@ -19,6 +19,8 @@ package com.sure.tool.lang;
  * 秒表计时器，参考 Hutool 的 {@code StopWatch} 设计。
  * 基于 {@link System#nanoTime()} 累计耗时，支持分段累计与多次启停。
  *
+ * <p>English: A monotonic stopwatch for measuring elapsed time in milliseconds and formatted strings.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

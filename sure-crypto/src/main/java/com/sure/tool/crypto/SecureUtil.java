@@ -26,6 +26,8 @@ import com.sure.tool.codec.HashUtil;
 /**
  * 安全工具门面：哈希、AES/DES/RSA/HMAC 一键加解密、随机密钥，参考 Hutool 的 {@code SecureUtil} 设计。
  *
+ * <p>English: Unified entry point for secure-by-default cryptography providers.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

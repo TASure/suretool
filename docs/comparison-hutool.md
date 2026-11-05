@@ -8,9 +8,9 @@
 | 维度 | suretool | Hutool |
 | --- | --- | --- |
 | 定位 | 小而全的 Java 工具库，聚焦常用高频能力 | 大型工具库，覆盖面极广（含更多领域扩展） |
-| JDK 要求 | **仅 JDK 25+**（`maven.compiler.release=21`） | JDK 8+（5.x 支持 JDK8+；兼容老版本） |
+| JDK 要求 | **仅 JDK 25+**（`maven.compiler.release=25`） | JDK 8+（5.x 支持 JDK8+；兼容老版本） |
 | 包名 | `com.sure.tool` | `cn.hutool` |
-| 模块数 | 11 个业务模块 + bom/all/examples | 数十个模块（hutool-all 聚合） |
+| 模块数 | 29 个模块（含 bom/all/examples） | 数十个模块（hutool-all 聚合） |
 | 依赖策略 | **零第三方依赖**（除 POI 等专项模块） | 核心零依赖，部分模块带第三方依赖 |
 
 ## 二、设计取向

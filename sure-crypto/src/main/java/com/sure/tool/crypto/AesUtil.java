@@ -37,6 +37,8 @@ import javax.crypto.spec.SecretKeySpec;
  *   <li>密钥派生使用 SHA-256 截取 16 字节（替代不安全的 MD5）。</li>
  * </ul>
  *
+ * <p>English: AES-GCM encryption and decryption with authenticated ciphertext.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

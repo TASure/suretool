@@ -30,6 +30,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 调度线程每秒检查一次；任务执行在虚拟线程（JDK 21+ 虚拟线程池），互不阻塞。
  * 同一秒内同一任务只执行一次（秒级精度）。
  *
+ * <p>English: Cron expression parsing and scheduling helpers.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

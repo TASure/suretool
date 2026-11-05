@@ -20,6 +20,8 @@ package com.sure.tool.util;
  *
  * <p>提供字符分类判断、空白判断等静态方法。</p>
  *
+ * <p>English: Character classification and conversion helpers.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

@@ -26,6 +26,8 @@ import java.util.zip.CRC32;
  *
  * <p>基于 JDK 原生 {@link MessageDigest} 实现 MD5、SHA 系列摘要与 CRC32 校验。</p>
  *
+ * <p>English: MD5, SHA-1, SHA-256 and HMAC hashing helpers.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

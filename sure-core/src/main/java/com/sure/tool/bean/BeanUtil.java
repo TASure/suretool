@@ -30,6 +30,8 @@ import com.sure.tool.util.ReflectUtil;
 /**
  * Bean 属性操作工具类：属性拷贝、Bean/Map 互转、属性读写，参考 Hutool 的 {@code BeanUtil} 设计。
  *
+ * <p>English: JavaBean property reading, writing and map-to-bean conversion.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

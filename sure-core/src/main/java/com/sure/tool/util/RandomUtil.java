@@ -29,6 +29,8 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * 随机工具类，参考 Hutool 的 {@code RandomUtil} 设计。
  *
+ * <p>English: Random string, number and element selection helpers.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

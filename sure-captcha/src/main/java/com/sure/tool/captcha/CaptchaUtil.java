@@ -18,6 +18,8 @@ package com.sure.tool.captcha;
 /**
  * 验证码工厂，参考 Hutool 的 {@code CaptchaUtil} 设计。
  *
+ * <p>English: Captcha generation helpers for line, circle and shear styles.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

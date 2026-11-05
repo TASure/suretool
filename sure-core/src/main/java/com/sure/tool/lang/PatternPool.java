@@ -20,6 +20,8 @@ import java.util.regex.Pattern;
 /**
  * 常用正则表达式模式池，参考 Hutool 的 {@code PatternPool} 设计。
  *
+ * <p>English: Reusable, precompiled regex patterns for common formats.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

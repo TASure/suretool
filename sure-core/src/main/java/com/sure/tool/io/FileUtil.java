@@ -40,6 +40,8 @@ import java.util.List;
 /**
  * 文件工具类，参考 Hutool 的 {@code FileUtil} 设计。
  *
+ * <p>English: File creation, reading, copying, moving and deletion helpers with clear null and exception semantics.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

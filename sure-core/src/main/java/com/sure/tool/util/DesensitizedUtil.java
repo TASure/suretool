@@ -18,6 +18,8 @@ package com.sure.tool.util;
 /**
  * 数据脱敏工具类，参考 Hutool 的 {@code DesensitizedUtil} 设计。
  *
+ * <p>English: Data masking helpers for phone numbers, IDs, emails and bank cards.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

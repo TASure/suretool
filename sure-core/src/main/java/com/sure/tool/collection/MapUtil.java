@@ -33,6 +33,8 @@ import java.util.function.Function;
 /**
  * Map 工具类，参考 Hutool 的 {@code MapUtil} 设计。
  *
+ * <p>English: Map construction and lookup helpers with typed getters and null-safe operations.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

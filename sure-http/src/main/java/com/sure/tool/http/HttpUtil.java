@@ -34,6 +34,8 @@ import com.sure.tool.io.IoUtil;
  * HTTP 请求工具类，基于 {@link HttpURLConnection} 的零依赖封装，参考 Hutool 的 {@code HttpUtil} 设计。
  * 仅支持 http/https 协议，2xx/3xx 返回响应体，其余状态码抛出 {@link HttpException}。
  *
+ * <p>English: A zero-dependency HTTP client facade for GET, POST and form requests.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

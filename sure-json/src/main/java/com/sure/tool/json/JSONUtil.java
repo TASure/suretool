@@ -29,6 +29,8 @@ import com.sure.tool.date.DateUtil;
 /**
  * JSON 解析与序列化工具类，零第三方依赖的自研实现（RFC 8259 子集），参考 Hutool 的 {@code JSONUtil} 设计。
  *
+ * <p>English: JSON parsing and serialization to and from strings, maps and POJOs.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

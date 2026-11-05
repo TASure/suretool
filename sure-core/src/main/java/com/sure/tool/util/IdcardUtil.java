@@ -21,6 +21,8 @@ import com.sure.tool.lang.PatternPool;
  * 身份证号码工具类（中国大陆 15/18 位），参考 Hutool 的 {@code IdcardUtil} 设计。
  * 支持合法性校验、15 位转 18 位、出生日期与性别解析。
  *
+ * <p>English: Chinese ID-card validation and field extraction helpers.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

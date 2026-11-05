@@ -29,6 +29,8 @@ import java.util.Map;
 /**
  * 反射工具类，参考 Hutool 的 {@code ReflectUtil} 设计。
  *
+ * <p>English: Reflection helpers for fields, methods and constructors with null-safe lookups.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

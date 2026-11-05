@@ -22,6 +22,8 @@ import java.util.regex.Pattern;
 /**
  * 数据校验工具类，参考 Hutool 的 {@code ValidatorUtil} 设计。
  *
+ * <p>English: Common input validators for phone numbers, emails, URLs and more.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

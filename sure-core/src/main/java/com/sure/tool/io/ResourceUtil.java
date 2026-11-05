@@ -47,6 +47,8 @@ import java.nio.charset.StandardCharsets;
  * <p>null 语义：位置为 {@code null} 或空白串时相关方法返回 {@code null}/{@code false}（空安全）；
  * 需要数据但资源不存在时抛 {@link IllegalArgumentException}。</p>
  *
+ * <p>English: Classpath and file-system resource loading helpers.</p>
+ *
  * @author suretool
  * @since 1.19.1
  */

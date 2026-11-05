@@ -1,78 +1,103 @@
 # 贡献指南（CONTRIBUTING）
 
-欢迎为 suretool 贡献代码、文档、示例或 issue。请先阅读并遵守本指南。
+欢迎为 suretool 贡献代码、文档、示例或 issue。本指南给出可直接执行的步骤，照着做即可通过 CI。
 
-## 1. 社区规范
+## 1. 环境要求
 
-- 所有互动遵守 [行为准则](CODE_OF_CONDUCT.md)（若尚未建立，以"尊重、专业、友善"为原则）。
-- 讨论使用中文或英文均可，PR 描述建议中英双语标题。
+- **JDK 25**（`mvn.cmd` 使用 `maven.compiler.release=25`，JDK 17/21 无法编译本仓库）。
+- **Maven 3.9+**，Git。
+- CI 在 Ubuntu / macOS / Windows 三平台 × JDK 25 上执行 `mvn -B verify`，本地默认只需跑通一个平台。
 
-## 2. 快速上手
+## 2. 五分钟跑通构建
 
 ```bash
 git clone https://github.com/TASure/suretool.git
 cd suretool
-# 需要 JDK 21+ 与 Maven 3.8+
-mvn -pl sure-core test        # 单模块测试
-mvn test                      # 全量测试
-mvn -pl sure-core verify      # 含 Checkstyle + 覆盖率门禁
+mvn -B -pl sure-core verify     # 单模块：测试 + Checkstyle + SpotBugs + License + JaCoCo + japicmp
+mvn -B verify                   # 全量：28 个 jar 模块的全部门禁（首次较慢）
 ```
 
 ## 3. 分支与提交
 
-- 开发基于 `main`，请新建分支：`git checkout -b feat/xxx` 或 `fix/xxx`。
-- 提交信息规范：`type(scope): 描述`，type 取 `feat` / `fix` / `docs` / `test` / `build` / `refactor` / `perf`。
-- 提交前：`mvn -pl <受影响模块> verify` 必须通过；新增/修改公共 API 需补测试（见 §5）。
-- 变更登记：涉及用户可见行为/API 的变更，需在 `CHANGELOG.md` 的 `Unreleased` 节追加一行。
+- 从最新 `main` 建分支：`feat/xxx`、`fix/xxx`、`docs/xxx`、`build/xxx`。
+- 提交信息：`type(scope): 描述`，type ∈ `feat` / `fix` / `docs` / `test` / `build` / `refactor` / `perf`。
+- 提交前至少跑通受影响模块的 `mvn -B -pl <模块> verify`。
+- 用户可见行为 / 公共 API 变更，在 `CHANGELOG.md` 的 `Unreleased` 节追加一行；破坏性变更标注 `Breaking`。
 
 ## 4. Good First Issue（新手任务）
 
-适合首次贡献者的任务会打 `good first issue` 标签：
+- **如何找**：Issues 页筛选 `good first issue`，任务会写明改动范围与验收标准。
+- **如何认领**：在 issue 下评论"我想认领"，维护者分配。
+- **完成标准**：满足 issue 验收条件，PR 通过 CI（三平台）后合并。
 
-- **如何找**：仓库 Issues 页筛选 `good first issue` 标签，任务通常标注"预计改动范围"与"验收标准"。
-- **如何认领**：在 issue 下评论"我想认领这个任务"，维护者会分配给你。
-- **完成标准**：满足 issue 描述的验收条件，PR 通过 CI（三平台）即合并。
+## 5. 质量门禁（CI 会逐项检查）
 
-## 5. 测试要求（质量门禁）
+| 门禁 | 要求 | 自查命令 / 位置 |
+| --- | --- | --- |
+| 测试 | 全量通过；**不得删除或禁用测试** | `mvn -B verify` |
+| 覆盖率 | 各代码模块行覆盖 ≥ **0.98**（`sure-socket` 为 0.97） | 见模块 `pom.xml` 的 `<jacoco.line.min>` |
+| 新模块覆盖率 | 必须显式声明 `<jacoco.line.min>0.98</jacoco.line.min>`，否则回落到根默认 0.70 | 新模块 `pom.xml` |
+| 方法命中 | 新增 public/protected 方法至少一个用例执行到 | `python3 .github/scripts/method_audit.py` |
+| 二进制兼容 | japicmp 对比 `1.19.1` 基线，不兼容修改直接失败 | `mvn -B -pl <模块> verify`（`breakBuildOnBinaryIncompatibleModifications=true`） |
+| 模块描述符 | 新增包必须在 `module-info.java` 补充 `exports` | `python3 .github/scripts/check_moduleinfo.py` |
+| 依赖契约 | 核心模块零第三方运行期依赖；第三方库（POI / PDFBox / Mail / commons-net / Zxing / commons-compress 等）必须 `optional` | enforcer `bannedDependencies`，根 `pom.xml` |
+| 静态检查 | Checkstyle（Tab 缩进、import 顺序）、SpotBugs effort=Max 且 failOnError、License 头 | `mvn -B verify` |
 
-- **覆盖率**：sure-core 行覆盖率门禁 ≥90%，新增代码必须带测试。
-- **测试框架**：默认 JUnit 4；生成式/属性测试用 jqwik（仅 sure-core 启用，见其 pom）。
-- **必测路径**：新增 public/protected 方法必须至少一个用例命中（仓库有 `method_audit.py` 审计脚本可自查）：
+测试框架：JUnit 4.13.2；属性测试用 jqwik（当前仅在 `sure-core` 启用）。测试类放在模块 `src/test/java`，命名 `*Test`。
+
+## 6. 运行示例
+
+**sure-examples（19 个独立 Demo + 1 个文件监控 Demo，共 20 个）**
 
 ```bash
-python3 .github/scripts/method_audit.py   # 检查是否有 public/protected 方法未被测试命中
+# 修改过核心模块时先安装到本地仓库（否则会用 Central 上的 1.19.1）
+mvn -B -pl sure-examples -am install -DskipTests
+
+mvn -B -pl sure-examples exec:java                                                    # 全部示例
+mvn -B -pl sure-examples exec:java -Dexec.mainClass=com.sure.tool.example.FileWatchDemo  # 单个示例
+mvn -B -pl sure-examples exec:java -Dexec.mainClass=com.sure.tool.example.PoiDemo
 ```
 
-- **风格**：遵循 Checkstyle（Tab 缩进、import 排序、Apache License 头），`mvn verify` 会自动检查。
+`FileWatchDemo` 演示 `FileTailer` 的日志追加 → rename 轮转 → 新文件续写（打印 `[rotate]` 与 `[done] rotations=1`），以及 `WatchDir` 的 CREATE / MODIFY / DELETE 事件，全程约 2 秒。
 
-## 6. PR 流程
+**sure-spring-boot-demo（独立工程，不参与 reactor 发布）**
 
-1. Fork 仓库，基于最新 main 建分支开发；
-2. 提交并 push 到你的 fork；
-3. 创建 PR：描述改动动机、影响范围、测试结果截图/日志；
-4. 等待 CI（ubuntu/macOS/Windows 三平台）通过；
-5. 维护者 review：公共 API 变更会有 API 兼容性检查（见 `docs/versioning.md`）；
-6. 合并后维护者关闭对应 issue。
+```bash
+cd sure-spring-boot-demo
+mvn spring-boot:run
+# 另开终端
+curl http://localhost:18080/          # 装配状态
+curl -o captcha.png http://localhost:18080/captcha
+curl http://localhost:18080/event     # 发布事件，返回累计接收数
+```
 
-## 7. AI 可读 JavaDoc 规范（必读）
+该示例展示 starter 的 `core + captcha` 默认装配，以及显式引入 `sure-event` / `sure-cron` / `sure-cache` 后可选域生效。
 
-面向 AI 编程助手（Copilot / Cursor / Claude）与人类读者的 JavaDoc 统一标准：
+## 7. 提交 PR
 
-- **类级示例**：每个 public 工具类/门面类的类级 Javadoc 必须含 `<pre>{@code ...}</pre>` 使用示例（含真实调用链，1–5 行），让 AI 无需翻源码即可理解用法；
-- **null 语义标注**：类级或关键方法必须显式说明 null 行为——「null 入参抛 NPE」或「null 安全（返回默认/空）」二者必选其一，禁止含糊；
-- **异常语义**：方法可能抛的受检/运行时异常要在 `@throws` 或描述中写明触发条件；
-- **@since 硬性**：新 API 必须带 `@since 1.x.0`（当前开发窗口版本），与版本发布一一对应；
-- **零依赖约束**：核心模块 JavaDoc 不得引入对第三方类的 {@link}（避免 javadoc 构建断链）。
+1. Fork 仓库，基于最新 `main` 建分支开发；
+2. push 到你的 fork，按 [PR 模板](.github/PULL_REQUEST_TEMPLATE.md) 填写动机、影响范围与验证证据；
+3. 等待 CI（三平台 × JDK 25）全绿——**CI 未全绿不合并**；
+4. 公共 API 变更会触发 japicmp 二进制兼容检查（见 `docs/versioning.md`）；
+5. 合并使用 squash，保持 `main` 线性历史。
 
-> 参照示范类：`com.sure.tool.lang.NullUtil` / `Result` / `Option` / `Results`、`com.sure.tool.thread.AsyncUtil`。
+## 8. AI 可读 JavaDoc 规范（必读）
 
-## 7.5 版本与 @since 规范
+- **类级示例**：public 工具类/门面类的类级 Javadoc 必须含 `<pre>{@code ...}</pre>`（1–5 行真实调用链）。
+- **null 语义**：显式写明「null 入参抛 NPE」或「null 安全（返回默认/空）」，禁止含糊。
+- **异常语义**：可能抛出的受检/运行时异常写明触发条件。
+- **@since 硬性**：新 API 必须带 `@since 1.x.0`，与版本发布一一对应。
+- **零依赖约束**：核心模块 Javadoc 不得 {@link} 第三方类。
 
-- 新 API 的 `@since` 标注下一个**未发布版本窗口**：批 21-24 → `1.11.0`，批 25-28 → `1.12.0`，批 29-30 → `1.13.0`，依此类推（见 CHANGELOG 顶部 `[Unreleased]` 窗口）。
-- 每个新工具类、新方法必须带 `@since`；无 `@since` 的 API 视为发布前内部 API。
-- 涉及 API 行为变更（如转换兜底规则）必须在 CHANGELOG 标注 `Breaking`，即使语义差异微小。
+> 示范类：`com.sure.tool.lang.NullUtil` / `Result` / `Option` / `Results`、`com.sure.tool.thread.AsyncUtil`。
 
-## 8. 需要帮助？
+## 9. 版本与 @since
 
-- 文档：[类索引](docs/index.md) · [构建与测试](README.md#构建与测试) · [发布指南](docs/RELEASING.md)
-- 提问：GitHub Discussions（如已启用）或 issue 标签 `question`
+- `@since` 标注**下一个未发布版本窗口**（见 `CHANGELOG.md` 顶部 `[Unreleased]`）。
+- 无 `@since` 的 API 视为发布前内部 API。
+- 行为变更（即使差异微小）在 CHANGELOG 标注 `Breaking`。
+
+## 10. 需要帮助？
+
+- 文档：[类索引](docs/index.md) · [模块与 API](docs/modules.md) · [构建与测试](README.md#构建与测试) · [发布指南](docs/RELEASING.md)
+- 提问：GitHub Discussions 或 `question` issue 模板；安全漏洞走私密通道（见 [SECURITY.md](SECURITY.md)）。

@@ -99,7 +99,7 @@ ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
 | `sure-dfa` | 敏感词过滤（前缀树 / 停用词） | 仅 JDK |
 | `sure-bom` | BOM，统一全部模块版本 | — |
 | `sure-all` | 聚合模块，一次引入全部能力 | 全部模块 |
-| `sure-examples` | 可运行示例（19 个 Demo） | sure-all |
+| `sure-examples` | 可运行示例（20 个 Demo） | sure-all |
 | `sure-benchmark` | JMH 基准测试 | core + json + math + event |
 | `sure-spring-boot-starter` | Spring Boot 自动装配 | core + captcha（event / cron / cache 可选） |
 
@@ -173,7 +173,7 @@ Maven Central 已发布 22 个版本，最新 `1.19.1`（2026-11-03）；所有�
 ## 文档 / 示例 / 贡献
 
 - 文档：[类索引](docs/index.md) · [模块与 API](docs/modules.md) · [5 分钟上手](docs/posts/quickstart.md) · [与 Hutool 对比](docs/comparison-hutool.md)
-- 示例：[sure-examples](sure-examples)，运行方式：`mvn -pl sure-examples -am install -DskipTests` 后 `mvn -pl sure-examples exec:java`
+- 示例：[sure-examples](sure-examples)（20 个可运行 Demo，含 `FileTailer` 轮转与 `WatchDir` 目录监听），运行方式：`mvn -pl sure-examples -am install -DskipTests` 后 `mvn -pl sure-examples exec:java`；Spring Boot 装配示例见 [sure-spring-boot-demo](sure-spring-boot-demo)
 - 贡献：[CONTRIBUTING.md](CONTRIBUTING.md) · [Bug 模板](.github/ISSUE_TEMPLATE/bug_report.md) · [功能请求模板](.github/ISSUE_TEMPLATE/feature_request.md) · [PR 模板](.github/PULL_REQUEST_TEMPLATE.md)
 - 安全：[SECURITY.md](SECURITY.md)，漏洞通过 GitHub Security Advisory 报告
 - 许可：[Apache License 2.0](LICENSE)

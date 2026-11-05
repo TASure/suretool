@@ -1,0 +1,16 @@
+server:
+  port: 18080
+
+suretool:
+  captcha:
+    enabled: true
+    width: 200
+    height: 80
+  event:
+    enabled: true
+  cron:
+    enabled: true
+  cache:
+    enabled: true
+    type: lru
+    capacity: 100

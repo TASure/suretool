@@ -41,6 +41,10 @@ suretool 是一个**小而全**的 Java 工具类库，参考 [Hutool](https://h
 | 类型转换 / 基础 | ArrayUtil、BooleanUtil、CharsetUtil、CharUtil、ConvertUtil、NumberUtil、ObjectUtil、StrSplitter、StrUtil、SystemUtil、VersionComparator、VersionUtil |
 | 脱敏 / 校验 / 其他 | DesensitizedUtil、NetUtil、RandomUtil、RuntimeUtil、Snowflake、ValidatorUtil |
 
+### sure-concurrent（JDK 25 专属：Scoped Values / Class-File API）
+
+`ScopedValueUtil`、`ClassFileUtil`（JDK 17/21 无法编译）
+
 ### sure-json（JSON 解析与序列化）
 
 `JSONObject`、`JSONArray`、`JSONUtil`、`JSONException`

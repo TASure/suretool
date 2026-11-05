@@ -31,6 +31,7 @@
     <packaging>jar</packaging>
     <name>suretool-core</name>
     <properties>
+        <japicmp.skip>false</japicmp.skip>
         <jacoco.line.min>0.98</jacoco.line.min>
     </properties>
     <description>核心工具域：字符串/集合/日期/IO/Bean/并发/断言等，零第三方运行期依赖。</description>
@@ -62,37 +63,7 @@
                     </dependency>
                 </dependencies>
             </plugin>
-            <!-- japicmp 二进制兼容门禁：对比上一发布版本 v1.8.0，破坏性 API 变更即失败 -->
-            <plugin>
-                <groupId>com.github.siom79.japicmp</groupId>
-                <artifactId>japicmp-maven-plugin</artifactId>
-                <version>0.26.5</version>
-                <configuration>
-                    <oldVersion>
-                        <dependency>
-                            <groupId>io.github.tasure</groupId>
-                            <artifactId>sure-core</artifactId>
-                            <version>1.8.0</version>
-                        </dependency>
-                    </oldVersion>
-                    <newVersion>
-                        <file>
-                            <path>${project.build.directory}/${project.artifactId}-${project.version}.jar</path>
-                        </file>
-                    </newVersion>
-                    <breakOnBinaryIncompatibleModifications>true</breakOnBinaryIncompatibleModifications>
-                    <onlyModified>true</onlyModified>
-                    <ignoreMissingClasses>true</ignoreMissingClasses>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>cmp</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <!-- japicmp 二进制兼容门禁由根 pom 统一配置（基线 1.19.1），本模块不再单独声明 -->
         </plugins>
     </build>
 </project>

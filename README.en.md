@@ -157,7 +157,7 @@ Heavy third-party libraries do not travel with `sure-all`: when you use PDF, Exc
 | Coverage | `sure-core` line coverage 98.23% (10,227/10,411), gate 0.98; every code module gated at 0.98 (0.97 for `sure-socket`) | `sure-core/pom.xml` · JaCoCo |
 | CI matrix | Ubuntu / macOS / Windows × JDK 25, all running `mvn -B verify` | `.github/workflows/ci.yml` |
 | Static analysis | Checkstyle fails on violations; SpotBugs at effort=Max with failOnError; CodeQL; OSV Scanner | `pom.xml` · workflows |
-| Binary compatibility | `sure-core` compares against 1.8.0 with japicmp and `breakOnBinaryIncompatibleModifications=true` | `sure-core/pom.xml` |
+| Binary compatibility | All 27 published jar modules run japicmp against 1.19.1 at verify, with `breakBuildOnBinaryIncompatibleModifications=true` | root `pom.xml` |
 | License headers | license-maven-plugin `check` bound to the verify phase | `pom.xml` |
 | SBOM | CycloneDX `makeAggregateBom` generated during `verify` under `-Prelease` | `pom.xml` |
 | Docs links | The `docs-links` job validates relative links and anchors in README and docs | `.github/scripts/check_docs_links.py` |

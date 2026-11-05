@@ -7,7 +7,7 @@
 
 | 入口 | 触发 | 职责 | 产物/结果 |
 | --- | --- | --- | --- |
-| **ci.yml** | push/PR 到 main | 三平台（ubuntu/macOS/Windows）质量门禁：编译 + 全量测试 + Checkstyle + JaCoCo 覆盖率（≥0.90） | 门禁通过/失败 |
+| **ci.yml** | push/PR 到 main | 三平台（ubuntu/macOS/Windows）质量门禁：编译 + 全量测试 + Checkstyle + SpotBugs + JaCoCo 覆盖率（≥0.98，`sure-socket` 0.97）+ japicmp 二进制兼容（基线 1.19.1） | 门禁通过/失败 |
 | **codeql.yml** | push/PR/定时 | GitHub CodeQL 静态安全扫描（Java） | SARIF 安全告警 |
 | **osv-scanner.yml** | push/定时 | 第三方依赖漏洞扫描（OSV） | 漏洞告警 |
 | **benchmark.yml** | push/PR（核心模块变更）/定时 | 性能基准门禁：JMH 跑 sure vs hutool 关键项，比率 >1.5 报警 | 基准回归报告 |
@@ -19,7 +19,8 @@
 
 ### 质量检查（唯一入口 = Actions）
 
-- 编译 / 测试 / Checkstyle / 覆盖率 / CodeQL / OSV / 基准门禁：**全部由 CI 执行**，本地不重复实现检查脚本。
+- 编译 / 测试 / Checkstyle / 覆盖率 / CodeQL / OSV / 基准门禁 / japicmp：**全部由 CI 执行**，本地不重复实现检查脚本。
+- japicmp 覆盖全部 27 个已发布 jar 模块，基线固定为最近稳定版本 1.19.1；根项目与 `sure-bom`（pom 打包）通过 `japicmp.skip=true` 跳过。当前版本号等于基线时对比结果为空，下一版本起拦截破坏性变更。
 - 本地提交前如需快速自检，只运行 `mvn -pl sure-core verify`（等价于 ci.yml 的 ubuntu 单机部分），**不新建本地检查脚本**。
 
 ### 发布（双通道，语义互补）

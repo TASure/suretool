@@ -30,6 +30,7 @@
     <packaging>jar</packaging>
     <name>sure-compress</name>
     <properties>
+        <japicmp.skip>false</japicmp.skip>
 		<jacoco.line.min>0.98</jacoco.line.min>
 	</properties>
     <description>高压缩率格式门面：7z（LZMA2，commons-compress）+ Brotli（官方 dec/enc）</description>

@@ -157,7 +157,7 @@ Maven Central 已发布 22 个版本，最新 `1.19.1`（2026-11-03）；所有�
 | 覆盖率 | `sure-core` 行覆盖 98.23%（10227/10411），门禁 0.98；各代码模块门禁 0.98（`sure-socket` 0.97） | `sure-core/pom.xml` · JaCoCo |
 | CI 矩阵 | Ubuntu / macOS / Windows × JDK 25，统一执行 `mvn -B verify` | `.github/workflows/ci.yml` |
 | 静态检查 | Checkstyle 违规即失败；SpotBugs effort=Max 且 failOnError；CodeQL；OSV Scanner | `pom.xml` · workflows |
-| 二进制兼容 | `sure-core` 用 japicmp 对比 1.8.0，`breakOnBinaryIncompatibleModifications=true` | `sure-core/pom.xml` |
+| 二进制兼容 | 27 个已发布 jar 模块在 verify 阶段用 japicmp 对比 1.19.1，`breakBuildOnBinaryIncompatibleModifications=true` | 根 `pom.xml` |
 | 许可头 | license-maven-plugin `check` 绑定在 verify 阶段 | `pom.xml` |
 | SBOM | CycloneDX `makeAggregateBom` 在 `-Prelease` 的 verify 阶段生成 | `pom.xml` |
 | 文档链接 | `docs-links` 任务校验 README 与 docs 的相对链接和锚点 | `.github/scripts/check_docs_links.py` |

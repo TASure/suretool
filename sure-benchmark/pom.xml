@@ -33,6 +33,7 @@
     <description>JMH 基准套件：suretool 与 Hutool / JDK 基线的性能对比（不参与测试与覆盖率门禁，仅编译验证）。</description>
 
     <properties>
+        <japicmp.skip>false</japicmp.skip>
         <!-- 基准模块无测试与覆盖率数据，不参与 JaCoCo 门禁 -->
         <jacoco.skip>true</jacoco.skip>
         <!-- 基准模块含 JMH 生成代码与 state 字段，不参与 SpotBugs 门禁 -->

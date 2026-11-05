@@ -91,6 +91,8 @@
         <!-- Reproducible Builds：同 tag 两次构建产物字节一致（ISO-8601 固定时间戳） -->
         <project.build.outputTimestamp>2026-11-03T01:11:54Z</project.build.outputTimestamp>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- japicmp 全模块门禁开关：根与 BOM 默认跳过，各已发布 jar 模块显式置 false -->
+        <japicmp.skip>true</japicmp.skip>
         <junit.version>4.13.2</junit.version>
         <jqwik.version>1.10.2</jqwik.version>
         <poi.version>6.0.0</poi.version>
@@ -345,6 +347,39 @@
 
     <build>
         <plugins>
+            <!-- 二进制兼容门禁（verify 阶段，全模块）：与最近稳定版本 1.19.1 对比，破坏性变更即失败。
+                 根项目与 sure-bom 通过 japicmp.skip=true 跳过；各已发布 jar 模块置 false。
+                 当前版本号仍为 1.19.1 时对比结果为“无差异”，下一版本起开始拦截。 -->
+            <plugin>
+                <groupId>com.github.siom79.japicmp</groupId>
+                <artifactId>japicmp-maven-plugin</artifactId>
+                <version>0.26.5</version>
+                <configuration>
+                    <skip>${japicmp.skip}</skip>
+                    <oldVersion>
+                        <dependency>
+                            <groupId>io.github.tasure</groupId>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <version>1.19.1</version>
+                        </dependency>
+                    </oldVersion>
+                    <newVersion>
+                        <file>
+                            <path>${project.build.directory}/${project.artifactId}-${project.version}.jar</path>
+                        </file>
+                    </newVersion>
+                    <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>japicmp-compat-gate</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>cmp</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- 模块依赖契约门禁（validate 阶段）：模块间只允许单向依赖 sure-core。
                  例外白名单在对应模块 pom 中通过 combine.self="override" 覆盖，理由就近注释。
                  searchTransitive=false：只检查各模块的直接依赖（POI 等第三方传递依赖不参与）。

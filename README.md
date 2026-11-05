@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 [![JDK](https://img.shields.io/badge/JDK-25%2B-blue)](https://openjdk.org/projects/jdk/25/)
 
-面向 **JDK 25+** 的零依赖 Java 工具包。28 个模块把字符串、集合、日期、IO、并发、JSON、HTTP、加解密等高频操作收敛为静态方法；核心域只依赖 JDK，按需引入一个模块即可。
+面向 **JDK 25+** 的零依赖 Java 工具包。29 个模块把字符串、集合、日期、IO、并发、JSON、HTTP、加解密等高频操作收敛为静态方法；核心域只依赖 JDK，按需引入一个模块即可。
 
 **如果你的项目在 JDK 17/21，本项目不适用**——请继续用 [Hutool](https://hutool.cn/) 或 [Apache Commons](https://commons.apache.org/)。本项目所有模块以 `--release 25` 编译，不提供低版本构建——不为兼容旧 JDK 而放弃 record、sealed、虚拟线程和结构化并发。
 
@@ -66,7 +66,7 @@ ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
 1. **核心域零第三方运行期依赖** —— `sure-core` 的 compile 作用域只有 JDK；POI、PDFBox、Mail 等重量级依赖隔离在独立模块，不引入就不会进你的 classpath。
 2. **覆盖率是硬门禁** —— `sure-core` 行覆盖下限 0.98，实测 98.23%（10227/10411 行）；各代码模块门禁 0.98（`sure-socket` 0.97），低于阈值 `mvn verify` 直接失败。
 3. **三平台 CI** —— Ubuntu / macOS / Windows × JDK 25 跑同一套 `mvn -B verify`；当前 302 个测试类、2404 个 `@Test`，单次执行 2399 例、0 失败。
-4. **22 个 JPMS 模块** —— 28 个子模块中有 22 个提供 `module-info.java`，可直接用于 module path。
+4. **23 个 JPMS 模块** —— 29 个子模块中有 23 个提供 `module-info.java`，可直接用于 module path。
 5. **44 个属性测试** —— 5 个测试类用 jqwik `@Property` 覆盖编解码、集合、字符串、日期的往返与不变量，而不只是手工挑的样例。
 
 ## 模块速览
@@ -74,6 +74,7 @@ ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
 | 模块 | 职责 | 关键依赖 |
 | --- | --- | --- |
 | `sure-core` | 字符串 / 集合 / 日期 / IO / 反射 / 并发 / 图 / 统计 | 仅 JDK |
+| `sure-concurrent` | JDK 25 差异化能力：Scoped Values / Class-File API | 仅 JDK |
 | `sure-log` | 日志门面：有 SLF4J 时委托，无则 Console 兜底 | core |
 | `sure-db` | JDBC 访问：Entity / SqlRunner / 连接池 / 事务 / 分页 | core |
 | `sure-script` | JSR-223 脚本门面（引擎探测 / 编译缓存） | core |
@@ -157,7 +158,7 @@ Maven Central 已发布 22 个版本，最新 `1.19.1`（2026-11-03）；所有�
 | 覆盖率 | `sure-core` 行覆盖 98.23%（10227/10411），门禁 0.98；各代码模块门禁 0.98（`sure-socket` 0.97） | `sure-core/pom.xml` · JaCoCo |
 | CI 矩阵 | Ubuntu / macOS / Windows × JDK 25，统一执行 `mvn -B verify` | `.github/workflows/ci.yml` |
 | 静态检查 | Checkstyle 违规即失败；SpotBugs effort=Max 且 failOnError；CodeQL；OSV Scanner | `pom.xml` · workflows |
-| 二进制兼容 | 27 个已发布 jar 模块在 verify 阶段用 japicmp 对比 1.19.1，`breakBuildOnBinaryIncompatibleModifications=true` | 根 `pom.xml` |
+| 二进制兼容 | 28 个 jar 模块中 27 个在 verify 阶段用 japicmp 对比 1.19.1（`sure-concurrent` 首次发布，下个版本纳入基线）；`breakBuildOnBinaryIncompatibleModifications=true` | 根 `pom.xml` |
 | 许可头 | license-maven-plugin `check` 绑定在 verify 阶段 | `pom.xml` |
 | SBOM | CycloneDX `makeAggregateBom` 在 `-Prelease` 的 verify 阶段生成 | `pom.xml` |
 | 文档链接 | `docs-links` 任务校验 README 与 docs 的相对链接和锚点 | `.github/scripts/check_docs_links.py` |

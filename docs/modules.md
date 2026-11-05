@@ -1,12 +1,13 @@
 # 模块与 API 门户（Modules & API Portal）
 
-> 28 个模块全览：坐标 / 主包 / 职责 / 对标 / 关键类。
+> 29 个模块全览：坐标 / 主包 / 职责 / 对标 / 关键类。
 > API 文档：javadoc.io 直链（随 Maven Central 自动生成）；源码：GitHub `main` 分支。
 > 使用约定：`sure-bom` 统一版本管理；`sure-all` 聚合全部模块；按需引入更轻。
 
 | 模块 Module | 坐标 Coordinates | 主包 Package | 能力 Capability | 对标 Reference | API (javadoc.io) | JPMS |
 | --- | --- | --- | --- | --- | --- | --- |
 | sure-core | `io.github.tasure:sure-core` | `com.sure.tool` | 核心工具域：字符串/集合/IO/日期/反射/并发/图/统计 | Hutool core / Guava | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-core/latest/index.html) | ✅ module-info |
+| sure-concurrent | `io.github.tasure:sure-concurrent` | `com.sure.tool.concurrent` | JDK 25 差异化能力（ScopedValueUtil / ClassFileUtil） | 无（JDK 原生 API 封装） | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-concurrent/latest/index.html) | ✅ module-info |
 | sure-log | `io.github.tasure:sure-log` | `com.sure.tool.log` | 零依赖日志门面（SLF4J 自动委托 / Console 兜底） | slf4j 轻量替代 | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-log/latest/index.html) | ✅ module-info |
 | sure-db | `io.github.tasure:sure-db` | `com.sure.tool.db` | JDBC 数据访问（Entity / SqlRunner / 连接池 / 事务 / 分页） | commons-dbutils | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-db/latest/index.html) | ✅ module-info |
 | sure-script | `io.github.tasure:sure-script` | `com.sure.tool.script` | JSR-223 脚本门面（引擎探测 / 编译缓存 / 快速求值） | commons-jexl 轻量替代 | [javadoc](https://javadoc.io/doc/io.github.tasure/sure-script/latest/index.html) | ✅ module-info |

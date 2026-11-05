@@ -20,7 +20,7 @@
 ### 质量检查（唯一入口 = Actions）
 
 - 编译 / 测试 / Checkstyle / 覆盖率 / CodeQL / OSV / 基准门禁 / japicmp：**全部由 CI 执行**，本地不重复实现检查脚本。
-- japicmp 覆盖全部 27 个已发布 jar 模块，基线固定为最近稳定版本 1.19.1；根项目与 `sure-bom`（pom 打包）通过 `japicmp.skip=true` 跳过。当前版本号等于基线时对比结果为空，下一版本起拦截破坏性变更。
+- japicmp 覆盖 28 个 jar 模块中的 27 个，基线固定为最近稳定版本 1.19.1；根项目、`sure-bom`（pom 打包）与首次发布的 `sure-concurrent` 通过 `japicmp.skip=true` 跳过。当前版本号等于基线时对比结果为空，下一版本起拦截破坏性变更。
 - 本地提交前如需快速自检，只运行 `mvn -pl sure-core verify`（等价于 ci.yml 的 ubuntu 单机部分），**不新建本地检查脚本**。
 
 ### 发布（双通道，语义互补）

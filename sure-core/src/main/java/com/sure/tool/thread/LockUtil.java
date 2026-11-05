@@ -24,6 +24,8 @@ import java.util.function.Supplier;
 /**
  * 锁工具类：按 key 获取全局读写锁 + 函数式读写执行，参考 Hutool 的 {@code LockUtil} 设计。
  *
+ * <p>English: Lock and synchronization helpers that always release safely.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

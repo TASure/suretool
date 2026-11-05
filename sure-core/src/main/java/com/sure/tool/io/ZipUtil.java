@@ -32,6 +32,8 @@ import java.util.zip.ZipOutputStream;
 /**
  * ZIP 压缩解压工具类，参考 Hutool 的 {@code ZipUtil} 设计。
  *
+ * <p>English: ZIP compression and extraction helpers.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

@@ -28,6 +28,8 @@ import java.util.regex.Pattern;
  *
  * <p>提供判空、去空白、截取、拼接、格式化、驼峰转换等常用静态方法。</p>
  *
+ * <p>English: String utilities: emptiness checks, trimming, splitting, joining, casing and formatting.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

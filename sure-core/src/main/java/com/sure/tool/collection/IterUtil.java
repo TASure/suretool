@@ -44,6 +44,8 @@ import java.util.function.Predicate;
  * <p>null 语义：迭代器/可迭代对象为 {@code null} 时视为空（空安全），
  * {@code getFirst} 返回 {@code null}，其余集合类方法返回空集合/空串。</p>
  *
+ * <p>English: Iterator and stream convenience methods, including null-safe traversal and joining.</p>
+ *
  * @author suretool
  * @since 1.19.1
  */

@@ -27,6 +27,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * 线程工具类：异步执行、休眠、线程工厂，参考 Hutool 的 {@code ThreadUtil} 设计。
  *
+ * <p>English: Thread creation, sleeping, joining and virtual-thread helpers.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

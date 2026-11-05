@@ -1,5 +1,7 @@
 # suretool 文档
 
+[中文](index.md) · [English](index-en.md)
+
 suretool 是一个**小而全**的 Java 工具类库，参考 [Hutool](https://hutool.cn) 设计，
 仅支持 **JDK 25+**，包前缀 `com.sure.tool`。
 
@@ -7,6 +9,10 @@ suretool 是一个**小而全**的 Java 工具类库，参考 [Hutool](https://h
 - [模块与 API 门户（29 模块 + javadoc.io 直链）](modules.md)
 - [JDK 25 差异化能力（Scoped Values / Class-File API）](jdk25-tools.md)
 - [快速上手教程（5 分钟）](posts/quickstart.md)
+- [快速上手（英文）](posts/quickstart-en.md)
+- [从 Hutool 迁移（中文）](migration-from-hutool.md)
+- [Migrating from Hutool (English)](migration-from-hutool.en.md)
+- [Top 50 API（英文 Javadoc 覆盖清单）](api-en.md)
 - [贡献指南](../CONTRIBUTING.md)
 - [安全策略](../SECURITY.md)
 - [发布指南](RELEASING.md)

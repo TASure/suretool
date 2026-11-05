@@ -24,6 +24,8 @@ import java.util.Map;
 /**
  * 类工具类，参考 Hutool 的 {@code ClassUtil} 设计。
  *
+ * <p>English: Class loading, type checks and package-name helpers.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

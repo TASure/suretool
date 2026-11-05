@@ -33,6 +33,9 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 日期时间工具类，参考 Hutool 的 {@code DateUtil} 设计。
  *
+ * <p>English: Date and time parsing, formatting and arithmetic for {@link java.util.Date} values,
+ * with java.time-based internals.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

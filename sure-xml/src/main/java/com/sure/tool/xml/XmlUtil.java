@@ -44,6 +44,8 @@ import com.sure.tool.bean.BeanUtil;
  * <p>
  * 仅支持元素层级与文本内容（忽略属性）；同名兄弟元素解析为 List。
  *
+ * <p>English: XML parsing and serialization helpers built on the JDK XML APIs.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

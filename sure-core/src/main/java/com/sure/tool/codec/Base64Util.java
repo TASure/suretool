@@ -23,6 +23,8 @@ import java.util.Base64;
 /**
  * Base64 编解码工具类，参考 Hutool 的 {@code Base64} 设计。
  *
+ * <p>English: Base64 encoding and decoding for strings and byte arrays.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

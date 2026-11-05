@@ -20,6 +20,8 @@ package com.sure.tool.util;
  *
  * <p>支持多种字符串形式解析布尔值。</p>
  *
+ * <p>English: Boolean parsing and conversion helpers that treat null as false where appropriate.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

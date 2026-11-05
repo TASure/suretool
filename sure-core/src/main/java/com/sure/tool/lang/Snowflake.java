@@ -20,6 +20,8 @@ package com.sure.tool.lang;
  *
  * <p>64 位 long：1 位符号位 + 41 位毫秒时间戳 + 5 位数据中心 + 5 位工作机器 + 12 位序列号。</p>
  *
+ * <p>English: A thread-safe snowflake ID generator with configurable worker and datacenter IDs.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

@@ -18,6 +18,8 @@ package com.sure.tool.util;
 /**
  * 系统属性工具类，参考 Hutool 的 {@code SystemUtil} 设计。
  *
+ * <p>English: Runtime and operating-system information helpers.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

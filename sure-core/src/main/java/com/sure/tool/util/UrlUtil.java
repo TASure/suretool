@@ -27,6 +27,8 @@ import java.util.Map;
 /**
  * URL 工具类：编码/解码、解析、参数提取、拼接，零依赖。
  *
+ * <p>English: URL parsing, encoding and query-parameter helpers.</p>
+ *
  * @author suretool
  * @since 0.2.0
  */

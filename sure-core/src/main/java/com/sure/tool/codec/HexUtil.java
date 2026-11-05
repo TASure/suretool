@@ -21,6 +21,8 @@ import com.sure.tool.util.StrUtil;
 /**
  * 十六进制编解码工具类，参考 Hutool 的 {@code HexUtil} 设计。
  *
+ * <p>English: Hexadecimal encoding and decoding helpers.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

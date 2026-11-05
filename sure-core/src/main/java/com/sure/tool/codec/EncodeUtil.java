@@ -24,6 +24,8 @@ import java.nio.charset.Charset;
  * URL 编解码工具类，参考 Hutool 的 {@code URLEncodeUtil} 设计。
  * 保留 {@code A-Z a-z 0-9 - _ . ~} 五个非保留字符，其余按字节 {@code %XX} 编码。
  *
+ * <p>English: URL and HTML encoding/decoding helpers.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

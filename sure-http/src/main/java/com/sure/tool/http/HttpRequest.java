@@ -49,6 +49,8 @@ import com.sure.tool.io.IoUtil;
  *
  * 与 {@link HttpUtil} 的差异：{@link #execute()} 不因非 2xx 状态码抛异常，响应状态由 {@link HttpResponse#isOk()} 判断。
  *
+ * <p>English: A fluent HTTP request builder with headers, query parameters and body handling.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

@@ -25,6 +25,8 @@ import java.util.regex.Pattern;
 /**
  * 正则工具类，参考 Hutool 的 {@code ReUtil} 设计。
  *
+ * <p>English: Regular-expression extraction, matching and replacement helpers.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

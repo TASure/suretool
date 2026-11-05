@@ -10,7 +10,7 @@ A zero-dependency Java toolkit for **JDK 25+**. Its 29 modules turn everyday wor
 
 **If your project still runs on JDK 17 or 21, this project is not for you** — stay on [Hutool](https://hutool.cn/) or [Apache Commons](https://commons.apache.org/). Every module here is compiled with `--release 25`, and there is no lower-version build. That is deliberate: we would rather use records, sealed types, virtual threads and structured concurrency than stay compatible with older runtimes.
 
-[中文](README.md) · [Docs](docs/index.md) · [Modules & API](docs/modules.md) · [Examples](sure-examples) · [Contributing](CONTRIBUTING.md)
+[中文](README.md) · [Docs](docs/index-en.md) · [Modules & API](docs/modules.md) · [Examples](sure-examples) · [Contributing](CONTRIBUTING.md) · [Migrating from Hutool](docs/migration-from-hutool.en.md)
 
 ## 30-second tour
 

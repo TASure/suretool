@@ -29,6 +29,8 @@ import java.util.function.Predicate;
 /**
  * 列表工具类，参考 Hutool 的 {@code ListUtil} 设计。
  *
+ * <p>English: List-specific helpers such as partitioning, splitting and safe indexing.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

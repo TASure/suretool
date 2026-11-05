@@ -20,6 +20,8 @@ import java.nio.charset.Charset;
 /**
  * 字符集工具类，参考 Hutool 的 {@code CharsetUtil} 设计。
  *
+ * <p>English: Charset lookup and encoding/decoding helpers.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

@@ -28,6 +28,8 @@ import java.util.Set;
  *
  * <p>支持对象数组与基本类型数组的统一处理，参考 Hutool 的 {@code ArrayUtil} 设计。</p>
  *
+ * <p>English: Array creation, concatenation, containment and conversion helpers.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

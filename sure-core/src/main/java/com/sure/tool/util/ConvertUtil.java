@@ -30,6 +30,8 @@ import java.util.Map;
 /**
  * 类型转换工具类，参考 Hutool 的 {@code Convert} 设计。
  *
+ * <p>English: Best-effort type conversion between strings, numbers, booleans and enums.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

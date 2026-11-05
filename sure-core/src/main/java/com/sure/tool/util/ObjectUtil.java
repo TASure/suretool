@@ -28,6 +28,8 @@ import java.util.Optional;
 /**
  * 对象工具类，参考 Hutool 的 {@code ObjectUtil} 设计。
  *
+ * <p>English: Null-safe object comparison, defaulting and type inspection helpers.</p>
+ *
  * @author suretool
  * @since 0.1.0
  */

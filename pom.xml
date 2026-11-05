@@ -57,6 +57,7 @@
 
     <modules>
         <module>sure-core</module>
+        <module>sure-concurrent</module>
         <module>sure-log</module>
         <module>sure-db</module>
         <module>sure-script</module>
@@ -127,6 +128,11 @@
             <dependency>
                 <groupId>io.github.tasure</groupId>
                 <artifactId>sure-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.tasure</groupId>
+                <artifactId>sure-concurrent</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

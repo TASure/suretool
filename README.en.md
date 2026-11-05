@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 [![JDK](https://img.shields.io/badge/JDK-25%2B-blue)](https://openjdk.org/projects/jdk/25/)
 
-A zero-dependency Java toolkit for **JDK 25+**. Its 28 modules turn everyday work — strings, collections, dates, IO, concurrency, JSON, HTTP, crypto — into static methods. The core domain needs nothing but the JDK, and you can pull in one module at a time.
+A zero-dependency Java toolkit for **JDK 25+**. Its 29 modules turn everyday work — strings, collections, dates, IO, concurrency, JSON, HTTP, crypto — into static methods. The core domain needs nothing but the JDK, and you can pull in one module at a time.
 
 **If your project still runs on JDK 17 or 21, this project is not for you** — stay on [Hutool](https://hutool.cn/) or [Apache Commons](https://commons.apache.org/). Every module here is compiled with `--release 25`, and there is no lower-version build. That is deliberate: we would rather use records, sealed types, virtual threads and structured concurrency than stay compatible with older runtimes.
 
@@ -66,7 +66,7 @@ ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
 1. **No third-party runtime dependencies in the core.** `sure-core` compiles against the JDK only. Heavy libraries such as POI, PDFBox and Mail live in separate modules, so they never reach your classpath unless you ask for them.
 2. **Coverage is a hard gate.** `sure-core` has a 0.98 line-coverage floor and currently measures 98.23% (10,227 of 10,411 lines). Every code module is gated at 0.98 (0.97 for `sure-socket`). Below the threshold, `mvn verify` fails.
 3. **Three-OS CI.** Ubuntu, macOS and Windows run the same `mvn -B verify` on JDK 25. Today that means 302 test classes and 2,404 `@Test` methods; the last full run executed 2,399 tests with zero failures.
-4. **22 JPMS modules.** 22 of the 28 child modules ship a `module-info.java` and can be used on the module path.
+4. **23 JPMS modules.** 23 of the 29 child modules ship a `module-info.java` and can be used on the module path.
 5. **44 property tests.** Five jqwik test classes check round-trips and invariants across codecs, collections, strings and dates — not just hand-picked examples.
 
 ## Modules
@@ -74,6 +74,7 @@ ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
 | Module | Responsibility | Key dependencies |
 | --- | --- | --- |
 | `sure-core` | Strings / collections / dates / IO / reflection / concurrency / graphs / statistics | JDK only |
+| `sure-concurrent` | JDK 25-only capabilities: Scoped Values / Class-File API | JDK only |
 | `sure-log` | Logging facade: delegates to SLF4J when present, falls back to console | core |
 | `sure-db` | JDBC access: Entity / SqlRunner / pool / transactions / paging | core |
 | `sure-script` | JSR-223 script facade (engine probing / compiled cache) | core |

@@ -41,13 +41,16 @@
             <artifactId>sure-core</artifactId>
         </dependency>
         <!-- poi-ooxml-full 聚合完整 schemas，poi-ooxml 提供 XSSF/XWPF 本体 -->
+        <!-- POI 为可选依赖：使用 Excel/Word 能力时由使用方显式引入，sure-all 聚合不再被动传递 -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml-full</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
+            <optional>true</optional>
         </dependency>
         <!-- POI 5.x 基于 Log4j2 API，测试期提供实现避免告警（运行期不强制）；版本由根 pom dependencyManagement 统一管理（2.25.4，安全基线） -->
         <dependency>

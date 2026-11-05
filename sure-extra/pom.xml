@@ -41,28 +41,34 @@
             <artifactId>sure-core</artifactId>
         </dependency>
 
+        <!-- 邮件/FTP/二维码/图像域依赖均为可选：使用对应能力时由使用方显式引入，sure-all 聚合不再被动传递 -->
         <dependency>
             <groupId>jakarta.mail</groupId>
             <artifactId>jakarta.mail-api</artifactId>
-                    </dependency>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>org.eclipse.angus</groupId>
             <artifactId>angus-mail</artifactId>
-                    </dependency>
+            <optional>true</optional>
+        </dependency>
 
         <dependency>
             <groupId>commons-net</groupId>
             <artifactId>commons-net</artifactId>
-                    </dependency>
+            <optional>true</optional>
+        </dependency>
 
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
-                    </dependency>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>javase</artifactId>
-                    </dependency>
+            <optional>true</optional>
+        </dependency>
 
         <dependency>
             <groupId>com.github.spotbugs</groupId>

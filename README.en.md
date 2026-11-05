@@ -79,10 +79,10 @@ ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
 | `sure-script` | JSR-223 script facade (engine probing / compiled cache) | core |
 | `sure-template` | Template engine (Template / SimpleTemplate / bean rendering) | core |
 | `sure-aop` | Zero-dependency AOP (Aspect / ProxyUtil / method matching) | core |
-| `sure-pdf` | PDF read/write facade | core + PDFBox 3 |
+| `sure-pdf` | PDF read/write facade | core + PDFBox 3 (optional) |
 | `sure-process` | Child processes, timeout kill | core |
 | `sure-math` | Math, BigDecimal, statistics, random numbers | core |
-| `sure-compress` | 7z / LZMA2 / Brotli compression facade | core + commons-compress |
+| `sure-compress` | 7z / LZMA2 / Brotli compression facade | core + commons-compress (optional) |
 | `sure-socket` | TCP client / server | core |
 | `sure-event` | Event bus (synchronous / virtual-thread async) | core |
 | `sure-json` | JSON parsing / serialization / bean mapping / JSONPath | core |
@@ -91,8 +91,8 @@ ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
 | `sure-cron` | Cron expressions and scheduler | core |
 | `sure-cache` | FIFO / LRU / LFU / Timed / Weak caches | core |
 | `sure-xml` | XML to Map / bean conversion | core |
-| `sure-poi` | Excel / Word read and write | core + POI |
-| `sure-extra` | Mail / FTP / QR codes / image processing | core + jakarta.mail + commons-net + zxing |
+| `sure-poi` | Excel / Word read and write | core + POI (optional) |
+| `sure-extra` | Mail / FTP / QR codes / image processing | core + jakarta.mail + commons-net + zxing (optional) |
 | `sure-captcha` | Graphic captcha (line / circle / shear) | JDK only |
 | `sure-jwt` | JWT signing and verification (HS / RS) | core + crypto + json |
 | `sure-dfa` | Sensitive-word filtering (prefix tree / stop words) | JDK only |
@@ -143,6 +143,8 @@ After that, any module can be declared without a version:
 
 The starter currently brings in `sure-core` and `sure-captcha` only. `sure-event`, `sure-cron` and `sure-cache` are optional: add the module you need and the matching auto-configuration activates via `@ConditionalOnClass`. The starter itself is built against Spring Boot 4.1.2.
 
+Heavy third-party libraries do not travel with `sure-all`: when you use PDF, Excel, mail or 7z features, declare the library yourself (for example `org.apache.poi:poi-ooxml`).
+
 ### Versions
 
 22 versions are published to Maven Central. The latest is `1.19.1` (2026-11-03), and all modules share the same version number.
@@ -163,7 +165,7 @@ The starter currently brings in `sure-core` and `sure-captcha` only. `sure-event
 ## Boundaries and limitations
 
 - **JDK 25+ only.** It will not run on JDK 17 or 21, and there is no downgraded build.
-- **`sure-all` pulls in third-party jars.** It is a convenience aggregator and brings POI, PDFBox, Angus Mail, commons-net, Zxing and commons-compress (more than 10 jars) onto your classpath. In production, prefer the BOM plus the modules you actually use.
+- **Heavy libraries are opt-in.** `sure-all` aggregates only suretool modules. POI, PDFBox, Mail, commons-net, Zxing and commons-compress are marked `optional` in their own modules and are no longer pulled through `sure-all`. Declare them yourself when you use those domains.
 - **Cross-platform stability is still being watched.** Some tests used to be flaky on Windows and macOS. They were fixed by additional coverage (all three platforms green on 2026-10-30), but the strict three-platform gate stays on.
 - **Not a drop-in Hutool replacement.** The project covers common use cases only; we do not add APIs just to match Hutool's method count.
 

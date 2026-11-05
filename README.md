@@ -1,431 +1,176 @@
 # suretool
 
-中文 | [English](README.en.md)
+[![CI](https://img.shields.io/github/actions/workflow/status/TASure/suretool/ci.yml?branch=main&label=CI)](https://github.com/TASure/suretool/actions/workflows/ci.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.tasure/sure-core?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.tasure/sure-core)
+[![Coverage](https://img.shields.io/endpoint?url=https://tasure.github.io/suretool/coverage/badge.json)](https://codecov.io/gh/TASure/suretool)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
+[![JDK](https://img.shields.io/badge/JDK-25%2B-blue)](https://openjdk.org/projects/jdk/25/)
 
+面向 **JDK 25+** 的零依赖 Java 工具包。28 个模块把字符串、集合、日期、IO、并发、JSON、HTTP、加解密等高频操作收敛为静态方法；核心域只依赖 JDK，按需引入一个模块即可。
 
+**如果你的项目在 JDK 17/21，本项目不适用。** 所有模块以 `--release 25` 编译，不提供低版本构建——不为兼容旧 JDK 而放弃 record、sealed、虚拟线程和结构化并发。
 
-![CI](https://img.shields.io/github/actions/workflow/status/TASure/suretool/ci.yml?branch=main\&label=CI)
+[English](README.en.md) · [文档](docs/index.md) · [模块与 API](docs/modules.md) · [示例](sure-examples) · [贡献](CONTRIBUTING.md)
 
+## 30 秒上手
 
+`sure-core` 的编译依赖为空。新建 Maven 工程，加入：
 
-![Coverage](https://img.shields.io/endpoint?url=https://tasure.github.io/suretool/coverage/badge.json)
-
-
-
-![Release](https://img.shields.io/github/v/release/TASure/suretool)
-
-
-
-![License](https://img.shields.io/badge/license-Apache%202.0-blue)
-
-
-
-![Java](https://img.shields.io/badge/Java-25+-blue)
-
-
-
-![Stars](https://img.shields.io/github/stars/TASure/suretool)
-
-
-
-![Maven Central](https://img.shields.io/maven-central/v/io.github.tasure/sure-core)
-
-![Maven Central Downloads](https://img.shields.io/maven-central/d/io.github.tasure/sure-core?label=Central%20Downloads)
-
-
-
-![Pages](https://img.shields.io/github/actions/workflow/status/TASure/suretool/pages.yml?branch=main\&label=Pages)
-
-一个**小而全**的 Java 工具类库，参考 [Hutool](https://doc.hutool.cn/pages/index/) 的设计理念，通过静态方法封装常用 JDK API，减少重复造轮子、降低开发成本。
-
-
-
-* 包前缀：`com.sure.tool`
-
-* 语言：Java 25+（核心域零第三方运行期依赖；Office 域基于 Apache POI 5.5.1）
-
-* 许可：Apache License 2.0
-
-* 文档：[类索引](docs/index.md) · [Hutool 对比](docs/comparison-hutool.md) · [发布指南](docs/RELEASING.md) · [维护手册](docs/MAINTAINING.md) · [仓库设置](docs/github-setup.md) · [依赖清单](docs/dependencies.md) · [CI 工作流职责](docs/ci-workflow.md)
-* 教程：[5 分钟上手](docs/posts/quickstart.md) · [模块与 API 门户](docs/modules.md) · [字符串/集合速查](docs/posts/string-collection-cookbook.md) · [加解密默认安全](docs/posts/security-crypto-guide.md) · [JSON+HTTP 实战](docs/posts/json-http-integration.md) · [Starter 集成](docs/posts/spring-boot-starter-guide.md) · [数学/进程/压缩速查](docs/posts/math-process-compress-guide.md) · [Socket+事件总线实战](docs/posts/socket-event-guide.md)
-
-## 快速开始
-
-### Maven 引入
-
-一个依赖引入全部工具域：
-
-
-
-```
+```xml
 <dependency>
-
     <groupId>io.github.tasure</groupId>
-
-    <artifactId>sure-all</artifactId>
-
-    <version>1.19.1</version>
-
-</dependency>
-```
-
-或按需按模块引入（依赖更轻）：
-
-
-
-```
-<dependency>
-
-    <groupId>io.github.tasure</groupId>
-
     <artifactId>sure-core</artifactId>
-
     <version>1.19.1</version>
-
-</dependency>
-
-<dependency>
-
-    <groupId>io.github.tasure</groupId>
-
-    <artifactId>sure-json</artifactId>
-
-    <version>1.19.1</version>
-
 </dependency>
 ```
 
-或引入 BOM 统一版本管理（import 后无需再写版本号）：
+把下面代码保存为 `src/main/java/Demo.java`，在 IDE 中运行 `main` 方法（或 `mvn -q compile` 验证编译）：
 
-
-
-```
-<dependencyManagement>
-
-    <dependencies>
-
-        <dependency>
-
-            <groupId>io.github.tasure</groupId>
-
-            <artifactId>sure-bom</artifactId>
-
-            <version>1.19.1</version>
-
-            <type>pom</type>
-
-            <scope>import</scope>
-
-        </dependency>
-
-    </dependencies>
-
-</dependencyManagement>
-```
-
-先本地安装：
-
-
-
-```
-mvn clean install
-```
-
-### 模块结构（P2 多模块拆分）
-
-
-
-| 模块                         | 坐标                                          | 能力                                                 | 运行期依赖                  |
-| -------------------------- | ------------------------------------------- | -------------------------------------------------- | ---------------------- |
-| `sure-core`                | `io.github.tasure:sure-core`                | util/codec/collection/date/io/lang/bean/thread 核心域 | 零依赖                    |
-| `sure-log`                 | `io.github.tasure:sure-log`                 | 零依赖日志门面（SLF4J 自动委托 / Console 兜底）                 | core                   |
-| `sure-db`                  | `io.github.tasure:sure-db`                  | JDBC 数据访问（Entity / SqlRunner / 内置连接池 / 事务 / 分页）    | core                   |
-| `sure-script`              | `io.github.tasure:sure-script`              | JSR-223 脚本门面（引擎探测 / 编译缓存 / 快速求值）                | core                   |
-| `sure-template`            | `io.github.tasure:sure-template`            | 模板引擎（Template 接口 / SimpleTemplate / 转义 / Bean 渲染）     | core                   |
-| `sure-aop`                 | `io.github.tasure:sure-aop`                 | 零依赖 AOP（Aspect 切面 / ProxyUtil 代理工厂 / 方法级匹配）       | core                   |
-| `sure-pdf`                 | `io.github.tasure:sure-pdf`                 | PDF 轻量门面（PdfWriter / PdfUtil，基于 PDFBox 3，Apache-2.0）    | core + pdfbox          |
-| `sure-process`             | `io.github.tasure:sure-process`             | 进程门面（ProcessUtil 多重载 / 超时强杀 / 虚拟线程防管道死锁）    | core                   |
-| `sure-math`                | `io.github.tasure:sure-math`                | 数学与数值（MathUtil 质数/组合/进制 / BigDecimalUtil / RandomUtil）| core                   |
-| `sure-compress`            | `io.github.tasure:sure-compress`            | 高压缩率门面（SevenZUtil 7z/LZMA2 防路径穿越 / BrotliUtil 解码检测）| core + compress        |
-| `sure-socket`              | `io.github.tasure:sure-socket`              | TCP 门面（SocketUtil 探测 / SocketServer 虚拟线程 / SocketClient）   | core                   |
-| `sure-event`               | `io.github.tasure:sure-event`               | 轻量事件总线（函数式/注解注册、同步/虚拟线程异步投递）               | core                   |
-| `sure-json`                | `io.github.tasure:sure-json`                | JSON 解析 / 序列化 / Bean 互转                            | core                   |
-| `sure-http`                | `io.github.tasure:sure-http`                | HTTP 客户端 / URL 工具（Cookie 会话 / 代理 / 连接池 / multipart 多文件上传） | core                   |
-| `sure-crypto`              | `io.github.tasure:sure-crypto`              | 哈希 / AES/DES/RSA/HMAC / HKDF / ML-KEM / ECDH          | core                   |
-| `sure-cron`                | `io.github.tasure:sure-cron`                | Cron 表达式 / 调度器                                     | core                   |
-| `sure-cache`               | `io.github.tasure:sure-cache`               | FIFO/LRU/LFU/Timed 缓存                              | core                   |
-| `sure-xml`                 | `io.github.tasure:sure-xml`                 | XML 与 Map/Bean 互转                                  | core                   |
-| `sure-poi`                 | `io.github.tasure:sure-poi`                 | Excel/Word 读写                                      | core + POI             |
-| `sure-extra`               | `io.github.tasure:sure-extra`               | 邮件（SMTP）/ FTP / 二维码 / 图像处理                      | core + jakarta.mail + commons-net + zxing |
-| `sure-captcha`             | `io.github.tasure:sure-captcha`             | 图形验证码（线段 / 圆圈 / 扭曲）                                | 零依赖                    |
-| `sure-jwt`                 | `io.github.tasure:sure-jwt`                 | JWT 签发 / 校验（HS/RS）                                 | core + crypto + json   |
-| `sure-dfa`                 | `io.github.tasure:sure-dfa`                 | 敏感词过滤（前缀树 / 停用词）                                   | 零依赖                    |
-| `sure-bom`                 | `io.github.tasure:sure-bom`                 | BOM 统一版本管理                                         | —                      |
-| `sure-all`                 | `io.github.tasure:sure-all`                 | 聚合模块（全部）                                           | 全部                     |
-| `sure-benchmark`           | `io.github.tasure:sure-benchmark`           | JMH 基准测试（性能指标）                                    | core + json + math + event |
-| `sure-examples`            | `io.github.tasure:sure-examples`            | 可运行示例（19 个 Demo）                                   | sure-all               |
-| `sure-spring-boot-starter` | `io.github.tasure:sure-spring-boot-starter` | Spring Boot 自动装配入口                                 | core + captcha + spring-boot（event/cron/cache 可选） |
-
-### 模块与工具类
-
-
-
-| 包                          | 工具类                | 说明                                              |
-| -------------------------- | ------------------ | ----------------------------------------------- |
-| `com.sure.tool.util`       | `StrUtil`          | 判空 / 截取 / 拼接 / 格式化 / 驼峰 / 补位 / 大小写 / Unicode 转码 |
-|                            | `CharUtil`         | 字符分类判断（字母 / 数字 / 空白 / 十六进制）                     |
-|                            | `ArrayUtil`        | 判空 / 包含 / 拼接 / 反转 / 去重 / 截取 / 基本类型↔包装 wrap      |
-|                            | `NumberUtil`       | 安全解析 / 高精度四则 / 四舍五入 / 百分比 / 素数 / 分配             |
-|                            | `BooleanUtil`      | 多种字符串形式解析布尔值（true/yes/1 / 是…）                   |
-|                            | `ObjectUtil`       | 判空 / 深比较 / 克隆 / 序列化 /null 安全 toString           |
-|                            | `RandomUtil`       | 随机数 / 随机字符串 / 随机 UUID                           |
-|                            | `ReUtil`           | 正则匹配 / 提取分组 / 查找 / 替换                           |
-|                            | `IdUtil`           | UUID、ObjectId、雪花 ID                             |
-|                            | `ClassUtil`        | 类加载 / 实例化 / 基本类型判断                              |
-|                            | `ReflectUtil`      | 反射获取 / 设置字段、调用方法                                |
-|                            | `ConvertUtil`      | 类型转换（基础类型 / 数组 / 集合 / 日期 / 枚举）                  |
-|                            | `DesensitizedUtil` | 手机号 / 身份证 / 银行卡 / 邮箱 / 姓名脱敏                     |
-|                            | `CharsetUtil`      | 字符集常量与编码转换                                      |
-|                            | `ValidatorUtil`    | 邮箱 / 手机 / 身份证 / IP v4・v6 / MAC / 信用代码等 20+ 校验   |
-|                            | `IdcardUtil`       | 身份证校验、15↔18 位转换、生日 / 性别解析                       |
-|                            | `EscapeUtil`       | HTML 转义与反转义（防注入）                                |
-|                            | `SystemUtil`       | 系统属性与 JVM 内存信息                                  |
-|                            | `RuntimeUtil`      | 执行系统命令并读取输出                                     |
-|                            | `NetUtil`          | 本机 IP / 主机名、内网地址判断、端口检查                         |
-|                            | `VersionUtil`      | 版本号比较 / 大小判断（SemVer 风格，构建元数据忽略）                 |
-|                            | `VersionComparator`| 版本号比较器（数字段优先 / 预发布段 / null 视为最小）                |
-| `com.sure.tool.codec`      | `Base64Util`       | Base64 / URL 安全 Base64 编解码                      |
-|                            | `Base58Util`       | Base58 编解码（Bitcoin 字母表，去易混淆字符，适合短链/邀请码）       |
-|                            | `Base62Util`       | Base62 编解码（0-9A-Za-z，紧凑且 URL 安全，适合短链/订单号）      |
-|                            | `CaesarUtil`       | 凯撒密码字母轮转编解码，支持任意位移量；位移 13 即 ROT-13         |
-|                            | `RotUtil`          | ROT-13 / ROT-47 轮转密码（自身互逆），ROT-47 覆盖 ASCII 33–126 |
-|                            | `MorseUtil`        | 摩斯电码双向编解码，字母间单空格/单词间三空格，支持 Unicode 变体     |
-|                            | `HexUtil`          | 十六进制编解码                                         |
-|                            | `HashUtil`         | MD5 / SHA-1 / SHA-256 / SHA-512 / CRC32         |
-|                            | `EncodeUtil`       | URL 百分号编解码                                      |
-| `com.sure.tool.collection` | `CollUtil`         | 集合判空 / 交并差 / 分组 / 过滤 / 映射 / 分片 / 随机取样 / 不可变 |
-|                            | `IterUtil`         | 迭代器空安全 / 判空 / 过滤 / 转换 / 拼接 / 首元素                |
-|                            | `ListUtil`         | 列表切分 / 分页 / 反转                                  |
-|                            | `MapUtil`          | Map 创建 / 取值 / 链式构建 / 键值互换 / 排序 / 过滤             |
-|                            | `TreeUtil`         | 树结构构建 / 遍历 / 深度计算                               |
-|                            | `TreeNode`         | 通用树节点                                           |
-|                            | `SeqUtil`          | Sequenced 集合（首尾访问 / 倒序快照 / 不可变前置追加）           |
-|                            | `BiMap`            | 双向映射（键值互查）                                      |
-|                            | `StrJoiner`        | 字符串拼接器（分隔符 / 前缀 / 后缀）                           |
-|                            | `CsvUtil`          | CSV 读写（引号 / 转义处理）                               |
-| `com.sure.tool.date`       | `DateUtil`         | 格式化 / 解析 / 偏移 / 年龄 / 区间 / 闰年 / 生肖 / 干支 / 季度     |
-|                            | `DateUnit`         | 日期时间单位枚举                                        |
-| `com.sure.tool.io`         | `FileUtil`         | 文件读写 / 复制 / 移动 / 删除 / 大小 / 路径规范化                |
-|                            | `IoUtil`           | 流复制 / 读取 / 写入 / 安静关闭                            |
-|                            | `ZipUtil`          | ZIP 压缩 / 解压（含 zip-slip 防护）                      |
-|                            | `ResourceUtil`     | classpath / 文件 / HTTP(S) 资源统一定位与读取            |
-| `com.sure.tool.cache`      | `Cache`            | 缓存接口                                            |
-|                            | `FifoCache`        | 先进先出缓存                                          |
-|                            | `LruCache`         | 最近最少使用缓存                                        |
-|                            | `LfuCache`         | 最不经常使用缓存                                        |
-|                            | `TimedCache`       | 定时过期缓存（TTL）                                     |
-|                            | `CacheUtil`        | 缓存门面（四种策略一键创建）                                  |
-| `com.sure.tool.xml`        | `XmlUtil`          | XML 与 Map/Bean 互转 / 转义                          |
-|                            | `XmlException`     | XML 处理异常                                        |
-| `com.sure.tool.poi`        | `ExcelUtil`        | Excel 读写（类型感知 / 表头 / Bean 导出）                   |
-|                            | `WordUtil`         | Word（docx）读写（段落 / 表格文本提取）                       |
-|                            | `PoiUtil`          | POI 通用门面（单元格取值 / 越界容错）                          |
-| `com.sure.tool.extra`      | `MailUtil`         | SMTP 邮件发送（抄送 / 密送 / HTML / 附件，编码与超时可配）          |
-|                            | `MailAccount`      | 邮箱账户配置（host / 认证 / SSL / STARTTLS / 编码 / 超时）       |
-|                            | `FtpUtil`          | FTP 连接 / 上传下载 / 目录操作 / 重命名 / 存在判断（编码 / 超时可配）   |
-|                            | `QrCodeUtil`       | 二维码生成（PNG / 图片 / Base64 / 文件，自定义颜色与 Logo）         |
-|                            | `QrConfig`         | 二维码配置（尺寸 / 纠错 / 边距 / 前景背景色 / Logo）                |
-|                            | `ImgUtil`          | 图像读取 / 缩放 / 裁剪 / 旋转 / 灰度 / 圆角 / 格式写出              |
-| `com.sure.tool.lang`       | `Assert`           | 断言工具（非空 / 为真 / 正则匹配）                            |
-|                            | `Snowflake`        | 雪花算法 ID 生成器                                     |
-|                            | `PatternPool`      | 常用正则模式池                                         |
-|                            | `StopWatch`        | 秒表计时器                                           |
-|                            | `Console`          | 控制台格式化打印                                        |
-|                            | `Dict`             | 便捷字典（类型化取值）                                     |
-| `com.sure.tool.config`     | `SettingUtil`      | 分层配置读取（系统属性 > 环境变量 > 文件 > 默认值）                  |
-| `com.sure.tool.log`        | `LogUtil`          | 日志门面（SLF4J 自动委托 / Console 兜底）                    |
-|                            | `LogFactory`       | 日志工厂（按名称/类获取，实例缓存）                              |
-| `com.sure.tool.db`         | `Db`               | 数据库门面（CRUD / 事务 / 分页）                            |
-|                            | `DbUtil`           | 数据库静态门面（全局默认数据源）                                |
-|                            | `SqlRunner`        | SQL 执行器（PreparedStatement 参数绑定 / Entity 映射）         |
-|                            | `Entity`           | 数据库实体（Map 风格 + 表名 + 类型化取值）                       |
-|                            | `SimpleDataSource` | 零依赖最小连接池（借用 / 校验 / 上限等待）                        |
-|                            | `PageResult`       | 分页结果（总数 / 总页数 / 当前页）                             |
-| `com.sure.tool.bean`       | `BeanUtil`         | 属性拷贝（含类型转换）/Bean↔Map / 属性读写                     |
-|                            | `BeanDesc`         | Bean 属性描述（getter/setter/ 字段扫描缓存）                |
-|                            | `FieldUtil`        | 字段遍历 / 查找 / 常量读取                                |
-| `com.sure.tool.json`       | `JSONUtil`         | 零依赖 JSON 解析 / 序列化 / Bean 互转                     |
-|                            | `JSONObject`       | JSON 对象（链式设置、类型化读取）                             |
-|                            | `JSONArray`        | JSON 数组（类型化读取）                                  |
-| `com.sure.tool.thread`     | `ThreadUtil`       | 异步执行 / 休眠 / 线程工厂                                |
-|                            | `ExecutorBuilder`  | 线程池构造器                                          |
-|                            | `SyncFinisher`     | 并发同步器（固定线程并发 + 等待）                              |
-|                            | `StructuredTaskUtil`| 结构化并发（parallel 聚合 / anyOf 首成功短路 / 超时）          |
-| `com.sure.tool.http`       | `HttpUtil`         | 零依赖 HTTP 客户端（GET/POST/JSON/ 下载 / 超时 / multipart 多文件上传） |
-|                            | `URLUtil`          | URL 域名 / 路径 / 参数提取与拼接                           |
-|                            | `HttpException`    | HTTP 异常（携带状态码）                                  |
-|                            | `HttpRequest`      | 链式 HTTP 请求（query / 表单 /body/ 超时 / 重定向 / Cookie / 代理 / 连接池 / 多文件） |
-|                            | `HttpResponse`     | 链式 HTTP 响应（状态 / 头 / 字符集解析）                      |
-|                            | `CookieStore`      | 会话级 Cookie 管理器（Set-Cookie 入库 / 过期剔除）          |
-|                            | `HttpClientBuilder`| JDK HttpClient 构建器（连接池 / 虚拟线程 executor / 代理）   |
-| `com.sure.tool.crypto`     | `SecureUtil`       | 安全门面：哈希 / AES/DES/RSA/HMAC/ 随机密钥                |
-| `com.sure.tool.crypto`     | `KdfUtil`          | HKDF 密钥派生（JEP 510）                               |
-| `com.sure.tool.crypto`     | `MlKemUtil`        | ML-KEM 后量子密钥对（JEP 496）                          |
-| `com.sure.tool.crypto`     | `EcdhUtil`         | X25519 / EC 共享密钥协商                                |
-|                            | `AesUtil`          | AES-GCM 加解密（随机 IV，hex/Base64 双输出）               |
-|                            | `DesUtil`          | DES 加解密（兼容旧系统）                                  |
-|                            | `RsaUtil`          | RSA 密钥对生成 / 加解密 / 密钥序列化                         |
-|                            | `HmacUtil`         | HMAC-MD5/SHA1/SHA256/SHA512                     |
-| `com.sure.tool.cron`       | `CronPattern`      | 6 段 Cron 表达式解析 / 匹配 / 下次执行时间                    |
-|                            | `CronUtil`         | 定时调度器（注册表达式任务，每秒扫描执行）                           |
-| `com.sure.tool.captcha`    | `Captcha`          | 验证码接口                                           |
-|                            | `AbstractCaptcha`  | 验证码基类（图形生成 / 字符校验）                              |
-|                            | `LineCaptcha`      | 线段干扰验证码                                         |
-|                            | `CircleCaptcha`    | 圆圈干扰验证码                                         |
-|                            | `ShearCaptcha`     | 扭曲干扰验证码                                         |
-|                            | `CaptchaUtil`      | 验证码门面（一键创建）                                     |
-| `com.sure.tool.jwt`        | `JWT`              | JWT 构建 / 解析 / 验证（HS256/384/512 + RS256）         |
-|                            | `JwtUtil`          | JWT 门面（签发 / 校验 / 解析）                            |
-|                            | `JWTException`     | JWT 异常                                          |
-| `com.sure.tool.dfa`        | `WordTree`         | 敏感词前缀树（停用词跳跃）                                   |
-|                            | `FoundWord`        | 命中结果（词 + 起止索引）                                  |
-|                            | `DfaUtil`          | 敏感词过滤门面                                         |
-
-## 使用示例
-
-
-
-```
+```java
+import com.sure.tool.codec.HashUtil;
 import com.sure.tool.collection.CollUtil;
-
 import com.sure.tool.date.DateUtil;
+import com.sure.tool.util.DesensitizedUtil;
+import com.sure.tool.util.StrUtil;
+import com.sure.tool.util.ValidatorUtil;
 
-import com.sure.tool.io.FileUtil;
-
-import com.sure.tool.lang.Snowflake;
-
-import com.sure.tool.util.*;
-
-import java.util.Date;
+import java.util.List;
 
 public class Demo {
-
-    public static void main(String[] args) throws Exception {
-
-        // 字符串
-
-        StrUtil.isBlank("  ");              // true
-
-        StrUtil.toCamelCase("user_name");   // userName
-
-        StrUtil.format("你好，{}", "世界");    // 你好，世界
-
-        // 数值
-
-        NumberUtil.div(10, 3, 2);           // 3.33
-
-        NumberUtil.round(3.14159, 2);       // 3.14
-
-        // 日期
-
-        DateUtil.format(DateUtil.now());    // 2026-09-09 16:30:00
-
-        DateUtil.age(DateUtil.parse("2000-05-20"));  // 26
-
-        // 集合
-
-        CollUtil.union(CollUtil.newArrayList(1, 2), CollUtil.newArrayList(2, 3));  // [1, 2, 3]
-
-        // 脱敏
-
-        DesensitizedUtil.mobilePhone("13812345678");   // 138****5678
-
-        // 加密
-
-        HashUtil.sha256Hex("abc");
-
-        // 文件
-
-        FileUtil.writeUtf8String("hello", new java.io.File("/tmp/a.txt"));
-
-        FileUtil.readUtf8String(new java.io.File("/tmp/a.txt"));
-
-        // ID
-
-        Snowflake snowflake = IdUtil.createSnowflake(1, 1);
-
-        snowflake.nextId();  // 雪花 ID
-
-        // 校验
-
-        ValidatorUtil.isEmail("test@example.com");   // true
-
-        ValidatorUtil.isMobile("13800138000");       // true
-
-        // 身份证
-
-        IdcardUtil.getBirthDate("11010119900307123X");  // 1990-03-07
-
-        // 压缩
-
-        ZipUtil.zip("/tmp/dir", "/tmp/out.zip");
-
-        ZipUtil.unzip("/tmp/out.zip", "/tmp/out");
-
+    public static void main(String[] args) {
+        System.out.println(StrUtil.format("Hello, {}!", "suretool"));            // Hello, suretool!
+        System.out.println(StrUtil.toCamelCase("user_name"));                    // userName
+        System.out.println(DesensitizedUtil.mobilePhone("13812345678"));         // 138****5678
+        System.out.println(ValidatorUtil.isEmail("dev@example.com"));            // true
+        System.out.println(DateUtil.formatDate(DateUtil.parse("2000-05-20")));   // 2000-05-20
+        System.out.println(CollUtil.union(List.of(1, 2), List.of(2, 3)));         // [1, 2, 3]
+        System.out.println(HashUtil.sha256Hex("abc"));                           // 64 位十六进制
     }
-
 }
 ```
 
-### 运行全部示例（sure-examples 模块，19 个 Demo）
+输出：
 
-
-
-```
-# 首次运行先安装依赖模块到本地仓库
-
-mvn -pl sure-examples -am install -DskipTests
-
-# 运行全部示例（聚合入口 ExamplesRunner）
-
-mvn -pl sure-examples exec:java
+```text
+Hello, suretool!
+userName
+138****5678
+true
+2000-05-20
+[1, 2, 3]
+ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
 ```
 
-## 构建与测试
+## 为什么是它
 
+1. **核心域零第三方运行期依赖** —— `sure-core` 的 compile 作用域只有 JDK；POI、PDFBox、Mail 等重量级依赖隔离在独立模块，不引入就不会进你的 classpath。
+2. **覆盖率是硬门禁** —— `sure-core` 行覆盖下限 0.98，实测 98.23%（10227/10411 行）；各代码模块门禁 0.98（`sure-socket` 0.97），低于阈值 `mvn verify` 直接失败。
+3. **三平台 CI** —— Ubuntu / macOS / Windows × JDK 25 跑同一套 `mvn -B verify`；当前 302 个测试类、2404 个 `@Test`，单次执行 2399 例、0 失败。
+4. **22 个 JPMS 模块** —— 28 个子模块中有 22 个提供 `module-info.java`，可直接用于 module path。
+5. **44 个属性测试** —— 5 个测试类用 jqwik `@Property` 覆盖编解码、集合、字符串、日期的往返与不变量，而不只是手工挑的样例。
 
+## 模块速览
 
+| 模块 | 职责 | 关键依赖 |
+| --- | --- | --- |
+| `sure-core` | 字符串 / 集合 / 日期 / IO / 反射 / 并发 / 图 / 统计 | 仅 JDK |
+| `sure-log` | 日志门面：有 SLF4J 时委托，无则 Console 兜底 | core |
+| `sure-db` | JDBC 访问：Entity / SqlRunner / 连接池 / 事务 / 分页 | core |
+| `sure-script` | JSR-223 脚本门面（引擎探测 / 编译缓存） | core |
+| `sure-template` | 模板引擎（Template / SimpleTemplate / Bean 渲染） | core |
+| `sure-aop` | 零依赖 AOP（Aspect / ProxyUtil / 方法匹配） | core |
+| `sure-pdf` | PDF 读写门面 | core + PDFBox 3 |
+| `sure-process` | 子进程调用、超时强杀 | core |
+| `sure-math` | 数学、BigDecimal、统计、随机数 | core |
+| `sure-compress` | 7z / LZMA2 / Brotli 压缩门面 | core + commons-compress |
+| `sure-socket` | TCP 客户端 / 服务端 | core |
+| `sure-event` | 事件总线（同步 / 虚拟线程异步） | core |
+| `sure-json` | JSON 解析 / 序列化 / Bean 互转 / JSONPath | core |
+| `sure-http` | HTTP 客户端（Cookie / 代理 / 连接池 / multipart） | core |
+| `sure-crypto` | 哈希 / AES-GCM / RSA-OAEP / HKDF / ML-KEM / ECDH | core |
+| `sure-cron` | Cron 表达式与调度器 | core |
+| `sure-cache` | FIFO / LRU / LFU / Timed / Weak 缓存 | core |
+| `sure-xml` | XML 与 Map / Bean 互转 | core |
+| `sure-poi` | Excel / Word 读写 | core + POI |
+| `sure-extra` | 邮件 / FTP / 二维码 / 图像处理 | core + jakarta.mail + commons-net + zxing |
+| `sure-captcha` | 图形验证码（线段 / 圆圈 / 扭曲） | 仅 JDK |
+| `sure-jwt` | JWT 签发与校验（HS / RS） | core + crypto + json |
+| `sure-dfa` | 敏感词过滤（前缀树 / 停用词） | 仅 JDK |
+| `sure-bom` | BOM，统一全部模块版本 | — |
+| `sure-all` | 聚合模块，一次引入全部能力 | 全部模块 |
+| `sure-examples` | 可运行示例（19 个 Demo） | sure-all |
+| `sure-benchmark` | JMH 基准测试 | core + json + math + event |
+| `sure-spring-boot-starter` | Spring Boot 自动装配 | core + captcha（event / cron / cache 可选） |
+
+完整坐标、包名与 javadoc 链接见 [模块与 API 门户](docs/modules.md)。
+
+## 安装与版本
+
+### BOM（推荐）
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>io.github.tasure</groupId>
+            <artifactId>sure-bom</artifactId>
+            <version>1.19.1</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
 ```
-# 编译并运行全部单元测试
 
-mvn test
+之后引入任意模块都不用再写版本：
 
-# 安装到本地仓库
-
-mvn clean install
+```xml
+<dependency>
+    <groupId>io.github.tasure</groupId>
+    <artifactId>sure-json</artifactId>
+</dependency>
 ```
 
-测试覆盖：字符串、数值、集合、日期、文件 IO、编解码、反射、断言、雪花 ID、校验、压缩、计时、字典等全部工具类。
+### Spring Boot Starter
 
-## 设计参考
+```xml
+<dependency>
+    <groupId>io.github.tasure</groupId>
+    <artifactId>sure-spring-boot-starter</artifactId>
+    <version>1.19.1</version>
+</dependency>
+```
 
-本项目的 API 设计参考 [Hutool](https://doc.hutool.cn/pages/index/)（[Gitee 仓库](https://gitee.com/chinabugotech/hutool)），实现为独立编写的原始代码，无代码复制。
+Starter 当前只自带 `sure-core` + `sure-captcha`（必选）。`sure-event` / `sure-cron` / `sure-cache` 是 optional 依赖：需要时显式引入对应模块，自动装配会按 `@ConditionalOnClass` 生效。Starter 本身以 Spring Boot 4.1.2 编译。
 
-## 贡献与安全
+### 版本
 
-欢迎贡献！请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)（含 Good First Issue 指引）。安全问题请走 GitHub Security Advisory 或直接联系维护者。
+Maven Central 已发布 22 个版本，最新 `1.19.1`（2026-11-03）；所有模块使用同一版本号发布。
 
+## 质量与工程证据
 
+| 项目 | 事实 | 验证位置 |
+| --- | --- | --- |
+| 测试规模 | 302 个测试类 / 2404 个静态 `@Test`；单次 `mvn -B verify` 执行 2399 例，0 失败 | CI 日志 |
+| 覆盖率 | `sure-core` 行覆盖 98.23%（10227/10411），门禁 0.98；各代码模块门禁 0.98（`sure-socket` 0.97） | `sure-core/pom.xml` · JaCoCo |
+| CI 矩阵 | Ubuntu / macOS / Windows × JDK 25，统一执行 `mvn -B verify` | `.github/workflows/ci.yml` |
+| 静态检查 | Checkstyle 违规即失败；SpotBugs effort=Max 且 failOnError；CodeQL；OSV Scanner | `pom.xml` · workflows |
+| 二进制兼容 | `sure-core` 用 japicmp 对比 1.8.0，`breakOnBinaryIncompatibleModifications=true` | `sure-core/pom.xml` |
+| 许可头 | license-maven-plugin `check` 绑定在 verify 阶段 | `pom.xml` |
+| SBOM | CycloneDX `makeAggregateBom` 在 `-Prelease` 的 verify 阶段生成 | `pom.xml` |
+| 文档链接 | `docs-links` 任务校验 README 与 docs 的相对链接和锚点 | `.github/scripts/check_docs_links.py` |
 
+## 边界与限制
 
-* 贡献指南：[CONTRIBUTING.md](CONTRIBUTING.md)（环境要求 / PR 流程 / 门禁标准）
+- **仅支持 JDK 25+。** 在 JDK 17/21 上不能运行，也没有降级构建。
+- **`sure-all` 会传递第三方依赖。** 它是便利聚合，会把 POI、PDFBox、Angus Mail、commons-net、Zxing、commons-compress 等（10 个以上 jar）带进 classpath。生产项目优先用 BOM + 按需模块。
+- **跨平台稳定性仍在观察。** Windows / macOS 上曾有平台相关用例不稳定，已通过补测修复（2026-10-30 三平台覆盖率全绿），CI 仍保持三平台严格门禁。
+- **不是 Hutool 的替代品。** 本项目只覆盖常用场景，不为对齐 Hutool 的方法数量而扩充 API。
 
-* 行为准则：[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)（Contributor Covenant 2.1）
+## 文档 / 示例 / 贡献
 
-* 安全策略：[SECURITY.md](SECURITY.md)（漏洞报告与响应承诺 24h）
-
-* 安全扫描：CodeQL（push/PR/ 每周）+ Dependabot 自动依赖升级
-
-## License
-
-[Apache License 2.0](LICENSE)
+- 文档：[类索引](docs/index.md) · [模块与 API](docs/modules.md) · [5 分钟上手](docs/posts/quickstart.md) · [与 Hutool 对比](docs/comparison-hutool.md)
+- 示例：[sure-examples](sure-examples)，运行方式：`mvn -pl sure-examples -am install -DskipTests` 后 `mvn -pl sure-examples exec:java`
+- 贡献：[CONTRIBUTING.md](CONTRIBUTING.md) · [Bug 模板](.github/ISSUE_TEMPLATE/bug_report.md) · [功能请求模板](.github/ISSUE_TEMPLATE/feature_request.md) · [PR 模板](.github/PULL_REQUEST_TEMPLATE.md)
+- 安全：[SECURITY.md](SECURITY.md)，漏洞通过 GitHub Security Advisory 报告
+- 许可：[Apache License 2.0](LICENSE)

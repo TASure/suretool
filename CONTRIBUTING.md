@@ -14,7 +14,7 @@
 git clone https://github.com/TASure/suretool.git
 cd suretool
 mvn -B -pl sure-core verify     # 单模块：测试 + Checkstyle + SpotBugs + License + JaCoCo + japicmp
-mvn -B verify                   # 全量：28 个 jar 模块的全部门禁（首次较慢）
+mvn -B verify                   # 全量：29 个模块的全部门禁（首次较慢）
 ```
 
 ## 3. 分支与提交
@@ -44,6 +44,26 @@ mvn -B verify                   # 全量：28 个 jar 模块的全部门禁（�
 | 静态检查 | Checkstyle（Tab 缩进、import 顺序）、SpotBugs effort=Max 且 failOnError、License 头 | `mvn -B verify` |
 
 测试框架：JUnit 4.13.2；属性测试用 jqwik（当前仅在 `sure-core` 启用）。测试类放在模块 `src/test/java`，命名 `*Test`。
+
+### 5.1 数量口径防漂移（强制）
+
+**新增/删除模块，或大幅增删测试（单次 PR 增删 ≥ 10 个 `@Test`）的那次 PR，必须在同一个 PR 内同步更新以下文件中的模块数 / 测试数 / 版本数 / 覆盖率：**
+
+- `ROADMAP.md`（现状基线与阶段验收行）
+- `docs/modules.md`（模块表与模块总数）
+- `README.md` 与 `README.en.md`（模块速览、质量证据表）
+
+数字口径（一律实测，不得沿用旧值）：
+
+| 指标 | 实测方式 |
+| --- | --- |
+| 模块数 | 根 `pom.xml` 中 `<module>` 的条数（历史基线行保留时须标注日期） |
+| 测试类数 / `@Test` 数 | 统计各模块 `src/test/java` 下含 `@Test` 的类与注解条数 |
+| 执行用例数 | `mvn -B verify` 日志中模块汇总的 `Tests run:` 行之和（不要用 surefire XML 汇总） |
+| 覆盖率 | 各模块 `target/site/jacoco/jacoco.csv` 的 `LINE_COVERED / (LINE_COVERED + LINE_MISSED)` |
+| 已发布版本数 | Maven Central `maven-metadata.xml` 的 `<versions>` 条数 |
+
+历史基线可以保留，但必须写明测量日期；**禁止把旧数字写成「当前」**。
 
 ## 6. 运行示例
 

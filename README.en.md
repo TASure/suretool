@@ -65,7 +65,7 @@ ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
 
 1. **No third-party runtime dependencies in the core.** `sure-core` compiles against the JDK only. Heavy libraries such as POI, PDFBox and Mail live in separate modules, so they never reach your classpath unless you ask for them.
 2. **Coverage is a hard gate.** `sure-core` has a 0.98 line-coverage floor and currently measures 98.23% (10,227 of 10,411 lines). Every code module is gated at 0.98 (0.97 for `sure-socket`). Below the threshold, `mvn verify` fails.
-3. **Three-OS CI.** Ubuntu, macOS and Windows run the same `mvn -B verify` on JDK 25. Today that means 302 test classes and 2,404 `@Test` methods; the last full run executed 2,399 tests with zero failures.
+3. **Three-OS CI.** Ubuntu, macOS and Windows run the same `mvn -B verify` on JDK 25. Today that means 290 test classes and 2,419 `@Test` methods; one full run executed 2,419 tests with zero failures (the benchmark and examples modules carry no tests).
 4. **23 JPMS modules.** 23 of the 29 child modules ship a `module-info.java` and can be used on the module path.
 5. **44 property tests.** Five jqwik test classes check round-trips and invariants across codecs, collections, strings and dates — not just hand-picked examples.
 
@@ -154,7 +154,7 @@ Heavy third-party libraries do not travel with `sure-all`: when you use PDF, Exc
 
 | Area | Fact | Where to check |
 | --- | --- | --- |
-| Test suite | 302 test classes / 2,404 static `@Test` methods; one `mvn -B verify` run executed 2,399 tests with 0 failures | CI logs |
+| Test suite | 290 test classes / 2,419 static `@Test` methods; the full `mvn -B verify` run on 2026-11-05 executed 2,419 tests with 0 failures, 0 errors and 0 skipped (`sure-core`: 1,430) | CI logs |
 | Coverage | `sure-core` line coverage 98.23% (10,227/10,411), gate 0.98; every code module gated at 0.98 (0.97 for `sure-socket`) | `sure-core/pom.xml` · JaCoCo |
 | CI matrix | Ubuntu / macOS / Windows × JDK 25, all running `mvn -B verify` | `.github/workflows/ci.yml` |
 | Static analysis | Checkstyle fails on violations; SpotBugs at effort=Max with failOnError; CodeQL; OSV Scanner | `pom.xml` · workflows |

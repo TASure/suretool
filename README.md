@@ -79,10 +79,10 @@ ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
 | `sure-script` | JSR-223 脚本门面（引擎探测 / 编译缓存） | core |
 | `sure-template` | 模板引擎（Template / SimpleTemplate / Bean 渲染） | core |
 | `sure-aop` | 零依赖 AOP（Aspect / ProxyUtil / 方法匹配） | core |
-| `sure-pdf` | PDF 读写门面 | core + PDFBox 3 |
+| `sure-pdf` | PDF 读写门面 | core + PDFBox 3（可选） |
 | `sure-process` | 子进程调用、超时强杀 | core |
 | `sure-math` | 数学、BigDecimal、统计、随机数 | core |
-| `sure-compress` | 7z / LZMA2 / Brotli 压缩门面 | core + commons-compress |
+| `sure-compress` | 7z / LZMA2 / Brotli 压缩门面 | core + commons-compress（可选） |
 | `sure-socket` | TCP 客户端 / 服务端 | core |
 | `sure-event` | 事件总线（同步 / 虚拟线程异步） | core |
 | `sure-json` | JSON 解析 / 序列化 / Bean 互转 / JSONPath | core |
@@ -91,8 +91,8 @@ ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
 | `sure-cron` | Cron 表达式与调度器 | core |
 | `sure-cache` | FIFO / LRU / LFU / Timed / Weak 缓存 | core |
 | `sure-xml` | XML 与 Map / Bean 互转 | core |
-| `sure-poi` | Excel / Word 读写 | core + POI |
-| `sure-extra` | 邮件 / FTP / 二维码 / 图像处理 | core + jakarta.mail + commons-net + zxing |
+| `sure-poi` | Excel / Word 读写 | core + POI（可选） |
+| `sure-extra` | 邮件 / FTP / 二维码 / 图像处理 | core + jakarta.mail + commons-net + zxing（可选） |
 | `sure-captcha` | 图形验证码（线段 / 圆圈 / 扭曲） | 仅 JDK |
 | `sure-jwt` | JWT 签发与校验（HS / RS） | core + crypto + json |
 | `sure-dfa` | 敏感词过滤（前缀树 / 停用词） | 仅 JDK |
@@ -143,6 +143,8 @@ ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
 
 Starter 当前只自带 `sure-core` + `sure-captcha`（必选）。`sure-event` / `sure-cron` / `sure-cache` 是 optional 依赖：需要时显式引入对应模块，自动装配会按 `@ConditionalOnClass` 生效。Starter 本身以 Spring Boot 4.1.2 编译。
 
+第三方重依赖不随 `sure-all` 传递：用到 PDF / Excel / 邮件 / 7z 等能力时，按模块表自行引入对应库（如 `org.apache.poi:poi-ooxml`）。
+
 ### 版本
 
 Maven Central 已发布 22 个版本，最新 `1.19.1`（2026-11-03）；所有模块使用同一版本号发布。
@@ -163,7 +165,7 @@ Maven Central 已发布 22 个版本，最新 `1.19.1`（2026-11-03）；所有�
 ## 边界与限制
 
 - **仅支持 JDK 25+。** 在 JDK 17/21 上不能运行，也没有降级构建。
-- **`sure-all` 会传递第三方依赖。** 它是便利聚合，会把 POI、PDFBox、Angus Mail、commons-net、Zxing、commons-compress 等（10 个以上 jar）带进 classpath。生产项目优先用 BOM + 按需模块。
+- **重依赖需显式引入。** `sure-all` 只聚合 suretool 模块；POI、PDFBox、Mail、commons-net、Zxing、commons-compress 等第三方库在对应模块中标为 `optional`，不会被 `sure-all` 传递。使用这些域时需自行声明对应依赖。
 - **跨平台稳定性仍在观察。** Windows / macOS 上曾有平台相关用例不稳定，已通过补测修复（2026-10-30 三平台覆盖率全绿），CI 仍保持三平台严格门禁。
 - **不是 Hutool 的替代品。** 本项目只覆盖常用场景，不为对齐 Hutool 的方法数量而扩充 API。
 

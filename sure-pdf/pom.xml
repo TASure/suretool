@@ -40,10 +40,12 @@
             <artifactId>sure-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- PDFBox 为可选依赖：使用 PDF 能力时由使用方显式引入 -->
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
             <version>3.0.8</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.github.spotbugs</groupId>

@@ -19,7 +19,7 @@ mvn spring-boot:run
 [suretool] event   = EventBus bean (1 listeners)
 [suretool] cache   = LruCache
 [suretool] cron    = CronLifecycle running=true
-[suretool] version = 1.19.1
+[suretool] version = 1.20.0
 ```
 
 ## 接口
@@ -44,4 +44,4 @@ curl http://localhost:18080/event
 
 ## 说明
 
-本工程是**独立示例**，不加入主仓库 reactor，也不随 `sure-bom` 发布；依赖坐标固定为已发布的 `1.19.1`。
+本工程是**独立示例**，不加入主仓库 reactor，也不随 `sure-bom` 发布；依赖坐标固定为已发布的 `1.20.0`。

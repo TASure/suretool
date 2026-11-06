@@ -29,7 +29,7 @@ java -cp sure-examples/target/classes:$(cat sure-examples/target/cp.txt 2>/dev/n
 <dependency>
     <groupId>io.github.tasure</groupId>
     <artifactId>sure-spring-boot-starter</artifactId>
-    <version>1.19.1</version>
+    <version>1.20.0</version>
 </dependency>
 ```
 

@@ -20,7 +20,7 @@
 <dependency>
     <groupId>io.github.tasure</groupId>
     <artifactId>sure-core</artifactId>
-    <version>1.19.1</version>
+    <version>1.20.0</version>
 </dependency>
 ```
 
@@ -115,7 +115,7 @@ ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
         <dependency>
             <groupId>io.github.tasure</groupId>
             <artifactId>sure-bom</artifactId>
-            <version>1.19.1</version>
+            <version>1.20.0</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
@@ -138,7 +138,7 @@ ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
 <dependency>
     <groupId>io.github.tasure</groupId>
     <artifactId>sure-spring-boot-starter</artifactId>
-    <version>1.19.1</version>
+    <version>1.20.0</version>
 </dependency>
 ```
 
@@ -148,7 +148,7 @@ Starter 当前只自带 `sure-core` + `sure-captcha`（必选）。`sure-event` 
 
 ### 版本
 
-Maven Central 已发布 22 个版本，最新 `1.19.1`（2026-11-03）；所有模块使用同一版本号发布。
+Maven Central 已发布 23 个版本，最新 `1.20.0`（2026-11-05）；所有模块使用同一版本号发布。
 
 ## 质量与工程证据
 

@@ -23,7 +23,7 @@ suretool 借鉴 Hutool 的“静态工具方法”形态，但**只支持 JDK 25
         <dependency>
             <groupId>io.github.tasure</groupId>
             <artifactId>sure-bom</artifactId>
-            <version>1.19.1</version>
+            <version>1.20.0</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>

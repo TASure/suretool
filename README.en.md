@@ -20,7 +20,7 @@ A zero-dependency Java toolkit for **JDK 25+**. Its 29 modules turn everyday wor
 <dependency>
     <groupId>io.github.tasure</groupId>
     <artifactId>sure-core</artifactId>
-    <version>1.19.1</version>
+    <version>1.20.0</version>
 </dependency>
 ```
 
@@ -115,7 +115,7 @@ Full coordinates, packages and javadoc links: [Modules & API portal](docs/module
         <dependency>
             <groupId>io.github.tasure</groupId>
             <artifactId>sure-bom</artifactId>
-            <version>1.19.1</version>
+            <version>1.20.0</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
@@ -138,7 +138,7 @@ After that, any module can be declared without a version:
 <dependency>
     <groupId>io.github.tasure</groupId>
     <artifactId>sure-spring-boot-starter</artifactId>
-    <version>1.19.1</version>
+    <version>1.20.0</version>
 </dependency>
 ```
 
@@ -148,7 +148,7 @@ Heavy third-party libraries do not travel with `sure-all`: when you use PDF, Exc
 
 ### Versions
 
-22 versions are published to Maven Central. The latest is `1.19.1` (2026-11-03), and all modules share the same version number.
+23 versions are published to Maven Central. The latest is `1.20.0` (2026-11-05), and all modules share the same version number.
 
 ## Quality and engineering evidence
 

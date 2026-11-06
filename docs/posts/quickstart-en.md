@@ -6,7 +6,7 @@ Requires **JDK 25+**. `sure-core` has no runtime dependencies.
 <dependency>
     <groupId>io.github.tasure</groupId>
     <artifactId>sure-core</artifactId>
-    <version>1.19.1</version>
+    <version>1.20.0</version>
 </dependency>
 ```
 

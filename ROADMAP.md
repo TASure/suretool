@@ -2,7 +2,7 @@
 
 > 目标：让 suretool 在**功能覆盖**上追平 Hutool 高频子集，在**工程质量、API 现代化程度、文档与社区活跃度**上实现超越。
 > 现状基线（2026-09-09）：38 个工具类、496 个 public static 方法、112 个测试用例、本地仓库可用、GitHub 仓库已建（推送待网络）。
-> 现状基线（2026-11-05）：29 个模块（根 `pom.xml` 的 `<module>` 实测）、280 个主类（`src/main/java` 下非 `module-info` 计数）、1947 处 `public static` 声明、290 个测试类 / 2419 个 `@Test`、单次 `mvn -B verify` 执行 2419 例（0 失败 / 0 错误 / 0 跳过）、23 个 JPMS 模块、`maven.compiler.release=25`、CI 矩阵 3 平台（ubuntu/macos/windows）× JDK 25、JaCoCo 行覆盖门禁 0.98（sure-socket 0.97，根默认 0.70）、Maven Central 已发布 22 个版本（repo1 latest/release=1.19.1）。
+> 现状基线（2026-11-06）：29 个模块（根 `pom.xml` 的 `<module>` 实测）、280 个主类（`src/main/java` 下非 `module-info` 计数）、1947 处 `public static` 声明、290 个测试类 / 2420 个 `@Test`、单次 `mvn -B verify` 执行 2420 例（0 失败 / 0 错误 / 0 跳过）、23 个 JPMS 模块、`maven.compiler.release=25`、CI 矩阵 3 平台（ubuntu/macos/windows）× JDK 25、JaCoCo 行覆盖门禁 0.98（sure-socket 0.97，根默认 0.70）、Maven Central 已发布 22 个版本（repo1 latest/release=1.19.1）。
 
 ---
 
@@ -10,9 +10,9 @@
 
 | 维度 | Hutool（参照） | suretool（现状） | 差距 |
 | --- | --- | --- | --- |
-| 规模 | 12+ 模块（core/cache/cron/db/dfa/extra/http/log/script/poi/jwt/aop），core 数百个工具类 | 29 个模块，280 个主类 / 1947 处 public static 声明（2026-11-05 实测） | 缺 3-5 个长尾能力域 |
-| 分布 | Maven Central 中央仓库 | Maven Central 已发布（v0.1.0 → v1.19.1，22 个版本，2026-11-05 实测） | 已对齐 |
-| 质量 | 测试覆盖中上、迭代 10+ 年 | 2419 个 @Test（290 个测试类）、三平台 CI、JaCoCo 门禁 0.98 | 已工程化 |
+| 规模 | 12+ 模块（core/cache/cron/db/dfa/extra/http/log/script/poi/jwt/aop），core 数百个工具类 | 29 个模块，280 个主类 / 1947 处 public static 声明（2026-11-06 实测） | 缺 3-5 个长尾能力域 |
+| 分布 | Maven Central 中央仓库 | Maven Central 已发布（v0.1.0 → v1.19.1，22 个版本，2026-11-06 实测） | 已对齐 |
+| 质量 | 测试覆盖中上、迭代 10+ 年 | 2420 个 @Test（290 个测试类）、三平台 CI、JaCoCo 门禁 0.98 | 已工程化 |
 | 文档 | 官方文档站 + 大量中文教程 | README + GitHub Pages 文档站 + 21 个示例类（20 个 Demo 可运行） | 文档站已上线，待补教程矩阵 |
 | 影响力 | Gitee 24,353 star、行业标准工具库 | GitHub 2 star、0 fork（2026-11-03） | 需长期运营 |
 | 差异化 | 迭代慢、部分 API 基于旧 java.util.Date、历史包袱 | 全新代码、可用 java.time 重构、无包袱 | **超越机会点** |
@@ -151,9 +151,9 @@
 **B 工程质量（可复现、可验证）**
 - [x] CI 矩阵：ubuntu / macos / windows × JDK 25 全量 `mvn verify`（另含 docs-links、benchmark-gate、CodeQL、OSV 等独立 workflow）
 - [x] 三重门禁：Checkstyle（0 违规）/ SpotBugs（Max 力度 / Medium 阈值）/ License 头校验
-- [x] 290 个测试类 / 2419 个 `@Test`；2026-11-05 本地 `mvn -B verify` 执行 2419 例全绿（Failures 0 / Errors 0 / Skipped 0，sure-core 1430 例）
+- [x] 290 个测试类 / 2420 个 `@Test`；2026-11-06 本地 `mvn -B verify` 执行 2420 例全绿（Failures 0 / Errors 0 / Skipped 0，sure-core 1430 例）
 - [x] JMH 基准：14 项对比 13 项不慢于 Hutool（见「JMH 基准报告」）
-- [x] 覆盖率收紧：全模块行覆盖率门禁 ≥ 0.98（sure-socket 0.97；5 个非工具模块 skip），sure-core 实测 98.23%（2026-11-05 本地 `mvn -B verify`，执行 1430 例）
+- [x] 覆盖率收紧：全模块行覆盖率门禁 ≥ 0.98（sure-socket 0.97；5 个非工具模块 skip），sure-core 实测 98.23%（2026-11-06 本地 `mvn -B verify`，执行 1430 例）
 - [x] JSON 解析 fuzz 测试（JsonFuzzTest 63 例：畸形输入 / 1000 层嵌套 / 10 万字符 / 全 unicode / 循环引用）
 
 **C 发布与分发（可被一键引入）**

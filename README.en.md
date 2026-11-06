@@ -20,7 +20,7 @@ A zero-dependency Java toolkit for **JDK 25+**. Its 29 modules turn everyday wor
 <dependency>
     <groupId>io.github.tasure</groupId>
     <artifactId>sure-core</artifactId>
-    <version>1.19.1</version>
+    <version>1.20.0</version>
 </dependency>
 ```
 
@@ -65,7 +65,7 @@ ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
 
 1. **No third-party runtime dependencies in the core.** `sure-core` compiles against the JDK only. Heavy libraries such as POI, PDFBox and Mail live in separate modules, so they never reach your classpath unless you ask for them.
 2. **Coverage is a hard gate.** `sure-core` has a 0.98 line-coverage floor and currently measures 98.23% (10,227 of 10,411 lines). Every code module is gated at 0.98 (0.97 for `sure-socket`). Below the threshold, `mvn verify` fails.
-3. **Three-OS CI.** Ubuntu, macOS and Windows run the same `mvn -B verify` on JDK 25. Today that means 290 test classes and 2,419 `@Test` methods; one full run executed 2,419 tests with zero failures (the benchmark and examples modules carry no tests).
+3. **Three-OS CI.** Ubuntu, macOS and Windows run the same `mvn -B verify` on JDK 25. Today that means 290 test classes and 2,420 `@Test` methods; one full run executed 2,420 tests with zero failures (the benchmark and examples modules carry no tests).
 4. **23 JPMS modules.** 23 of the 29 child modules ship a `module-info.java` and can be used on the module path.
 5. **44 property tests.** Five jqwik test classes check round-trips and invariants across codecs, collections, strings and dates — not just hand-picked examples.
 
@@ -115,7 +115,7 @@ Full coordinates, packages and javadoc links: [Modules & API portal](docs/module
         <dependency>
             <groupId>io.github.tasure</groupId>
             <artifactId>sure-bom</artifactId>
-            <version>1.19.1</version>
+            <version>1.20.0</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
@@ -138,7 +138,7 @@ After that, any module can be declared without a version:
 <dependency>
     <groupId>io.github.tasure</groupId>
     <artifactId>sure-spring-boot-starter</artifactId>
-    <version>1.19.1</version>
+    <version>1.20.0</version>
 </dependency>
 ```
 
@@ -148,13 +148,13 @@ Heavy third-party libraries do not travel with `sure-all`: when you use PDF, Exc
 
 ### Versions
 
-22 versions are published to Maven Central. The latest is `1.19.1` (2026-11-03), and all modules share the same version number.
+23 versions are published to Maven Central. The latest is `1.20.0` (2026-11-05), and all modules share the same version number.
 
 ## Quality and engineering evidence
 
 | Area | Fact | Where to check |
 | --- | --- | --- |
-| Test suite | 290 test classes / 2,419 static `@Test` methods; the full `mvn -B verify` run on 2026-11-05 executed 2,419 tests with 0 failures, 0 errors and 0 skipped (`sure-core`: 1,430) | CI logs |
+| Test suite | 290 test classes / 2,420 static `@Test` methods; the full `mvn -B verify` run on 2026-11-06 executed 2,420 tests with 0 failures, 0 errors and 0 skipped (`sure-core`: 1,430) | CI logs |
 | Coverage | `sure-core` line coverage 98.23% (10,227/10,411), gate 0.98; every code module gated at 0.98 (0.97 for `sure-socket`) | `sure-core/pom.xml` · JaCoCo |
 | CI matrix | Ubuntu / macOS / Windows × JDK 25, all running `mvn -B verify` | `.github/workflows/ci.yml` |
 | Static analysis | Checkstyle fails on violations; SpotBugs at effort=Max with failOnError; CodeQL; OSV Scanner | `pom.xml` · workflows |

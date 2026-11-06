@@ -166,4 +166,36 @@ public class SureToolAutoConfigurationTest {
 					assertThat(context).doesNotHaveBean(SureToolAutoConfiguration.CronLifecycle.class);
 				});
 	}
+
+	/**
+	 * 1.19.1 兼容入口：三个废弃方法仍返回可用实例；因不带 {@code @Bean}，不会额外注册 Bean。
+	 */
+	@Test
+	@SuppressWarnings("deprecation")
+	public void deprecatedCompatMethodsReturnUsableInstancesWithoutRegisteringBeans() {
+		SureToolAutoConfiguration configuration = new SureToolAutoConfiguration();
+		SureToolProperties properties = new SureToolProperties();
+		properties.getCache().setType("lru");
+		properties.getCache().setCapacity(32);
+
+		EventBus bus = configuration.sureEventBus();
+		assertThat(bus).isNotNull();
+		bus.post("compat");   // 可用：发布事件不抛异常
+
+		SureToolAutoConfiguration.CronLifecycle lifecycle = configuration.sureCronLifecycle();
+		assertThat(lifecycle).isNotNull();
+		assertThat(lifecycle.isRunning()).isFalse();
+
+		Cache<?, ?> cache = configuration.sureCache(properties);
+		assertThat(cache).isNotNull();
+		assertThat(cache.isEmpty()).isTrue();
+
+		runner.run(context -> {
+			assertThat(context).hasNotFailed();
+			// 仅 EventConfiguration 注册的一个；兼容方法不参与装配，不产生重复 Bean
+			assertThat(context).hasSingleBean(EventBus.class);
+			assertThat(context).doesNotHaveBean(Cache.class);
+			assertThat(context).doesNotHaveBean(SureToolAutoConfiguration.CronLifecycle.class);
+		});
+	}
 }

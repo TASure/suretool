@@ -23,7 +23,7 @@
 
     <groupId>io.github.tasure</groupId>
     <artifactId>suretool</artifactId>
-    <version>1.19.1</version>
+    <version>1.20.0</version>
     <packaging>pom</packaging>
 
     <name>suretool</name>
@@ -355,7 +355,7 @@
         <plugins>
             <!-- 二进制兼容门禁（verify 阶段，全模块）：与最近稳定版本 1.19.1 对比，破坏性变更即失败。
                  根项目与 sure-bom 通过 japicmp.skip=true 跳过；各已发布 jar 模块置 false。
-                 当前版本号仍为 1.19.1 时对比结果为“无差异”，下一版本起开始拦截。 -->
+                 sure-concurrent 首次随 1.20.0 发布，暂无 1.19.1 基线，置 skip=true 并在下个版本纳入。 -->
             <plugin>
                 <groupId>com.github.siom79.japicmp</groupId>
                 <artifactId>japicmp-maven-plugin</artifactId>

@@ -10,7 +10,7 @@ suretool 已发布到 Maven Central（groupId `io.github.tasure`），核心模�
 <dependency>
     <groupId>io.github.tasure</groupId>
     <artifactId>sure-core</artifactId>
-    <version>1.19.1</version>
+    <version>1.20.0</version>
 </dependency>
 ```
 

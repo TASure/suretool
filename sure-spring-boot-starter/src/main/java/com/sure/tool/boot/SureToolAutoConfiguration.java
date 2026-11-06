@@ -56,6 +56,62 @@ public class SureToolAutoConfiguration {
 	}
 
 	/**
+	 * 兼容 1.19.1 的二进制入口：事件总线装配已移入 {@link EventConfiguration}。
+	 *
+	 * <p>本方法不带 {@code @Bean}，不参与自动装配，仅为保持已发布版本的二进制兼容性。
+	 *
+	 * @return 新的事件总线实例
+	 * @deprecated 自 1.20.0 起由 {@code EventConfiguration} 按 {@code @ConditionalOnClass} 装配，本方法仅为兼容保留
+	 * @since 1.20.0
+	 */
+	@Deprecated
+	public EventBus sureEventBus() {
+		return new EventBus();
+	}
+
+	/**
+	 * 兼容 1.19.1 的二进制入口：Cron 生命周期装配已移入 {@link CronConfiguration}。
+	 *
+	 * <p>本方法不带 {@code @Bean}，不参与自动装配，仅为保持已发布版本的二进制兼容性。
+	 *
+	 * @return 新的调度生命周期控制器
+	 * @deprecated 自 1.20.0 起由 {@code CronConfiguration} 按 {@code @ConditionalOnClass} 装配，本方法仅为兼容保留
+	 * @since 1.20.0
+	 */
+	@Deprecated
+	public CronLifecycle sureCronLifecycle() {
+		return new CronLifecycle();
+	}
+
+	/**
+	 * 兼容 1.19.1 的二进制入口：缓存装配已移入 {@link CacheConfiguration}。
+	 *
+	 * <p>本方法不带 {@code @Bean}，不参与自动装配，仅为保持已发布版本的二进制兼容性。
+	 *
+	 * @param properties 配置
+	 * @return 按配置创建的缓存实例
+	 * @deprecated 自 1.20.0 起由 {@code CacheConfiguration} 按 {@code @ConditionalOnClass} 装配，本方法仅为兼容保留
+	 * @since 1.20.0
+	 */
+	@Deprecated
+	public Cache<?, ?> sureCache(SureToolProperties properties) {
+		String type = properties.getCache().getType();
+		int capacity = properties.getCache().getCapacity();
+		long timeout = properties.getCache().getTimeout();
+		switch (type) {
+			case "fifo":
+				return CacheUtil.<Object, Object>newFifoCache(capacity);
+			case "timed":
+				return CacheUtil.<Object, Object>newTimedCache(timeout);
+			case "weak":
+				return CacheUtil.<Object, Object>newWeakCache(capacity, timeout);
+			case "lru":
+			default:
+				return CacheUtil.<Object, Object>newLruCache(capacity);
+		}
+	}
+
+	/**
 	 * 事件总线装配（可选域）：仅当使用方引入 sure-event 时生效。
 	 *
 	 * <p>独立配置类 + 类级 {@link ConditionalOnClass}，缺少模块时整类跳过，

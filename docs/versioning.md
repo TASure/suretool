@@ -47,7 +47,7 @@
 ## 5. 版本号管理
 
 - 单一事实来源：根 `pom.xml` 的 `<version>`；`sure-bom` 与各模块版本由 `${project.version}` 驱动，**禁止手工改子模块版本**。
-- 发布后仓库保持在发布版本号（当前 `1.19.1`），下一开发周期开始时再切 `x.y.z-SNAPSHOT`（如 1.19.1 → 1.20.0-SNAPSHOT）。
+- 发布后仓库保持在发布版本号（当前 `1.20.0`），下一开发周期开始时再切 `x.y.z-SNAPSHOT`（如 1.20.0 → 1.21.0-SNAPSHOT）。
 - git tag 与 Maven 版本严格一一对应：tag `v1.1.0` ↔ 坐标 `io.github.tasure:sure-core:1.1.0`。
 
 ## 6. 变更记录纪律

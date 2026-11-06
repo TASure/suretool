@@ -70,7 +70,7 @@ mvn -B verify                   # 全量：29 个模块的全部门禁（首次�
 **sure-examples（19 个独立 Demo + 1 个文件监控 Demo，共 20 个）**
 
 ```bash
-# 修改过核心模块时先安装到本地仓库（否则会用 Central 上的 1.19.1）
+# 修改过核心模块时先安装到本地仓库（否则会用 Central 上的 1.20.0）
 mvn -B -pl sure-examples -am install -DskipTests
 
 mvn -B -pl sure-examples exec:java                                                    # 全部示例

@@ -4,6 +4,41 @@
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.20.0] - 2026-11-06
+
+> **这是 minor 版本，不是破坏性升级。** 既有 Maven 坐标（`io.github.tasure:*`）、包名（`com.sure.tool.*`）、类名与方法签名均不变；升级只需把版本号从 `1.19.1` 改为 `1.20.0`（或继续使用 `sure-bom`）。唯一的**行为语义变化**在 `sure-all`：第三方重依赖不再随它传递，见下文。
+
+### 新增：`sure-concurrent` 模块（JDK 25 专属）
+
+- 新模块 `io.github.tasure:sure-concurrent`（包 `com.sure.tool.concurrent`，JPMS 模块 `com.sure.tool.concurrent`），提供两个 JDK 25 差异化能力：
+  - **`ScopedValueUtil`**：Scoped Values（`ScopedValue`）封装——`where(...)` 绑定、`call(...)` 读取，作用域退出后值不可见；适合替代 `ThreadLocal` 做请求上下文传递，对虚拟线程无泄漏。
+  - **`ClassFileUtil`**：Class-File API（`java.lang.classfile`）封装——解析 `.class` 元数据（类名、方法数、字段数），不引入 ASM 等第三方字节码库。
+- **仅在 JDK 25+ 可用**：`java.lang.classfile` 与标准化的 Scoped Values 在 JDK 17/21 上不存在，这两个类在低版本 **无法编译**。
+- 新增 API 的 `@since` 统一为 **`1.20.0`**；新增 15 例测试，模块行覆盖率 100%（61/61）。
+- 新模块不随 `sure-all` 引入第三方依赖，仍为纯 JDK。
+
+### 变更：`sure-all` 不再自动带入第三方重依赖（**使用方需注意**）
+
+- `sure-poi`（Apache POI）、`sure-pdf`（PDFBox 3）、`sure-extra`（jakarta.mail / angus-mail、commons-net、zxing）、`sure-compress`（commons-compress / xz / brotli）中的第三方依赖已标记为 `optional`。
+- **影响**：引入 `sure-all` 后，classpath **不再自动带入**上述第三方 jar（对标 hutool-all 的“零外部依赖”体验）。
+- **需要显式声明依赖的场景**：
+  | 能力 | 原传递依赖 | 现在需要自己声明 |
+  | --- | --- | --- |
+  | Excel / Word（`sure-poi`） | POI 5.5 | `org.apache.poi:poi-ooxml`（版本见 `sure-bom`） |
+  | PDF（`sure-pdf`） | PDFBox 3 | `org.apache.pdfbox:pdfbox` |
+  | 邮件（`sure-extra`） | jakarta.mail / angus-mail | `org.eclipse.angus:angus-mail` |
+  | FTP（`sure-extra`） | commons-net | `commons-net:commons-net` |
+  | 二维码（`sure-extra`） | zxing | `com.google.zxing:core` / `javase` |
+  | 7z / Brotli（`sure-compress`） | commons-compress | `org.apache.commons:commons-compress` 等 |
+- 纯 JDK 能力（core / json / http / crypto / cron / cache / xml / captcha / jwt / dfa / event / socket 等）不受影响，`sure-all` 仍会传递全部 suretool 模块。
+
+### 工程与门禁
+
+- japicmp 二进制兼容基线统一为 **1.19.1**，覆盖 27 个已发布 jar 模块（根项目与 `sure-bom` 跳过；`sure-concurrent` 首次发布，下个版本纳入基线），`breakBuildOnBinaryIncompatibleModifications=true`。
+- `sure-spring-boot-starter` 保留 1.19.1 的三个装配方法签名（`sureEventBus()` / `sureCronLifecycle()` / `sureCache(SureToolProperties)`）：标 `@Deprecated`、不带 `@Bean`、不参与装配，仅作二进制兼容入口，方法体行为与 1.19.1 一致。
+- 全量 `mvn -B verify` 通过：29 个模块、290 个测试类 / 2420 个 `@Test`，执行 2420 例，0 失败 0 错误 0 跳过；`sure-core` 行覆盖率 98.23%。
+- 文档口径同步：README / ROADMAP / modules.md 的模块数、测试数、版本数均为 2026-11-06 实测值。
+
 ## [1.19.1] - 2026-11-03
 
 ### 发布修复：JPMS `fluent` 导出

@@ -4,7 +4,7 @@
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-## [1.20.0] - 2026-11-05
+## [1.20.0] - 2026-11-06
 
 > **这是 minor 版本，不是破坏性升级。** 既有 Maven 坐标（`io.github.tasure:*`）、包名（`com.sure.tool.*`）、类名与方法签名均不变；升级只需把版本号从 `1.19.1` 改为 `1.20.0`（或继续使用 `sure-bom`）。唯一的**行为语义变化**在 `sure-all`：第三方重依赖不再随它传递，见下文。
 
@@ -35,8 +35,9 @@
 ### 工程与门禁
 
 - japicmp 二进制兼容基线统一为 **1.19.1**，覆盖 27 个已发布 jar 模块（根项目与 `sure-bom` 跳过；`sure-concurrent` 首次发布，下个版本纳入基线），`breakBuildOnBinaryIncompatibleModifications=true`。
-- 全量 `mvn -B verify` 通过：29 个模块、290 个测试类 / 2419 个 `@Test`，执行 2419 例，0 失败 0 错误 0 跳过；`sure-core` 行覆盖率 98.23%。
-- 文档口径同步：README / ROADMAP / modules.md 的模块数、测试数、版本数均为 2026-11-05 实测值。
+- `sure-spring-boot-starter` 保留 1.19.1 的三个装配方法签名（`sureEventBus()` / `sureCronLifecycle()` / `sureCache(SureToolProperties)`）：标 `@Deprecated`、不带 `@Bean`、不参与装配，仅作二进制兼容入口，方法体行为与 1.19.1 一致。
+- 全量 `mvn -B verify` 通过：29 个模块、290 个测试类 / 2420 个 `@Test`，执行 2420 例，0 失败 0 错误 0 跳过；`sure-core` 行覆盖率 98.23%。
+- 文档口径同步：README / ROADMAP / modules.md 的模块数、测试数、版本数均为 2026-11-06 实测值。
 
 ## [1.19.1] - 2026-11-03
 

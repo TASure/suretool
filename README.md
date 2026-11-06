@@ -65,7 +65,7 @@ ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
 
 1. **核心域零第三方运行期依赖** —— `sure-core` 的 compile 作用域只有 JDK；POI、PDFBox、Mail 等重量级依赖隔离在独立模块，不引入就不会进你的 classpath。
 2. **覆盖率是硬门禁** —— `sure-core` 行覆盖下限 0.98，实测 98.23%（10227/10411 行）；各代码模块门禁 0.98（`sure-socket` 0.97），低于阈值 `mvn verify` 直接失败。
-3. **三平台 CI** —— Ubuntu / macOS / Windows × JDK 25 跑同一套 `mvn -B verify`；当前 290 个测试类、2419 个 `@Test`，一次全量执行 2419 例、0 失败（第 1-25 个模块；基准/示例模块不跑测试）。
+3. **三平台 CI** —— Ubuntu / macOS / Windows × JDK 25 跑同一套 `mvn -B verify`；当前 290 个测试类、2420 个 `@Test`，一次全量执行 2420 例、0 失败（第 1-25 个模块；基准/示例模块不跑测试）。
 4. **23 个 JPMS 模块** —— 29 个子模块中有 23 个提供 `module-info.java`，可直接用于 module path。
 5. **44 个属性测试** —— 5 个测试类用 jqwik `@Property` 覆盖编解码、集合、字符串、日期的往返与不变量，而不只是手工挑的样例。
 
@@ -154,7 +154,7 @@ Maven Central 已发布 23 个版本，最新 `1.20.0`（2026-11-05）；所有�
 
 | 项目 | 事实 | 验证位置 |
 | --- | --- | --- |
-| 测试规模 | 290 个测试类 / 2419 个静态 `@Test`；2026-11-05 全量 `mvn -B verify` 执行 2419 例，0 失败 0 错误 0 跳过（`sure-core` 1430 例） | CI 日志 |
+| 测试规模 | 290 个测试类 / 2420 个静态 `@Test`；2026-11-06 全量 `mvn -B verify` 执行 2420 例，0 失败 0 错误 0 跳过（`sure-core` 1430 例） | CI 日志 |
 | 覆盖率 | `sure-core` 行覆盖 98.23%（10227/10411），门禁 0.98；各代码模块门禁 0.98（`sure-socket` 0.97） | `sure-core/pom.xml` · JaCoCo |
 | CI 矩阵 | Ubuntu / macOS / Windows × JDK 25，统一执行 `mvn -B verify` | `.github/workflows/ci.yml` |
 | 静态检查 | Checkstyle 违规即失败；SpotBugs effort=Max 且 failOnError；CodeQL；OSV Scanner | `pom.xml` · workflows |

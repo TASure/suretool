@@ -117,7 +117,50 @@ curl http://localhost:18080/event     # 发布事件，返回累计接收数
 - 无 `@since` 的 API 视为发布前内部 API。
 - 行为变更（即使差异微小）在 CHANGELOG 标注 `Breaking`。
 
-## 10. 需要帮助？
+## 10. Issue SLA 与分诊
+
+### 10.1 首响承诺
+
+| 渠道 | 承诺 | 说明 |
+| --- | --- | --- |
+| Issue（bug / enhancement / question / documentation） | **工作日 48 小时内**首次响应 | 时区 Asia/Shanghai，法定节假日顺延 |
+| PR | 5 个工作日内给出 review 结论或明确排期 | 与 CI 状态无关，CI 红时优先要求修复 |
+| 安全漏洞 | 不走公开 issue，见 [SECURITY.md](SECURITY.md) | 走私密通道，按该文档时限处理 |
+
+「首次响应」= 维护者至少留下一条有效评论（确认问题、请求补充信息、或转交负责人），**不等于修复完成**。
+
+### 10.2 标签体系
+
+| 维度 | 标签 | 含义 |
+| --- | --- | --- |
+| 类型 | `bug` / `enhancement` / `documentation` / `question` / `dependencies` | 每个 issue 至少一个 |
+| 状态 | `needs-triage` | 新建 issue 的默认状态，尚未归类 |
+| 状态 | `needs-repro` | 缺少最小复现，等待报告者补充 |
+| 状态 | `needs-design` | 方案未定，需要先讨论 API/行为 |
+| 状态 | `blocked` | 被外部依赖或其他 issue 阻塞 |
+| 优先级 | `priority:p0` / `priority:p1` / `priority:p2` | p0=安全或发布阻塞；p1=下个 minor；p2=backlog |
+| 参与 | `good first issue` / `help wanted` | 适合新手 / 需要社区协助 |
+| 关闭 | `duplicate` / `invalid` / `wontfix` | 关闭原因，必须与一条说明性评论同时使用 |
+
+### 10.3 分诊流程
+
+1. **进入队列**：新 issue 落到 `needs-triage`（见 10.4 的现状说明）。
+2. **48 小时内分诊**：复现 → 判定类型 → 打优先级 → 必要时追加 `needs-repro` / `needs-design`。
+3. **移出队列**：去掉 `needs-triage`；能立即修的直接关联 PR，暂不修的进入 milestone 或留在 backlog（保留 `priority:p2`）。
+4. **修复与验证**：PR 正文写 `Fixes #<issue>`；合并时 issue 自动关闭。
+5. **超期处理**：`stale.yml` 会对长期无响应的 issue 打标记并最终关闭，关闭前会留评论。
+
+### 10.4 自动打标签的现状（未启用，不假装可用）
+
+- **当前状态**：仓库**没有**任何 issue 自动打标签 workflow，新 issue 需人工加 `needs-triage`。唯一相关的自动化是已有的 `stale.yml`（长时间无活动后提醒/关闭）。
+- **要启用自动打标签，需要**：
+  1. 在 Settings → Labels 先创建上表中的标签（GitHub 不会自动创建，写入不存在的标签会被静默忽略）；
+  2. 增加一个 workflow，声明 `permissions: issues: write`，用内置 `GITHUB_TOKEN` 调用 `issues.addLabels`；**不需要 GitHub App**；
+  3. 若要做基于内容的自动分类（按堆栈/关键词判模块），同样只需 `issues: write` 权限与一份关键词映射；
+  4. 若要跨仓库同步或自动写入 Projects 字段，则需要 GitHub App 或带 `project` scope 的 PAT。
+- 在完成第 1、2 步之前，请勿在文档或模板中假设标签会自动出现。
+
+## 11. 需要帮助？
 
 - 文档：[类索引](docs/index.md) · [模块与 API](docs/modules.md) · [构建与测试](README.md#构建与测试) · [发布指南](docs/RELEASING.md)
 - 提问：GitHub Discussions 或 `question` issue 模板；安全漏洞走私密通道（见 [SECURITY.md](SECURITY.md)）。

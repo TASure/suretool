@@ -6,8 +6,9 @@
 # suretool 发布指南（自动化流水线版）
 
 > 推荐方式：**GitHub Actions 一键发布**（`.github/workflows/release.yml`）。
-> 推送 `v*` 标签即触发：全量门禁 → 构建发布制品 → GPG 签名 → Sonatype Central Portal
-> 上传发布 → 校验 repo1 可访问 → 自动创建 GitHub Release。
+> 推送 `v*` 标签即触发：全量门禁 → 构建发布制品 → GPG 签名 → 上传 OSSRH staging
+> → 输出 `deploymentId` → 自动创建 GitHub Release（真实制品 + 校验和）。
+> 最终 Publish 由维护者在 Central Portal 人工点击。
 > 本地手动发布（`scripts/release.ps1`）保留为兜底通道，见文末第 7 节。
 
 ## 0. 自动化发布（推荐）
@@ -37,9 +38,18 @@ git push origin v1.1.0
 
 流水线自动完成：verify 门禁 → `-Prelease` 构建（源码/JavaDoc/SBOM）→
 bundle 打包（maven 布局 + Manifest）→ 逐文件 GPG 签名（.asc）→
-`POST central.sonatype.com/api/v1/publisher/upload` → 轮询 repo1 直到
-`io/github/tasure/sure-core/<ver>/sure-core-<ver>.jar` 返回 200 →
-创建 GitHub Release（附件 bundle.zip）。
+上传 OSSRH staging → 轮询 Central Portal 直到 deployment 进入 `VALIDATED`
+并输出 `deploymentId` → 创建 GitHub Release 并上传真实制品。
+
+GitHub Release 默认附件（可用仓库变量 `RELEASE_SKIP_GH_RELEASE=true` 显式关闭）：
+
+| 附件 | 内容 |
+| --- | --- |
+| `suretool-<ver>-bundle.zip` | 全部模块的 pom / jar / sources / javadoc 及 `.asc`，Maven 仓库布局 |
+| `sure-all-<ver>.jar` | 聚合模块的完整 jar；只含 MANIFEST 与 Maven 元数据、**不含 class**，约 2 KB 属设计如此 |
+| `SHA256SUMS-<ver>.txt` | 上述附件的 SHA-256 |
+
+> `Publish` 仍由维护者在 Central Portal 人工执行（仓库变量 `RELEASE_AUTO_PUBLISH=true` 时才自动 Publish）。
 
 ### 0.3 手动触发（不带标签）
 

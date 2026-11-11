@@ -16,6 +16,10 @@ name: Release to Maven Central
 #   GPG_PASSPHRASE      GPG 私钥口令
 #
 # 说明：sonatype-central-portal 上传为异步任务，本流水线轮询 repo1 直到制品可访问。
+#
+# GitHub Release 附件：
+#   默认在 deploy 成功后创建 Release 并上传真实制品（bundle zip、sure-all jar、SHA256SUMS）。
+#   仓库变量 RELEASE_SKIP_GH_RELEASE=true 时显式关闭。
 
 on:
   push:
@@ -131,6 +135,16 @@ jobs:
           VER="${{ steps.version.outputs.version }}"
           (cd bundle && zip -r "../suretool-$VER-bundle.zip" .)
 
+      - name: Generate checksums for release assets
+        if: steps.check.outputs.published != 'true'
+        run: |
+          set -euo pipefail
+          VER="${{ steps.version.outputs.version }}"
+          sha256sum "suretool-$VER-bundle.zip" "sure-all/target/sure-all-$VER.jar" \
+            > "SHA256SUMS-$VER.txt"
+          echo "=== 校验和 ==="
+          cat "SHA256SUMS-$VER.txt"
+
       - name: Configure Maven settings (OSSRH staging + GPG)
         if: steps.check.outputs.published != 'true'
         env:
@@ -225,17 +239,41 @@ jobs:
             echo "::warning::repo1 15 分钟轮询超时（制品可能已发布，仅同步慢）；由下一步尝试创建 GitHub Release"
           fi
 
-      - name: Create GitHub Release
-        if: steps.check.outputs.published != 'true' && vars.RELEASE_AUTO_PUBLISH == 'true'
+      - name: Create GitHub Release with real artifacts
+        # 默认上传真实制品；RELEASE_SKIP_GH_RELEASE=true 时显式关闭。
+        if: steps.check.outputs.published != 'true' && vars.RELEASE_SKIP_GH_RELEASE != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
           VER="${{ steps.version.outputs.version }}"
           TAG="${{ steps.version.outputs.tag }}"
-          if ! gh release view "$TAG" >/dev/null 2>&1; then
-            gh release create "$TAG" "suretool-$VER-bundle.zip" \
-              --title "suretool $VER" \
-              --notes "suretool $VER 已发布到 Maven Central：io.github.tasure:*"
+          ID="${{ steps.staging.outputs.deployment_id }}"
+          NOTES=$(cat <<EOF
+          suretool $VER 已上传至 Maven Central staging（deploymentId: $ID）。
+
+          待维护者在 https://central.sonatype.com/publishing/deployments 人工 Publish 后，
+          即可从 Maven Central 解析：io.github.tasure:*:$VER。
+
+          ## 附件说明
+
+          - `suretool-$VER-bundle.zip`：全部模块的 pom / jar / sources / javadoc 及 GPG `.asc` 签名，Maven 仓库布局。
+          - `sure-all-$VER.jar`：聚合模块的完整 jar。它只含 MANIFEST 与 Maven 元数据，**不含 class**（依赖通过 pom 传递），因此约 2 KB，属于设计如此，不是坏包。工具代码在 sure-core 等域模块中。
+          - `SHA256SUMS-$VER.txt`：上述附件的 SHA-256。
+
+          以 Maven Central 上的制品为准；本页附件仅作离线镜像与校验用。
+          EOF
+          )
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG 已存在：更新说明，不重复上传附件"
+            gh release edit "$TAG" --notes "$NOTES"
           else
-            echo "Release $TAG 已存在，跳过创建"
+            gh release create "$TAG" \
+              "suretool-$VER-bundle.zip" \
+              "sure-all/target/sure-all-$VER.jar" \
+              "SHA256SUMS-$VER.txt" \
+              --title "suretool $VER" \
+              --notes "$NOTES"
           fi
+          echo "=== Release $TAG 附件 ==="
+          gh release view "$TAG" --json assets --jq '.assets[] | "\(.name) \(.size) bytes"'

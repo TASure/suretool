@@ -84,6 +84,30 @@ Actions → Release to Maven Central → Run workflow：从当前 main 分支版
 | 10 分钟未同步 | 到 [central.sonatype.com](https://central.sonatype.com) → Deployments 查看发布状态，多数为排队 |
 | SNAPSHOT 版本被拒 | 发布前必须将根 pom 版本改为非 SNAPSHOT 并提交 |
 
+### 0.6 JavaDoc 体积控制（no-fonts）
+
+**背景**：Maven Central 对组织有**月度 Release Size 配额**（本组织当前 80 MB/月，见 Portal 的
+Usage Center）。一次全量发布（29 个模块 × pom/jar/sources/javadoc/.asc）原先约 107 MB，
+其中 javadoc jar 占 105.18 MB —— 单个模块的 javadoc jar 里，JDK 自带的标准 Web 字体
+（`resource-files/fonts/`）约占 89% 且每个模块各存一份，与业务代码量无关。
+
+**措施**：`pom.xml` 的 `release` profile 里给 `maven-javadoc-plugin` 加 `additionalOption`
+`--no-fonts`（JDK 25 的 `javadoc` 支持该选项），不内嵌字体。日常 `mvn verify` 不激活该 profile，不受影响。
+
+**实测（2026-11-12，本机 `mvn -B -Prelease -DskipTests package`，真实字节数）**：
+
+| 指标 | 1.19.1（含字体） | 1.20.0（no-fonts） | 变化 |
+| --- | --- | --- | --- |
+| 27 个 javadoc jar 合计 | 105.18 MB | **5.17 MB** | −100.01 MB（95.1%） |
+| 单模块典型值 | 3.97–4.05 MB | 0.11–0.20 MB | 约 −3.85 MB/模块 |
+| `sure-core` | 5.01 MB | 1.20 MB | −3.81 MB（76%） |
+| `sure-benchmark` | 4.39 MB | 0.56 MB | −3.83 MB（87%） |
+
+**完整性校验**：除 `resource-files/fonts/` 外，javadoc jar 的条目列表与 1.19.1 **完全一致**
+（以 `sure-log` 为例：非字体条目 61 = 61，无增无减）；HTML 页面数不变（`sure-core` 353 页、
+`sure-log` 23 页），搜索索引（`member/type/package-search-index.js`、`search.html`）齐全。
+javadoc jar 仍然存在且含合法 HTML，满足 Central 对 javadoc 制品的强制要求。
+
 ---
 
 ## 1. 环境要求

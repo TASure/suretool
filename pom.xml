@@ -612,11 +612,19 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <!-- JavaDoc 包（上传中央仓库必需） -->
+                    <!-- JavaDoc 包（上传中央仓库必需）。
+                         javadoc 的 no-fonts 选项：不内嵌标准 Web 字体（JDK 25 支持）。字体占单个
+                         javadoc jar 约 89% 体积且每个模块重复一份，去掉后发布体积大幅下降，
+                         以满足 Maven Central 的月度 Release Size 配额；HTML 与搜索索引不受影响。 -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>3.6.3</version>
+                        <configuration>
+                            <additionalOptions>
+                                <additionalOption>--no-fonts</additionalOption>
+                            </additionalOptions>
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>

@@ -49,14 +49,29 @@ GitHub Release 默认附件（可用仓库变量 `RELEASE_SKIP_GH_RELEASE=true` 
 | `sure-all-<ver>.jar` | 聚合模块的完整 jar；只含 MANIFEST 与 Maven 元数据、**不含 class**，约 2 KB 属设计如此 |
 | `SHA256SUMS-<ver>.txt` | 上述附件的 SHA-256 |
 
-> `Publish` 仍由维护者在 Central Portal 人工执行（仓库变量 `RELEASE_AUTO_PUBLISH=true` 时才自动 Publish）。
+这些附件**由 tag 推送后自动产出，无需手工上传**；`Publish` 仍由维护者在 Central Portal 人工执行
+（仓库变量 `RELEASE_AUTO_PUBLISH=true` 时才自动 Publish）。
 
-### 0.3 手动触发（不带标签）
+### 0.3 Release 附件缺失时怎么办
+
+附件步骤被跳过时（`Create GitHub Release` 结论为 `skipped`），先确认属于哪种情况：
+
+| 原因 | 判断依据 | 处理 |
+| --- | --- | --- |
+| tag 指向的 commit 仍是旧版 workflow | run 的 `Create GitHub Release` 为 skipped，且该 commit 早于附件逻辑 PR #45 | 不补建。以 Maven Central 为准，并在 `docs/health-daily/BACKLOG.md` 登记一条决策，避免被当成漏项（范例：`HL-2026-11-12-01`，v1.20.0） |
+| 仓库变量 `RELEASE_SKIP_GH_RELEASE=true` | run 环境含该变量，步骤条件为假 | 属预期行为；如需附件，把变量改回非 `true` 后重跑 workflow |
+| 附件步骤执行失败 | 步骤结论为 `failure`，日志有 `gh release` 报错 | 修复后重跑该 workflow；`gh release create` 不幂等，已存在同名 Release 时改走 `gh release edit` + `gh release upload` |
+| 版本已发布被跳过 | `Check already published` 输出 `published=true` | 整条流水线短路，不会创建 Release；属幂等设计 |
+
+红线：**不要用本地重建的 jar 回填历史 Release**，那会让读者误以为是原始发布件。确需附件时，
+必须在 Release 正文明确标注「重建制品、非原始发布件」，或直接声明以 Central 为准。
+
+### 0.4 手动触发（不带标签）
 
 Actions → Release to Maven Central → Run workflow：从当前 main 分支版本发布，
 标签按 `v<version>` 自动生成。
 
-### 0.4 失败排查
+### 0.5 失败排查
 
 | 现象 | 处理 |
 | --- | --- |

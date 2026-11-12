@@ -171,6 +171,24 @@ jobs:
           SETTINGS
           echo "settings.xml 已生成 (ossrh + gpg)"
 
+      - name: Snapshot existing Portal deployments (baseline)
+        id: baseline
+        if: steps.check.outputs.published != 'true'
+        env:
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+        run: |
+          set -euo pipefail
+          # 记录 deploy 之前的 Portal deploymentId 快照。
+          # 目的：后续只认「本次运行新增」的部署，避免把历史上一直挂着 VALIDATED 的旧记录误当成本次结果。
+          BEFORE="$RUNNER_TEMP/deployments_before.txt"
+          : > "$BEFORE"
+          curl -sS --fail -u "$SONATYPE_USERNAME:$SONATYPE_PASSWORD" \
+            https://central.sonatype.com/api/v1/publisher/deployments \
+            -o "$RUNNER_TEMP/deployments_before.json"
+          jq -r '.deployments[]?.deploymentId' "$RUNNER_TEMP/deployments_before.json" | sort -u > "$BEFORE"
+          echo "基线 Portal deployment 数量: $(wc -l < "$BEFORE" | tr -d ' ')"
+
       - name: Deploy to OSSRH staging (GPG-signed)
         if: steps.check.outputs.published != 'true'
         run: mvn -B -Prelease deploy
@@ -183,24 +201,51 @@ jobs:
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
         run: |
           set -euo pipefail
-          # deploy 产生的部署进入 VALIDATED 后记录 deploymentId；默认不自动 Publish，
-          # 最终 Publish 由维护者在 Central Portal 人工执行（仓库变量 RELEASE_AUTO_PUBLISH=true 时才自动发布）。
+          # 只认「本次运行新增 + VALIDATED」的 Portal deployment，并校验其版本包含本次 $VERSION。
+          # 默认不自动 Publish，最终 Publish 由维护者在 Central Portal 人工执行
+          #（仓库变量 RELEASE_AUTO_PUBLISH=true 时才自动发布）。
+          VER="${{ steps.version.outputs.version }}"
+          API=https://central.sonatype.com/api/v1/publisher
+          BEFORE="$RUNNER_TEMP/deployments_before.txt"
+          BEFORE_JSON=$(jq -R -s 'split("\n") | map(select(length > 0))' "$BEFORE")
+
           ID=""
           for i in $(seq 1 30); do
-            ID=$(curl -s -u "$SONATYPE_USERNAME:$SONATYPE_PASSWORD" \
-              https://central.sonatype.com/api/v1/publisher/deployments \
-              | jq -r '[.deployments[] | select(.deploymentState=="VALIDATED")] | sort_by(.createTimestamp) | .[-1].deploymentId // empty')
+            curl -sS --fail -u "$SONATYPE_USERNAME:$SONATYPE_PASSWORD" \
+              "$API/deployments" -o "$RUNNER_TEMP/deployments_now.json"
+            ID=$(jq -r --argjson before "$BEFORE_JSON" '
+              [.deployments[]?
+               | select(.deploymentState == "VALIDATED")
+               | select((.deploymentId as $id | $before | index($id)) | not)]
+              | sort_by(.createTimestamp) | last | .deploymentId // empty' "$RUNNER_TEMP/deployments_now.json")
             if [ -n "$ID" ]; then break; fi
-            echo "[$i/30] 等待部署进入 VALIDATED…"
+            echo "[$i/30] 等待本次新增的部署进入 VALIDATED…"
             sleep 10
           done
           if [ -z "$ID" ]; then
-            echo "::error::未找到 VALIDATED 部署，请检查 deploy 结果"
+            echo "::error::未找到本次运行新增的 VALIDATED 部署；历史遗留的 VALIDATED 记录不会被视为本次结果，请检查 deploy 结果"
             exit 1
           fi
+
+          # 版本校验：从 deployment 详情里抓所有 version 字段，若返回了版本信息则必须包含本次版本，
+          # 防止 ID 正确但内容不是这一版（例如重复触发、误取旧部署）。
+          DETAIL=$(curl -sS -u "$SONATYPE_USERNAME:$SONATYPE_PASSWORD" "$API/deployment/$ID" || true)
+          VERS=$(printf '%s' "$DETAIL" | jq -r '.. | objects | .version? // empty' 2>/dev/null | sort -u || true)
+          if [ -n "$VERS" ]; then
+            if ! printf '%s\n' "$VERS" | grep -qx "$VER"; then
+              echo "::error::deployment $ID 的版本为 [$(printf '%s' "$VERS" | tr '\n' ' ')]，与本次发布版本 $VER 不一致"
+              exit 1
+            fi
+            echo "版本校验通过: $VER"
+          else
+            echo "::warning::deployment 详情未返回版本字段，仅以「本次新增 + VALIDATED」判定，请人工核对 portal 内容"
+          fi
+
           echo "deployment_id=$ID" >> "$GITHUB_OUTPUT"
+          echo "Portal deploymentId = $ID"
           echo "### Maven Central staging 已就绪" >> "$GITHUB_STEP_SUMMARY"
-          echo "- deploymentId: \`$ID\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- 版本: \`$VER\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Portal deploymentId: \`$ID\`（本次运行新增，非历史遗留）" >> "$GITHUB_STEP_SUMMARY"
           echo "- 人工发布入口: https://central.sonatype.com/publishing/deployments" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Publish staging deployment to Maven Central (Portal API)

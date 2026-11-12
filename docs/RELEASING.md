@@ -41,6 +41,9 @@ bundle 打包（maven 布局 + Manifest）→ 逐文件 GPG 签名（.asc）→
 上传 OSSRH staging → 轮询 Central Portal 直到 deployment 进入 `VALIDATED`
 并输出 `deploymentId` → 创建 GitHub Release 并上传真实制品。
 
+> `deploymentId` 只从**本次运行新增**的 Portal 部署里取（运行前会先做一次 ID 快照），
+> 历史上一直挂着 `VALIDATED` 的旧记录不会被误当成本次结果；拿到 ID 后还会校验其版本等于本次发布版本。
+
 GitHub Release 默认附件（可用仓库变量 `RELEASE_SKIP_GH_RELEASE=true` 显式关闭）：
 
 | 附件 | 内容 |
